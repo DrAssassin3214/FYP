@@ -8,3 +8,5 @@ __pycache__/
 data/*.db
 data/*.jsonl
 Research_Papers/
+examples/output/
+out/

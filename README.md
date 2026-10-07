@@ -21,11 +21,20 @@ simulation, and an expected-monetary-value (EMV) decision layer, with a local we
 
 ## Run
 
+Windows: double-click `setup_windows.bat` (creates `.venv`, installs the requirements, starts the GUI).
+Next time use `gui\run_gui.bat`.
+
+Any platform:
+
 ```
 pip install -r requirements.txt
-python -m gui          # opens http://127.0.0.1:8765/
-python -m pytest
+python -m gui                      # opens http://127.0.0.1:8765/
+python -m app.cli example > case.json
+python -m app.cli run case.json --out out    # writes register.md, register.csv, result.json
+python examples/masonry_demo.py    # Monte Carlo + EMV option comparison
 ```
+
+Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest`.
 
 ## Not in the repository
 

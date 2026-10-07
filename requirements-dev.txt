@@ -1,0 +1,7 @@
+# Tests plus the literature / statistics scripts in scripts/
+-r requirements.txt
+pytest
+pandas
+python-docx
+requests
+statsmodels

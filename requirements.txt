@@ -1,10 +1,6 @@
+# Runtime: enough to run the GUI, the CLI and the demo
 flask
 numpy
-pandas
 scipy
-statsmodels
 matplotlib
 openpyxl
-python-docx
-requests
-pytest
