@@ -1,8 +1,8 @@
 // Screen 4: Risk matrix (ordinal prioritisation only)
 import { h, fmt, fmtIn, isNum, valAttr } from "../util.js";
 import { S } from "../state.js";
-import { screenHead, alertBox, icon, term, staleNote, tipIcon, serviceWarnings } from "../ui.js";
-import { screenProblems } from "../problems.js";
+import { screenHead, alertBox, icon, term, staleNote, tipIcon, serviceWarnings, sourceBadge } from "../ui.js";
+import { screenProblems, checkFailure } from "../problems.js";
 
 const pct = (x) => `${fmtIn(x * 100, 2)}%`;
 
@@ -31,8 +31,8 @@ function liveBlock() {
     for (let ic = 1; ic <= 5; ic++) {
       const lvl = levels[pc]?.[ic] || "";
       const here = rows.filter((x) => x.p_class === pc && x.impact_class === ic);
-      grid += `<div class="mx-cell lvl-${h(lvl)}" role="cell" aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${here.map((x) => x.risk_id).join(", ")}` : ""}">
-        ${here.map((x) => `<span class="mx-risk${x.basis === "literature-seed" ? " is-seed" : ""}" tabindex="0" data-tip="${h(x.basis === "literature-seed" ? `${x.risk_id} – ${names.get(x.risk_id) || ""} | literature seed: survey RII rank ${seedOf(x.risk_id)?.rank} of ${seedOf(x.risk_id)?.n_seeded} | score ${x.score} (${x.level})` : `${x.risk_id} – ${names.get(x.risk_id) || ""} | p = ${x.p} | expected delay if it occurs = ${fmt(x.expected_delay_if_occurs_days, 2)} d | score ${x.score} (${x.level})`)}">${h(x.risk_id)}</span>`).join("")}
+      grid += `<div class="mx-cell lvl-${h(lvl)}" role="cell" aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${h(here.map((x) => x.risk_id).join(", "))}` : ""}">
+        ${here.map((x) => `<span class="mx-risk${x.basis === "literature-seed" ? " is-seed" : ""}" tabindex="0" data-tip="${h(x.basis === "literature-seed" ? `${x.risk_id} – ${names.get(x.risk_id) || ""} | literature seed (importance ranking, not a probability): survey RII rank ${seedOf(x.risk_id)?.rank} of ${seedOf(x.risk_id)?.n_seeded} | score ${x.score} (${x.level})` : `${x.risk_id} – ${names.get(x.risk_id) || ""} | p = ${x.p} | expected delay if it occurs = ${fmt(x.expected_delay_if_occurs_days, 2)} d | score ${x.score} (${x.level})`)}">${h(x.risk_id)}</span>`).join("")}
         <span class="lvl" aria-hidden="true">${h(lvl)}</span></div>`;
     }
   }
@@ -49,9 +49,9 @@ function liveBlock() {
     </tbody></table></div>` : "";
 
   let content;
-  if (!r) content = alertBox("info", "Waiting for the first check of the inputs", "");
+  if (!r) content = checkFailure() || alertBox("info", "Waiting for the first check of the inputs", "");
   else if (!rows.length) content = alertBox("warn", "No risks on the matrix yet", "A risk appears here once it has a literature seed (library risks with survey evidence) or its probability and delay range are entered on the Risk register step with the planned duration on step 1 and the four impact edges above.");
-  else content = `<section class="card"><header class="card-h"><h2>Probability × impact</h2><span class="badge b-warn">${icon("alert")}ordinal prioritisation only – a label, not a quantity</span></header><div class="card-b">${nSeed ? `<p class="hint mb-3">${nSeed} risk${nSeed > 1 ? "s are" : " is"} placed from the <b>literature seed</b> (dashed outline): a relative ranking from survey importance indices (RII) in the evidence store, used as a starting point until you enter probability and delay. An importance index is not a probability or a number of days.</p>` : ""}${matrix}${legend}${table}</div></section>`;
+  else content = `<section class="card"><header class="card-h"><h2>Probability × impact</h2><span class="badge b-warn">${icon("alert")}ordinal prioritisation only – a label, not a quantity</span></header><div class="card-b">${nSeed ? `<p class="hint mb-3">${nSeed} risk${nSeed > 1 ? "s are" : " is"} placed from the <b>literature seed</b> (dashed outline): a relative importance ranking from survey indices (RII), used as a starting point until you enter probability and delay. An importance index is not a probability or a number of days (see the note on ranking basis above).</p>` : ""}${matrix}${legend}${table}</div></section>`;
 
   return `${staleNote()}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
 }
@@ -73,12 +73,18 @@ export function render() {
   return `${screenHead(4, "Risk matrix", `A 5×5 grid that orders the register for attention. ${term("Ordinal prioritisation only", "matrix")}: the continuous p and delay range stay in the register; the class is a label.`, dots)}
   ${screenProblems("matrix")}
   ${open ? edgesCard : ""}
-  <section class="card"><div class="card-b"><div class="field" style="max-width:34rem"><label for="seed-basis">Literature ranking basis</label>
+  <section class="card"><div class="card-b"><div class="field field-wide"><label for="seed-basis">Literature ranking basis</label>
     <select id="seed-basis" class="select" data-bind="seed_basis" data-t="sel" data-rerender="1">
-      <option value="seed"${(S.case.seed_basis || "seed") === "seed" ? " selected" : ""}>Seed studies, direct matches (default; 6 studies held out for validation)</option>
-      <option value="all"${S.case.seed_basis === "all" ? " selected" : ""}>All studies pooled, direct and related matches (uses all the data; no held-out check)</option>
+      <option value="seed"${(S.case.seed_basis || "seed") === "seed" ? " selected" : ""}>Seed studies, direct matches (default)</option>
+      <option value="all"${S.case.seed_basis === "all" ? " selected" : ""}>All studies pooled, direct and related matches</option>
     </select>
-    <p class="hint mt-2">Both rank risks by survey importance (RII) and use the same per-study averaging and five equal-count bands. "All" places every library risk, but related matches are weaker and nothing is held out to test it.</p></div></div></section>
+    <p class="hint mt-2">Both rank risks by survey importance (RII) and use the same per-study averaging and five equal-count bands. The default keeps the held-out surveys out of the ranking so they can be used for a held-out comparison (only held-out surveys with enough overlap with the library can be compared, and their agreement with the seed is weak and not statistically significant). "All" places every library risk, but related matches are weaker, and because the held-out surveys are then used, no held-out comparison applies.</p></div>
+    <div class="alert alert-warn seed-explain mt-3" role="note">${icon("alert")}<div class="a-body"><div class="a-title">What the literature seed is, and is not</div>
+      <p>The seed is an <strong>importance ranking</strong> from general building-construction surveys (RII scores). It is <strong>not a probability and not a delay</strong>. It only gives a risk a starting place on the matrix until you enter its own probability and delay. Two Assumptions turn the ranking into a matrix cell:</p>
+      <ul>
+        <li>${sourceBadge("Assumption", true)} The same RII class is used for BOTH the probability and impact axes.</li>
+        <li>${sourceBadge("Assumption", true)} A rule flag raises the probability class by 1 (capped at 5).</li>
+      </ul></div></div></div></section>
   <div id="matrix-live">${liveBlock()}</div>`;
 }
 

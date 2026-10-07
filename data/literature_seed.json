@@ -8,17 +8,17 @@
       "authors": "Karthik, D. & Rao, C.B.K.",
       "year": 2019,
       "title": "The analysis of essential factors responsible for loss of labour productivity in building construction projects in India",
-      "venue": "Engineering Journal 23(2)",
+      "venue": "Engineering Journal 23(2): 55-70",
       "doi": "10.4186/ej.2019.23.2.55",
       "country": "India (Telangana)",
-      "context": "Multi-storey residential building, masonry wall construction",
-      "masonry": "Yes",
+      "context": "Survey of labour-productivity factors in building construction (general, not masonry-specific); the separate field case study was masonry walls built with AAC blocks",
+      "masonry": "No (general building-construction survey; masonry only in the field case)",
       "n": "44",
       "scale": "1-5",
       "location": "Table 3, p.61",
       "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
       "role": "seed",
-      "note": "N = 44 from the response counts in Table 3 (each row sums to 44)."
+      "note": "N = 44 from the response counts in Table 3 (each row sums to 44). [Correction 2026-10-08] The RII survey (44 respondents, building firms in Telangana) rates building-construction labour-productivity factors in general; only the time-and-motion field case is masonry, and that site used AAC blocks, not bricks. Row 'Bad leadership skill': the printed sum/RII (165, 0.750) is inconsistent with the paper's own counts [1,5,5,27,6], which give 164 and 0.745; the value is kept as printed (0.750). Table 3 lists only factors with RII >= 0.700 (28 of 38), so factors rated lower are absent (truncation)."
     },
     {
       "id": "A02",
@@ -28,14 +28,14 @@
       "venue": "IJETMR 5(2): 239-248",
       "doi": "10.29121/ijetmr.v5.i2.2018.168",
       "country": "India (Chennai)",
-      "context": "Two 3-storey residential buildings, brick masonry activity",
-      "masonry": "Yes",
+      "context": "Labour-productivity survey for residential buildings (general, not masonry-specific); brick masonry activity observed separately on two 3-storey sites",
+      "masonry": "No (general residential-building survey; masonry only in the separate site observation)",
       "n": "Not reported",
       "scale": "1-4",
       "location": "Tables 1-2 and Fig. 1",
       "obtained": "From the research notes (full text read in an earlier session); PDF not in the project folder",
       "role": "seed",
-      "note": "Low-tier journal; respondent count not reported. Payment delays printed as 775.8 on a 1000 scale."
+      "note": "Low-tier journal; respondent count not reported. Payment delays printed as 775.8 on a 1000 scale. [Correction 2026-10-08] The RII survey covers residential-building labour productivity in general (respondents include supervisors, engineers and labourers); the brick-masonry record is a separate site observation. DOI not independently verified."
     },
     {
       "id": "M06",
@@ -52,7 +52,7 @@
       "location": "Table 3, p.5",
       "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
       "role": "seed",
-      "note": "RII = total score / (5 x 201). 'Conflict of interest among team members' is printed twice with different values."
+      "note": "RII = total score / (5 x 201). 'Conflict of interest among team members' is printed twice with different values. [Correction 2026-10-08] n = 201 per the abstract and Table 3 (the RII denominator); the text of Section 3.1 says 206. The rating scale is not stated in the text; 1-5 is inferred because RII = total score / (5 x 201)."
     },
     {
       "id": "A14",
@@ -69,7 +69,7 @@
       "location": "Table 2",
       "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked against Table 2 on 2026-10-07",
       "role": "seed",
-      "note": "Only the rows quoted in the notes are listed (39 factors in the paper)."
+      "note": "Only the rows quoted in the notes are listed (39 factors in the paper). [Correction 2026-10-08] Only 5 of the paper's 39 factors (Table 2) were entered; the 34 omitted factors include Q11 financial difficulties of contractors 0.8233 (rank 3), Q39 Covid-19 0.7902 (rank 5), Q9 poor planning and scheduling 0.7890 (rank 6), Q30 inadequate numbers of equipment 0.7828 (rank 8), Q13 poor site management, monitoring and control 0.7742 (rank 9), Q28 low productivity of labourers 0.7485 (rank 11), Q31 failure of equipment 0.7018 (rank 16). The entered rows are a selection, not the whole table, so the seed is not 'built from every factor' of this study. 26.4% of respondents worked on road projects, so the sample is not buildings only."
     },
     {
       "id": "A15",
@@ -86,7 +86,7 @@
       "location": "Top-ranked factors",
       "obtained": "From the research notes (summary of the full text, two decimals; lower confidence)",
       "role": "seed",
-      "note": "Only the top five factors (of 32) are recorded."
+      "note": "Only the top five factors (of 32) are recorded. [Correction 2026-10-08] Full author list, volume/pages and rating scale are not recorded here; values are two-decimal figures from a summary of the full text (lower confidence). 'n' counts firms (90), not respondents; only 5 of 32 factors were entered."
     },
     {
       "id": "M10",
@@ -103,11 +103,11 @@
       "location": "Table 7, pp.210-211",
       "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
       "role": "validation",
-      "note": "Rows Man. 20 (delays responding to requests for information, overall rank 1) and Tec. 5 (type of project) were not captured by text extraction; neither maps to a tool risk."
+      "note": "Rows Man. 20 (delays responding to requests for information, overall rank 1) and Tec. 5 (type of project) were not captured by text extraction; neither maps to a tool risk. [Correction 2026-10-08] Man. 20 (delays in responding to requests for information) and Tec. 5 (type of project) are NOT rows of Table 7; they appear only in the text below the table on p.211, with no effect-summary value in Table 7. The statement above that text extraction missed them is wrong. The paper itself lists Malaysia and Vietnam among the 'Middle East' studies (its own inconsistency)."
     },
     {
       "id": "M15",
-      "authors": "de Almeida, Feitoza, Carvalho, Pina, Araujo et al.",
+      "authors": "Eduardo Lavocat Galvão de Almeida, Vitor Amadeu da Silva Feitoza, Michele Tereza Marques Carvalho, Ana Beatriz Souza Piña, Lissa Gomes Araújo & Luiz Augusto Gimenez Aidar",
       "year": 2021,
       "title": "Study of delays in constructions: a managerial point of view of private companies in Brasilia, Brazil",
       "venue": "Gestao & Producao 28(3): e5194",
@@ -120,7 +120,7 @@
       "location": "Table 3, p.8",
       "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
       "role": "validation",
-      "note": "RII printed as a percentage; converted to 0-1."
+      "note": "RII printed as a percentage; converted to 0-1. [Correction 2026-10-08] The DOI is inconsistent inside the PDF: the running footers and header print e5194 (used here), while the 'how to cite' box on p.1 prints e5120."
     },
     {
       "id": "M14",
@@ -137,24 +137,24 @@
       "location": "Table 2, p.5",
       "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
       "role": "validation",
-      "note": "Published online 2025. Decimal commas in the PDF converted to points."
+      "note": "Published online 2025. Decimal commas in the PDF converted to points. [Correction 2026-10-08] The printed 'RII' column equals W/(5 x N) (e.g. Low salary: W = 305, N = 83 gives 0.735), although the text states A = 4 for the 1-4 scale; on that stated basis the same row would be 305/(4 x 83) = 0.919. Values are copied as printed, so they are not on the paper's own stated 1-4 basis and their absolute level is not comparable with other studies' RII; the rank order is unaffected."
     },
     {
       "id": "A10",
       "authors": "Pinky Devi & Sindhu",
       "year": 2025,
       "title": "Delay analysis of infrastructure construction projects in India",
-      "venue": "Journal of The Institution of Engineers (India): Series A",
+      "venue": "Journal of The Institution of Engineers (India): Series A 106(3): 763-771",
       "doi": "10.1007/s40030-025-00899-5",
       "country": "India",
       "context": "Infrastructure (roads, bridges), NOT buildings",
       "masonry": "No",
       "n": "72",
       "scale": "1-5",
-      "location": "RII table",
+      "location": "Table 2 pp.766-767 (items); Table 3 p.767 (groups); text p.767 (weather 0.616 appears only in the text)",
       "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked on 2026-10-07",
       "role": "validation",
-      "note": "Only 2 tool risks overlap, too few for a rank correlation. Notes list the group 'material-related issues' as rank 1 although item values are higher; recheck the paper."
+      "note": "Only 2 tool risks overlap, too few for a rank correlation. Notes list the group 'material-related issues' as rank 1 although item values are higher; recheck the paper. [Correction 2026-10-08] The earlier statement that only 2 tool risks overlap is too pessimistic: about 10 tool risks overlap with Table 2 items (e.g. rework 0.600, accident 0.555, unsafe practice 0.552, equipment 0.556, planning 0.525, design errors 0.533, communication 0.546, construction methods 0.418, site restriction 0.602, payment/financing 0.538, contractor financing 0.458). Those rows were NOT entered in this file, so the file is a deliberate subset of the paper. The group row 'material-related issues' rank 1 is correct (Table 3, group mean 0.562; site 0.555 is rank 2 and contractor 0.506 rank 3, not recorded here)."
     },
     {
       "id": "A21",
@@ -168,10 +168,10 @@
       "masonry": "No",
       "n": "30 projects; 380 respondents",
       "scale": "1-5 importance scale",
-      "location": "Results section",
+      "location": "Table 6 p.16 (Tables 7-10 repeat by group); labour issues 0.733 in Table 6/7 and text, 0.773 appears only in the abstract",
       "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked on 2026-10-07",
       "role": "validation",
-      "note": "Labour issues: 0.773 in the abstract but 0.733 in the results text; 0.733 is used here."
+      "note": "Labour issues: 0.773 in the abstract but 0.733 in the results text; 0.733 is used here. [Correction 2026-10-08] More than the stated risks overlap with Table 6 (e.g. materials/equipment procurement 0.719 rank 4, planning and scheduling 0.706 rank 6, subcontractors 0.700 rank 7, supervision 0.682 rank 14, communication 0.712 rank 5, weather 0.641 rank 23, economic conditions 0.712 rank 5, inflation 0.688 rank 12, change orders 0.723 rank 3), but those rows were NOT entered, so the file is a deliberate subset of the paper. The paper's own 'Weight' column and the RII values cannot be fully reconciled; 0.733 is the better-supported value."
     },
     {
       "id": "HAS25",
@@ -188,7 +188,7 @@
       "location": "Abstract",
       "obtained": "From the research notes (abstract only)",
       "role": "validation",
-      "note": "Abstract gives only two values. Not in the tool's evidence store."
+      "note": "Abstract gives only two values. Not in the tool's evidence store. [Correction 2026-10-08] The 'title' field is a placeholder description, not the paper's title, so this entry cannot be cited in APA until the real title is read from the paper."
     }
   ],
   "rows": [
@@ -1688,14 +1688,14 @@
       "source": "Soundarya et al. (2025), An investigation study on residential buildings for cost overrun, Scientific Reports, DOI 10.1038/s41598-025-95984-x (Chennai, India)",
       "index": "Importance index II (frequency x severity), NOT RII",
       "items": "Overall lag in schedule 0.71 (rank 1); rework/extra work 0.55 (2); inadequate skilled labour 0.53 (3); inadequate design/specification 0.52 (4); climatic variation 0.37 (11); hike in materials cost 0.29 (12)",
-      "why_not_used": "Different index; mixing it with RII would compare unlike scales."
+      "why_not_used": "Different index; mixing it with RII would compare unlike scales. [Correction 2026-10-08] Exclusion reason is the different index (frequency x severity), not a small overlap: A11 covers rework, skilled labour, design and climate. Values quoted above were not re-checked against the PDF."
     },
     {
       "study": "P1-23",
       "source": "Karthik & Rao (2019), Identifying the significant factors affecting masonry labour productivity in India, Int. J. Construction Management 22(3): 464-472, DOI 10.1080/15623599.2019.1631978",
       "index": "RII, factor-group average only",
       "items": "Workforce-related factors: average RII 0.784 (120 site personnel, 38 factors)",
-      "why_not_used": "Only a group average is available (abstract); item values not read."
+      "why_not_used": "Only a group average is available (abstract); item values not read. [Correction 2026-10-08] May report the same survey as M01 (same authors and year, 38 factors; 120 contacted vs 44 responses in M01); check before ever adding it as a separate study. Year differs by source (online 2019, issue 2022)."
     }
   ]
 }

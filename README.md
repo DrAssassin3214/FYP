@@ -1,23 +1,34 @@
 # FYP
 
 Framework for brickwork labour-productivity and delay-risk prediction using managerial factors in
-selected Indian building projects (NICMAR final year project).
+selected Indian building projects (NICMAR final year project). The official title describes the earlier,
+larger scope; the current scope is below.
 
-An offline decision-support tool: a deterministic rules engine and risk register, Monte Carlo schedule
-simulation, and an expected-monetary-value (EMV) decision layer, with a local web GUI.
+**Current scope (since 2026-09-28):** an offline decision-support tool for delay risk in one activity,
+brick/blockwork masonry: risk **identification** (risk library, 11 site-fact rules, evidence-cited AI
+suggestions) -> risk **register** -> **5x5 probability-impact matrix** -> exports (report.html, matrix.png/svg,
+register.md/csv, case JSON), with a local web GUI. Risks without entered numbers are placed on the matrix
+from a **labelled literature seed**: relative importance index (RII) values from published surveys, turned
+into an ordinal band. An RII measures importance, not probability or days of delay, so the seed is an
+ordinal starting position and an Assumption of this tool, not a validated prediction; replace it with
+expert-survey and site data. See `docs/Project_Handoff_Summary.md` section 8 for the limits.
+
+**Out of scope and not in the UI:** the earlier Monte Carlo schedule simulation, the expected-monetary-value
+(EMV) decision layer, mitigation decisions and the labour-productivity models. That code is still in
+`app/` and `examples/` (unused by the interface) and is not part of the current deliverable.
 
 ## Layout
 
 | Folder | Contents |
 |---|---|
-| `app/` | Engine (rules, simulation, EMV, decision), productivity models, AI evidence layer, reporting, service API |
+| `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (also legacy, unused code: simulation, EMV, decision, productivity models) |
 | `gui/` | Local offline GUI, as a web page (`python -m gui`) or a PySide6 desktop window (`python -m gui.qt_app`); see `gui/README_GUI.md` |
 | `data/` | Rules, risk library, productivity models, India labour norms, literature seed |
 | `scripts/` | Literature harvesting, screening and statistics scripts |
 | `tests/` | pytest suite |
 | `Research_Notes/`, `Literature_Evidence_Package.xlsx` | Evidence corpus the app loads (M##/R## records, research notes, full-text reviews) |
 | `docs/` | Handoff summary, case schema, statistical analysis reports |
-| `examples/` | Example case and demo script |
+| `examples/` | ILLUSTRATIVE example case and a legacy demo script |
 
 ## Run
 
@@ -31,7 +42,7 @@ pip install -r requirements.txt
 python -m gui                      # opens http://127.0.0.1:8765/
 python -m app.cli example > case.json
 python -m app.cli run case.json --out out    # writes register.md, register.csv, result.json
-python examples/masonry_demo.py    # Monte Carlo + EMV option comparison
+python examples/masonry_demo.py    # legacy demo (Monte Carlo + EMV option comparison); out of the current scope
 ```
 
 Desktop app (PySide6 window, no browser): `run_desktop.bat` runs it from source; `build_desktop_exe.bat`

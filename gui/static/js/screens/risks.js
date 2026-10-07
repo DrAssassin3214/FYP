@@ -22,7 +22,7 @@ function resultLine(rid) {
   const mx = (r.matrix || []).find((x) => x.risk_id === rid);
   const flag = row?.flag;
   const parts = [];
-  if (mx && mx.basis === "literature-seed") parts.push(`<span>matrix <b>${h(mx.level)}</b> (p class ${mx.p_class} × impact ${mx.impact_class}) · <b>literature seed</b>: survey RII rank ${row?.seed?.rank} of ${row?.seed?.n_seeded}${row?.seed?.raised_by_rule ? ", probability raised one class by a rule flag" : ""}. Enter probability and delay to replace it</span>`);
+  if (mx && mx.basis === "literature-seed") parts.push(`<span>matrix <b>${h(mx.level)}</b> (p class ${mx.p_class} × impact ${mx.impact_class}) · <b>literature seed</b>: survey RII importance rank ${row?.seed?.rank} of ${row?.seed?.n_seeded} (a ranking, not a probability or a delay; the same class is used on both axes, an Assumption)${row?.seed?.raised_by_rule ? "; probability class raised by 1 for a rule flag (Assumption, capped at 5)" : ""}. Enter probability and delay to replace it</span>`);
   else if (mx) parts.push(`<span>matrix <b>${h(mx.level)}</b> (p class ${mx.p_class} × impact ${mx.impact_class})</span><span>expected delay if it occurs <b>${fmtIn(mx.expected_delay_if_occurs_days, 2)} d</b></span>`);
   else if (row && !row.complete) parts.push("<span>not on the matrix yet: enter probability and delay with their sources</span>");
   else parts.push("<span>not on the matrix: see the notes on the Risk matrix step</span>");

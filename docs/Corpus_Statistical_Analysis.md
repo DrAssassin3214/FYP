@@ -81,7 +81,7 @@ Association only; field, venue and quality are not controlled.
 | China / Hong Kong | 147 | 3.7% (3.2%-4.3%) | 7.0% | 2.9% | 4.6% | 2.4% | -0.03 | 0.244 |
 | Malaysia / Indonesia / Vietnam / Thailand | 316 | 7.9% (7.1%-8.8%) | 6.0% | 7.6% | 9.3% | 7.0% | +0.00 | 1.000 |
 
-With N = 3,550 even small trends are 'significant'. Judge by the shares, not the p-values: for example the machine-learning share rises from about 2% (1995-2009) to about 8% (2023-2026), while questionnaire use stays near 45%. Rho values near 0.1 are weak.
+With N = 3,975 even small trends are 'significant'. Judge by the shares, not the p-values: for example the machine-learning share rises from about 2% (1995-2009) to about 10% (10.4%, 2023-2026), while questionnaire use stays near 45%. Rho values near 0.1 are weak.
 
 ## 7. Is the corpus large enough?
 
@@ -97,4 +97,4 @@ Bootstrap (2,000 resamples) of the share of works in the delay-causes theme (ful
 | 3000 | 49.3% - 53.1% | 3.8% |
 | 3975 | 49.7% - 52.7% | 3.0% |
 
-The interval width falls roughly as 1/sqrt(n); beyond about 2,000 works each doubling buys little extra precision for a share like this. That supports sufficiency for corpus-level shares, not for coverage of the literature or for the relevance of every record (see the audit sample in `Literature_Database_Report.md`).
+The interval width falls roughly as 1/sqrt(n); beyond about 2,000 works each doubling buys little extra precision for a share like this. Correction (audit 2026-10-08): the full-corpus share is a census of this database, so it has no sampling error; the bootstrap above only shows how a smaller random subsample would behave. It does not support sufficiency of the corpus, and it says nothing about coverage of the literature or about the relevance of every record (see the audit sample in `Literature_Database_Report.md`).

@@ -48,6 +48,18 @@ class NormItem:
                 return r
         raise ValueError(f"{self.item_id}: no mason role found in {list(self.roles)}")
 
+    def mason_roles(self) -> tuple:
+        """Every mason class present in the item (e.g. 1st AND 2nd class for CPWD analysis-of-rates items)."""
+        found = tuple(r for r in _MASON_ROLES if r in self.roles)
+        if not found:
+            raise ValueError(f"{self.item_id}: no mason role found in {list(self.roles)}")
+        return found
+
+    def mason_days_per_unit(self) -> float:
+        """Total mason-days per unit = SUM over mason classes (CPWD 6.4: 0.47 + 0.47 = 0.94, which equals the
+        IS 7272 single 'mason' constant 0.94 for the same work)."""
+        return sum(self.roles[r] for r in self.mason_roles())
+
 
 def load_norms(path: Path = DEFAULT_PATH) -> dict[str, NormItem]:
     rows = json.loads(Path(path).read_text(encoding="utf-8-sig"))
@@ -73,6 +85,9 @@ class CrewOutput:
     provided_support: dict
     understaffed: dict                # role -> shortfall (provided < required), if any
     basis: str
+    mason_days_per_unit: Optional[dict] = None  # mason class -> days per unit (as in the source), transparent breakdown
+    mason_days_per_unit_total: float = 0.0   # sum of the classes
+    required_masons_by_class: Optional[dict] = None    # mason class -> masons of that class needed for the stated crew
 
 
 def crew_output_per_day(item: NormItem, masons: float, support: Optional[Mapping[str, float]] = None) -> CrewOutput:
@@ -82,9 +97,11 @@ def crew_output_per_day(item: NormItem, masons: float, support: Optional[Mapping
     checkable understaffing condition, not a guess)."""
     if masons <= 0:
         raise ValueError("masons must be > 0")
-    mrole = item.mason_role()
-    mason_days = item.roles[mrole]
+    mclasses = item.mason_roles()
+    by_class = {r: item.roles[r] for r in mclasses}
+    mason_days = sum(by_class.values())          # all mason classes are required per unit, so they ADD
     output = masons / mason_days
+    masons_by_class = {r: masons * d / mason_days for r, d in by_class.items()}
     support = dict(support or {})
     required, provided, short = {}, {}, {}
     for role, days in item.roles.items():
@@ -97,6 +114,8 @@ def crew_output_per_day(item: NormItem, masons: float, support: Optional[Mapping
             provided[role] = prov
             if prov < req - 1e-9:
                 short[role] = req - prov
-    basis = (f"output = masons / {mrole} labour constant ({mason_days} {item.role_unit}); "
+    parts = " + ".join(f"{r} {d}" for r, d in by_class.items())
+    basis = (f"output = masons / total mason labour constant ({parts} = {mason_days:g} {item.role_unit}); "
              "support-role requirement scaled by the same ratio (author's derivation, not printed in the source)")
-    return CrewOutput(item.item_id, output, item.unit_basis + "/day", masons, required, provided, short, basis)
+    return CrewOutput(item.item_id, output, item.unit_basis + "/day", masons, required, provided, short, basis,
+                      by_class, mason_days, masons_by_class)

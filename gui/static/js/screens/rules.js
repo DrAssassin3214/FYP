@@ -36,7 +36,7 @@ function factControl(f) {
   const facts = S.case.facts || {};
   const v = facts[f.name];
   const has = Object.prototype.hasOwnProperty.call(facts, f.name) && v !== null;
-  const rulesTxt = `used by ${f.rules.join(", ")}`;
+  const rulesTxt = `used by ${f.rules.map(h).join(", ")}`;
   if (f.type === "boolean") {
     const cur = !has ? "unknown" : v === true ? "true" : v === false ? "false" : "other";
     const seg = `<div class="seg sm tri" role="group" aria-label="${h(info.label)}">${[["unknown", "Unknown"], ["true", "Yes"], ["false", "No"]].map(([val, lab]) =>

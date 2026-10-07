@@ -48,7 +48,7 @@
     "role_unit": "days per m3 (analysis-of-rates labour constant)",
     "location_in_source": "Sub-head 6.0, item 6.1.1; PDF p.200 (printed p.201)",
     "evidence_depth": "full text (P3-02-6.1-*)",
-    "conditions": "FPS = First-class Perforated/Pressed brick class designation 75. mason_1st_class and mason_2nd_class are alternative gang compositions in the source, not additive."
+    "conditions": "FPS = First-class Perforated/Pressed brick class designation 75. mason_1st_class and mason_2nd_class are treated as ADDITIVE in the code (0.47 + 0.47 = 0.94 mason-days/m3, equal to the IS 7272 constant), as recorded in Research_Notes/P3_india_norms.md. The original CPWD DAR table was not re-checked in the 2026-10-08 audit; verify against it before relying on this item."
   },
   {
     "item_id": "CPWD-FPS-superstructure-1brick",

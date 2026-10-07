@@ -16,9 +16,20 @@ export async function api(method, path, body) {
   const attachment = /attachment/i.test(res.headers.get("content-disposition") || "");
   let data;
   try {
-    data = ct.includes("application/json") && !attachment ? await res.json() : await res.blob();
+    if (!res.ok && !(ct.includes("application/json") && !attachment)) {
+      // a non-JSON error page (e.g. the web server's HTML 500): show its text, never leave the caller waiting on a Blob
+      const txt = (await res.text()).replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 240);
+      data = { problems: [`Server error (HTTP ${res.status})${txt ? `: ${txt}` : ""}`] };
+    } else {
+      data = ct.includes("application/json") && !attachment ? await res.json() : await res.blob();
+      if (!res.ok && data && typeof data === "object" && !Array.isArray(data.problems)) {
+        // JSON error without a problems list (e.g. {"error": "..."}): normalise it
+        const msg = data.error || data.message || data.detail;
+        data = { ...data, problems: [`Server error (HTTP ${res.status})${msg ? `: ${typeof msg === "string" ? msg : JSON.stringify(msg)}` : ""}`] };
+      }
+    }
   } catch (e) {
-    data = { problems: [`Unreadable server response (${e.message})`] };
+    data = { problems: [`Unreadable server response (HTTP ${res.status}): ${e.message}`] };
   }
   return { ok: res.ok, status: res.status, data, headers: res.headers };
 }

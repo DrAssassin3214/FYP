@@ -141,7 +141,7 @@ DEFAULT_PATH = Path(__file__).resolve().parents[2] / "data" / "productivity_mode
 
 
 def load_models(path: Path = DEFAULT_PATH) -> dict[str, ProductivityModel]:
-    rows = json.loads(Path(path).read_text(encoding="utf-8"))
+    rows = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     out: dict[str, ProductivityModel] = {}
     for r in rows:
         m = model_from_dict(r)

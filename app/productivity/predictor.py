@@ -11,6 +11,8 @@ With a single model and no spread the baseline is deterministic and that is stat
 """
 from __future__ import annotations
 
+import math
+
 from dataclasses import dataclass, field
 from typing import Mapping, Optional, Sequence
 
@@ -89,6 +91,10 @@ def build_baseline(
 ) -> BaselineResult:
     if quantity <= 0 or crews < 1:
         raise ValueError("quantity must be > 0 and crews >= 1")
+    if single_model_spread_pct is not None:
+        sp = single_model_spread_pct
+        if isinstance(sp, bool) or not isinstance(sp, (int, float)) or not math.isfinite(sp) or not (0 <= sp < 100):
+            raise ValueError(f"single_model_spread_pct must be a number in [0, 100) percent, got {sp!r}")
     warns: list[str] = []
     used: list[str] = []
     srcs: list[str] = []

@@ -1,6 +1,7 @@
 // Screen 6: Export
 import { S, isStale } from "../state.js";
 import { screenHead, alertBox, icon, staleNote } from "../ui.js";
+import { checkFailure } from "../problems.js";
 import { renderMarkdown } from "../markdown.js";
 
 export function render() {
@@ -18,7 +19,7 @@ export function render() {
 
 function preview() {
   const r = S.result;
-  if (!r) return alertBox("info", "Nothing to preview yet", "The preview appears once the inputs have been checked.");
+  if (!r) return checkFailure() || alertBox("info", "Nothing to preview yet", "The preview appears once the inputs have been checked.");
   return `<section class="card"><header class="card-h"><h2>${icon("doc")} Preview</h2><span class="sub">register.md</span></header>
     <div class="card-b">${r.matrix_svg && r.matrix?.length ? `<div class="matrix-graphic${isStale() ? " is-stale-view" : ""}">${r.matrix_svg}</div>` : ""}<article class="md${isStale() ? " is-stale-view" : ""}">${renderMarkdown(r.report_markdown || "")}</article></div></section>`;
 }

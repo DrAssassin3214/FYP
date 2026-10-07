@@ -63,18 +63,38 @@ class SimResult:
 
 
 def _correlation_matrix(ids: Sequence[str], corr: Optional[Mapping[tuple[str, str], float]]) -> Optional[np.ndarray]:
+    """Build the occurrence-correlation matrix.
+
+    Rules (all violations raise ValueError with a clear message):
+      * every rho must be a finite number in [-1, 1];
+      * a self-pair (R, R) never overwrites the unit diagonal: it is only accepted if rho == 1;
+      * (A, B) and (B, A) given together must agree;
+      * the matrix must be strictly positive definite.  |rho| = 1 (or any exactly collinear set) makes it
+        singular, which has no Cholesky factor; it is REJECTED rather than silently nudged - use |rho| < 1
+        (e.g. 0.99) or merge the two risks into one.
+    """
     if not corr:
         return None
     k = len(ids)
     idx = {r: i for i, r in enumerate(ids)}
     mat = np.eye(k)
+    seen: dict = {}
     for (r1, r2), rho in corr.items():
+        if isinstance(rho, bool) or not np.isfinite(rho) or not (-1.0 <= rho <= 1.0):
+            raise ValueError(f"correlation for ({r1}, {r2}) must be a finite number in [-1, 1], got {rho!r}")
+        if r1 == r2:
+            if rho != 1.0:
+                raise ValueError(f"self-correlation for {r1} must be 1, got {rho}")
+            continue
         if r1 in idx and r2 in idx:
-            if not (-1.0 <= rho <= 1.0):
-                raise ValueError("correlation must be in [-1, 1]")
+            key = frozenset((r1, r2))
+            if key in seen and seen[key] != rho:
+                raise ValueError(f"conflicting correlations given for ({r1}, {r2})")
+            seen[key] = rho
             mat[idx[r1], idx[r2]] = mat[idx[r2], idx[r1]] = rho
-    if np.min(np.linalg.eigvalsh(mat)) < -1e-10:
-        raise ValueError("correlation matrix is not positive semi-definite")
+    if k and np.min(np.linalg.eigvalsh(mat)) <= 1e-10:
+        raise ValueError("correlation matrix is singular or not positive definite "
+                         "(|rho| = 1 or inconsistent set); use |rho| < 1")
     return mat
 
 
@@ -94,6 +114,8 @@ def simulate(
     activity.validate()
     if n < 1:
         raise ValueError("n must be >= 1")
+    if isinstance(seed, bool) or not isinstance(seed, (int, np.integer)) or seed < 0:
+        raise ValueError(f"seed must be a non-negative integer, got {seed!r}")
     ids = [r.risk_id for r in risks]
     if len(set(ids)) != len(ids):
         raise ValueError("risk ids must be unique")

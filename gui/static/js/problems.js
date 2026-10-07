@@ -25,6 +25,13 @@ export function friendly(p) {
   return hint ? `${h(hint)}<span class="raw">${h(s)}</span>` : h(s);
 }
 
+/** When the very first check failed (no valid result yet): show the real cause instead of "waiting for the first check". */
+export function checkFailure() {
+  if (S.result || S.validation.status !== "err") return "";
+  const probs = S.validation.problems || [];
+  return alertBox("danger", "The case could not be checked", `<ul>${probs.map((p) => `<li>${friendly(p)}</li>`).join("")}</ul>`);
+}
+
 export const SCREEN_TITLES = {
   case: "Case & Activity", rules: "Site facts & Rules", risks: "Risk register", matrix: "Risk matrix",
 };

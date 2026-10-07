@@ -262,8 +262,10 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 
 /* vibrant matrix colours */
 :root { --lvl-low: #4fcf6f; --lvl-mod: #ffd93d; --lvl-high: #ff9626; --lvl-ext: #ff4b4b; --lvl-ink: #14140f; }
-:root[data-theme="dark"] { --lvl-low: #1fa64d; --lvl-mod: #d8ae00; --lvl-high: #e8741a; --lvl-ext: #e03636; --lvl-ink: #ffffff; }
-.mx-cell .lvl { opacity: .7; }
+:root[data-theme="dark"] { --lvl-low: #4fcf6f; --lvl-mod: #ffd93d; --lvl-high: #ff9626; --lvl-ext: #ff4b4b; --lvl-ink: #14140f; }
+/* Decision: the dark theme uses the SPECIFIED level colours too (the old dark variants #1fa64d/#d8ae00/#e8741a/#e03636 with white ink gave only 2.1-4.4:1). Dark ink gives >= 5.6:1 on every cell; legend swatches use the same variables. */
+.mx-cell .lvl { opacity: .85; }
+.mx-risk.is-seed { color: var(--lvl-ink); }   /* seeded chips are transparent: use the cell ink, not the page text colour */
 
 /* Case & Activity / Site facts & Rules: stack the cards one below the other, roomier text and fields */
 .grid-2 { grid-template-columns: 1fr; gap: var(--s-5); }
@@ -304,3 +306,15 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
    scrollbar and gives pages no way to change it. Wheel, trackpad, touch and keyboard scrolling are unaffected. */
 html.has-cursor, html.has-cursor * { scrollbar-width: none; }
 html.has-cursor::-webkit-scrollbar, html.has-cursor *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+/* Export (and any long action row): the buttons wrap inside the available width instead of forcing a horizontal scroll */
+.screen-head .actions { flex: 0 1 auto; min-width: 0; max-width: 100%; flex-wrap: wrap; }
+.field-wide { max-width: min(46rem, 100%); }
+/* the first check failed: say so instead of "Checking the case..." */
+.kpi-strip.is-error { color: var(--danger); align-items: center; font-size: var(--fs-sm); gap: var(--s-2); min-width: 0; overflow-wrap: anywhere; }
+.kpi-strip.is-error .ic { flex: none; }
+.kpi-strip.is-error .kpi-err { color: var(--text); }
+/* explanation of what the literature seed is (matrix screen) */
+.seed-explain ul { margin: 6px 0 0 18px; padding: 0; }
+.seed-explain li { margin: 3px 0; }
+.seed-explain .src { vertical-align: baseline; margin-right: 4px; }

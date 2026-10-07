@@ -10,7 +10,11 @@ Guard rules (each is enforced in code and tested):
       user / expert / cited data with a Source);
   G3  quoted text must appear in the cited record's stored text, otherwise the quote is flagged;
   G4  output is always AI_UNVERIFIED; only an explicit user confirmation can change the status;
-  G5  the raw prompt, model id, retrieved ids and raw output are kept verbatim in an audit log.
+  G5  the raw prompt, model id, retrieved ids and raw output are kept verbatim in an audit log;
+  G7  a suggestion whose name, category or mechanism contains a probability, percentage, duration, day-count or
+      currency figure is rejected (the AI may not smuggle numbers in as prose) and the rejection is logged;
+  G8  every field is type-checked; one malformed item is dropped and logged, the other suggestions survive;
+  G9  unknown numeric keys (likelihood, days, impact, ...) are dropped and logged like the listed ones (G2).
 """
 from __future__ import annotations
 
@@ -22,10 +26,39 @@ from typing import Optional, Protocol, Sequence
 
 from app.engine.models import DelayDist, Param, Risk, RiskStatus, Source
 
+from .clients import extract_json
 from .evidence import EvidenceRecord, EvidenceStore
 
 NUMERIC_KEYS = {"p", "probability", "delay", "delay_days", "min_delay", "max_delay", "most_likely_delay",
                 "cost", "cost_inr", "effect", "effect_size", "p_after", "reduction", "expected_delay"}
+# keys an LLM tends to invent for the same purpose; dropped and logged under G9
+SUSPECT_KEYS = {"likelihood", "days", "impact", "severity", "chance", "odds", "duration", "duration_days",
+                "price", "budget", "score", "rating", "rii", "percent", "percentage", "min", "max", "mean",
+                "most_likely", "expected_cost", "delay_range", "impact_days", "cost_estimate", "estimate"}
+
+_NUMWORD = r"(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|thirty|forty|fifty|sixty|ninety|hundred)"
+_UNIT = r"(?:working\s+|calendar\s+)?(?:days?|weeks?|months?|hours?|hrs?)"
+FIGURE_PATTERNS = [
+    (re.compile(r"\d\s*%|\bper\s?cent\b|\bpercent(?:age)?\b", re.I), "a percentage"),
+    (re.compile(r"\b(?:probability|likelihood|chance|odds|p)\b\s*(?:of|is|=|:|at|about|around)?\s*(?:approximately\s+|~\s*)?(?:0?\.\d+|\d+)", re.I), "a probability figure"),
+    (re.compile(r"\b0?\.\d+\s+(?:probability|likelihood|chance)", re.I), "a probability figure"),
+    (re.compile(r"(?<![A-Za-z0-9])\d+(?:[.,]\d+)?\s*(?:-|to|–)?\s*(?:\d+(?:[.,]\d+)?\s*)?" + _UNIT + r"\b", re.I), "a duration / day-count"),
+    (re.compile(r"\b" + _NUMWORD + r"(?:\s*(?:-|to|–)\s*" + _NUMWORD + r")?\s+" + _UNIT + r"\b", re.I), "a duration / day-count"),
+    (re.compile(r"(?<![A-Za-z])(?:INR|Rs\.?|₹)\s*[\d,]", re.I), "a currency amount"),
+    (re.compile(r"\d[\d,]*(?:\.\d+)?\s*(?:INR|Rs|rupees|lakhs?|crores?)\b", re.I), "a currency amount"),
+]
+
+
+def find_figures(text) -> list[str]:
+    """Describe every probability / percentage / duration / currency figure found in free text."""
+    if not isinstance(text, str):
+        return []
+    found = []
+    for rx, label in FIGURE_PATTERNS:
+        m = rx.search(text)
+        if m and label not in found:
+            found.append(label)
+    return found
 
 
 class LLMClient(Protocol):
@@ -59,20 +92,58 @@ def build_prompt(activity_name: str, records: Sequence[EvidenceRecord]) -> str:
     )
 
 
-def parse_and_validate(raw: str, retrieved_ids: set[str], store: EvidenceStore) -> list[RiskCandidate]:
+def _is_number(v) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def parse_and_validate(raw: str, retrieved_ids: set[str], store: EvidenceStore,
+                       log: Optional[list] = None) -> list[RiskCandidate]:
+    """Validate an LLM reply. Rejected / dropped items are appended to `log` (a list of dicts with a rule id)."""
+    log = log if log is not None else []
     try:
-        data = json.loads(raw)
-        items = data["risks"]
+        data = extract_json(raw)
+        items = data["risks"] if isinstance(data, dict) else data
         if not isinstance(items, list):
             raise ValueError
     except (ValueError, KeyError, TypeError):
         return [RiskCandidate("(unparseable output)", "", "", (), issues=["LLM output was not valid JSON in the required schema"])]
+    norm = lambda s: re.sub(r"\s+", " ", str(s)).strip().lower()
     out: list[RiskCandidate] = []
-    for it in items:
-        if not isinstance(it, dict) or not it.get("name"):
+    for n, it in enumerate(items):
+        def drop(rule: str, why: str, name=None):
+            log.append({"rule": rule, "item": n, "name": name if isinstance(name, str) else None, "reason": why})
+
+        if not isinstance(it, dict):
+            drop("G8", f"item is a {type(it).__name__}, not an object; dropped")
+            continue
+        name = it.get("name")
+        if not isinstance(name, str):
+            drop("G8", "name is missing or not text; item dropped")
+            continue
+        if not name.strip():
+            continue
+        bad_type = [f for f, t in (("category", str), ("mechanism", str)) if it.get(f) is not None and not isinstance(it.get(f), t)]
+        eids = it.get("evidence_ids")
+        if eids is not None and not isinstance(eids, list):
+            bad_type.append("evidence_ids")
+        quotes = it.get("quotes")
+        if quotes is not None and not (isinstance(quotes, dict) and all(isinstance(v, str) for v in quotes.values())):
+            bad_type.append("quotes")
+        if bad_type:
+            drop("G8", "wrong type for " + ", ".join(bad_type) + "; item dropped", name)
+            continue
+        figs = sorted({f for fld in ("name", "category", "mechanism") for f in find_figures(it.get(fld))})
+        if figs:
+            drop("G7", "free text contains " + ", ".join(figs) + "; the AI may not supply probabilities, delays or costs; suggestion rejected", name)
             continue
         issues: list[str] = []
-        cited = [str(x) for x in (it.get("evidence_ids") or [])]
+        cited = []
+        for e in eids or []:
+            if not isinstance(e, str):
+                issues.append(f"G8: evidence id {e!r} is not text; dropped")
+                log.append({"rule": "G8", "item": n, "name": name, "reason": f"evidence id {e!r} is not text; dropped"})
+            else:
+                cited.append(e)
         good = []
         for e in cited:
             if e not in retrieved_ids:
@@ -83,15 +154,20 @@ def parse_and_validate(raw: str, retrieved_ids: set[str], store: EvidenceStore) 
                 good.append(e)
         if not good:
             issues.append("no valid supporting evidence: AI-suggested and unsupported")
-        for eid, quote in (it.get("quotes") or {}).items():
+        for eid, quote in (quotes or {}).items():
             rec = store.get(eid)
-            norm = lambda s: re.sub(r"\s+", " ", str(s)).strip().lower()
             if rec is None or norm(quote) not in norm(rec.text + " " + rec.citation):
                 issues.append(f"G3: quote for {eid} not found in the stored record text")
-        rejected = {k: v for k, v in it.items() if k.lower() in NUMERIC_KEYS}
+        rejected = {k: v for k, v in it.items() if isinstance(k, str) and k.lower() in NUMERIC_KEYS}
         if rejected:
             issues.append("G2: numeric fields from the LLM were rejected; values require user/expert/cited input")
-        out.append(RiskCandidate(str(it["name"]), str(it.get("category", "")), str(it.get("mechanism", "")),
+        extra = {k: v for k, v in it.items() if isinstance(k, str) and k not in rejected
+                 and (k.lower() in SUSPECT_KEYS or (_is_number(v) and k not in ("name", "category", "mechanism")))}
+        if extra:
+            issues.append("G9: unknown numeric fields from the LLM were dropped: " + ", ".join(sorted(extra)))
+            log.append({"rule": "G9", "item": n, "name": name, "reason": "unknown numeric keys dropped: " + ", ".join(sorted(extra))})
+            rejected = {**rejected, **extra}
+        out.append(RiskCandidate(name, str(it.get("category") or ""), str(it.get("mechanism") or ""),
                                  tuple(good), issues=issues, rejected_numeric_fields=rejected))
     return out
 
@@ -100,12 +176,13 @@ def generate_candidates(client: LLMClient, activity_name: str, query: str, store
     records = store.retrieve(query, k)
     prompt = build_prompt(activity_name, records)
     raw = client.complete(prompt)
-    candidates = parse_and_validate(raw, {r.evidence_id for r in records}, store)
+    guard_log: list = []
+    candidates = parse_and_validate(raw, {r.evidence_id for r in records}, store, guard_log)
     return {
         "candidates": candidates,
         "audit": {"timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                   "model_id": client.model_id, "prompt": prompt, "retrieved_ids": [r.evidence_id for r in records],
-                  "raw_output": raw},
+                  "raw_output": raw, "guard_log": guard_log},
     }
 
 

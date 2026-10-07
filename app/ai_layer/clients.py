@@ -19,10 +19,40 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
 from typing import Optional
+
+_FENCE = re.compile(r"```[A-Za-z0-9_+-]*[ \t]*\r?\n?(.*?)```", re.S)
+
+
+def extract_json(raw):
+    """Parse JSON out of an LLM reply: strips markdown code fences and tolerates prose before/after a
+    JSON object or array. Returns the parsed value; raises ValueError if no JSON value is found."""
+    if not isinstance(raw, str):
+        raise ValueError("reply is not text")
+    text = raw.strip().lstrip("\ufeff")
+    candidates = [text]
+    candidates += [m.group(1).strip() for m in _FENCE.finditer(text)]
+    dec = json.JSONDecoder()
+    for c in candidates:
+        try:
+            return json.loads(c)
+        except (ValueError, RecursionError):
+            pass
+    for c in candidates:
+        for i, ch in enumerate(c):
+            if ch in "{[":
+                try:
+                    obj, _ = dec.raw_decode(c[i:])
+                except (ValueError, RecursionError):
+                    continue
+                if isinstance(obj, (dict, list)):
+                    return obj
+    raise ValueError("no JSON object or array found in the reply")
+
 
 PROVIDERS = ("anthropic", "gemini")
 DEFAULT_MODEL = {"anthropic": "claude-sonnet-5", "gemini": "gemini-3.8-flash"}
@@ -131,6 +161,16 @@ def get_client(api_key: Optional[str] = None, model: Optional[str] = None,
         return None
 
 
+def _mask(key: Optional[str]) -> Optional[str]:
+    """Display-safe preview of a key: a short key is never shown (only that one is set); a long key shows
+    the provider prefix and the last 4 characters, which can never reconstruct it."""
+    if not key:
+        return None
+    if len(key) < 12:
+        return "(key set)"
+    return f"{key[:5]}...{key[-4:]}"
+
+
 def describe_config() -> dict:
     """What get_client() would use right now, WITHOUT exposing the key -- for a settings/health
     screen. 'configured' is false only when source == 'none'."""
@@ -138,4 +178,4 @@ def describe_config() -> dict:
 
     key, mdl, prov, source = resolve_config()
     return {"configured": source != "none", "source": source, "provider": prov,
-            "masked_key": settings_store.mask_key(key), "model": mdl or DEFAULT_MODEL.get(prov, "claude-sonnet-5")}
+            "masked_key": _mask(key), "model": mdl or DEFAULT_MODEL.get(prov, "claude-sonnet-5")}

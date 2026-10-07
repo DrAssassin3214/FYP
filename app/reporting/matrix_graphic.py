@@ -5,10 +5,16 @@ dependent) so the file looks the same when pasted into a report or printed.
 """
 from __future__ import annotations
 
-from html import escape as esc
+from html import escape as _esc
 from typing import Mapping, Optional
 
 from app.engine.matrix import DEFAULT_LABELS, matrix_level
+from app.reporting.register_report import _is_illustrative
+
+def esc(v) -> str:
+    """HTML-escape any value (None -> empty, non-strings coerced) so odd types never raise."""
+    return _esc("" if v is None else str(v))
+
 
 FILL = {"Low": "#4fcf6f", "Moderate": "#ffd93d", "High": "#ff9626", "Extreme": "#ff4b4b"}
 INK = "#1a1a17"
@@ -50,7 +56,7 @@ def matrix_svg(result: Mapping) -> str:
                 cy = y + 26 + (k // per_row) * (bh + 4)
                 seed = m.get("basis") == "literature-seed"
                 dash = ' stroke-dasharray="3 2"' if seed else ""
-                label = esc(m["risk_id"].replace("R-", ""))
+                label = esc(str(m["risk_id"]).replace("R-", ""))
                 o.append(f'<g><title>{esc(m["risk_id"])} – {esc(names.get(m["risk_id"], ""))}'
                          f'{" (literature seed)" if seed else ""} · score {m["score"]} ({esc(m["level"])})</title>'
                          f'<rect x="{cx}" y="{cy}" width="{bw}" height="{bh}" rx="3" fill="#ffffff" stroke="{INK}" stroke-width="1.2"{dash}/>'
@@ -100,12 +106,12 @@ def register_html(result: Mapping, evidence_index: Optional[Mapping[str, str]] =
         dtxt = (f'{d["a"]:g} / {d["m"]:g} / {d["b"]:g} d <small>({esc(d["source"])})</small>' if d and d.get("kind") != "fixed"
                 else (f'{d["m"]:g} d <small>({esc(d["source"])})</small>' if d else "–"))
         rows.append(f"<tr><td>{_cell(r['id'])}</td><td>{_cell(r['name'])}</td><td>{_cell(r['category'])}</td>"
-                    f"<td>{ptxt}</td><td>{dtxt}</td><td>{mx}</td><td>{_cell(', '.join(r['evidence_ids']))}</td></tr>")
+                    f"<td>{ptxt}</td><td>{dtxt}</td><td>{mx}</td><td>{_cell(', '.join(str(e) for e in (r.get('evidence_ids') or [])))}</td></tr>")
     fired = (result.get("rules") or {}).get("fired") or []
     rules = "".join(f"<li><b>{esc(f['rule_id'])}</b> flags {esc(f.get('risk_id', ''))} as {esc(f['level'])}</li>" for f in fired) \
         or "<li>No rule fired on the facts entered.</li>"
     notes = "".join(f"<li>{esc(w)}</li>" for w in result["warnings"]) or "<li>none</li>"
-    cited = sorted({e for r in result["risks"] for e in r["evidence_ids"]})
+    cited = sorted({str(e) for r in result["risks"] for e in (r.get("evidence_ids") or [])})
     refs = "".join(f"<li><b>{esc(e)}</b>: {esc(evidence_index.get(e, 'reference not found in the evidence corpus'))}</li>" for e in cited)
     legend = "".join(f'<span><i style="background:{FILL[k]}"></i>{k} {s["levels"].get(k, 0)}</span>' for k in LEVELS)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Risk register and matrix</title>
@@ -120,6 +126,7 @@ th, td {{ border: 1px solid #d5d5cc; padding: 5px 7px; text-align: left; vertica
 svg {{ max-width: 100%; height: auto; }} li {{ margin: 2px 0; }}
 </style></head><body>
 <h1>Risk register and matrix</h1>
+{'<p><b>ILLUSTRATIVE case: every number is a placeholder, not evidence and not site data.</b></p>' if _is_illustrative(result) else ''}
 <div class="sub">{esc(proj.get('name') or 'Untitled case')}{' · ' + esc(proj.get('location')) if proj.get('location') else ''} ·
 Activity: {esc(act.get('name') or '')}{f' · planned {pd["value"]:g} working days ({esc(pd["source"])})' if pd else ''}</div>
 <p>{s['n_risks']} risks in the register, {s['n_on_matrix']} placed on the matrix ({s['n_seeded']} from the literature seed).

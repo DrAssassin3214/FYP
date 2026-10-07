@@ -1,4 +1,4 @@
-﻿// Application controller: boot, routing, data binding, live checking, files, theme.
+// Application controller: boot, routing, data binding, live checking, files, theme.
 // The GUI never computes a result: it posts the case JSON to the local API (app.service) and renders what comes back.
 import { $, $$, h, fmtIn, getPath, setPath, deletePath, debounce, download, slug, uniqueId, parseNum } from "./util.js";
 import { get, post } from "./api.js";
@@ -58,7 +58,7 @@ function renderRail() {
   }
   html += `</div>
     <button type="button" class="navlink rail-settings" data-action="settings" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
-    <div class="rail-foot">Offline tool. The register and matrix come from the service; the GUI computes nothing.<br>v${h(S.health?.version || "")} Â· ${(S.health?.evidence_records ?? S.evidenceList.length).toLocaleString()} evidence records</div>`;
+    <div class="rail-foot">Offline tool. The register and matrix come from the service; the GUI computes nothing.<br>v${h(S.health?.version || "")} · ${(S.health?.evidence_records ?? S.evidenceList.length).toLocaleString()} evidence records</div>`;
   $("#rail").innerHTML = html;
 }
 
@@ -66,7 +66,7 @@ function renderDirty() {
   const el = $("#dirty");
   const d = isDirty();
   el.classList.toggle("is-dirty", d);
-  el.querySelector(".dirty-txt").textContent = d ? "Unsaved changes" : S.ui.fileName ? `Saved Â· ${S.ui.fileName}` : "No unsaved changes";
+  el.querySelector(".dirty-txt").textContent = d ? "Unsaved changes" : S.ui.fileName ? `Saved · ${S.ui.fileName}` : "No unsaved changes";
   el.title = d ? "The case differs from the last saved / opened / loaded version" : "";
   const nameInput = $("#case-name");
   if (document.activeElement !== nameInput) nameInput.value = S.case?.project?.name || "";
@@ -83,10 +83,20 @@ function renderKpi() {
   const el = $("#kpi-strip");
   const r = S.result;
   if (!r) {
+    if (S.validation.status === "err") {
+      // the check itself failed (server error, unreadable reply, problems before any valid state): say so, with the server's text
+      const probs = S.validation.problems || [];
+      el.className = "kpi-strip is-error";
+      el.setAttribute("role", "alert");
+      el.innerHTML = `${icon("alert")}<span class="kpi-err"><strong>The case could not be checked.</strong> ${h(probs[0] || "Unknown error")}${probs.length > 1 ? ` (and ${probs.length - 1} more; see the problems button)` : ""}</span>`;
+      return;
+    }
     el.className = "kpi-strip is-empty";
-    el.innerHTML = `${icon("info")}<span>&nbsp;Checking the caseâ€¦ the register and matrix update as you type.</span>`;
+    el.removeAttribute("role");
+    el.innerHTML = `${icon("info")}<span>&nbsp;Checking the case&hellip; the register and matrix update as you type.</span>`;
     return;
   }
+  el.removeAttribute("role");
   const s = r.summary;
   const item = (k, v, u = "", cls = "") => `<div class="kpi-item ${cls}"><span class="k">${k}</span><span class="v"${typeof v === "number" && !u ? ` data-n="${v}" data-k="${k}"` : ""}>${v}${u ? `<small>${u}</small>` : ""}</span></div>`;
   el.className = "kpi-strip";
@@ -208,14 +218,14 @@ async function validateNow() {
     S.validation = { status: "ok", problems: [], warnings: res.data.warnings || [], key };
     S.result = res.data.result; S.resultKey = key;
   } else {
-    S.validation = { status: "err", problems: res.data?.problems || [`validation failed (HTTP ${res.status})`], warnings: [], key };
+    S.validation = { status: "err", problems: res.data?.problems?.length ? res.data.problems : [`The check failed (HTTP ${res.status}) and the server gave no details.`], warnings: [], key };
   }
   let added = [];
   if (S.validation.status === "ok" && S.ui.autoAddPending) { S.ui.autoAddPending = false; added = autoAddFlaggedRisks(); }
   afterValidation();
   if (added.length) {
     changed({ rerender: true });
-    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.join(", ")}). Enter each probability and delay to place ${added.length > 1 ? "them" : "it"} on the matrix.`, "info",
+    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.map(h).join(", ")}). Enter each probability and delay to place ${added.length > 1 ? "them" : "it"} on the matrix.`, "info",
       { actionLabel: "Open register", timeout: 12000, onAction: () => { location.hash = "#/risks"; } });
   }
 }
@@ -438,7 +448,7 @@ function loadCase(c, { fileName = null, msg = "" } = {}) {
   S.result = null; S.resultKey = null;
   S.validation = { status: "idle", problems: [], warnings: [], key: null };
   S.ui.open.clear(); S.ui.autoAdded.clear(); S.ui.suggest = null;
-  S.ui.autoAddPending = true;                 // a freshly loaded case may already have flagged risks missing
+  S.ui.autoAddPending = false;                // load/open restores EXACTLY the saved state; risks are auto-added only after an explicit fact edit
   S.ui.fileName = fileName;
   renderAll({ nav: true });
   if (msg) toast(msg, "ok");
@@ -586,14 +596,14 @@ function openSettings() {
       testResult.innerHTML = "";
       const res = await post("/api/settings/test", { api_key: keyInput.value.trim(), model: modelInput.value.trim(), provider: providerSelect.value });
       btn.disabled = false; btn.classList.remove("is-busy");
-      const ok = res.ok && res.data.ok;
-      testResult.innerHTML = alertBox(ok ? "ok" : "danger", ok ? "Connected" : "Could not connect", h(res.data.message || `HTTP ${res.status}`));
+      const ok = res.ok && res.data?.ok;
+      testResult.innerHTML = alertBox(ok ? "ok" : "danger", ok ? "Connected" : "Could not connect", h(res.data?.message || res.data?.problems?.join("; ") || `HTTP ${res.status}`));
     });
     dlg.querySelector("#set-clear").addEventListener("click", async () => {
       if (!(await confirmModal("Clear the saved API key?", "The tool goes back to offline mode (evidence retrieval only). You can add a key again at any time.", "Clear key"))) return;
       const res = await post("/api/settings", { api_key: "" });
       if (res.ok) { await refreshHealth(); toast("API key cleared. AI is now in offline mode.", "info"); closeModal(); }
-      else toast(`Could not clear the key: ${(res.data.problems || []).join("; ") || "unknown error"}`, "err");
+      else toast(`Could not clear the key: ${h((res.data?.problems || []).join("; ") || "unknown error")}`, "err");
     });
     dlg.querySelector("#set-save").addEventListener("click", async (e) => {
       const btn = e.currentTarget;
@@ -607,7 +617,7 @@ function openSettings() {
         toast(res.data.configured ? "Settings saved. AI is in guarded LLM mode." : "Settings saved.", "ok");
         closeModal();
       } else {
-        testResult.innerHTML = alertBox("danger", "Could not save", h((res.data.problems || []).join("; ") || `HTTP ${res.status}`));
+        testResult.innerHTML = alertBox("danger", "Could not save", h((res.data?.problems || []).join("; ") || `HTTP ${res.status}`));
       }
     });
   });
@@ -754,7 +764,7 @@ async function boot() {
     let c;
     try { c = JSON.parse(await f.text()); } catch (err) { toast(`${h(f.name)} is not valid JSON (${h(err.message)}).`, "err"); return; }
     if (!c || typeof c !== "object" || Array.isArray(c) || !("activity" in c || "project" in c)) { toast(`${h(f.name)} does not look like a case file (no activity/project block).`, "err"); return; }
-    loadCase(c, { fileName: f.name, msg: `Opened ${h(f.name)}.` });
+    loadCase(c, { fileName: f.name });   // no toast: the top bar shows the file name and an unchanged case
   });
   window.addEventListener("beforeunload", (e) => { if (isDirty()) { e.preventDefault(); e.returnValue = ""; } });
 

@@ -37,6 +37,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from flask import Flask, Response, request, send_from_directory  # noqa: E402
+from werkzeug.exceptions import HTTPException  # noqa: E402
 
 from app import service  # noqa: E402
 from app.ai_layer.clients import describe_config, get_client  # noqa: E402
@@ -93,12 +94,66 @@ def _describe(e: Exception) -> str:
     return str(e)
 
 
-def _case_from_request() -> dict:
-    data = request.get_json(silent=True)
-    if isinstance(data, dict) and isinstance(data.get("case"), dict):
-        data = data["case"]
+class BadRequest(Exception):
+    """A malformed request body; becomes a clean JSON error (never HTML, never a traceback)."""
+
+    def __init__(self, problems: list[str], status: int = 422):
+        super().__init__("; ".join(problems))
+        self.problems, self.status = problems, status
+
+
+# Anything the service or a renderer can raise on a malformed-but-parseable case is the caller's input problem.
+_INPUT_ERRORS = (ValueError, TypeError, KeyError, AttributeError, IndexError, ArithmeticError, RecursionError)
+MAX_JSON_DEPTH = 40
+_ALLOWED_HOSTS = {"127.0.0.1", "localhost", "::1", "[::1]"}
+
+
+def _reject_constant(name: str):
+    raise ValueError(f"{name} is not valid JSON")
+
+
+def _too_deep(o: Any, limit: int = MAX_JSON_DEPTH) -> bool:
+    stack = [(o, 1)]
+    while stack:
+        cur, d = stack.pop()
+        if isinstance(cur, (dict, list)):
+            if d > limit:
+                return True
+            stack.extend((v, d + 1) for v in (cur.values() if isinstance(cur, dict) else cur))
+    return False
+
+
+def _json_body() -> Any:
+    """Parse the request body as JSON. Invalid JSON, NaN/Infinity and absurd nesting raise BadRequest."""
+    raw = request.get_data(cache=True)
+    try:
+        data = json.loads(raw.decode("utf-8-sig"), parse_constant=_reject_constant)
+    except (ValueError, RecursionError, UnicodeDecodeError):
+        raise BadRequest(["request body is not valid JSON"])
+    if _too_deep(data):
+        raise BadRequest([f"request body is nested more than {MAX_JSON_DEPTH} levels deep"])
+    return data
+
+
+def _json_object() -> dict:
+    data = _json_body()
     if not isinstance(data, dict):
-        raise service.CaseError(["request body must be a JSON case object"])
+        raise BadRequest([f"request body must be a JSON object, not {type(data).__name__ if data is not None else 'null'}"])
+    return data
+
+
+def _opt_str(body: dict, name: str) -> Any:
+    """body[name] if it is text or null; anything else (number, list, bool, object) is a 422."""
+    v = body.get(name)
+    if v is not None and not isinstance(v, str):
+        raise BadRequest([f"{name} must be a string"])
+    return v
+
+
+def _case_from_request() -> dict:
+    data = _json_object()
+    if "case" in data and isinstance(data["case"], dict):
+        data = data["case"]
     return data
 
 
@@ -243,25 +298,11 @@ def create_app() -> Flask:
 
     @app.post("/api/settings")
     def post_settings():
-        body = request.get_json(silent=True)
-        if not isinstance(body, dict):
-            return _problems(["request body must be a JSON object"])
+        body = _json_object()
         updates = {}
-        if "api_key" in body:
-            v = body["api_key"]
-            if v is not None and not isinstance(v, str):
-                return _problems(["api_key must be a string"])
-            updates["api_key"] = (v or "").strip()
-        if "model" in body:
-            v = body["model"]
-            if v is not None and not isinstance(v, str):
-                return _problems(["model must be a string"])
-            updates["model"] = (v or "").strip()
-        if "provider" in body:
-            v = body["provider"]
-            if v is not None and not isinstance(v, str):
-                return _problems(["provider must be a string"])
-            updates["provider"] = (v or "").strip()
+        for name in ("api_key", "model", "provider"):
+            if name in body:
+                updates[name] = (_opt_str(body, name) or "").strip()
         try:
             settings_store.save_settings(updates)
         except ValueError as e:
@@ -274,10 +315,10 @@ def create_app() -> Flask:
         """Makes ONE small, real request to the provider to confirm the key works, so the person
         knows before relying on it. Costs a trivial amount of their API usage; never happens on
         every keystroke or on save alone -- only when this route is explicitly called."""
-        body = request.get_json(silent=True) or {}
-        key = (body.get("api_key") or "").strip() or None
-        model = (body.get("model") or "").strip() or None
-        provider = (body.get("provider") or "").strip() or None
+        body = _json_object()
+        key = (_opt_str(body, "api_key") or "").strip() or None
+        model = (_opt_str(body, "model") or "").strip() or None
+        provider = (_opt_str(body, "provider") or "").strip() or None
         client = get_client(api_key=key, model=model, provider=provider)
         if client is None:
             return _json({"ok": False, "message": "No API key configured (enter one above, or set ANTHROPIC_API_KEY / GEMINI_API_KEY)."})
@@ -295,16 +336,13 @@ def create_app() -> Flask:
     def validate():
         # Live validation: problems are an expected outcome, so they come back with HTTP 200 and ok=false
         # (the browser would otherwise log every keystroke's 422 as a console error). /api/run keeps 422.
-        try:
-            case = _case_from_request()
-        except service.CaseError as e:
-            return _problems(e.problems, 200)
+        case = _case_from_request()          # a malformed body is a 400/422 JSON error (BadRequest handler)
         extra = _gui_checks(case)
         try:
             res = service.run_case(case, evidence_index())
         except service.CaseError as e:
             return _problems(list(e.problems) + extra, 200)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)] + extra, 200)
         if extra:
             return _problems(extra, 200)
@@ -320,17 +358,17 @@ def create_app() -> Flask:
             res = service.run_case(case, evidence_index())
         except service.CaseError as e:
             return _problems(e.problems)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)])
-        except Exception as e:  # pragma: no cover - reported, not hidden
-            log.exception("run failed")
-            return _problems([f"internal error: {e}"], 500)
         return _json(res)
 
     @app.post("/api/suggest-risks")
     def suggest_risks():
-        d = request.get_json(silent=True) or {}
-        query = str(d.get("query") or "").strip()
+        d = _json_object()
+        for f in ("query", "activity_name"):
+            if d.get(f) is not None and not isinstance(d.get(f), str):
+                raise BadRequest([f"{f} must be a string"])
+        query = (d.get("query") or "").strip()
         if not query:
             return _problems(["enter a few words describing the conditions or risks to search for"])
         try:
@@ -339,7 +377,7 @@ def create_app() -> Flask:
             k = 6
         client = get_client()
         try:
-            out = service.suggest_risks(str(d.get("activity_name") or "Brick masonry"), query, client=client, k=k)
+            out = service.suggest_risks(d.get("activity_name") or "Brick masonry", query, client=client, k=k)
         except Exception as e:
             log.exception("suggest failed")
             return _problems([f"suggestion request failed: {e}"], 502 if client else 500)
@@ -360,7 +398,7 @@ def create_app() -> Flask:
             res = _run_for_download()
         except service.CaseError as e:
             return _problems(e.problems)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)])
         return Response(res["report_markdown"], mimetype="text/markdown",
                         headers={"Content-Disposition": 'attachment; filename="register.md"'})
@@ -371,9 +409,10 @@ def create_app() -> Flask:
             res = _run_for_download()
         except service.CaseError as e:
             return _problems(e.problems)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)])
-        return Response(register_csv_text(res), mimetype="text/csv",
+        # utf-8-sig (BOM) so Excel on Windows decodes non-ASCII text correctly
+        return Response(register_csv_text(res).encode("utf-8-sig"), content_type="text/csv; charset=utf-8",
                         headers={"Content-Disposition": 'attachment; filename="register.csv"'})
 
     @app.post("/api/matrix-svg")
@@ -382,7 +421,7 @@ def create_app() -> Flask:
             res = _run_for_download()
         except service.CaseError as e:
             return _problems(e.problems)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)])
         return Response(res["matrix_svg"], mimetype="image/svg+xml",
                         headers={"Content-Disposition": 'attachment; filename="risk_matrix.svg"'})
@@ -393,10 +432,23 @@ def create_app() -> Flask:
             res = _run_for_download()
         except service.CaseError as e:
             return _problems(e.problems)
-        except (ValueError, TypeError, KeyError) as e:
+        except _INPUT_ERRORS as e:
             return _problems([_describe(e)])
         return Response(register_html(res, evidence_index()), mimetype="text/html",
                         headers={"Content-Disposition": 'attachment; filename="risk_report.html"'})
+
+    @app.before_request
+    def _host_check():
+        """DNS-rebinding hardening: only answer requests addressed to the loopback host names."""
+        host = (request.host or "").strip().lower()
+        name = host[: host.index("]") + 1] if host.startswith("[") and "]" in host else host.rsplit(":", 1)[0] if host.count(":") == 1 else host
+        if name not in _ALLOWED_HOSTS:
+            return _json({"ok": False, "problems": ["this tool only answers requests addressed to 127.0.0.1 or localhost"]}, 403)
+        return None
+
+    @app.errorhandler(BadRequest)
+    def bad_request(e):
+        return _problems(e.problems, e.status)
 
     @app.errorhandler(404)
     def not_found(e):
@@ -413,5 +465,18 @@ def create_app() -> Flask:
     @app.errorhandler(413)
     def too_large(e):
         return _problems(["request too large"], 413)
+
+    @app.errorhandler(HTTPException)
+    def http_error(e):
+        if request.path.startswith("/api/"):
+            return _problems([e.description or e.name], e.code or 400)
+        return e
+
+    @app.errorhandler(Exception)
+    def internal_error(e):
+        if isinstance(e, HTTPException):          # not reached (handled above); defensive
+            return e
+        log.exception("unhandled error on %s", request.path)
+        return _json({"ok": False, "error": "internal error"}, 500)
 
     return app

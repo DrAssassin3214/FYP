@@ -9,8 +9,56 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from app import service
+from app.reporting.register_report import register_csv
+
+
+class CliError(Exception):
+    """A user-facing problem: printed as one line on stderr, exit code 2, no traceback."""
+
+
+def _load_case(path: str) -> dict:
+    p = Path(path)
+    if not p.exists():
+        raise CliError(f"case file not found: {path}")
+    if p.is_dir():
+        raise CliError(f"{path} is a folder, not a case file")
+    try:
+        raw = p.read_bytes()
+    except OSError as e:
+        raise CliError(f"cannot read {path}: {e.strerror or e}")
+    if not raw.strip():
+        raise CliError(f"{path} is empty")
+    if raw[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        raise CliError(f"{path} is saved as UTF-16; re-save it as UTF-8 (in Notepad: Save As > Encoding > UTF-8)")
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        raise CliError(f"{path} is not valid UTF-8 text; re-save it as UTF-8")
+    try:
+        case = json.loads(text)
+    except (ValueError, RecursionError) as e:
+        raise CliError(f"{path} is not valid JSON: {e}")
+    if not isinstance(case, dict):
+        raise CliError(f"{path} must contain a JSON object (a case), not a {type(case).__name__}")
+    return case
+
+
+def _write_outputs(res: dict, out_dir: str) -> None:
+    out = Path(out_dir)
+    if out.exists() and not out.is_dir():
+        raise CliError(f"--out {out_dir} is a file; give a folder")
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "register.md").write_text(res["report_markdown"], encoding="utf-8")
+        # utf-8-sig: Excel on Windows needs the BOM to decode non-ASCII text
+        (out / "register.csv").write_text(register_csv(res), encoding="utf-8-sig", newline="")
+        (out / "result.json").write_text(
+            json.dumps({k: v for k, v in res.items() if k != "report_markdown"}, indent=2, default=str), encoding="utf-8")
+    except OSError as e:
+        raise CliError(f"cannot write to --out {out_dir}: {e.strerror or e}")
 
 
 def main(argv=None) -> int:
@@ -28,11 +76,20 @@ def main(argv=None) -> int:
         print(json.dumps(service.example_case(), indent=2))
     else:
         try:
-            res = service.run_case_file(a.case, a.out, service.evidence_index_from_workbook())
+            case = _load_case(a.case)
+            res = service.run_case(case, service.evidence_index_from_workbook())
+            if a.out:
+                _write_outputs(res, a.out)
+        except CliError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
         except service.CaseError as e:
             print("Case has problems:", file=sys.stderr)
             for p in e.problems:
                 print(f"  - {p}", file=sys.stderr)
+            return 2
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
+            print(f"error: the case could not be processed ({type(e).__name__}: {e})", file=sys.stderr)
             return 2
         s = res["summary"]
         print(f"{s['n_risks']} risks in the register ({s['n_complete']} complete); {s['n_on_matrix']} on the matrix: "

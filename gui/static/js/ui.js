@@ -64,6 +64,7 @@ export const TIPS = {
   matrix: "The risk matrix is ordinal prioritisation only: a label for attention, not a quantity of time or money.",
   evidence: "Evidence IDs refer to records in the evidence corpus (curated workbook, research notes, model registries and the literature harvest). Click an ID to read the citation and evidence depth.",
   status: "Risk status: literature-supported (existence backed by a cited record), expert/user-provided, or AI-suggested and unverified. Status never changes a number.",
+  seed: "Literature seed: an importance RANKING from general building-construction surveys (RII). It is not a probability and not a delay. Two Assumptions turn it into a matrix cell: the same RII class is used for both axes, and a rule flag raises the probability class by 1 (capped at 5).",
   impact: "Impact class = expected delay if the risk occurs, divided by the planned duration, binned by the four edges you enter.",
 };
 export function term(label, key) {
@@ -189,8 +190,8 @@ export function distWidget(path, d, o = {}) {
   d = d || {};
   const kind = d.kind || "pert";
   const kinds = [["pert", "Beta-PERT"], ["triangular", "Triangular"], ["uniform", "Uniform"], ["fixed", "Fixed"]];
-  const kindSel = `<div class="field"><label>Distribution</label><select class="select" data-drole="kind" aria-label="${h(label)}: distribution">${kinds.map(([v, l]) => `<option value="${v}"${v === kind ? " selected" : ""}>${l}</option>`).join("")}</select></div>`;
-  const num = (role, lab, val) => `<div class="field"><label>${lab}</label><input class="input" type="number" inputmode="decimal" step="any" min="0" data-drole="${role}" value="${valAttr(val)}" placeholder="days" aria-label="${h(label)}: ${lab} (working days)" autocomplete="off"></div>`;
+  const kindSel = `<div class="field"><label for="${fid(path)}-kind">Distribution</label><select class="select" id="${fid(path)}-kind" data-drole="kind" aria-label="${h(label)}: distribution">${kinds.map(([v, l]) => `<option value="${v}"${v === kind ? " selected" : ""}>${l}</option>`).join("")}</select></div>`;
+  const num = (role, lab, val) => `<div class="field"><label for="${fid(path)}-${role}">${lab}</label><input class="input" id="${fid(path)}-${role}" type="number" inputmode="decimal" step="any" min="0" data-drole="${role}" value="${valAttr(val)}" placeholder="days" aria-label="${h(label)}: ${lab} (working days)" autocomplete="off"></div>`;
   let cells;
   if (kind === "fixed") cells = num("m", "Delay (d)", d.m) + "<div></div><div></div>";
   else if (kind === "uniform") cells = num("a", "Min (d)", d.a) + num("b", "Max (d)", d.b) + "<div></div>";

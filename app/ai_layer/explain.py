@@ -14,6 +14,7 @@ from typing import Any, Iterable, Mapping, Optional
 from .guard import LLMClient
 
 _ID_TOKEN = re.compile(r"\b[A-Za-z]{1,4}[-_]?[A-Za-z]{0,4}\d+[A-Za-z0-9\-]*\b")
+_CURRENCY_PREFIX = re.compile(r"(?<![A-Za-z])(?:INR|Rs\.?|₹)\s*(?=\d)")
 _NUM = re.compile(r"(?<![\w.])[-+]?\d[\d,]*\.?\d*%?")
 
 
@@ -35,6 +36,7 @@ def collect_numbers(obj: Any, out: Optional[set] = None) -> set[float]:
 
 
 def numbers_in(text: str) -> list[tuple[str, float]]:
+    text = _CURRENCY_PREFIX.sub(" ", text)              # "INR999999", "Rs5000", "₹1,200": keep the amount, drop the prefix
     text = _ID_TOKEN.sub(" ", text)                     # ignore evidence / option / risk ids such as M01, R-MAT, O-A
     found = []
     for m in _NUM.finditer(text):

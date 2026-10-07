@@ -5,6 +5,8 @@ presented as evidence (master prompt, section 37).
 """
 from __future__ import annotations
 
+import math
+import numbers
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
@@ -55,6 +57,14 @@ class DelayDist:
     def validate(self) -> None:
         if self.kind not in {"pert", "triangular", "uniform", "fixed"}:
             raise ValueError(f"unknown distribution kind: {self.kind}")
+        # only the parameters the kind actually uses are checked (uniform ignores m; fixed uses only m)
+        used = {"fixed": ("m",), "uniform": ("a", "b")}.get(self.kind, ("a", "m", "b"))
+        for name in used + (("lam",) if self.kind == "pert" else ()):
+            v = getattr(self, name)
+            if isinstance(v, bool) or not isinstance(v, numbers.Real):
+                raise ValueError(f"{name} must be a number")
+            if not math.isfinite(v):
+                raise ValueError(f"{name} must be a finite number")
         if self.kind == "fixed":
             if self.m < 0:
                 raise ValueError("fixed delay must be >= 0")
@@ -67,7 +77,7 @@ class DelayDist:
             return
         if not (self.a <= self.m <= self.b):
             raise ValueError("require a <= m <= b")
-        if self.lam <= 0:
+        if self.kind == "pert" and self.lam <= 0:
             raise ValueError("PERT lambda must be > 0")
 
     def variance(self) -> float:
@@ -108,7 +118,10 @@ class Risk:
     evidence_ids: tuple[str, ...] = ()
 
     def validate(self) -> None:
-        if not (0.0 <= self.p.value <= 1.0):
+        pv = self.p.value
+        if isinstance(pv, bool) or not isinstance(pv, numbers.Real) or not math.isfinite(pv):
+            raise ValueError(f"{self.risk_id}: probability must be a finite number")
+        if not (0.0 <= pv <= 1.0):
             raise ValueError(f"{self.risk_id}: probability must be in [0,1]")
         if self.direct_cost_if_occurs.value < 0:
             raise ValueError(f"{self.risk_id}: direct cost must be >= 0")
