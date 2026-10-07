@@ -1,0 +1,1701 @@
+{
+  "_about": "RII (Relative Importance Index) values for delay / productivity-loss factors, copied from published surveys. This one file feeds BOTH the app's literature seed (app/literature_seed.py) and the Excel workbook RII_Masonry_Literature.xlsx (scripts/build_rii_workbook.py). An RII measures how important respondents rated a factor; it is NOT a probability and NOT a number of days, so it only supports a relative ordering of risks.",
+  "index": "RII",
+  "seed_rule": "A value is USED by the model when its study has role 'seed' (RII surveys from India / Sri Lanka) and the factor maps 'direct' to a tool risk. For each risk: average the study's direct items first (so one study counts once), then average across studies. Studies with role 'validation' are held out and only used to test the ranking.",
+  "studies": [
+    {
+      "id": "M01",
+      "authors": "Karthik, D. & Rao, C.B.K.",
+      "year": 2019,
+      "title": "The analysis of essential factors responsible for loss of labour productivity in building construction projects in India",
+      "venue": "Engineering Journal 23(2)",
+      "doi": "10.4186/ej.2019.23.2.55",
+      "country": "India (Telangana)",
+      "context": "Multi-storey residential building, masonry wall construction",
+      "masonry": "Yes",
+      "n": "44",
+      "scale": "1-5",
+      "location": "Table 3, p.61",
+      "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
+      "role": "seed",
+      "note": "N = 44 from the response counts in Table 3 (each row sums to 44)."
+    },
+    {
+      "id": "A02",
+      "authors": "Ponmalar, Aravindraj & Nandhini",
+      "year": 2018,
+      "title": "Study on factors influencing labour productivity in residential buildings in Indian scenario",
+      "venue": "IJETMR 5(2): 239-248",
+      "doi": "10.29121/ijetmr.v5.i2.2018.168",
+      "country": "India (Chennai)",
+      "context": "Two 3-storey residential buildings, brick masonry activity",
+      "masonry": "Yes",
+      "n": "Not reported",
+      "scale": "1-4",
+      "location": "Tables 1-2 and Fig. 1",
+      "obtained": "From the research notes (full text read in an earlier session); PDF not in the project folder",
+      "role": "seed",
+      "note": "Low-tier journal; respondent count not reported. Payment delays printed as 775.8 on a 1000 scale."
+    },
+    {
+      "id": "M06",
+      "authors": "Dixit, Mandal, Thanikal & Saurabh",
+      "year": 2019,
+      "title": "Study of significant factors affecting construction productivity using relative importance index in Indian construction industry",
+      "venue": "E3S Web of Conferences 140, 09010",
+      "doi": "10.1051/e3sconf/201914009010",
+      "country": "India",
+      "context": "Construction industry (general), consultants, contractors, developers, academia",
+      "masonry": "No",
+      "n": "201",
+      "scale": "1-5",
+      "location": "Table 3, p.5",
+      "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
+      "role": "seed",
+      "note": "RII = total score / (5 x 201). 'Conflict of interest among team members' is printed twice with different values."
+    },
+    {
+      "id": "A14",
+      "authors": "Abeysinghe & Jayathilaka",
+      "year": 2022,
+      "title": "Factors influencing the timely completion of construction projects in Sri Lanka",
+      "venue": "PLoS ONE 17(12): e0278318",
+      "doi": "10.1371/journal.pone.0278318",
+      "country": "Sri Lanka",
+      "context": "Construction projects incl. buildings; clients, contractors, consultants",
+      "masonry": "No",
+      "n": "163",
+      "scale": "1-5 (very low to very high significance)",
+      "location": "Table 2",
+      "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked against Table 2 on 2026-10-07",
+      "role": "seed",
+      "note": "Only the rows quoted in the notes are listed (39 factors in the paper)."
+    },
+    {
+      "id": "A15",
+      "authors": "Manoharan et al.",
+      "year": 2022,
+      "title": "Labour-related factors affecting construction productivity in Sri Lankan building projects: perspectives of engineers and managers",
+      "venue": "Frontiers in Engineering and Built Environment",
+      "doi": "10.1108/FEBE-03-2022-0009",
+      "country": "Sri Lanka",
+      "context": "Building projects, 90 upper-grade contractor firms",
+      "masonry": "No",
+      "n": "90 firms",
+      "scale": "Not recorded",
+      "location": "Top-ranked factors",
+      "obtained": "From the research notes (summary of the full text, two decimals; lower confidence)",
+      "role": "seed",
+      "note": "Only the top five factors (of 32) are recorded."
+    },
+    {
+      "id": "M10",
+      "authors": "Adebowale & Agumba",
+      "year": 2023,
+      "title": "A meta-analysis of factors affecting construction labour productivity in the Middle East",
+      "venue": "Journal of Construction in Developing Countries 28(1): 193-220",
+      "doi": "10.21315/jcdc-12-21-0192",
+      "country": "Middle East (10 studies: Malaysia, Palestine, Kuwait, Qatar, Saudi Arabia, Egypt, Bahrain, Oman, Yemen, Vietnam)",
+      "context": "Meta-analysis: pooled RII ('effect summary', random model) of 35 factors",
+      "masonry": "No",
+      "n": "10 studies",
+      "scale": "Pooled RII",
+      "location": "Table 7, pp.210-211",
+      "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
+      "role": "validation",
+      "note": "Rows Man. 20 (delays responding to requests for information, overall rank 1) and Tec. 5 (type of project) were not captured by text extraction; neither maps to a tool risk."
+    },
+    {
+      "id": "M15",
+      "authors": "de Almeida, Feitoza, Carvalho, Pina, Araujo et al.",
+      "year": 2021,
+      "title": "Study of delays in constructions: a managerial point of view of private companies in Brasilia, Brazil",
+      "venue": "Gestao & Producao 28(3): e5194",
+      "doi": "10.1590/1806-9649-2021v28e5194",
+      "country": "Brazil (Brasilia)",
+      "context": "Private building companies; directors, managers, engineers",
+      "masonry": "No",
+      "n": "47",
+      "scale": "1-4",
+      "location": "Table 3, p.8",
+      "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
+      "role": "validation",
+      "note": "RII printed as a percentage; converted to 0-1."
+    },
+    {
+      "id": "M14",
+      "authors": "Loekito, Dani, Zulfikar, Triarso & Prasetyono",
+      "year": 2026,
+      "title": "Factors influencing construction worker productivity in Indonesia and strategies for improvement",
+      "venue": "Multidisciplinary Science Journal 8: e2026243",
+      "doi": "10.31893/multiscience.2026243",
+      "country": "Indonesia (East Java)",
+      "context": "Construction WORKERS' perspective",
+      "masonry": "No",
+      "n": "83",
+      "scale": "1-4",
+      "location": "Table 2, p.5",
+      "obtained": "Read from the PDF (Research_Papers/5_Masonry_Productivity_Delay)",
+      "role": "validation",
+      "note": "Published online 2025. Decimal commas in the PDF converted to points."
+    },
+    {
+      "id": "A10",
+      "authors": "Pinky Devi & Sindhu",
+      "year": 2025,
+      "title": "Delay analysis of infrastructure construction projects in India",
+      "venue": "Journal of The Institution of Engineers (India): Series A",
+      "doi": "10.1007/s40030-025-00899-5",
+      "country": "India",
+      "context": "Infrastructure (roads, bridges), NOT buildings",
+      "masonry": "No",
+      "n": "72",
+      "scale": "1-5",
+      "location": "RII table",
+      "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked on 2026-10-07",
+      "role": "validation",
+      "note": "Only 2 tool risks overlap, too few for a rank correlation. Notes list the group 'material-related issues' as rank 1 although item values are higher; recheck the paper."
+    },
+    {
+      "id": "A21",
+      "authors": "Ouansrimeang & Wisaeang",
+      "year": 2024,
+      "title": "Analyzing the critical delay factors for construction projects in the public sector using relative importance index and machine learning techniques",
+      "venue": "Journal of Infrastructure, Policy and Development 8(8): 6208",
+      "doi": "10.24294/jipd.v8i8.6208",
+      "country": "Thailand",
+      "context": "30 delayed public projects",
+      "masonry": "No",
+      "n": "30 projects; 380 respondents",
+      "scale": "1-5 importance scale",
+      "location": "Results section",
+      "obtained": "Read from the PDF (Research_Papers/6_Ranking_Studies_OpenAccess); rows checked on 2026-10-07",
+      "role": "validation",
+      "note": "Labour issues: 0.773 in the abstract but 0.733 in the results text; 0.733 is used here."
+    },
+    {
+      "id": "HAS25",
+      "authors": "Hassoon et al.",
+      "year": 2025,
+      "title": "(brickwork / housing skeleton tasks, Iraq)",
+      "venue": "Journal of Infrastructure Preservation and Resilience 6, art. 3",
+      "doi": "10.1186/s43065-025-00116-4",
+      "country": "Iraq",
+      "context": "Brickwork and housing skeleton tasks",
+      "masonry": "Yes",
+      "n": "Not recorded",
+      "scale": "Not recorded",
+      "location": "Abstract",
+      "obtained": "From the research notes (abstract only)",
+      "role": "validation",
+      "note": "Abstract gives only two values. Not in the tool's evidence store."
+    }
+  ],
+  "rows": [
+    {
+      "study": "M01",
+      "factor": "Unsafe working conditions",
+      "rii": 0.809,
+      "rank": 1,
+      "risk": "R-SAFE",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Poor work planning",
+      "rii": 0.791,
+      "rank": 2,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Unrealistic scheduling",
+      "rii": 0.791,
+      "rank": 3,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Little or no financial rewards",
+      "rii": 0.777,
+      "rank": 4,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Material shortages",
+      "rii": 0.777,
+      "rank": 5,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Payment delay",
+      "rii": 0.773,
+      "rank": 6,
+      "risk": "R-PAY",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Working at heights",
+      "rii": 0.764,
+      "rank": 7,
+      "risk": "R-SAFE",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Weather conditions",
+      "rii": 0.764,
+      "rank": 8,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Lack of skill and experience of worker",
+      "rii": 0.759,
+      "rank": 9,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Poor or no supervision method",
+      "rii": 0.759,
+      "rank": 10,
+      "risk": "R-SUP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Incompetent supervisors",
+      "rii": 0.759,
+      "rank": 11,
+      "risk": "R-SUP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Accidents",
+      "rii": 0.759,
+      "rank": 12,
+      "risk": "R-ACC",
+      "mapping": "direct",
+      "note": "an outcome of unsafe conditions, not the condition itself"
+    },
+    {
+      "study": "M01",
+      "factor": "Poor relation between labour and superintendents",
+      "rii": 0.755,
+      "rank": 13,
+      "risk": "R-COM",
+      "mapping": "related"
+    },
+    {
+      "study": "M01",
+      "factor": "Poor condition of equipment and tools",
+      "rii": 0.75,
+      "rank": 14,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Bad leadership skill",
+      "rii": 0.75,
+      "rank": 15,
+      "risk": "R-DIS",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Working 7 days per week",
+      "rii": 0.741,
+      "rank": 16,
+      "risk": "R-OVT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Equipment and tools shortages",
+      "rii": 0.741,
+      "rank": 17,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Low labour morale/commitment",
+      "rii": 0.736,
+      "rank": 18,
+      "risk": "R-MOT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Rework",
+      "rii": 0.736,
+      "rank": 19,
+      "risk": "R-RWK",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Lack of empowerment",
+      "rii": 0.732,
+      "rank": 20,
+      "risk": "R-MOT",
+      "mapping": "related"
+    },
+    {
+      "study": "M01",
+      "factor": "Change order during execution",
+      "rii": 0.732,
+      "rank": 21,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Low amount of pay",
+      "rii": 0.727,
+      "rank": 22,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "High workforce absenteeism",
+      "rii": 0.723,
+      "rank": 23,
+      "risk": "R-LAB",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Lack of labour surveillance",
+      "rii": 0.714,
+      "rank": 24,
+      "risk": "R-SUP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Inadequate safety plan",
+      "rii": 0.714,
+      "rank": 25,
+      "risk": "R-SAFE",
+      "mapping": "related",
+      "note": "a management cause, broader than the site condition"
+    },
+    {
+      "study": "M01",
+      "factor": "Frequency of working overtime",
+      "rii": 0.709,
+      "rank": 26,
+      "risk": "R-OVT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Effectiveness of management system",
+      "rii": 0.709,
+      "rank": 27,
+      "risk": "R-MGT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M01",
+      "factor": "Method of construction",
+      "rii": 0.7,
+      "rank": 28,
+      "risk": "R-MTH",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Lack of experience (manpower)",
+      "rii": 0.787,
+      "rank": 1,
+      "risk": "R-SKILL",
+      "mapping": "direct",
+      "note": "rank within Table 1 (manpower)"
+    },
+    {
+      "study": "A02",
+      "factor": "Absenteeism",
+      "rii": 0.751,
+      "rank": 2,
+      "risk": "R-LAB",
+      "mapping": "direct",
+      "note": "rank within Table 1 (manpower)"
+    },
+    {
+      "study": "A02",
+      "factor": "Age",
+      "rii": 0.73,
+      "rank": null,
+      "note": "Table 1 (manpower)",
+      "risk": "R-FAT",
+      "mapping": "related"
+    },
+    {
+      "study": "A02",
+      "factor": "Misunderstanding among labourers",
+      "rii": 0.68,
+      "rank": null,
+      "note": "Table 1 (manpower)",
+      "risk": "R-COM",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Accidents",
+      "rii": 0.65,
+      "rank": null,
+      "risk": "R-ACC",
+      "mapping": "direct",
+      "note": "Table 1; an outcome, not the condition"
+    },
+    {
+      "study": "A02",
+      "factor": "Personal problems",
+      "rii": 0.61,
+      "rank": null,
+      "note": "Table 1 (manpower)",
+      "risk": "R-FAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Lack of required construction material",
+      "rii": 0.78,
+      "rank": 1,
+      "risk": "R-MAT",
+      "mapping": "direct",
+      "note": "rank within Table 2 (resources)"
+    },
+    {
+      "study": "A02",
+      "factor": "Lack of tools/equipment",
+      "rii": 0.76,
+      "rank": null,
+      "risk": "R-TOOL",
+      "mapping": "direct",
+      "note": "Table 2 (resources)"
+    },
+    {
+      "study": "A02",
+      "factor": "Poor site condition",
+      "rii": 0.751,
+      "rank": null,
+      "note": "Table 2 (resources)",
+      "risk": "R-SITE",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Material storage location",
+      "rii": 0.7,
+      "rank": null,
+      "note": "Table 2 (resources)",
+      "risk": "R-STO",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Increase in price of material",
+      "rii": 0.55,
+      "rank": 9,
+      "note": "rank within Table 2 (resources)",
+      "risk": "R-PRC",
+      "mapping": "direct"
+    },
+    {
+      "study": "A02",
+      "factor": "Payment delays",
+      "rii": 0.7758,
+      "rank": null,
+      "risk": "R-PAY",
+      "mapping": "direct",
+      "note": "Fig. 1, printed as 775.8 on a 1000 scale"
+    },
+    {
+      "study": "A02",
+      "factor": "Weather condition",
+      "rii": 0.7,
+      "rank": 3,
+      "risk": "R-WX",
+      "mapping": "direct",
+      "note": "Fig. 1, printed as 700 on a 1000 scale; rank within Fig. 1"
+    },
+    {
+      "study": "A02",
+      "factor": "Shortage of water",
+      "rii": 0.65,
+      "rank": 5,
+      "risk": "R-WAT",
+      "mapping": "direct",
+      "note": "Fig. 1; water is a mortar input but not brick/block supply"
+    },
+    {
+      "study": "M06",
+      "factor": "Availability of resources",
+      "rii": 0.80199,
+      "rank": 1,
+      "risk": "R-MAT",
+      "mapping": "related",
+      "note": "covers material, labour and equipment together"
+    },
+    {
+      "study": "M06",
+      "factor": "Contractual disputes",
+      "rii": 0.799005,
+      "rank": 2,
+      "risk": "R-CTR",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Scope clarity of the project",
+      "rii": 0.79005,
+      "rank": 3,
+      "risk": "R-SCP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Design capability and frequent design changes",
+      "rii": 0.785075,
+      "rank": 4,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Rework",
+      "rii": 0.776119,
+      "rank": 5,
+      "risk": "R-RWK",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Coordination between all stakeholders",
+      "rii": 0.774129,
+      "rank": 6,
+      "risk": "R-MGT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Project manager's authority to take financial decisions and select key team members",
+      "rii": 0.772139,
+      "rank": 7,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Timely payment of completed works",
+      "rii": 0.771144,
+      "rank": 8,
+      "risk": "R-PAY",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Site clearance/availability",
+      "rii": 0.771144,
+      "rank": 9,
+      "risk": "R-SITE",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Ability to handle the crisis by the PM",
+      "rii": 0.771144,
+      "rank": 10,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Use of inappropriate planning tools and techniques",
+      "rii": 0.763184,
+      "rank": 11,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Quality",
+      "rii": 0.754229,
+      "rank": 12,
+      "risk": "R-QLT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Leadership qualities",
+      "rii": 0.752239,
+      "rank": 13,
+      "risk": "R-DIS",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Top management support to PM",
+      "rii": 0.752239,
+      "rank": 14,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Human resource and labour strike",
+      "rii": 0.749254,
+      "rank": 15,
+      "risk": "R-STR",
+      "mapping": "direct",
+      "note": "strikes are narrower than absenteeism/shortage"
+    },
+    {
+      "study": "M06",
+      "factor": "Cost",
+      "rii": 0.744279,
+      "rank": 16,
+      "risk": "R-CST",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Project coordination meetings",
+      "rii": 0.740299,
+      "rank": 17,
+      "risk": "R-MGT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Inadequate project formulation in the beginning",
+      "rii": 0.738308,
+      "rank": 18,
+      "risk": "R-SCP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Obsolete construction equipment, methods and technology",
+      "rii": 0.738308,
+      "rank": 19,
+      "risk": "R-TOOL",
+      "mapping": "related",
+      "note": "includes methods and technology"
+    },
+    {
+      "study": "M06",
+      "factor": "Conflict of interest among team members",
+      "rii": 0.737313,
+      "rank": 20,
+      "note": "printed twice in the paper",
+      "risk": "R-CTR",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Customer/client satisfaction",
+      "rii": 0.730348,
+      "rank": 21,
+      "risk": "R-CLI",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Conflict of interest among team members (second entry)",
+      "rii": 0.730348,
+      "rank": 22,
+      "note": "printed twice in the paper",
+      "risk": "R-CTR",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Availability of training and development for enhancing skills",
+      "rii": 0.727363,
+      "rank": 23,
+      "risk": "R-SKILL",
+      "mapping": "related",
+      "note": "training availability, not labour skill itself"
+    },
+    {
+      "study": "M06",
+      "factor": "Selection of PM with proven track record",
+      "rii": 0.724378,
+      "rank": 24,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Supply chain",
+      "rii": 0.700498,
+      "rank": 25,
+      "risk": "R-MAT",
+      "mapping": "related",
+      "note": "broader than material shortage"
+    },
+    {
+      "study": "M06",
+      "factor": "Willingness to adopt change",
+      "rii": 0.700498,
+      "rank": 26,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Claim genuineness",
+      "rii": 0.694527,
+      "rank": 27,
+      "risk": "R-CTR",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Regular budget update",
+      "rii": 0.692537,
+      "rank": 28,
+      "risk": "R-CST",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Social skills of key team managers",
+      "rii": 0.691542,
+      "rank": 29,
+      "risk": "R-COM",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Working hours",
+      "rii": 0.687562,
+      "rank": 30,
+      "risk": "R-OVT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Developing and maintaining a short and informal line of communication",
+      "rii": 0.678607,
+      "rank": 31,
+      "risk": "R-COM",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Urgency emphasized by the owner while issuing tender",
+      "rii": 0.673632,
+      "rank": 32,
+      "risk": "R-CLI",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Ability to delegate authority",
+      "rii": 0.669652,
+      "rank": 33,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Political and economic environment",
+      "rii": 0.665672,
+      "rank": 34,
+      "risk": "R-ECO",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Exceptional difference between client and architect",
+      "rii": 0.665672,
+      "rank": 35,
+      "risk": "R-CTR",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Interpersonal skills",
+      "rii": 0.662687,
+      "rank": 36,
+      "risk": "R-COM",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Climate conditions",
+      "rii": 0.656716,
+      "rank": 37,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Interest and inflation rates",
+      "rii": 0.656716,
+      "rank": 38,
+      "risk": "R-ECO",
+      "mapping": "direct"
+    },
+    {
+      "study": "M06",
+      "factor": "Availability of accurate historical information",
+      "rii": 0.641791,
+      "rank": 39,
+      "risk": "R-SCP",
+      "mapping": "related"
+    },
+    {
+      "study": "M06",
+      "factor": "Social environment",
+      "rii": 0.59403,
+      "rank": 40,
+      "risk": "R-SOC",
+      "mapping": "direct"
+    },
+    {
+      "study": "A14",
+      "factor": "Shortage of skilled subcontractors/suppliers",
+      "rii": 0.8294,
+      "rank": 1,
+      "risk": "R-MAT",
+      "mapping": "related",
+      "note": "suppliers and subcontractors together"
+    },
+    {
+      "study": "A14",
+      "factor": "Shortage of labourers (skilled, semi-skilled, unskilled)",
+      "rii": 0.8245,
+      "rank": 2,
+      "risk": "R-LAB",
+      "mapping": "direct"
+    },
+    {
+      "study": "A14",
+      "factor": "Delay of delivering materials to the site",
+      "rii": 0.8098,
+      "rank": 4,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "A14",
+      "factor": "Fluctuation of material prices in the market",
+      "rii": 0.789,
+      "rank": 6,
+      "risk": "R-PRC",
+      "mapping": "direct"
+    },
+    {
+      "study": "A14",
+      "factor": "Bad weather conditions",
+      "rii": 0.6528,
+      "rank": 30,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "A15",
+      "factor": "Skills shortage",
+      "rii": 0.82,
+      "rank": 1,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "A15",
+      "factor": "Lack of thinking abilities",
+      "rii": 0.81,
+      "rank": 2,
+      "risk": "R-SKILL",
+      "mapping": "related"
+    },
+    {
+      "study": "A15",
+      "factor": "Lack of work experience",
+      "rii": 0.8,
+      "rank": 3,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "A15",
+      "factor": "Lack of knowledge in construction works",
+      "rii": 0.79,
+      "rank": 4,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "A15",
+      "factor": "Poor labour discipline",
+      "rii": 0.79,
+      "rank": 5,
+      "risk": "R-DIS",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Inadequate workers' supervision",
+      "rii": 0.816,
+      "rank": 2,
+      "risk": "R-SUP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "A shortage of skilled labour",
+      "rii": 0.801,
+      "rank": 3,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Extent of change orders",
+      "rii": 0.793,
+      "rank": 4,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Clarity of technical specifications",
+      "rii": 0.791,
+      "rank": 5,
+      "risk": "R-DES",
+      "mapping": "related",
+      "note": "specification clarity, not drawings or changes"
+    },
+    {
+      "study": "M10",
+      "factor": "Coordination among design disciplines",
+      "rii": 0.785,
+      "rank": 6,
+      "risk": "R-DES",
+      "mapping": "related"
+    },
+    {
+      "study": "M10",
+      "factor": "Lack of incentive schemes",
+      "rii": 0.783,
+      "rank": 7,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Economic conditions",
+      "rii": 0.778,
+      "rank": 8,
+      "risk": "R-ECO",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Material shortage at project site",
+      "rii": 0.775,
+      "rank": 9,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Proportion of work subcontracted",
+      "rii": 0.761,
+      "rank": 10,
+      "risk": "R-SUB",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Rework",
+      "rii": 0.761,
+      "rank": 10,
+      "risk": "R-RWK",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Quality and availability of drawings",
+      "rii": 0.758,
+      "rank": 12,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Payment delay",
+      "rii": 0.751,
+      "rank": 13,
+      "risk": "R-PAY",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Remuneration scale",
+      "rii": 0.738,
+      "rank": 14,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Stringent inspections",
+      "rii": 0.732,
+      "rank": 15,
+      "risk": "R-QLT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Physical fatigue",
+      "rii": 0.723,
+      "rank": 16,
+      "risk": "R-FAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Inclement weather conditions",
+      "rii": 0.715,
+      "rank": 17,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Poor workers' motivation",
+      "rii": 0.709,
+      "rank": 18,
+      "risk": "R-MOT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Unrealistic deadline for project completion",
+      "rii": 0.698,
+      "rank": 19,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Government policies",
+      "rii": 0.698,
+      "rank": 19,
+      "risk": "R-GOV",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Poor site management",
+      "rii": 0.696,
+      "rank": 21,
+      "risk": "R-PLAN",
+      "mapping": "related",
+      "note": "management in general, not planning"
+    },
+    {
+      "study": "M10",
+      "factor": "Working overtime",
+      "rii": 0.696,
+      "rank": 21,
+      "risk": "R-OVT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Unavailability of suitable tools and equipment",
+      "rii": 0.691,
+      "rank": 23,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Problem of communication",
+      "rii": 0.682,
+      "rank": 24,
+      "risk": "R-COM",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Unsuitability of storage location",
+      "rii": 0.68,
+      "rank": 25,
+      "risk": "R-STO",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Design complexity",
+      "rii": 0.668,
+      "rank": 26,
+      "risk": "R-MTH",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Construction method",
+      "rii": 0.666,
+      "rank": 27,
+      "risk": "R-MTH",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Absenteeism",
+      "rii": 0.66,
+      "rank": 28,
+      "risk": "R-LAB",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Working within a confined space",
+      "rii": 0.659,
+      "rank": 29,
+      "risk": "R-SITE",
+      "mapping": "related"
+    },
+    {
+      "study": "M10",
+      "factor": "Inspection delay",
+      "rii": 0.638,
+      "rank": 30,
+      "risk": "R-QLT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M10",
+      "factor": "Accident",
+      "rii": 0.632,
+      "rank": 31,
+      "risk": "R-ACC",
+      "mapping": "direct",
+      "note": "an outcome, not the condition"
+    },
+    {
+      "study": "M10",
+      "factor": "Lack of labour recognition programmes",
+      "rii": 0.555,
+      "rank": 33,
+      "risk": "R-MOT",
+      "mapping": "related"
+    },
+    {
+      "study": "M10",
+      "factor": "Project location",
+      "rii": 0.555,
+      "rank": 33,
+      "risk": "R-SITE",
+      "mapping": "related"
+    },
+    {
+      "study": "M10",
+      "factor": "Inadequate training",
+      "rii": 0.459,
+      "rank": 35,
+      "risk": "R-TRN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Rework",
+      "rii": 0.75,
+      "rank": 1,
+      "risk": "R-RWK",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Low labor productivity",
+      "rii": 0.73,
+      "rank": 2,
+      "risk": "R-PRD",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Lack of skilled labor",
+      "rii": 0.725,
+      "rank": 3,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Low qualification of labor",
+      "rii": 0.705,
+      "rank": 4,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Modifications to the project",
+      "rii": 0.695,
+      "rank": 5,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Failure to manage deadlines",
+      "rii": 0.69,
+      "rank": 6,
+      "risk": "R-PLAN",
+      "mapping": "related",
+      "note": "deadline control rather than planning"
+    },
+    {
+      "study": "M15",
+      "factor": "Poor specification or lack of definition of the project",
+      "rii": 0.69,
+      "rank": 6,
+      "risk": "R-DES",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Incompatibility of projects",
+      "rii": 0.67,
+      "rank": 8,
+      "risk": "R-DES",
+      "mapping": "related",
+      "note": "clashes between design disciplines"
+    },
+    {
+      "study": "M15",
+      "factor": "Poor qualification in the contractor's technical staff",
+      "rii": 0.65,
+      "rank": 9,
+      "risk": "R-MGT",
+      "mapping": "related"
+    },
+    {
+      "study": "M15",
+      "factor": "Delay in delivery of material",
+      "rii": 0.65,
+      "rank": 9,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Unrealistic schedule",
+      "rii": 0.64,
+      "rank": 11,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Timing failures due to overestimation of productivity",
+      "rii": 0.63,
+      "rank": 12,
+      "risk": "R-PLAN",
+      "mapping": "related",
+      "note": "an estimating error"
+    },
+    {
+      "study": "M15",
+      "factor": "Delay in ordering materials",
+      "rii": 0.615,
+      "rank": 13,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Conflict between parties (contractor and contractor)",
+      "rii": 0.61,
+      "rank": 14,
+      "risk": "R-CTR",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Delay in delivery of material at the front of service (site handling)",
+      "rii": 0.59,
+      "rank": 15,
+      "risk": "R-MAT",
+      "mapping": "related",
+      "note": "on-site handling, not supply"
+    },
+    {
+      "study": "M15",
+      "factor": "Delay in the mobilization of the work",
+      "rii": 0.52,
+      "rank": 16,
+      "risk": "R-MGT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Low efficiency and productivity of equipment",
+      "rii": 0.51,
+      "rank": 17,
+      "risk": "R-TOOL",
+      "mapping": "related",
+      "note": "equipment output, not availability"
+    },
+    {
+      "study": "M15",
+      "factor": "Delay for defective material",
+      "rii": 0.485,
+      "rank": 18,
+      "risk": "R-DEF",
+      "mapping": "direct",
+      "note": "a quality problem"
+    },
+    {
+      "study": "M15",
+      "factor": "Effects of climate on construction (heat, rain)",
+      "rii": 0.475,
+      "rank": 19,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Equipment shortage",
+      "rii": 0.455,
+      "rank": 20,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Accident during construction",
+      "rii": 0.455,
+      "rank": 20,
+      "risk": "R-ACC",
+      "mapping": "direct",
+      "note": "an outcome, not the condition"
+    },
+    {
+      "study": "M15",
+      "factor": "Complexity of the project",
+      "rii": 0.444,
+      "rank": 22,
+      "risk": "R-MTH",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Scarcity of building materials on the market",
+      "rii": 0.435,
+      "rank": 23,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M15",
+      "factor": "Equipment defects",
+      "rii": 0.415,
+      "rank": 24,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Low salary",
+      "rii": 0.735,
+      "rank": 1,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Lack of supervision",
+      "rii": 0.72,
+      "rank": 2,
+      "risk": "R-SUP",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "No incentives",
+      "rii": 0.716,
+      "rank": 3,
+      "risk": "R-INC",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Late payment",
+      "rii": 0.716,
+      "rank": 4,
+      "risk": "R-PAY",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Personal problems",
+      "rii": 0.711,
+      "rank": 5,
+      "risk": "R-FAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Changing jobs",
+      "rii": 0.701,
+      "rank": 6,
+      "risk": "R-MOT",
+      "mapping": "related"
+    },
+    {
+      "study": "M14",
+      "factor": "Inadequate tools",
+      "rii": 0.689,
+      "rank": 7,
+      "risk": "R-TOOL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Project scale",
+      "rii": 0.66,
+      "rank": 8,
+      "risk": "R-MTH",
+      "mapping": "related"
+    },
+    {
+      "study": "M14",
+      "factor": "Types of work contracts",
+      "rii": 0.66,
+      "rank": 9,
+      "risk": "R-SUB",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Weather",
+      "rii": 0.643,
+      "rank": 10,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Fatigue",
+      "rii": 0.612,
+      "rank": 11,
+      "risk": "R-FAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "No consumption",
+      "rii": 0.598,
+      "rank": 12
+    },
+    {
+      "study": "M14",
+      "factor": "Lack of skills",
+      "rii": 0.523,
+      "rank": 13,
+      "risk": "R-SKILL",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Poor communication",
+      "rii": 0.518,
+      "rank": 14,
+      "risk": "R-COM",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Late material",
+      "rii": 0.508,
+      "rank": 15,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Project location",
+      "rii": 0.508,
+      "rank": 16,
+      "risk": "R-SITE",
+      "mapping": "related"
+    },
+    {
+      "study": "M14",
+      "factor": "Job scheduling",
+      "rii": 0.504,
+      "rank": 17,
+      "risk": "R-PLAN",
+      "mapping": "related",
+      "note": "scheduling in general"
+    },
+    {
+      "study": "M14",
+      "factor": "Work method",
+      "rii": 0.504,
+      "rank": 18,
+      "risk": "R-MTH",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Compressed time",
+      "rii": 0.475,
+      "rank": 19,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Worker dissatisfaction",
+      "rii": 0.46,
+      "rank": 20,
+      "risk": "R-MOT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Inadequate safety",
+      "rii": 0.46,
+      "rank": 21,
+      "risk": "R-SAFE",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "Lack of motivation",
+      "rii": 0.458,
+      "rank": 22,
+      "risk": "R-MOT",
+      "mapping": "direct"
+    },
+    {
+      "study": "M14",
+      "factor": "The owner/supervisor cannot decide",
+      "rii": 0.412,
+      "rank": 23,
+      "risk": "R-CLI",
+      "mapping": "direct"
+    },
+    {
+      "study": "A10",
+      "factor": "Late material deliveries",
+      "rii": 0.652,
+      "rank": null,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "A10",
+      "factor": "Material shortages",
+      "rii": 0.619,
+      "rank": null,
+      "risk": "R-MAT",
+      "mapping": "direct"
+    },
+    {
+      "study": "A10",
+      "factor": "Weather conditions (external)",
+      "rii": 0.616,
+      "rank": null,
+      "risk": "R-WX",
+      "mapping": "direct"
+    },
+    {
+      "study": "A10",
+      "factor": "Material-related issues (group)",
+      "rii": 0.562,
+      "rank": 1,
+      "note": "factor group, not an item"
+    },
+    {
+      "study": "A10",
+      "factor": "Construction-site factors (group)",
+      "rii": 0.555,
+      "rank": null,
+      "note": "factor group, not an item"
+    },
+    {
+      "study": "A10",
+      "factor": "Contractor-related (group)",
+      "rii": 0.506,
+      "rank": null,
+      "note": "factor group, not an item"
+    },
+    {
+      "study": "A21",
+      "factor": "Contractor financial issues",
+      "rii": 0.777,
+      "rank": 1,
+      "risk": "R-FIN",
+      "mapping": "direct",
+      "note": "the contractor's own finances, not late payment to it"
+    },
+    {
+      "study": "A21",
+      "factor": "Labour issues (shortage during harvest season or festivals)",
+      "rii": 0.733,
+      "rank": 2,
+      "risk": "R-LAB",
+      "mapping": "direct",
+      "note": "0.773 in the abstract, 0.733 in the results text"
+    },
+    {
+      "study": "HAS25",
+      "factor": "Planning",
+      "rii": 0.874,
+      "rank": null,
+      "risk": "R-PLAN",
+      "mapping": "direct"
+    },
+    {
+      "study": "HAS25",
+      "factor": "Team size",
+      "rii": 0.856,
+      "rank": null,
+      "risk": "R-LAB",
+      "mapping": "related",
+      "note": "crew size, not absenteeism"
+    }
+  ],
+  "other_indices": [
+    {
+      "study": "A11",
+      "source": "Soundarya et al. (2025), An investigation study on residential buildings for cost overrun, Scientific Reports, DOI 10.1038/s41598-025-95984-x (Chennai, India)",
+      "index": "Importance index II (frequency x severity), NOT RII",
+      "items": "Overall lag in schedule 0.71 (rank 1); rework/extra work 0.55 (2); inadequate skilled labour 0.53 (3); inadequate design/specification 0.52 (4); climatic variation 0.37 (11); hike in materials cost 0.29 (12)",
+      "why_not_used": "Different index; mixing it with RII would compare unlike scales."
+    },
+    {
+      "study": "P1-23",
+      "source": "Karthik & Rao (2019), Identifying the significant factors affecting masonry labour productivity in India, Int. J. Construction Management 22(3): 464-472, DOI 10.1080/15623599.2019.1631978",
+      "index": "RII, factor-group average only",
+      "items": "Workforce-related factors: average RII 0.784 (120 site personnel, 38 factors)",
+      "why_not_used": "Only a group average is available (abstract); item values not read."
+    }
+  ]
+}

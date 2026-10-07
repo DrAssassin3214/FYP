@@ -1,0 +1,461 @@
+[
+  {
+    "id": "R-MAT",
+    "name": "Brick / block / mortar material shortage or late delivery",
+    "category": "Material",
+    "description": "Stock-out or late delivery of bricks, blocks, cement or sand halts masons.",
+    "existence_evidence": [
+      "M01",
+      "M06"
+    ],
+    "evidence_note": "M01 (India, brick-wall site): material shortages RII 0.777 and identified as the most influential factor on the site; M06 (India): availability of resources ranked first. Survey rankings show importance, not probability.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-TOOL",
+    "name": "Tools and equipment delay",
+    "category": "Equipment",
+    "description": "Scaffolding, mixers, hoists or hand tools unavailable when needed.",
+    "existence_evidence": [
+      "M01"
+    ],
+    "evidence_note": "M01: tools delay reported with material shortage as the most influential factors at the observed site.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-LAB",
+    "name": "Labour absenteeism or shortage",
+    "category": "Labour",
+    "description": "Fewer masons or helpers available than planned.",
+    "existence_evidence": [
+      "M01",
+      "M07",
+      "M15"
+    ],
+    "evidence_note": "M07 (India): site amenities and welfare factors affect workforce productivity; M15 (Brazil): lack of qualified labour among top delay causes; M01 (India) lists labour factors.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-SKILL",
+    "name": "Unskilled or unqualified labour",
+    "category": "Labour",
+    "description": "Crew skill below what the wall specification needs, lowering output and raising defects.",
+    "existence_evidence": [
+      "M15",
+      "M14"
+    ],
+    "evidence_note": "M15: unqualified labour ranked among the top delay causes (Brazil); M14: worker-perceived productivity factors (Indonesia).",
+    "scope": "activity"
+  },
+  {
+    "id": "R-PLAN",
+    "name": "Poor planning or unrealistic scheduling",
+    "category": "Management",
+    "description": "Sequence, resource loading or duration in the plan is not achievable.",
+    "existence_evidence": [
+      "M01"
+    ],
+    "evidence_note": "M01 (India): poor work planning RII 0.791 and unrealistic scheduling RII 0.791.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-SAFE",
+    "name": "Unsafe conditions or work at height",
+    "category": "Safety",
+    "description": "Stoppage or slowdown due to unsafe working conditions, particularly at height.",
+    "existence_evidence": [
+      "M01"
+    ],
+    "evidence_note": "M01 (India): unsafe working conditions RII 0.809 (highest in that table) and working at heights RII 0.764.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-WX",
+    "name": "Rain / monsoon stoppage",
+    "category": "Weather",
+    "description": "Rain or extreme weather stops or slows outdoor masonry.",
+    "existence_evidence": [
+      "R08",
+      "M01"
+    ],
+    "evidence_note": "R08 (India, cold regions): snowfall, rainfall and low temperature are top delay factors; M01 lists weather conditions among the ranked factors. Building studies in the notes rank weather below labour and material.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-RWK",
+    "name": "Rework due to workmanship or defects",
+    "category": "Quality",
+    "description": "Rejected or redone wall sections.",
+    "existence_evidence": [
+      "M03",
+      "M15"
+    ],
+    "evidence_note": "M03 (Palestine): rework cost lowers brick-work productivity (Y = 34.36 - 1.71X); M15 (Brazil): rework ranked first among delay causes.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-PAY",
+    "name": "Payment delay",
+    "category": "Financial",
+    "description": "Delayed payments to contractor or labour cause slowdown or stoppage.",
+    "existence_evidence": [
+      "M01"
+    ],
+    "evidence_note": "M01 (India): payment delay RII 0.773.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-DES",
+    "name": "Design changes or incomplete documentation",
+    "category": "Design",
+    "description": "Drawing changes, clarifications or missing details interrupt work.",
+    "existence_evidence": [
+      "M06",
+      "M13"
+    ],
+    "evidence_note": "M06 (India): frequent design changes and scope clarity among significant productivity factors; M13 (Saudi Arabia): design quality affects delay.",
+    "scope": "activity"
+  },
+  {
+    "id": "R-SUP",
+    "name": "Inadequate supervision or monitoring of workers",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Masons and helpers work without effective supervision, targets or monitoring, so output and quality fall.",
+    "existence_evidence": [
+      "M01",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M10 (Middle East): inadequate workers' supervision RII 0.816; M01 (India): poor or no supervision method RII 0.759; M01 (India): incompetent supervisors RII 0.759; M14 (Indonesia): lack of supervision RII 0.72. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-MOT",
+    "name": "Low motivation, morale or labour turnover",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Poor morale, dissatisfaction or workers leaving reduce effort and continuity of the crew.",
+    "existence_evidence": [
+      "M01",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M01 (India): low labour morale/commitment RII 0.736; M01 (India): lack of empowerment RII 0.732 (related); M10 (Middle East): poor workers' motivation RII 0.709; M14 (Indonesia): changing jobs RII 0.701 (related). Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-INC",
+    "name": "Inadequate wages or incentives",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Low pay or no incentives lower commitment and make workers move to other sites.",
+    "existence_evidence": [
+      "M01",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M10 (Middle East): lack of incentive schemes RII 0.783; M01 (India): little or no financial rewards RII 0.777; M10 (Middle East): remuneration scale RII 0.738; M14 (Indonesia): low salary RII 0.735. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-OVT",
+    "name": "Overtime and long working hours",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Working long hours or seven days a week reduces productivity and raises errors and absence.",
+    "existence_evidence": [
+      "M01",
+      "M06",
+      "M10"
+    ],
+    "evidence_note": "M01 (India): working 7 days per week RII 0.741; M01 (India): frequency of working overtime RII 0.709; M10 (Middle East): working overtime RII 0.696; M06 (India): working hours RII 0.688. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-FAT",
+    "name": "Worker fatigue, age or personal problems",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Tired, older or distracted workers lose output.",
+    "existence_evidence": [
+      "A02",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "A02 (India): age RII 0.73 (related); M10 (Middle East): physical fatigue RII 0.723; M14 (Indonesia): personal problems RII 0.711; M14 (Indonesia): fatigue RII 0.612. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-COM",
+    "name": "Poor communication or misunderstanding on site",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Instructions are misunderstood between labourers, supervisors and management.",
+    "existence_evidence": [
+      "A02",
+      "M01",
+      "M06",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M01 (India): poor relation between labour and superintendents RII 0.755 (related); M06 (India): social skills of key team managers RII 0.692 (related); M10 (Middle East): problem of communication RII 0.682; A02 (India): misunderstanding among labourers RII 0.68. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-DIS",
+    "name": "Poor labour discipline or weak site leadership",
+    "category": "Management",
+    "scope": "activity",
+    "description": "Lack of discipline or leadership leads to idle time and uncontrolled work.",
+    "existence_evidence": [
+      "A15",
+      "M01",
+      "M06"
+    ],
+    "evidence_note": "A15 (Sri Lanka): poor labour discipline RII 0.79; M06 (India): leadership qualities RII 0.752 (related); M01 (India): bad leadership skill RII 0.75. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-TRN",
+    "name": "Inadequate training of workers",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Workers lack the training needed for the masonry method in use.",
+    "existence_evidence": [
+      "M10"
+    ],
+    "evidence_note": "M10 (Middle East): inadequate training RII 0.459. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-PRD",
+    "name": "Low labour productivity",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Crew output falls below the planned rate (an outcome that several surveys list as a cause of delay).",
+    "existence_evidence": [
+      "M15"
+    ],
+    "evidence_note": "M15 (Brazil): low labor productivity RII 0.73. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-STR",
+    "name": "Labour strikes or disputes",
+    "category": "Labour",
+    "scope": "activity",
+    "description": "Strikes or labour disputes stop work.",
+    "existence_evidence": [
+      "M06"
+    ],
+    "evidence_note": "M06 (India): human resource and labour strike RII 0.749. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-ACC",
+    "name": "Accidents and injuries on site",
+    "category": "Safety",
+    "scope": "activity",
+    "description": "An accident or injury stops the crew, triggers investigation or removes workers.",
+    "existence_evidence": [
+      "A02",
+      "M01",
+      "M10",
+      "M15"
+    ],
+    "evidence_note": "M01 (India): accidents RII 0.759; A02 (India): accidents RII 0.65; M10 (Middle East): accident RII 0.632; M15 (Brazil): accident during construction RII 0.455. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-MGT",
+    "name": "Poor site management and coordination",
+    "category": "Management",
+    "scope": "activity",
+    "description": "Weak coordination, crisis handling or management systems cause waiting and rework.",
+    "existence_evidence": [
+      "M01",
+      "M06",
+      "M15"
+    ],
+    "evidence_note": "M06 (India): coordination between all stakeholders RII 0.774; M06 (India): project manager's authority to take financial decisions and select key team members RII 0.772 (related); M06 (India): ability to handle the crisis by the pm RII 0.771 (related); M06 (India): top management support to pm RII 0.752 (related). Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-SUB",
+    "name": "Subcontracting and contract-type problems",
+    "category": "Management",
+    "scope": "activity",
+    "description": "A high share of subcontracted work or the contract type causes interface delays.",
+    "existence_evidence": [
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M10 (Middle East): proportion of work subcontracted RII 0.761; M14 (Indonesia): types of work contracts RII 0.66. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-CTR",
+    "name": "Contractual disputes and claims",
+    "category": "Management",
+    "scope": "project",
+    "description": "Disputes or claims between parties slow or stop the work.",
+    "existence_evidence": [
+      "M06",
+      "M15"
+    ],
+    "evidence_note": "M06 (India): contractual disputes RII 0.799; M06 (India): conflict of interest among team members RII 0.737 (related); M06 (India): conflict of interest among team members (second entry) RII 0.73 (related); M06 (India): claim genuineness RII 0.695. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-SCP",
+    "name": "Unclear scope or inadequate project formulation",
+    "category": "Design",
+    "scope": "project",
+    "description": "The scope or the project definition is unclear at the start, causing changes and waiting.",
+    "existence_evidence": [
+      "M06"
+    ],
+    "evidence_note": "M06 (India): scope clarity of the project RII 0.79; M06 (India): inadequate project formulation in the beginning RII 0.738; M06 (India): availability of accurate historical information RII 0.642 (related). Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-CLI",
+    "name": "Client decision delay or pressure",
+    "category": "Management",
+    "scope": "project",
+    "description": "Slow decisions, changes or urgency from the owner disturb the work.",
+    "existence_evidence": [
+      "M06",
+      "M14"
+    ],
+    "evidence_note": "M06 (India): customer/client satisfaction RII 0.73 (related); M06 (India): urgency emphasized by the owner while issuing tender RII 0.674 (related); M14 (Indonesia): the owner/supervisor cannot decide RII 0.412. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-CST",
+    "name": "Cost control and budget updating problems",
+    "category": "Financial",
+    "scope": "project",
+    "description": "Poor cost control or budget updating leads to cash shortage and slowdown.",
+    "existence_evidence": [
+      "M06"
+    ],
+    "evidence_note": "M06 (India): cost RII 0.744; M06 (India): regular budget update RII 0.693. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-QLT",
+    "name": "Inspection and quality-approval delays",
+    "category": "Quality",
+    "scope": "activity",
+    "description": "Stringent or late inspections hold the next step of masonry work.",
+    "existence_evidence": [
+      "M06",
+      "M10"
+    ],
+    "evidence_note": "M06 (India): quality RII 0.754 (related); M10 (Middle East): stringent inspections RII 0.732; M10 (Middle East): inspection delay RII 0.638. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-DEF",
+    "name": "Defective or poor-quality material",
+    "category": "Material",
+    "scope": "activity",
+    "description": "Defective bricks, blocks or mortar materials are rejected or cause rework.",
+    "existence_evidence": [
+      "M15"
+    ],
+    "evidence_note": "M15 (Brazil): delay for defective material RII 0.485. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-SITE",
+    "name": "Poor site access, clearance or conditions",
+    "category": "Site",
+    "scope": "activity",
+    "description": "Limited access, congestion, confined space or an uncleared site slows the crew.",
+    "existence_evidence": [
+      "A02",
+      "M06",
+      "M10",
+      "M14"
+    ],
+    "evidence_note": "M06 (India): site clearance/availability RII 0.771; A02 (India): poor site condition RII 0.751; M10 (Middle East): working within a confined space RII 0.659 (related); M10 (Middle East): project location RII 0.555 (related). Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-STO",
+    "name": "Poor material storage or handling",
+    "category": "Material",
+    "scope": "activity",
+    "description": "Materials are stored far from the work face or in unsuitable places, causing waiting and damage.",
+    "existence_evidence": [
+      "A02",
+      "M10"
+    ],
+    "evidence_note": "A02 (India): material storage location RII 0.7; M10 (Middle East): unsuitability of storage location RII 0.68. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-PRC",
+    "name": "Material price escalation",
+    "category": "Material",
+    "scope": "activity",
+    "description": "Price rises make suppliers or the contractor slow deliveries or purchase less.",
+    "existence_evidence": [
+      "A02",
+      "A14"
+    ],
+    "evidence_note": "A14 (Sri Lanka): fluctuation of material prices in the market RII 0.789; A02 (India): increase in price of material RII 0.55. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-WAT",
+    "name": "Water shortage",
+    "category": "Material",
+    "scope": "activity",
+    "description": "Water for mortar and curing is short, halting masonry.",
+    "existence_evidence": [
+      "A02"
+    ],
+    "evidence_note": "A02 (India): shortage of water RII 0.65. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-MTH",
+    "name": "Construction method or design complexity",
+    "category": "Design",
+    "scope": "activity",
+    "description": "A complex design, project scale or unsuitable method slows the masonry.",
+    "existence_evidence": [
+      "M01",
+      "M10",
+      "M14",
+      "M15"
+    ],
+    "evidence_note": "M01 (India): method of construction RII 0.7; M10 (Middle East): design complexity RII 0.668; M10 (Middle East): construction method RII 0.666; M14 (Indonesia): project scale RII 0.66 (related). Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-ECO",
+    "name": "Economic conditions, inflation or interest rates",
+    "category": "External",
+    "scope": "project",
+    "description": "Economic conditions affect cash flow, prices and availability of resources.",
+    "existence_evidence": [
+      "M06",
+      "M10"
+    ],
+    "evidence_note": "M10 (Middle East): economic conditions RII 0.778; M06 (India): political and economic environment RII 0.666; M06 (India): interest and inflation rates RII 0.657. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-GOV",
+    "name": "Government policies or approvals",
+    "category": "External",
+    "scope": "project",
+    "description": "Policies, regulations or approvals interrupt or delay work.",
+    "existence_evidence": [
+      "M10"
+    ],
+    "evidence_note": "M10 (Middle East): government policies RII 0.698. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-SOC",
+    "name": "Social or community environment",
+    "category": "External",
+    "scope": "project",
+    "description": "Local social conditions or community action disturb the work.",
+    "existence_evidence": [
+      "M06"
+    ],
+    "evidence_note": "M06 (India): social environment RII 0.594. Survey rankings show importance, not probability."
+  },
+  {
+    "id": "R-FIN",
+    "name": "Contractor financial difficulties",
+    "category": "Financial",
+    "scope": "project",
+    "description": "The contractor's own finances limit purchase, wages and mobilisation.",
+    "existence_evidence": [
+      "A21"
+    ],
+    "evidence_note": "A21 (Thailand): contractor financial issues RII 0.777. Survey rankings show importance, not probability."
+  }
+]

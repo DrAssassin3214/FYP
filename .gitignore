@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+~$*
+*.log
+.venv/
+# Large data and downloaded third-party papers are kept out of git
+data/*.db
+data/*.jsonl
+Research_Papers/

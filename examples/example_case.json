@@ -1,0 +1,192 @@
+{
+  "project": {
+    "name": "ILLUSTRATIVE example",
+    "location": "n/a",
+    "construction_type": "Residential building",
+    "notes": "Demonstration only. Every probability, delay and the planned duration is a placeholder labelled Assumption, not site data and not evidence. The evidence IDs (M01, M02, ...) point to real literature records supporting that each risk exists, not its size. Its site facts cover every input of the bundled rules, so the rule engine flags the risks that are in the register and nothing is left over. Replace all numbers with your own before drawing any conclusion."
+  },
+  "activity": {
+    "id": "MAS-01",
+    "name": "Brick masonry, ground-floor walls",
+    "planned_duration_days": {
+      "value": 16,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence"
+    }
+  },
+  "facts": {
+    "required_workers": 6,
+    "available_workers": 5,
+    "material_lead_time_days": 6,
+    "material_buffer_days": 3,
+    "material_stock_days": 2,
+    "tools_shortage": false,
+    "monsoon_overlap": true,
+    "work_at_height": true,
+    "payment_delay_expected": false,
+    "design_incomplete": false,
+    "prior_rework_history": true,
+    "schedule_compressed": true,
+    "skilled_masons_short": true
+  },
+  "risks": [
+    {
+      "id": "R-MAT",
+      "name": "Brick / material shortage",
+      "category": "Material",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01",
+        "M06"
+      ],
+      "p": {
+        "value": 0.5,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 3,
+        "b": 8,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-LAB",
+      "name": "Labour absenteeism / shortage",
+      "category": "Labour",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01",
+        "M07",
+        "M15"
+      ],
+      "p": {
+        "value": 0.35,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 6,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-RWK",
+      "name": "Rework due to workmanship",
+      "category": "Quality",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M03",
+        "M15"
+      ],
+      "p": {
+        "value": 0.25,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 5,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-WX",
+      "name": "Rain / monsoon stoppage",
+      "category": "Weather",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "R08"
+      ],
+      "p": {
+        "value": 0.2,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 7,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-PLAN",
+      "name": "Poor planning or unrealistic scheduling",
+      "category": "Management",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01"
+      ],
+      "p": {
+        "value": 0.1,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 1,
+        "b": 3,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-SAFE",
+      "name": "Unsafe conditions / work at height",
+      "category": "Safety",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01"
+      ],
+      "p": {
+        "value": 0.3,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 6,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-SKILL",
+      "name": "Unskilled or unqualified labour",
+      "category": "Labour",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M15",
+        "M14"
+      ],
+      "p": {
+        "value": 0.22,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 5,
+        "source": "Assumption"
+      }
+    }
+  ],
+  "impact_bin_edges_fraction": [
+    0.02,
+    0.05,
+    0.1,
+    0.2
+  ]
+}

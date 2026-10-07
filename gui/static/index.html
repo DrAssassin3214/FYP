@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bricks-ly</title>
+  <meta name="description" content="Risk identification, risk register and probability-impact matrix for one brick-masonry activity, with cited evidence and guarded AI suggestions.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <script>
+    (function () {
+      var t = null;
+      try { t = window.localStorage.getItem("fyp-gui-theme"); } catch (e) { t = null; }
+      if (t !== "light" && t !== "dark") {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/theme-designshop.css">
+  <script type="module" src="/static/js/app.js"></script>
+</head>
+<body>
+  <div id="intro" class="intro" aria-hidden="true">
+    <div class="intro-word" id="intro-word"><span class="ch" style="--i:0">B</span><span class="ch" style="--i:1">r</span><span class="ch" style="--i:2">i</span><span class="ch" style="--i:3">c</span><span class="ch" style="--i:4">k</span><span class="ch" style="--i:5">s</span><span class="ch" style="--i:6">-</span><span class="ch" style="--i:7">l</span><span class="ch" style="--i:8">y</span></div>
+    <div class="intro-row">
+      <span class="intro-sub">Risk identification &middot; register &middot; matrix</span>
+      <span class="intro-pct"><span id="intro-pct-num">0</span>%</span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var el = document.getElementById("intro");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) { el.remove(); return; }
+      var num = document.getElementById("intro-pct-num");
+      var start = performance.now(), dur = 1000;
+      function tick(now) {
+        var p = Math.min(1, (now - start) / dur);
+        num.textContent = Math.round(p * 100);
+        if (p < 1) requestAnimationFrame(tick);
+        else setTimeout(function () {
+          el.classList.add("is-leaving");
+          el.addEventListener("transitionend", function () { el.remove(); }, { once: true });
+          setTimeout(function () { if (el.parentNode) el.remove(); }, 1200);   // safety net
+        }, 150);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
+  <a class="sr-only" href="#screen">Skip to content</a>
+  <div id="progress" class="progress-top" hidden></div>
+
+  <header class="topbar" id="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg class="ic" viewBox="0 0 24 24">
+          <path style="--i:0" d="M3 6.5h18v11H3z"/>
+          <path style="--i:1" d="M3 10.2h18"/>
+          <path style="--i:2" d="M3 13.8h18"/>
+          <path style="--i:3" d="M9 6.5v3.7"/>
+          <path style="--i:4" d="M15 6.5v3.7"/>
+          <path style="--i:5" d="M6 10.2v3.6"/>
+          <path style="--i:6" d="M12 10.2v3.6"/>
+          <path style="--i:7" d="M18 10.2v3.6"/>
+          <path style="--i:8" d="M9 13.8v3.7"/>
+          <path style="--i:9" d="M15 13.8v3.7"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title" aria-label="Bricks-ly"><span class="ch" style="--i:0">B</span><span class="ch" style="--i:1">r</span><span class="ch" style="--i:2">i</span><span class="ch" style="--i:3">c</span><span class="ch" style="--i:4">k</span><span class="ch" style="--i:5">s</span><span class="ch" style="--i:6">-</span><span class="ch" style="--i:7">l</span><span class="ch" style="--i:8">y</span></span>
+      </div>
+    </div>
+    <div class="casebox">
+      <label for="case-name">Case</label>
+      <input id="case-name" class="case-name" type="text" placeholder="Untitled case" data-bind="project.name" data-t="text" autocomplete="off" aria-label="Case (project) name">
+      <span id="dirty" class="dirty" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span class="dirty-txt">No changes</span></span>
+      <button id="problems-btn" class="btn btn-sm problems-btn" type="button" hidden aria-haspopup="dialog" aria-expanded="false"></button>
+    </div>
+    <div class="toolbar" id="toolbar"></div>
+  </header>
+
+
+  <div class="shell">
+    <nav class="rail" id="rail" aria-label="Workflow steps"></nav>
+    <main class="main" id="main">
+      <div id="kpi-strip" class="kpi-strip is-empty" aria-label="Key results"></div>
+      <div id="screen" class="screen" tabindex="-1"></div>
+    </main>
+  </div>
+
+  <div id="tip" class="tip" role="tooltip" aria-hidden="true"></div>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="popover-root"></div>
+  <dialog id="modal" class="modal" aria-labelledby="modal-title"></dialog>
+  <input id="file-input" type="file" accept=".json,application/json" hidden>
+  <noscript><p style="padding:24px">This tool needs JavaScript enabled (it runs locally; nothing is sent to the internet).</p></noscript>
+</body>
+</html>
