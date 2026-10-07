@@ -1,0 +1,1159 @@
+[
+  {
+    "id": "P2-01",
+    "authors": "Wen Yi; Albert P. C. Chan",
+    "year": 2017,
+    "title": "Effects of Heat Stress on Construction Labor Productivity in Hong Kong: A Case Study of Rebar Workers",
+    "journal": "International Journal of Environmental Research and Public Health 14(9):1055",
+    "doi": "10.3390/ijerph14091055",
+    "access": "Open access, CC BY (licence text seen on PMC5615592 full text)",
+    "country": "Hong Kong (two construction training grounds, Aug-Sep 2016; hot-humid subtropical)",
+    "trade_activity": "Steel bar (rebar) fixing - manual building trade, NOT masonry",
+    "modifier_name": "Heat stress (WBGT) plus work intensity, work duration, age, alcohol habit -> direct work time (CLP)",
+    "input_variable": {
+      "name": "WBGT (wet bulb globe temperature)",
+      "unit": "deg C",
+      "min": 22.28,
+      "max": 35.46
+    },
+    "functional_form": "absolute",
+    "equation_text": "CLP = 1.602 - 0.028*WBGT + 0.231*%HRmax - 0.035*WD - 0.005*Age - 0.085*ADH  (Eq. 2, as printed with unicode minus signs; WBGT in deg C; WD = work duration in hours; ADH = alcohol drinking habit coded 0/1/2; %HRmax = percentage of maximum heart rate)",
+    "coefficients": {
+      "constant": 1.602,
+      "WBGT": -0.028,
+      "%HRmax": 0.231,
+      "work_duration_WD": -0.035,
+      "Age": -0.005,
+      "alcohol_ADH": -0.085,
+      "ranges_in_Table6": {
+        "WBGT_C": "22.28-35.46",
+        "%HRmax": "34.3-80.5",
+        "WD_h": "0-4",
+        "Age_y": "21-39",
+        "ADH": "0,1,2"
+      }
+    },
+    "table": null,
+    "output_definition": "CLP = construction labor productivity measured as proportion of 15-min direct work time (DWT, AACE direct/indirect/non-productive work sampling, 4114 observations). Absolute output (fraction/percentage of time in direct work), NOT a multiplier on a baseline; the unit of CLP inside Eq. 2 is not stated in the text read, and the abstract's statement 'direct work time decreased by 0.33% when WBGT increased by 1 C' cannot be reconciled with the printed coefficient -0.028 per deg C from the text alone.",
+    "fit": {
+      "r2": "adjusted R2 = 0.68 (n=340 estimation sets, p<0.05)",
+      "other": "validation on 38 held-out sets: RMSE 0.857, MAPE 0.092, Theil's U 0.009; max VIF 5.68; 378 sets total, 32 outliers removed"
+    },
+    "evidence_depth": "Full text read (PMC HTML). Small sample: 14 male rebar fixers (mean age 29 +/- 3.32), acclimatised, training-ground not live site.",
+    "location_in_paper": "Section 3.4 Regression Model of CLP, Eq. (2), Table 6; Table 4 (DWT by time of day: 8-9h 57.82%, 9-10h 70.53%, 10:15-11h 72.79%, 11-12h 67.41%, 13-14h 55.96%, 14-15h 59.35%, 15:30-16:30 62.63%)",
+    "limitations": "Rebar not masonry; Hong Kong not India; small homogeneous sample of young acclimatised workers; unit of CLP in Eq.2 not stated and inconsistent with abstract's 0.33%/deg C; requires %HRmax (physiological measurement) as an input so not directly usable from weather data alone; WBGT needs globe/wet-bulb instrument; validity only 22-35.5 deg C WBGT."
+  },
+  {
+    "id": "P2-02",
+    "authors": "Lendra; Muhammad I. R. Resnawan; Waluyo Nuswantoro; Andi",
+    "year": 2026,
+    "title": "Impact of Overtime Work on Construction Labor Productivity: Evidence from Work Sampling Analysis of Finishing Activities",
+    "journal": "Journal of Engineering Management and Systems Engineering 5(2):156-177",
+    "doi": "10.56578/jemse050203",
+    "access": "Open access, CC BY 4.0 (licence statement seen on page 1 of the PDF)",
+    "country": "Indonesia (Palangka Raya, Central Kalimantan; two-storey residential, Jun-Dec 2025)",
+    "trade_activity": "Plastering and skim coating (finishing trades, NOT masonry); 9 regular hours + 2-3 overtime hours per day",
+    "modifier_name": "Overtime (2-3 h after a 9 h regular day) effect on labour utilisation rate (LUR) and on volume output per hour",
+    "input_variable": {
+      "name": "Working period: regular hours vs overtime (2-3 h following 9 h)",
+      "unit": "categorical (regular / overtime)",
+      "min": null,
+      "max": null
+    },
+    "functional_form": "table",
+    "equation_text": "No fitted predictive equation. Printed definitions: LUR = t_eff / t x 100% (Eq. 1); Decrease in Relative Activity = (Initial Value - Final Value) / Initial Value x 100% (Eq. 2); LUR difference = Overtime LUR - Normal LUR (Section 4.2.3).",
+    "coefficients": {
+      "plastering_LUR_regular_avg_pct": 56.94,
+      "plastering_LUR_overtime_avg_pct": 56.02,
+      "plastering_LUR_change_pct_points": -0.92,
+      "skim_LUR_regular_avg_pct": 66.67,
+      "skim_LUR_overtime_avg_pct": 60.19,
+      "skim_LUR_change_pct_points": -6.48,
+      "effective_activities_per_session_regular": 133.5,
+      "effective_activities_per_session_overtime": 125.5,
+      "effective_activities_decrease_pct": -5.99,
+      "volume_output_change_overtime_vs_regular_plastering_pct": 28,
+      "volume_output_change_overtime_vs_regular_skim_pct": 49,
+      "p_plastering_Wilcoxon": 0.109,
+      "p_skim_paired_t": 0.031,
+      "degrees_of_freedom": 2
+    },
+    "table": [
+      {
+        "input": "Plastering, regular hours (avg of 3 days)",
+        "value": "LUR 56.94 %; productivity 21.28 m2/man-day (foreman/skilled), 10.64 (unskilled) - Tables 1, 7"
+      },
+      {
+        "input": "Plastering, overtime (avg of 3 days)",
+        "value": "LUR 56.02 %; productivity 27.22 m2/man-day (foreman/skilled), 13.61 (unskilled) - Tables 1, 7"
+      },
+      {
+        "input": "Skim coating, regular hours (avg of 3 days)",
+        "value": "LUR 66.67 %; productivity 47.99 (foreman), 23.99 (skilled), 47.99 (unskilled) m2/man-day - Tables 1, 8"
+      },
+      {
+        "input": "Skim coating, overtime (avg of 3 days)",
+        "value": "LUR 60.19 %; productivity 71.63 (foreman), 35.82 (skilled), 71.63 (unskilled) m2/man-day - Tables 1, 8"
+      }
+    ],
+    "output_definition": "LUR = share of 5-minute work-sampling observations that are effective (percentage; absolute, then compared regular vs overtime); volume output = m2 per man-day/hour normalised to the AHSP 7 h standard. Overtime comparison is a before/after ratio (multiplier on output per hour ~1.28 plastering, ~1.49 skim coating as reported by the authors as +28% and +49%), but with only df = 2 and 3 days per trade it is not a fitted multiplier model.",
+    "fit": {
+      "r2": null,
+      "other": "Skim coating paired t-test p = 0.031; plastering Wilcoxon p = 0.109; 1,296 observations (864 regular, 432 overtime), six workers, Cronbach alpha 0.87 (observer consistency); authors call p-values preliminary"
+    },
+    "evidence_depth": "Full text read (local PDF held by user). One site, six workers, three days per trade, two overtime sessions per day.",
+    "location_in_paper": "Tables 1, 4, 5, 7, 8 and 17; Sections 4.2.3, 4.3.2, 4.4; Section 5.3 (limitations). Secondary citation (Putra et al. [24], not read by me): lightweight brick wall installation overtime productivity +185%, +32%, +22% for foreman, labourer, assistant labourer.",
+    "limitations": "Finishing (plastering/skim coat), not masonry; Indonesia; extremely small sample (df = 2); payment was a down-payment tied to target output which may inflate overtime output; authors state the two results are preliminary; the direction (LUR falls 1-6.5 pts while volume per hour rises) conflicts with classic overtime-loss literature so it must not be read as a general overtime multiplier."
+  },
+  {
+    "id": "P2-03",
+    "authors": "Ibrahim Mahamid",
+    "year": 2020,
+    "title": "Study of relationship between rework and labor productivity in Building Construction Projects",
+    "journal": "Revista de la Construccion (Journal of Construction) 19(1):30-41",
+    "doi": "10.7764/RDLC.19.1.30-41",
+    "access": "Free PDF held locally by user; no licence statement found in the PDF text (open-access licence NOT confirmed; NC)",
+    "country": "Palestine (West Bank), 40 building projects 2015-2018",
+    "trade_activity": "Brick works (masonry) - Model 2; also plastering (Model 1) and ceramic works (Model 3)",
+    "modifier_name": "Rework cost (% of item contract price) -> labour productivity of brick works (2-labour crew, m2/day)",
+    "input_variable": {
+      "name": "Rework cost in brick works (% of item contract price)",
+      "unit": "%",
+      "min": 0,
+      "max": 10
+    },
+    "functional_form": "absolute",
+    "equation_text": "Y = 34.36 - 1.71X   (Equation 5; Y = labor productivity in brick works, m2/day; X = rework cost in brick works, %). Chart trendline printed as y = -1.7107x + 34.36, R2 = 0.7823. For comparison: plastering Y = 40.9 - 2.02X (Eq. 4, R2 0.82); ceramic Y = 44.60 - 2.58X (Eq. 6, R2 0.79).",
+    "coefficients": {
+      "brick_intercept_m2_per_day": 34.36,
+      "brick_slope_m2_per_day_per_pct_rework": -1.71,
+      "brick_mean_rework_pct": 4.51,
+      "brick_mean_productivity_m2_per_day": 26.2,
+      "brick_t_intercept": 7.11,
+      "brick_t_slope": 6.44,
+      "plastering_intercept": 40.9,
+      "plastering_slope": -2.02,
+      "plastering_mean_rework_pct": 5.11,
+      "plastering_mean_productivity": 30.59,
+      "ceramic_intercept": 44.6,
+      "ceramic_slope": -2.58,
+      "ceramic_mean_rework_pct": 5.43,
+      "ceramic_mean_productivity": 30.55
+    },
+    "table": null,
+    "output_definition": "Absolute productivity in m2 per day for a 2-labour crew (not a multiplier). A relative modifier can be derived (P(X)/P(0) = 1 - 0.0498 X, my arithmetic from the printed coefficients: 1.71/34.36), but the paper does not print that form. Paper's text says the Eq. 3 template has Y = rework cost and X = productivity, but Eqs. 4-6 define Y as productivity and X as rework cost (internal inconsistency; Eqs. 4-6 used here).",
+    "fit": {
+      "r2": "0.78 (Table 5; chart R2 = 0.7823)",
+      "other": "F(1,39) = 62.71, p = 0.00; n = 40 observations; t(intercept) 7.11, t(slope) 6.44"
+    },
+    "evidence_depth": "Full text read (user's local PDF). 40 building projects from contracting firms; regression on project-level averages; each of the three models reports n = 40 (unclear whether same projects).",
+    "location_in_paper": "Section 'Predictive models', Model 2 (brick works), Equation (5), Table 5, Figure 2; means in text; Section 'Ranking of factors' Table 2 (ranking only)",
+    "limitations": "Palestine not India; rework cost and productivity are project-level company records (data definitions, crew size definition, wall type, thickness not reported in the text read); plotted rework range appears 0-10% (axis) - observed min/max not stated; linear fit through means: at the printed mean rework 4.51% the line gives 26.65 m2/day (my calc) vs printed mean 26.2 (minor mismatch); text once calls the activity 'block works' though titled brick works; cross-sectional association, not causal; productivity of 34 m2/day intercept is defined only by the crew of 2."
+  },
+  {
+    "id": "P2-04",
+    "authors": "Rateb J. Sweis; Ghaleb J. Sweis; Ayman A. Abu Hammad; Malek Abu Rumman",
+    "year": 2009,
+    "title": "Modeling the Variability of Labor Productivity in Masonry Construction",
+    "journal": "Jordan Journal of Civil Engineering 3(3):197-212",
+    "doi": "NR",
+    "access": "Free PDF on iiste.org (Jordan Journal of Civil Engineering); licence statement NOT seen, so open-access status not confirmed",
+    "country": "Jordan (Amman), 14 masonry (concrete masonry unit) projects 2006-2007",
+    "trade_activity": "Concrete masonry wall construction (crew-shift level), all projects work content rating 1 (least complex)",
+    "modifier_name": "Baseline productivity and normal-variation band (control limits) for daily masonry crew productivity; loss of productivity relative to baseline",
+    "input_variable": {
+      "name": "Daily crew productivity (work hours per m2 of standardised masonry)",
+      "unit": "work-hours per m2 (Wh/sq.m)",
+      "min": 0.765,
+      "max": 1.464
+    },
+    "functional_form": "table",
+    "equation_text": "Daily productivity_t = Work hours_t / Equivalent Quantities_t (as printed, definition of daily productivity, Wh per unit of work). Control limits per project: UCL = X_bar + 3.14 x M; LCL = X_bar - 3.14 x M, where X_bar = mean of daily productivity, M = median of the ranges (differences between consecutive daily values); baseline productivity = average of daily values below the LCL (process printed on p.206). A regression on (actual - baseline) with binary factor variables is only PROPOSED (Fig. 10), not estimated.",
+    "coefficients": {
+      "average_baseline_productivity_Wh_per_m2": 0.946,
+      "average_daily_productivity_Wh_per_m2": 1.104,
+      "average_range_normal_variation_above_below_average": 0.227,
+      "average_range_normal_variation_above_baseline": 0.454,
+      "average_UCL_Wh_per_m2": 1.314,
+      "average_LCL_Wh_per_m2": 0.876,
+      "per_project_baseline_min": 0.833,
+      "per_project_baseline_max": 1.032,
+      "per_project_average_min": 0.921,
+      "per_project_average_max": 1.246,
+      "n_projects": 14
+    },
+    "table": [
+      {
+        "input": "Project 0601 (baseline / average / UCL / LCL, Wh/m2)",
+        "value": "0.921 / 1.030 / 1.212 / 0.848"
+      },
+      {
+        "input": "Project 0602",
+        "value": "0.993 / 1.124 / 1.338 / 0.911"
+      },
+      {
+        "input": "Project 0603",
+        "value": "1.001 / 1.116 / 1.324 / 0.909"
+      },
+      {
+        "input": "Project 0604",
+        "value": "0.985 / 1.235 / 1.464 / 1.006"
+      },
+      {
+        "input": "Project 0605",
+        "value": "1.032 / 1.151 / 1.377 / 0.925"
+      },
+      {
+        "input": "Project 0606",
+        "value": "0.931 / 1.056 / 1.269 / 0.842"
+      },
+      {
+        "input": "Project 0607",
+        "value": "0.998 / 1.246 / 1.359 / 0.889"
+      },
+      {
+        "input": "Project 0608",
+        "value": "0.975 / 1.114 / 1.399 / 0.828"
+      },
+      {
+        "input": "Project 0701",
+        "value": "0.872 / 1.027 / 1.228 / 0.817"
+      },
+      {
+        "input": "Project 0702",
+        "value": "0.913 / 1.142 / 1.392 / 0.893"
+      },
+      {
+        "input": "Project 0703",
+        "value": "0.921 / 1.064 / 1.246 / 0.881"
+      },
+      {
+        "input": "Project 0704",
+        "value": "0.981 / 1.192 / 1.421 / 0.963"
+      },
+      {
+        "input": "Project 0705",
+        "value": "0.883 / 0.999 / 1.206 / 0.792"
+      },
+      {
+        "input": "Project 0706",
+        "value": "0.833 / 0.961 / 1.158 / 0.765"
+      },
+      {
+        "input": "Average of 14 projects",
+        "value": "0.946 / 1.104 / 1.314 / 0.876 (range of normal variation above baseline avg 0.454)"
+      }
+    ],
+    "output_definition": "Work-hours per m2 of standardised masonry (lower = better). Baseline = best achievable with few disruptions. Not a multiplier; a relative productivity-loss index can be formed as daily/baseline (my arithmetic from printed averages: 1.104/0.946 = 1.17, i.e. mean daily labour input ~17% above the printed average baseline; UCL/baseline = 1.314/0.946 = 1.39), but the paper does not print that ratio and its text equates baseline with the LCL average (0.876), which conflicts with the Table 2 baseline average (0.946).",
+    "fit": {
+      "r2": null,
+      "other": "No regression fitted; 14 projects, Shewhart-type control limits (factor 3.14 from Nelson 1984)"
+    },
+    "evidence_depth": "Full text read (PDF from iiste.org). Descriptive statistics of 14 Jordanian projects; factor regression only proposed as future work.",
+    "location_in_paper": "Table 2 (Jordan's database parameters), 'Project Evaluation' p.206 (control-limit procedure), Fig. 9-10 (conceptual loss chart / factor quantification); Table 1 (work content scale 1-5)",
+    "limitations": "Jordan not India; all 14 projects at the lowest work-content rating (1), so no complexity scaling; per-factor quantification (weather, material, congestion, rework, overtime) explicitly NOT done; unit description in text ('20 mm x 20 mm x 40 mm concrete masonry units') looks like a typo for the standard block size; inconsistent definition of baseline (0.946 in Table 2 vs LCL 0.876 in text); no licence text seen."
+  },
+  {
+    "id": "P2-05",
+    "authors": "Edwin Adakole Agbo; Yohanna D. Izam; Calistus Ayegba",
+    "year": 2021,
+    "title": "Quantifying the Impact of Work Environment Factors on the Variability of Labour Productivity in Wall Plastering",
+    "journal": "Journal of Construction in Developing Countries (Early View provisional PDF, accepted 02-Aug-2021)",
+    "doi": "10.21315/jcdc-01-21-0009",
+    "access": "Open access, CC BY 4.0 (licence statement printed on PDF page 1 of provisional version)",
+    "country": "Nigeria (Abuja), 25 public building projects, 30-day observation Jan-Feb 2020",
+    "trade_activity": "Wall plastering on sandcrete block walls (2-person gang: mason + labourer); authors position it as relevant to 'masonry trades'; NOT bricklaying",
+    "modifier_name": "Work-environment factors cited on the workday (waiting for materials, congestion, rework, weather, gang size, supervision, etc.) -> loss of daily productivity",
+    "input_variable": {
+      "name": "Binary occurrence of each cited work-environment factor on the day",
+      "unit": "0/1 (cited that day or not)",
+      "min": 0,
+      "max": 1
+    },
+    "functional_form": "absolute",
+    "equation_text": "Pav - PbL = Var - PbL + PL1*X1 + PL2*X2 + PL3*X3 ... + PL15*X15  (as printed on p.23; Pav = average daily productivity, PbL = baseline productivity, Var = average variation in daily productivity, PLi = loss of productivity due to factor Xi, Xi = work-environment factor cited during the workday). Productivity = input hours / output (Eq. 7, whr/m2); CPV = PV x 100 / baseline productivity (Eq. 8).",
+    "coefficients": {
+      "note": "Unstandardised B (Std. Error), standardised Beta, t, Sig from Table 5; units of B are NOT stated in the text read",
+      "waiting_for_materials": {
+        "B": 2.399,
+        "SE": 2.992,
+        "Beta": 0.624,
+        "t": 2.857,
+        "p": 0.006
+      },
+      "unexplained_movement": {
+        "B": -0.264,
+        "SE": 2.191,
+        "Beta": 0.32,
+        "t": 2.266,
+        "p": 0.05
+      },
+      "supervision": {
+        "B": 1.376,
+        "SE": 1.096,
+        "Beta": 0.231,
+        "t": 1.256,
+        "p": 0.22
+      },
+      "weather": {
+        "B": 1.17,
+        "SE": 1.346,
+        "Beta": 0.421,
+        "t": 2.869,
+        "p": 0.034
+      },
+      "waiting_for_tools": {
+        "B": 2.498,
+        "SE": 1.339,
+        "Beta": 0.511,
+        "t": 2.66,
+        "p": 0.015
+      },
+      "work_redone": {
+        "B": 1.726,
+        "SE": 1.292,
+        "Beta": 0.517,
+        "t": 2.739,
+        "p": 0.013
+      },
+      "waiting_for_other_crew": {
+        "B": 0.317,
+        "SE": 1.361,
+        "Beta": 0.052,
+        "t": 0.233,
+        "p": 0.818
+      },
+      "interference": {
+        "B": 0.483,
+        "SE": 1.531,
+        "Beta": 0.372,
+        "t": 2.16,
+        "p": 0.046
+      },
+      "waiting_for_information": {
+        "B": 3.593,
+        "SE": 1.538,
+        "Beta": 0.472,
+        "t": 2.337,
+        "p": 0.031
+      },
+      "congestion": {
+        "B": 0.756,
+        "SE": 1.46,
+        "Beta": 0.525,
+        "t": 2.18,
+        "p": 0.011
+      },
+      "accident": {
+        "B": 0.733,
+        "SE": 1.376,
+        "Beta": 0.117,
+        "t": 0.532,
+        "p": 0.6
+      },
+      "gang_size_composition": {
+        "B": 1.649,
+        "SE": 0.781,
+        "Beta": 0.31,
+        "t": 2.112,
+        "p": 0.041
+      },
+      "plant_equipment_breakdown": {
+        "B": 0.003,
+        "SE": 0.001,
+        "Beta": 0.21,
+        "t": 2.142,
+        "p": 0.052
+      },
+      "waiting_for_instruction": {
+        "B": 1.468,
+        "SE": 1.199,
+        "Beta": 0.216,
+        "t": 1.225,
+        "p": 0.233
+      },
+      "on_job_but_not_working": {
+        "B": 3.591,
+        "SE": 1.266,
+        "Beta": 0.526,
+        "t": 2.836,
+        "p": 0.01
+      },
+      "overall_average_daily_productivity_whr_per_m2": 1.268,
+      "baseline_productivity_whr_per_m2": 0.993,
+      "average_CPV_pct": 22.08,
+      "CPV_range_pct": "8.76-63.3"
+    },
+    "table": null,
+    "output_definition": "Dependent variable = (average daily productivity - baseline productivity) in whr/m2 (work-hours per m2, lower is better); coefficients are additive losses per cited factor in the same unit, NOT multipliers. Unit is inferred from the model definition, not explicitly stated for Table 5.",
+    "fit": {
+      "r2": "0.636",
+      "other": "F(15,137) = 6.201, Sig F change 0.0005, Durbin-Watson 1.346; 152 completed questionnaires; direct observation of 25 sites, average 28 observations per site"
+    },
+    "evidence_depth": "Full text read (provisional PDF via Semantic Scholar mirror). Serious internal inconsistencies noted below.",
+    "location_in_paper": "Section 5.4 (model form), Table 4 (model summary), Table 5 (coefficients); Table 2 (baseline and CPV per project); Table 3 (RII ranking)",
+    "limitations": "Plastering not brickwork; Nigeria; unstandardised B values (up to 3.6) are implausibly large next to baseline 0.993 whr/m2 if the unit is whr/m2 (units not stated) - do not use B as a productivity loss without checking the final published version; the text reports standardised Beta values as '% of variability' (e.g. 62.4%) and quotes p-values that differ from Table 5 (e.g. waiting for tools p = 0.150 in text vs 0.015 in table; congestion t = 2.18 with p = 0.011); Table 2 overall baseline printed as 0.963 whereas abstract says 0.993; provisional (not copy-edited) version."
+  },
+  {
+    "id": "P2-06",
+    "authors": "Moumita Sett; Subhashis Sahu",
+    "year": 2014,
+    "title": "Effects of occupational heat exposure on female brick workers in West Bengal, India",
+    "journal": "Global Health Action 7:21923",
+    "doi": "10.3402/gha.v7.21923",
+    "access": "Open access, CC BY (licence text seen on PMC3914028)",
+    "country": "India (West Bengal brickfields; 8-month working period, three sessions)",
+    "trade_activity": "Manual brick MANUFACTURING (brick moulders, n=88 weekly records; brick carriers, n=32) - NOT bricklaying/masonry; included as an India-specific temperature-output slope for brick-related manual work",
+    "modifier_name": "Maximum air temperature -> weekly productivity per person (bricks moulded or carried)",
+    "input_variable": {
+      "name": "Mean maximum air temperature (weather station)",
+      "unit": "deg C",
+      "min": 34.9,
+      "max": null
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "No equation printed. Text: 'linear decline in productivity with increased maximum air temperature above 34.9 C' (Abstract/Results); 'the lost productivity for every degree rise in temperature is about 2%' (Abstract/Conclusion); Discussion: 'each degree rise in temperature causes about a 1.81% loss of productivity of these female workers'.",
+    "coefficients": {
+      "loss_per_deg_C_above_threshold_pct_abstract": 2,
+      "loss_per_deg_C_pct_discussion": 1.81,
+      "threshold_max_air_temp_C": 34.9,
+      "WBGT_out_summer_range_C": "26.9-30.74 (cardiac study days)",
+      "WBGT_out_winter_range_C": "16.12-19.37",
+      "secondary_cited_not_read": "Sahu et al. rice harvesters India: about 5% loss per +1 C WBGT (cited within this paper); Langkulsen et al. Thailand: hourly productivity reduced 10 to 60% in construction and pottery depending on heat exposure (cited within this paper)"
+    },
+    "table": null,
+    "output_definition": "Percent loss of weekly output per person per +1 deg C, relative to output below the ~34.9 deg C threshold (so a multiplicative/relative slope, printed only as prose; the paper's Figure 2 holds the data but no fitted equation, R2 or intercept was seen in the text).",
+    "fit": {
+      "r2": "NR",
+      "other": "NR; questionnaire n=120; cardiac subset n=40 (18 moulders, 22 carriers); productivity 88 moulder-weeks and 32 carrier-weeks"
+    },
+    "evidence_depth": "Full text read (PMC HTML). Slope is descriptive from a figure; two different values (about 2% vs 1.81%) are printed.",
+    "location_in_paper": "Abstract (Results, Conclusion); Discussion 'Productivity analyses'; Fig. 2; Results 'Productivity analyses'",
+    "limitations": "Brick manufacturing by female piece-rate workers (not bricklaying); productivity is weekly output, not hourly; workers self-pace and are paid per output; no fitted equation, R2 or confidence interval; threshold and slope derived on a single brickfield unit; clay drying time also varies with season (authors note); not masonry so use only as an order-of-magnitude India heat slope."
+  },
+  {
+    "id": "P2-07",
+    "authors": "Shurong Han; Lin Dong; Yulei Weng; Jianjun Xiang",
+    "year": 2024,
+    "title": "Heat exposure and productivity loss among construction workers: a meta-analysis",
+    "journal": "BMC Public Health 24:3252",
+    "doi": "10.1186/s12889-024-20744-x",
+    "access": "Open access, CC BY-NC-ND 4.0 (licence text seen on PMC11583663)",
+    "country": "Multi-country (14 studies, 2387 workers; 11 middle/low-income, 3 high-income)",
+    "trade_activity": "Construction workers, mixed trades (meta-analysis)",
+    "modifier_name": "Heat exposure (WBGT / ambient temperature) -> proportion of workers with productivity loss (prevalence, not output magnitude)",
+    "input_variable": {
+      "name": "Heat exposure category (WBGT <= 28 C or ambient <= 35 C vs WBGT > 28 C or ambient > 35 C)",
+      "unit": "deg C (categorical threshold)",
+      "min": null,
+      "max": null
+    },
+    "functional_form": "table",
+    "equation_text": "No equation. Random-effects pooled proportions (Table 3).",
+    "coefficients": {
+      "pooled_proportion_with_productivity_loss": 0.6,
+      "pooled_95CI": "0.48-0.72",
+      "I2_overall_pct": 90,
+      "WBGT_le_28_or_Ta_le_35_proportion": 0.59,
+      "WBGT_le_28_or_Ta_le_35_CI": "0.44-0.73",
+      "WBGT_gt_28_or_Ta_gt_35_proportion": 0.62,
+      "WBGT_gt_28_or_Ta_gt_35_CI": "0.37-0.84",
+      "self_report_proportion": 0.67,
+      "self_report_CI": "0.58-0.75",
+      "actual_measurement_proportion": 0.13,
+      "actual_measurement_CI": "0.03-0.29",
+      "actual_measurement_n_studies": 2,
+      "age_lt_38": 0.58,
+      "age_ge_38": 0.61,
+      "male_only": 0.45,
+      "mixed_or_female": 0.74,
+      "secondary_cited_not_read": "Li (Beijing, rebar workers): 0.57% productivity decline per +1 C WBGT; Sett (India brick workers): about 2% loss per degree above 34.98 C; Zhang et al.: 'ideal temperature' for peak construction productivity 24.90 C (all cited in the Introduction/Discussion of this paper)"
+    },
+    "table": [
+      {
+        "input": "All 14 studies (random effects)",
+        "value": "proportion with productivity loss 0.60 (0.48-0.72), I2 90%"
+      },
+      {
+        "input": "WBGT <= 28 C / ambient <= 35 C (9 studies)",
+        "value": "0.59 (0.44-0.73)"
+      },
+      {
+        "input": "WBGT > 28 C / ambient > 35 C (5 studies)",
+        "value": "0.62 (0.37-0.84)"
+      },
+      {
+        "input": "Self-reported productivity loss (12 studies)",
+        "value": "0.67 (0.58-0.75)"
+      },
+      {
+        "input": "Measured productivity loss (2 studies)",
+        "value": "0.13 (0.03-0.29), I2 0%"
+      }
+    ],
+    "output_definition": "Pooled proportion (0-1) of workers or observations reporting/showing productivity loss under heat; NOT the percentage reduction in output per degree. The 0.13 'actual measurement' value is printed under 'rate of productivity loss' and is from two studies; its exact meaning (share of workers vs share of output lost) is not clear in the text read.",
+    "fit": {
+      "r2": null,
+      "other": "I2 = 90% (p<0.01); Egger p = 0.6222, Begg p = 0.6222; JBI risk-of-bias: 6 low, 8 moderate"
+    },
+    "evidence_depth": "Full text read (PMC HTML) including Table 3; per-study data (Table 1) not transcribed here.",
+    "location_in_paper": "Abstract; Results 'Combined effect size' and 'Subgroup analyses'; Table 3; Discussion 'Influence of temperature thresholds'",
+    "limitations": "Prevalence of loss, not a dose-response function; 12 of 14 studies used self-report (67% vs 13% measured); very high heterogeneity; studies not specific to masonry or India (Tamil Nadu study P2-08 is separate); threshold analysis is a crude two-level split."
+  },
+  {
+    "id": "P2-08",
+    "authors": "Vidhya Venugopal; P. K. Latha; Rekha Shanmugam",
+    "year": 2026,
+    "title": "Quantifying the impact of heat stress on labour productivity in outdoor workplaces in Southern India amid a changing climate",
+    "journal": "Scientific Reports 16:14228",
+    "doi": "10.1038/s41598-026-41807-6",
+    "access": "Open access, CC BY-NC-ND 4.0 (licence text seen on PMC13139379)",
+    "country": "India (Tamil Nadu, 11 districts, 2021-2023)",
+    "trade_activity": "Informal outdoor workers across five sectors (agriculture, construction, brick making, saltpan, stone quarry); sector-specific construction figures NOT extracted (not seen in the text parts read)",
+    "modifier_name": "Season / WBGT exposure -> perceived productivity loss (PL) and working hours lost",
+    "input_variable": {
+      "name": "WBGT (seasonal average range)",
+      "unit": "deg C",
+      "min": 20.4,
+      "max": 32.7
+    },
+    "functional_form": "table",
+    "equation_text": "No equation. Odds ratios and a two-season table (Table 3, repeat measures, n = 310).",
+    "coefficients": {
+      "summer_Apr_Jun_WBGT_range_C": "21.7-32.7",
+      "winter_Nov_Jan_WBGT_range_C": "20.4-32.5",
+      "workers_exceeding_TLV_summer_pct": 75,
+      "workers_exceeding_TLV_winter_pct": 62,
+      "working_hours_lost_due_to_heat_summer_avg_range": "5.8 (0.5-100)",
+      "working_hours_lost_due_to_heat_winter_avg_range": "3.8 (0.5-60)",
+      "productivity_losses_pct_summer": 32,
+      "productivity_losses_pct_winter": 17,
+      "AOR_PL_summer_vs_winter": "2.3 (95% CI 1.2-4.2)",
+      "risk_of_PL_with_elevated_WBGT": "1.4-fold (95% CI 1.1-1.8) (abstract)",
+      "AOR_high_workload_and_season": "1.5 (95% CI 1.2-2.1) (abstract)",
+      "PL_reported_summer_pct_of_workers": 61.0,
+      "PL_reported_winter_pct_of_workers": 39.0,
+      "secondary_cited_not_read": "Sahu et al. rice harvesters: about 5% fewer rice bundles per hour per +1 C WBGT above 26 C; Muthers et al.: productivity loss 20-50% in peak heat depending on heat stress and work intensity"
+    },
+    "table": [
+      {
+        "input": "Summer (Apr-Jun): WBGT 21.7-32.7 C",
+        "value": "75% exceed TLV; working hours lost 5.8 (range 0.5-100); productivity losses 32 (column header '%'; unit of hours-lost not printed)"
+      },
+      {
+        "input": "Winter (Nov-Jan): WBGT 20.4-32.5 C",
+        "value": "62% exceed TLV; working hours lost 3.8 (0.5-60); productivity losses 17"
+      }
+    ],
+    "output_definition": "Self-perceived productivity loss (HOTHAPS questionnaire) reported as percentage of workers and odds ratios; not measured output per hour. The 'Productivity losses (%)' column is most consistent with % of workers reporting loss, but the text read does not state this explicitly.",
+    "fit": {
+      "r2": null,
+      "other": "Adjusted odds ratios as above; 1560 workers; convenience sampling; repeat interviews on 310 workers"
+    },
+    "evidence_depth": "Full text read (PMC HTML), Tables 2-3 partly read; supplementary material not read.",
+    "location_in_paper": "Abstract; Results 'Workers' perceived health and PL'; Table 3; Discussion",
+    "limitations": "Perception data; sector-specific construction estimates not extracted; convenience sampling; no output-per-hour measurement; the study itself states it cannot be extrapolated to all India; licence is ND (do not adapt tables)."
+  },
+  {
+    "id": "P2-09",
+    "authors": "Regula Brunies; Zey Emir (Revay and Associates Limited)",
+    "year": 2001,
+    "title": "Calculating Loss of Productivity Due to Overtime Using Published Charts - Fact or Fiction",
+    "journal": "The Revay Report, Volume 20, Number 3 (November 2001) - consultancy newsletter, not peer-reviewed",
+    "doi": "NR",
+    "access": "Freely downloadable PDF (revay.com and a copy filed in regulations.gov docket EPA-R06-OAR-2010-0190-0109); only a reproduction statement was seen ('Contents may be reproduced, with a credit as to source appreciated'), not an open licence",
+    "country": "USA/Canada (review of U.S. studies)",
+    "trade_activity": "Mixed: BLS manufacturing; boilermakers (Foster Wheeler); unknown trades (Business Roundtable); electricians, pipefitters, insulators (CII); electricians (NECA); concrete (Adrian; Haneiko and Henry). NO masonry.",
+    "modifier_name": "Scheduled overtime (hours per week, days per week, consecutive weeks) -> productivity/efficiency",
+    "input_variable": {
+      "name": "Weekly hours worked (scheduled overtime schedule)",
+      "unit": "hours per week (also days x hours per day)",
+      "min": 40,
+      "max": 70
+    },
+    "functional_form": "table",
+    "equation_text": "No equation in the text read; figures (curves) not readable in extracted text. Values below are those printed in the article text.",
+    "coefficients": {
+      "BLS_1947_50h_week_productivity_pct": 92,
+      "BLS_60h_week_productivity_pct": 82,
+      "BLS_70h_week_productivity_pct": 78,
+      "Foster_Wheeler_5x10h_avg_productivity_pct": 87,
+      "Foster_Wheeler_6x10h_avg_productivity_pct": 73,
+      "CII_SD98_loss_5_and_6_day_weeks_pct": "10-15",
+      "CII_SD98_average_short_term_overtime_loss_pct": 15,
+      "CII_SD98_loss_range_pct": "none to 25 (for crews with no other factors affecting productivity)",
+      "Haneiko_Henry_1991_concrete_60h_vs_40h": "6.78 hrs/cy vs 5.01 hrs/cy, printed as '35% less' productivity",
+      "NECA_1962_survey_sporadic_extended_day_5d_8h_scheduled_actual_9_10_11_12h_productivity_pct": "100, 98, 95, 92",
+      "NECA_1962_survey_extended_weeks_productivity_pct": "6d x 8h 98; 7d x 8h 95; 6d x 10h 84; 7d x 10h 78 (assignment of these four rows to 'isolated/sporadic' vs 'continuous/protracted' extended weeks is inferred from text layout)"
+    },
+    "table": [
+      {
+        "input": "BLS (1940s manufacturing, 78 cases), 50 / 60 / 70 h week",
+        "value": "average productivity 92% / 82% / 78%"
+      },
+      {
+        "input": "Foster Wheeler 5-10 h days vs 6-10 h days",
+        "value": "87% vs 73% average productivity"
+      },
+      {
+        "input": "CII SD-98 (Thomas and Raynar, 151 weeks, 4 industrial projects), 5- and 6-day weeks",
+        "value": "efficiency loss 10-15%, little difference between 5 and 6 days; average loss about 15%, range none to 25%"
+      },
+      {
+        "input": "NECA 1962 survey (289 members), 5 d x 8 h scheduled, extended to 9 / 10 / 11 / 12 h",
+        "value": "100 / 98 / 95 / 92 %"
+      },
+      {
+        "input": "Haneiko and Henry 1991 concrete placement, 8 weeks at 60 h/wk vs 40 h/wk",
+        "value": "6.78 vs 5.01 hrs per cubic yard"
+      }
+    ],
+    "output_definition": "Productivity or efficiency relative to a straight-time (40 h) baseline, expressed as percentage (values below 100 are losses); a relative multiplier on baseline productivity for each schedule.",
+    "fit": {
+      "r2": null,
+      "other": "Not applicable (secondary review of published charts); the authors' own conclusion: charts 'only be used with the greatest caution', decrease per additional 10 h/week is definite but not necessarily linear"
+    },
+    "evidence_depth": "Full text read (PDF text layer from the regulations.gov copy); figures 1-16 and the Business Roundtable curves NOT readable from text. Secondary source; primary papers (Thomas and Raynar 1997; BRT 1980; NECA 1989) not read.",
+    "location_in_paper": "Sections 'Bureau of Labor Statistics', 'Foster Wheeler', 'Construction Industry Institute', 'National Electrical Contractors Association', 'Miscellaneous Studies'; page 1-6",
+    "limitations": "Industrial/manufacturing/electrical/concrete data, not masonry; US; overtime defined as more than 40 h/week or more than 8 h/day; BLS data are wartime incentive-pay manufacturing; NECA figures are from a small subjective survey; the authors state the BRT curves come from a single project and that CII 1988 found no consistent overtime effect; no data for the 1-3 h/day overtime typical of Indian sites."
+  },
+  {
+    "id": "P2-10",
+    "authors": "Rod C. Carter (Long International, Inc.), summarising MCAA Bulletin No. OT1 Revised (2011)",
+    "year": null,
+    "title": "Labor Productivity Loss Calculation for Overtime (web article on the MCAA productivity-index table)",
+    "journal": "Long International, Inc. website article (undated in the text read; not peer-reviewed)",
+    "doi": "NR",
+    "access": "Free web page (no licence statement seen)",
+    "country": "USA (MCAA mechanical contractors; four averaged studies BRT 1980, NECA 1989, Thomas 1997, US Army COE 1979)",
+    "trade_activity": "Mechanical/electrical/industrial trades in the underlying studies; NOT masonry",
+    "modifier_name": "Scheduled overtime: Productivity Index (PI) by weekly hours and consecutive overtime weeks",
+    "input_variable": {
+      "name": "Weekly hours worked and consecutive weeks of overtime",
+      "unit": "hours per week; weeks",
+      "min": 50,
+      "max": 72
+    },
+    "functional_form": "table",
+    "equation_text": "PI = (Planned Productivity) / (Actual Productivity), productivity in work hours per unit installed; Productivity loss = 1.00 - PI; Inefficient MHs = Actual MHs - [Actual MHs / (1 + Inefficiency Factor)] (all as quoted from the MCAA Bulletin by the article).",
+    "coefficients": {
+      "PI_50h_week_1st_consecutive_week": 0.95,
+      "PI_50h_week_10th_consecutive_week": 0.72,
+      "PI_60h_week_1st_week": 0.91,
+      "PI_60h_week_10th_week": 0.61,
+      "PI_54to60h_2nd_consecutive_week": 0.9,
+      "PI_63h_week_example": 0.84,
+      "PI_70to72h_week_example": 0.8,
+      "Richardson_standard_manhour_add_on_pct": "41-48 h/wk: 5-10; 49-50 h/wk: 11-15; 51-54 h/wk: 16-20; 55-59 h/wk: 21-25 (as quoted from Richardson Process Plant Construction Estimating Standards, 2003)"
+    },
+    "table": [
+      {
+        "input": "50 h/wk, 1st consecutive overtime week",
+        "value": "PI 0.95 (5% loss)"
+      },
+      {
+        "input": "50 h/wk, 10th consecutive overtime week",
+        "value": "PI 0.72 (28% loss)"
+      },
+      {
+        "input": "60 h/wk, 1st week",
+        "value": "PI 0.91 (9% loss)"
+      },
+      {
+        "input": "60 h/wk, 10th week",
+        "value": "PI 0.61 (39% loss)"
+      }
+    ],
+    "output_definition": "Productivity Index relative to a 40 h/week baseline (multiplier on baseline productivity); loss = 1 - PI.",
+    "fit": {
+      "r2": null,
+      "other": "Not applicable; MCAA averaged four earlier studies; NECA 'Average' impact level used; the full PI table (Table 1 of the article) is an image and was NOT readable"
+    },
+    "evidence_depth": "Web article text read; only PI values quoted in prose are transcribed. MCAA Bulletin itself not read.",
+    "location_in_paper": "Section 3 (Description of the productivity loss calculation method), Section 4 (advantages and disadvantages); Table 1 is an image",
+    "limitations": "Secondary summary of a summary; not masonry; author is a claims consultant (retrospective claims method); hours-per-week basis, no per-day overtime data; MCAA PI values are averages of studies criticised for limited data."
+  },
+  {
+    "trade_activity": "General construction trades (validation across reinforcement, carpentry, BRICKLAYING, finishing works); worked example is ceiling formwork",
+    "modifier_name": "Composite fuzzy factor model: 17 factors (weather, shift duration, absence, adaptation, day of week, worker condition, etc.) -> relative productivity Wp (1 = standard)",
+    "input_variable": {
+      "name": "17 factors c1-c17 each mapped to a membership value mu in [0,1]",
+      "unit": "mixed (see table)",
+      "min": 0,
+      "max": 1
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "Wp = [ ( SUM_{i=1..17} mu_A(c_i) * w(c_i) ) / ( SUM_{i=1..17} w(c_i) ) + 0.5 ]^y   (Eq. 12); sigma_w = (sigma_t)^y (Eq. 13); y = ln(sigma_w) / ln(sigma_t) (Eq. 14). Wp is the relative productivity where 100% = the standard; the +0.5 shifts an average quotient of 0.5 to Wp = 1. y widens the range: printed Table 4 gives the theoretical interval [z1, z2] of Wp for y = 0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5.",
+    "coefficients": {
+      "weights_w_from_Table3": "0.25 (low): c3 shift duration, c10 recovery of strength, c14 time with family, c15 worker absence; 0.5 (average): c2 noise, c6 stress, c9 age, c11 precipitation, c12 air temperature, c13 wind, c16 day of week, c17 adaptation; 0.75 (high): c1 ergonomics, c5 workstation organisation, c7 fatigue, c8 health; 1.0 (very high): c4 salary",
+      "survey_mean_scores_Table2": "c1 4.01; c2 3.65; c3 3.20; c4 4.51; c5 4.17; c6 3.38; c7 4.18; c8 4.27; c9 3.83; c10 3.09; c11 3.49; c12 3.49; c13 3.49; c14 3.16; c15 3.16; c16 3.65; c17 3.73",
+      "Table4_interval_z1_z2_by_y": "y=0: 1-1; 0.25: 0.84-1.11; 0.5: 0.71-1.22; 0.75: 0.59-1.36; 1: 0.5-1.5; 2: 0.25-2.25; 3: 0.13-3.38; 4: 0.06-5.06; 5: 0.03-7.59",
+      "worked_example": "all 17 factors, ceiling formwork, 14 Oct 2015: Wp = 1.04; standard 0.769 m2/w-h -> 0.800 m2/w-h; value of exponent y not stated in the text read"
+    },
+    "table": [
+      {
+        "input": "Age x (years): mu = 0 for x<=16 or x>=55; (x-16)/10 for 16<x<26; 1 for 16<=x<=45 [as printed; the printed cases conflict for 26-45 vs 16<=x<=45]; (55-x)/10 for 45<x<55",
+        "value": "Eq. 1"
+      },
+      {
+        "input": "Noise x (dB): 1 for x<=52; (85-x)/33 for 52<x<85; 0 for x>=85",
+        "value": "Eq. 2"
+      },
+      {
+        "input": "Shift duration x (h): 0 for x<=6 or x>=12; (x-6)/1.5 for 6<x<7.5; 1 for 7.5<=x<=9; (12-x)/3 for 9<x<12",
+        "value": "Eq. 3"
+      },
+      {
+        "input": "Recovery ratio T_fo/T (%): 0 for <=6 or >=30; (T-6)/8 for 6<T<14; 1 for 14<=T<=20; (30-T)/10 for 20<T<30",
+        "value": "Eq. 4"
+      },
+      {
+        "input": "Precipitation x (mm): 1 for x=0; (10-x)/10 for 0<x<10; 0 for x>=10",
+        "value": "Eq. 5 (time basis of the mm value not stated)"
+      },
+      {
+        "input": "Wind x (m/s): 1 for x=0; (10-x)/10 for 0<x<10; 0 for x>=10",
+        "value": "Eq. 6"
+      },
+      {
+        "input": "Air temperature x (deg C): 0 for x<=4; (x-4)/12 for 4<x<16; 1 for x=16; (28-x)/12 for 16<x<28; 0 for x>=28",
+        "value": "Eq. 7"
+      },
+      {
+        "input": "Worker absence x (workdays r-d): 0 for x=0; x/5 for 1<x<5; 1 for x>=5",
+        "value": "Eq. 8 (as printed)"
+      },
+      {
+        "input": "Adaptation to new working conditions x (day): 0 for x=1; (x-1)/15 for 2<=x<=15; 1 for x>=16",
+        "value": "Eq. 9"
+      },
+      {
+        "input": "Time with family x (r-d/week): 1 for x<=5; 0 for x>=6",
+        "value": "Eq. 10 (as printed)"
+      },
+      {
+        "input": "Day of week: Mon 0.38; Tue 0.87; Wed 1; Thu 0.88; Fri 0.84; Sat 0",
+        "value": "Eq. 11"
+      },
+      {
+        "input": "Linguistic factors (ergonomics, salary, workstation organisation, stress, fatigue, health) trapezoids (a;b;c;d)",
+        "value": "Very good (0.8;0.9;1.0;1.0); Good (0.6;0.7;0.8;0.9); Average (0.3;0.4;0.6;0.7); Weak (0.1;0.2;0.3;0.4); Bad (0;0;0.1;0.2)"
+      }
+    ],
+    "output_definition": "Wp = relative labour productivity (percent of the standard, 1.0 = 100%); a MULTIPLIER on a standard/baseline productivity rate (worked example multiplies the directory standard 0.769 m2/w-h by 1.04 to get 0.800).",
+    "fit": {
+      "r2": null,
+      "other": "Validation: 236 measurements on various sites over about a dozen work types incl. bricklaying; Shapiro-Wilk then Spearman/Pearson correlations; text says strong correlation for all but one work type; NO correlation coefficients printed in the text read"
+    },
+    "evidence_depth": "Full text read via browser pane (MathJax source of Eq. 1-15 and Tables 1-5 extracted from the page).",
+    "location_in_paper": "Sections 3.2-3.5; Eq. (1)-(15); Tables 2-5",
+    "limitations": "Membership functions and weights come from literature/expert opinion and a Polish Likert survey (weights are ranks 0.25-1, not fitted coefficients); no regression fit; validation statistics not printed; worked example (Table 5) recovery factor printed 0.28 while Eq. 4 gives 0.25 for 8%; y not stated for the example; Polish climate and labour context; because the bracket is an average of memberships, a single factor moves Wp only a little unless y is large (see notes).",
+    "id": "P2-11",
+    "authors": "Jaroslaw Malara; Edyta Plebankiewicz; Michal Juszczyk",
+    "doi": "10.3390/buildings9120240",
+    "country": "Poland (Cracow); survey of 142 respondents (66 supervisors, 76 workers) in 2014; 236 field measurements for validation",
+    "year": 2019,
+    "journal": "Buildings 9(12):240",
+    "title": "Formula for Determining the Construction Workers Productivity Including Environmental Factors",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)"
+  },
+  {
+    "id": "P2-12",
+    "same_paper_as": "P2-11",
+    "authors": "Jaroslaw Malara; Edyta Plebankiewicz; Michal Juszczyk",
+    "year": 2019,
+    "title": "Formula for Determining the Construction Workers Productivity Including Environmental Factors",
+    "journal": "Buildings 9(12):240",
+    "doi": "10.3390/buildings9120240",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)",
+    "country": "Poland (Cracow); membership functions from literature and expert judgement, weights from a survey of 142 respondents",
+    "trade_activity": "General construction work (model validated incl. bricklaying); outdoor work",
+    "modifier_name": "Air temperature membership function (high-productivity set)",
+    "input_variable": {
+      "name": "Air temperature",
+      "unit": "deg C",
+      "min": 4,
+      "max": 28
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "mu_A(x) = 0 for x<=4 C; (x-4 C)/(12 C) for 4<x<16 C; 1 for x=16 C; (28 C - x)/(12 C) for 16<x<28 C; 0 for x>=28 C  (Eq. 7 as printed). Enters the composite model Wp = [ (SUM mu_A(c_i) w(c_i)) / (SUM w(c_i)) + 0.5 ]^y (Eq. 12) with weight w and 16 other factors; the factor alone is not a standalone multiplier.",
+    "coefficients": {
+      "peak_temperature_C": 16,
+      "zero_below_C": 4,
+      "zero_above_C": 28,
+      "weight_w": 0.5,
+      "survey_mean_score": 3.49,
+      "worked_example_8C_mu": 0.33
+    },
+    "table": null,
+    "output_definition": "Membership value 0-1 of the 'high productivity' set for air temperature; fed into Wp (relative productivity, 1 = standard).",
+    "fit": {
+      "r2": null,
+      "other": "No fit statistics for this factor; whole-model validation on 236 measurements, correlations not printed in the text read"
+    },
+    "evidence_depth": "Full text read (equation source extracted from MathJax).",
+    "location_in_paper": "Eq. (7); Table 2 (c12), Table 3 (weight), Table 5",
+    "limitations": "Literature/expert-defined triangular function (not fitted to measurements); Polish context; weight is a survey rank; composite model averages memberships so one factor changes Wp only slightly (my arithmetic, y=1 and all other factors at mu=0.5: Wp = 1 + w(mu-0.5)/SUM(w), SUM(w)=9 for all 17 factors). Optimum 16 C and 28 C cut-off are for Polish/temperate conditions and would give mu = 0 for most Indian summer days; not calibrated for tropical climates."
+  },
+  {
+    "id": "P2-13",
+    "same_paper_as": "P2-11",
+    "authors": "Jaroslaw Malara; Edyta Plebankiewicz; Michal Juszczyk",
+    "year": 2019,
+    "title": "Formula for Determining the Construction Workers Productivity Including Environmental Factors",
+    "journal": "Buildings 9(12):240",
+    "doi": "10.3390/buildings9120240",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)",
+    "country": "Poland (Cracow); membership functions from literature and expert judgement, weights from a survey of 142 respondents",
+    "trade_activity": "General construction work (model validated incl. bricklaying); outdoor work",
+    "modifier_name": "Precipitation membership function (and wind)",
+    "input_variable": {
+      "name": "Precipitation (time basis of mm value not stated); wind speed",
+      "unit": "mm; m/s",
+      "min": 0,
+      "max": 10
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "Precipitation: mu_A(x) = 1 for x=0 mm; (10-x)/10 for 0<x<10 mm; 0 for x>=10 mm (Eq. 5). Wind: mu_A(x) = 1 for x=0 m/s; (10-x)/10 for 0<x<10 m/s; 0 for x>=10 m/s (Eq. 6). Enters the composite model Wp = [ (SUM mu_A(c_i) w(c_i)) / (SUM w(c_i)) + 0.5 ]^y (Eq. 12) with weight w and 16 other factors; the factor alone is not a standalone multiplier.",
+    "coefficients": {
+      "precipitation_zero_at_mm": 10,
+      "wind_zero_at_m_per_s": 10,
+      "weight_w_precipitation": 0.5,
+      "weight_w_wind": 0.5,
+      "survey_mean_score_precipitation": 3.49,
+      "survey_mean_score_wind": 3.49,
+      "worked_example_wind_5_m_per_s_mu": 0.5
+    },
+    "table": null,
+    "output_definition": "Membership value 0-1 fed into Wp (relative productivity).",
+    "fit": {
+      "r2": null,
+      "other": "No fit statistics for this factor; whole-model validation on 236 measurements, correlations not printed in the text read"
+    },
+    "evidence_depth": "Full text read (equation source extracted from MathJax).",
+    "location_in_paper": "Eq. (5)-(6); Tables 2, 3, 5",
+    "limitations": "Literature/expert-defined triangular function (not fitted to measurements); Polish context; weight is a survey rank; composite model averages memberships so one factor changes Wp only slightly (my arithmetic, y=1 and all other factors at mu=0.5: Wp = 1 + w(mu-0.5)/SUM(w), SUM(w)=9 for all 17 factors). Linear falling function with a hard zero at 10 mm; rain intensity/duration basis not defined; no monsoon calibration."
+  },
+  {
+    "id": "P2-14",
+    "same_paper_as": "P2-11",
+    "authors": "Jaroslaw Malara; Edyta Plebankiewicz; Michal Juszczyk",
+    "year": 2019,
+    "title": "Formula for Determining the Construction Workers Productivity Including Environmental Factors",
+    "journal": "Buildings 9(12):240",
+    "doi": "10.3390/buildings9120240",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)",
+    "country": "Poland (Cracow); membership functions from literature and expert judgement, weights from a survey of 142 respondents",
+    "trade_activity": "General construction work (model validated incl. bricklaying)",
+    "modifier_name": "Duration of work shift (overtime / long-shift) membership function",
+    "input_variable": {
+      "name": "Daily shift duration",
+      "unit": "hours",
+      "min": 6,
+      "max": 12
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "mu_A(x) = 0 for x<=6 h or x>=12 h; (x-6 h)/(1.5 h) for 6<x<7.5 h; 1 for 7.5<=x<=9 h; (12 h - x)/(3 h) for 9<x<12 h  (Eq. 3 as printed). Enters the composite model Wp = [ (SUM mu_A(c_i) w(c_i)) / (SUM w(c_i)) + 0.5 ]^y (Eq. 12) with weight w and 16 other factors; the factor alone is not a standalone multiplier.",
+    "coefficients": {
+      "full_value_range_h": "7.5-9",
+      "zero_at_h": "6 and 12",
+      "slope_above_9h_per_h": -0.333,
+      "weight_w": 0.25,
+      "survey_mean_score": 3.2
+    },
+    "table": null,
+    "output_definition": "Membership value 0-1 fed into Wp; slope above 9 h = -1/3 per hour (my arithmetic from printed (12-x)/3).",
+    "fit": {
+      "r2": null,
+      "other": "No fit statistics for this factor; whole-model validation on 236 measurements, correlations not printed in the text read"
+    },
+    "evidence_depth": "Full text read (equation source extracted from MathJax).",
+    "location_in_paper": "Eq. (3); Table 3 (lowest weight class 0.25)",
+    "limitations": "Literature/expert-defined triangular function (not fitted to measurements); Polish context; weight is a survey rank; composite model averages memberships so one factor changes Wp only slightly (my arithmetic, y=1 and all other factors at mu=0.5: Wp = 1 + w(mu-0.5)/SUM(w), SUM(w)=9 for all 17 factors). The low weight (0.25) means shift length has the smallest influence class in the model; not an empirical overtime-loss curve."
+  },
+  {
+    "id": "P2-15",
+    "same_paper_as": "P2-11",
+    "authors": "Jaroslaw Malara; Edyta Plebankiewicz; Michal Juszczyk",
+    "year": 2019,
+    "title": "Formula for Determining the Construction Workers Productivity Including Environmental Factors",
+    "journal": "Buildings 9(12):240",
+    "doi": "10.3390/buildings9120240",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)",
+    "country": "Poland (Cracow); membership functions from literature and expert judgement, weights from a survey of 142 respondents",
+    "trade_activity": "General construction work (model validated incl. bricklaying)",
+    "modifier_name": "Adaptation to new working conditions / new technology (learning-in) membership function; worker absence",
+    "input_variable": {
+      "name": "Days since starting new working conditions (adaptation); workdays of absence",
+      "unit": "working day (r-d)",
+      "min": 1,
+      "max": 16
+    },
+    "functional_form": "multiplicative",
+    "equation_text": "Adaptation: mu_A(x) = 0 for x=1 day; (x-1)/15 for 2<=x<=15 days; 1 for x>=16 days (Eq. 9). Absence: mu_A(x) = 0 for x=0; x/5 for 1<x<5; 1 for x>=5 (Eq. 8 as printed). Enters the composite model Wp = [ (SUM mu_A(c_i) w(c_i)) / (SUM w(c_i)) + 0.5 ]^y (Eq. 12) with weight w and 16 other factors; the factor alone is not a standalone multiplier.",
+    "coefficients": {
+      "adaptation_full_at_day": 16,
+      "weight_w_adaptation": 0.5,
+      "survey_mean_adaptation": 3.73,
+      "weight_w_absence": 0.25,
+      "survey_mean_absence": 3.16,
+      "worked_example_day2_mu": 0.07,
+      "worked_example_absence_1_day_mu": 0.2
+    },
+    "table": null,
+    "output_definition": "Membership value 0-1 fed into Wp. Adaptation is a linear 16-day learning ramp (no learning-curve exponent).",
+    "fit": {
+      "r2": null,
+      "other": "No fit statistics for this factor; whole-model validation on 236 measurements, correlations not printed in the text read"
+    },
+    "evidence_depth": "Full text read (equation source extracted from MathJax).",
+    "location_in_paper": "Eq. (8)-(9); Tables 2, 3, 5",
+    "limitations": "Literature/expert-defined triangular function (not fitted to measurements); Polish context; weight is a survey rank; composite model averages memberships so one factor changes Wp only slightly (my arithmetic, y=1 and all other factors at mu=0.5: Wp = 1 + w(mu-0.5)/SUM(w), SUM(w)=9 for all 17 factors). The absence function as printed gives mu = 0 for no absence and 1 for 5+ days, which looks inverted relative to the text; treat as printed-but-doubtful."
+  },
+  {
+    "id": "P2-16",
+    "authors": "Saja H. Rasool; Faiq M. S. Al-Zwainy",
+    "year": 2016,
+    "title": "Estimating Productivity of Brickwork item using Logistic and Multiple Regression Approaches",
+    "journal": "Scholars Journal of Engineering and Technology 4(5):234-243",
+    "doi": "NR",
+    "access": "Free PDF on saspublishers.com; licence statement not seen in the text read (open-access licence NOT confirmed)",
+    "country": "Iraq (data taken from a 2011/2012 Baghdad University thesis on brickwork productivity, n = 50 observations)",
+    "trade_activity": "Brickwork (masonry) - crew productivity (unit not stated in the text read)",
+    "modifier_name": "Worker age, experience, number of labourers and level of execution -> brickwork productivity (multiple linear regression) and logistic (good/bad productivity) model",
+    "input_variable": {
+      "name": "X1 age; X2 experience; X3 number of workers; X4 level of execution (labelled 'Meter', values 1-3)",
+      "unit": "years; years; workers; level (values 1 to 3)",
+      "min": null,
+      "max": null
+    },
+    "functional_form": "absolute",
+    "equation_text": "MLR (Eq. 3): y = 4.010 + 0.025 X1 - 0.013 X2 - 0.038 X3 - 0.417 X4  (as printed). Logistic (Eq. 6, printed as a logit expression with a garbled left side): 3.257 + 0.166 X1 - 0.193 X2 - 0.095 X3 - 3.204 X4, where P is probability of 'good' productivity.",
+    "coefficients": {
+      "MLR_constant": 4.01,
+      "MLR_age": 0.025,
+      "MLR_experience": -0.013,
+      "MLR_no_of_labour": -0.038,
+      "MLR_level": -0.417,
+      "MLR_p_values": {
+        "age": 0.013,
+        "experience": 0.234,
+        "no_of_labour": 0.554,
+        "level": 0.003
+      },
+      "MLR_standardised_beta": {
+        "age": 0.466,
+        "experience": -0.206,
+        "no_of_labour": -0.077,
+        "level": -0.436
+      },
+      "Logit_constant": 3.257,
+      "Logit_x1": 0.166,
+      "Logit_x2": -0.193,
+      "Logit_x3": -0.095,
+      "Logit_x4": -3.204,
+      "Logit_p_values": {
+        "x1": 0.105,
+        "x2": 0.114,
+        "x3": 0.847,
+        "x4": 0.006
+      },
+      "data_ranges_Table2": {
+        "age_years": "22-55 (mean 37.92)",
+        "experience_years": "4-32 (mean 15.2)",
+        "workers": "4-8 (mean 5.64)",
+        "level": "1-3 (mean 1.62)"
+      },
+      "productivity_mean_SD_n": "3.95, 0.5076, 50"
+    },
+    "table": null,
+    "output_definition": "Absolute productivity in an unstated unit (mean 3.95); not a multiplier. Logistic model gives probability of 'good' vs 'bad' productivity class (threshold not stated in the text read).",
+    "fit": {
+      "r2": "MLR Table 5: R = 0.682, R2 = 0.466, adjusted 0.418, Sig F change 0.000 (n = 50); Table 16 (validation with 5 new observations): R = 87.28%, R2 = 76.2%, MAPE 7.5%, accuracy 92.5%",
+      "other": "Logistic: Cox-Snell R2 0.405, Nagelkerke 0.583, omnibus chi-square 25.928 (df 4, p<0.001); validation MAPE 4.2%, accuracy 95.8%"
+    },
+    "evidence_depth": "Full text read (PDF). Sample n = 50 from an earlier thesis; validation on only 5 (MLR) and 4 (logistic) new cases.",
+    "location_in_paper": "Table 1-2 (variables), Table 5-6 and Eq. 3 (MLR), Table 9 and Eq. 6 (logistic), Tables 12-16 (validation)",
+    "limitations": "Iraq; productivity unit not stated; 'level of execution (Meter)' undefined (floor level? height?) and constant security variable dropped; only age and level significant; positive age coefficient with negative experience coefficient (age and experience correlated 0.76); text calls the ANN models 'very good' in the conclusions of a regression paper (copy errors); reported model R (0.682) differs from the R in the abstract (87.28%), which comes from a 5-case validation; not usable as a modifier without the original units."
+  },
+  {
+    "id": "P2-17",
+    "authors": "Yongwei Shan; Paul Goodrum",
+    "year": 2014,
+    "title": "Integration of Building Information Modeling and Critical Path Method Schedules to Simulate the Impact of Temperature and Humidity at the Project Level",
+    "journal": "Buildings 4(3):295-319",
+    "doi": "10.3390/buildings4030295",
+    "access": "Open access, CC BY 3.0 (licence text seen on the MDPI article page)",
+    "country": "USA (steel-frame model project simulated in four US cities); factor table credited by the authors to Koehn and Brown (1985)",
+    "trade_activity": "Multi-trade construction labour (Koehn and Brown data: steel, masonry, electrical, carpentry and labour occupations per the authors); the paper applies it to structural steel erection",
+    "modifier_name": "Productivity factor as a function of air temperature and relative humidity (Table 2, tabulated Koehn and Brown model)",
+    "input_variable": {
+      "name": "Air temperature (with relative humidity as second input)",
+      "unit": "deg F / deg C; RH %",
+      "min": -28.9,
+      "max": 48.9
+    },
+    "functional_form": "table",
+    "equation_text": "No equation printed in the text read; the authors state the model relationship 'was tabulated as illustrated in Table 2'. Productivity factor = ratio of labour productivity under optimal conditions to that under the given temperature and humidity (always <= 1). Daily factor Fd = average productivity factor over the 10-hour day computed from the factors Fti and Fti+1 at consecutive weather time points (Eq. 1; the formula image was not read, only its variable definitions).",
+    "coefficients": {
+      "optimal_range_C": "10-21 (50-70 F), factor 1.00 at all RH",
+      "example_32.2C_RH35": 0.93,
+      "example_32.2C_RH75": 0.85,
+      "example_37.8C_RH35": 0.79,
+      "example_37.8C_RH75": 0.67,
+      "example_43.3C_RH55": 0.51,
+      "example_-1.1C_RH55": 0.89,
+      "example_-12.2C_RH55": 0.67,
+      "table_RH_columns_percent": [
+        5,
+        15,
+        25,
+        35,
+        45,
+        55,
+        65,
+        75,
+        85,
+        95
+      ],
+      "cited_by_authors_not_read_at_source": "Grimm and Wagner: 51 workers, standard masonry wall panel erection, 40 to 100 F, RH 20% to 100%; Koehn and Brown: 172 data points from -40 F at 90% RH to 125 F at 10% RH; Thomas and Yiakoumis: 12 to 82 F, RH 18% to 85%"
+    },
+    "table": [
+      {
+        "input": "T = -20 F / -28.9 C",
+        "value": "RH 5%: 0.28; RH 15%: 0.27; RH 25%: 0.25; RH 35%: 0.22; RH 45%: 0.18; RH 55%: 0.13; RH 65%: 0.05; RH 75%: not printed (dash); RH 85%: not printed (dash); RH 95%: not printed (dash)"
+      },
+      {
+        "input": "T = -10 F / -23.3 C",
+        "value": "RH 5%: 0.44; RH 15%: 0.43; RH 25%: 0.42; RH 35%: 0.40; RH 45%: 0.38; RH 55%: 0.34; RH 65%: 0.29; RH 75%: 0.21; RH 85%: 0.10; RH 95%: not printed (dash)"
+      },
+      {
+        "input": "T = 0 F / -17.8 C",
+        "value": "RH 5%: 0.59; RH 15%: 0.58; RH 25%: 0.57; RH 35%: 0.56; RH 45%: 0.54; RH 55%: 0.52; RH 65%: 0.49; RH 75%: 0.44; RH 85%: 0.36; RH 95%: 0.23"
+      },
+      {
+        "input": "T = 10 F / -12.2 C",
+        "value": "RH 5%: 0.71; RH 15%: 0.71; RH 25%: 0.70; RH 35%: 0.70; RH 45%: 0.69; RH 55%: 0.67; RH 65%: 0.65; RH 75%: 0.62; RH 85%: 0.58; RH 95%: 0.50"
+      },
+      {
+        "input": "T = 20 F / -6.7 C",
+        "value": "RH 5%: 0.81; RH 15%: 0.81; RH 25%: 0.81; RH 35%: 0.81; RH 45%: 0.81; RH 55%: 0.80; RH 65%: 0.79; RH 75%: 0.77; RH 85%: 0.75; RH 95%: 0.71"
+      },
+      {
+        "input": "T = 30 F / -1.1 C",
+        "value": "RH 5%: 0.90; RH 15%: 0.90; RH 25%: 0.90; RH 35%: 0.90; RH 45%: 0.90; RH 55%: 0.89; RH 65%: 0.89; RH 75%: 0.89; RH 85%: 0.88; RH 95%: 0.87"
+      },
+      {
+        "input": "T = 40 F / 4.4 C",
+        "value": "RH 5%: 0.96; RH 15%: 0.96; RH 25%: 0.96; RH 35%: 0.96; RH 45%: 0.96; RH 55%: 0.96; RH 65%: 0.96; RH 75%: 0.96; RH 85%: 0.96; RH 95%: 0.96"
+      },
+      {
+        "input": "T = 50 F / 10 C",
+        "value": "RH 5%: 1.00; RH 15%: 1.00; RH 25%: 1.00; RH 35%: 1.00; RH 45%: 1.00; RH 55%: 1.00; RH 65%: 1.00; RH 75%: 1.00; RH 85%: 1.00; RH 95%: 1.00"
+      },
+      {
+        "input": "T = 60 F / 15.6 C",
+        "value": "RH 5%: 1.00; RH 15%: 1.00; RH 25%: 1.00; RH 35%: 1.00; RH 45%: 1.00; RH 55%: 1.00; RH 65%: 1.00; RH 75%: 1.00; RH 85%: 1.00; RH 95%: 1.00"
+      },
+      {
+        "input": "T = 70 F / 21.1 C",
+        "value": "RH 5%: 1.00; RH 15%: 1.00; RH 25%: 1.00; RH 35%: 1.00; RH 45%: 1.00; RH 55%: 1.00; RH 65%: 1.00; RH 75%: 1.00; RH 85%: 1.00; RH 95%: 1.00"
+      },
+      {
+        "input": "T = 80 F / 26.7 C",
+        "value": "RH 5%: 1.00; RH 15%: 1.00; RH 25%: 1.00; RH 35%: 1.00; RH 45%: 1.00; RH 55%: 0.99; RH 65%: 0.98; RH 75%: 0.96; RH 85%: 0.95; RH 95%: 0.93"
+      },
+      {
+        "input": "T = 90 F / 32.2 C",
+        "value": "RH 5%: 0.95; RH 15%: 0.95; RH 25%: 0.94; RH 35%: 0.93; RH 45%: 0.92; RH 55%: 0.90; RH 65%: 0.88; RH 75%: 0.85; RH 85%: 0.82; RH 95%: 0.78"
+      },
+      {
+        "input": "T = 100 F / 37.8 C",
+        "value": "RH 5%: 0.81; RH 15%: 0.81; RH 25%: 0.80; RH 35%: 0.79; RH 45%: 0.77; RH 55%: 0.74; RH 65%: 0.71; RH 75%: 0.67; RH 85%: 0.61; RH 95%: 0.54"
+      },
+      {
+        "input": "T = 110 F / 43.3 C",
+        "value": "RH 5%: 0.58; RH 15%: 0.58; RH 25%: 0.58; RH 35%: 0.57; RH 45%: 0.55; RH 55%: 0.51; RH 65%: 0.47; RH 75%: 0.41; RH 85%: 0.32; RH 95%: 0.21"
+      },
+      {
+        "input": "T = 120 F / 48.9 C",
+        "value": "RH 5%: not printed (dash); RH 15%: 0.28; RH 25%: 0.28; RH 35%: 0.28; RH 45%: 0.25; RH 55%: 0.21; RH 65%: 0.15; RH 75%: 0.07; RH 85%: not printed (dash); RH 95%: not printed (dash)"
+      }
+    ],
+    "output_definition": "Productivity factor (dimensionless, <= 1, percent of standard efficient operation): MULTIPLIER on baseline output rate; man-hours needed = baseline man-hours / factor (consistent with the authors' definition of productivity as man-hours per unit quantity).",
+    "fit": {
+      "r2": null,
+      "other": "NR (tabulated model of Koehn and Brown; the source equations and fit statistics were not read)"
+    },
+    "evidence_depth": "Full text of Shan and Goodrum read via browser pane (Tables 1-3 extracted). The original Koehn and Brown (1985) paper is paywalled and was NOT read; this table is a secondary reproduction.",
+    "location_in_paper": "Section 5.5 'Selection of Productivity vs. Temperature and Humidity Model', Table 2",
+    "limitations": "Secondary (authors' tabulation of Koehn and Brown); developed largely from US data; the optimum band 10-21 C and the high-temperature penalties come from a study in which acclimatisation, clothing and work intensity are not reported here; RH effect beyond 26.7 C only; dashes in table mean values not printed; Indian summer conditions (35-45 C at RH 20-80%) are at the extreme end of the table (e.g. 43.3 C: 0.21-0.58)."
+  },
+  {
+    "id": "P2-18",
+    "authors": "Martina Sopic; Andro Vrankovic; Ivan Marovic",
+    "year": 2025,
+    "title": "Understanding and Quantifying the Impact of Adverse Weather on Construction Productivity",
+    "journal": "Applied Sciences 15(19):10759",
+    "doi": "10.3390/app151910759",
+    "access": "Open access, CC BY 4.0 (licence text seen on the MDPI article page)",
+    "country": "Croatia (Rijeka, Krk, Pazin; 1999-2022 weather records); general construction, not masonry-specific",
+    "trade_activity": "General outdoor construction activities (concrete, steelwork, earthworks, exterior painting, asphalt, crane operations, scaffolding) referenced when discussing weather cancellation thresholds; no masonry-specific figure printed",
+    "modifier_name": "Adverse-weather DAY-COUNT model (precipitation >=10 mm, stormy wind, cold/hot days) -> expected number of days per month with at least one adverse-weather event; magnitude of productivity loss is explicitly NOT given by the model",
+    "input_variable": {
+      "name": "Monthly counts of days with precipitation >=10 mm, stormy wind (gust >= 17.2 m/s), cold days (Tmin < 0 C) or hot days (Tmax >= 30 C)",
+      "unit": "days per month",
+      "min": 0,
+      "max": 31
+    },
+    "functional_form": "table",
+    "equation_text": "Inclusion-exclusion for 3 events (Eq. 4, as extracted): a+b+c - (a/d)b + (a/d)c + (b/d)c + (a/d)(b/d)c, where a,b,c = number of days in the month with each adverse event, d = number of days in the month (this is the paper's stated way of estimating pairwise/triple joint-occurrence days from marginal counts, treated as independent). Extended forms for 4 events (Eq. 5) and 5 events (Eq. 6) are given in the JSON 'coefficients' field. Confidence interval for a normally distributed monthly count: mean +/- t(alpha/2, n-1) x s/sqrt(n) (Eq. 11) or mean +/- Z(alpha/2) x sigma/sqrt(n) (Eq. 12).",
+    "coefficients": {
+      "note_from_the_paper_itself_own_model_output_no_magnitude": true,
+      "Rijeka_July_expected_days_reduced_productivity": "17-21 of 31 days",
+      "Rijeka_August": "16-21 of 31",
+      "Pazin_January": "for about 22 of 31 days",
+      "Pazin_July": "15-19 of 31",
+      "Krk_July": "18-22 of 31",
+      "secondary_citations_within_this_paper_NOT_read_at_source": {
+        "light_rain_below_4mm_per_12h_loss_pct": 40,
+        "productivity_decreases_above_precipitation_mm": 10,
+        "productivity_unaffected_C": "10-20",
+        "drops_significantly_above_C": 25,
+        "drops_significantly_below_C": 0,
+        "loss_per_1C_above_28C_pct_up_to": 57,
+        "wind_speed_reduces_productivity_m_per_s": 8.94,
+        "wind_productivity_loss_pct": "30-40",
+        "heavy_snowfall_loss_pct": 35,
+        "work_stops_below_C": -23.3,
+        "work_stops_above_C": 43.3
+      }
+    },
+    "table": [
+      {
+        "input": "Rijeka, January (mean 10.26 days, 95% CI 8.64-11.89)",
+        "value": "9-12 days/month with >=1 adverse event"
+      },
+      {
+        "input": "Rijeka, July (mean 18.91, CI 16.81-21.00)",
+        "value": "17-21 days/month"
+      },
+      {
+        "input": "Pazin, January (mean 21.63, not normal - no CI)",
+        "value": "for about 22 days/month"
+      },
+      {
+        "input": "Krk, August (mean 19.09, CI 16.53-21.65)",
+        "value": "17-22 days/month"
+      }
+    ],
+    "output_definition": "Expected COUNT of days per month with reduced productivity due to at least one adverse-weather event (a day-frequency model). The paper explicitly states it does NOT give the magnitude of productivity loss per day (not 25%, 50%, 75% etc.) - that is left to the schedule planner.",
+    "fit": {
+      "r2": null,
+      "other": "Shapiro-Wilk normality test per month per city; 95% confidence intervals via t- or Z-distribution where normal; validated qualitatively by interviews with experienced contractors"
+    },
+    "evidence_depth": "Full text read via browser pane (tables, formulas via MathJax source, conclusion section). No masonry-specific number found.",
+    "location_in_paper": "Section 2.1 (cited thresholds from other studies, not verified at source); Section on Formulas 3-12 (own model); Tables 1-7; Conclusions (explicit statement that magnitude is not given)",
+    "limitations": "Croatian climate (temperate, not monsoon); the paper's OWN contribution is a day-count/frequency model only, not a productivity-magnitude modifier; the percentage figures quoted above are this paper's citations of OTHER studies and were not verified at their original source in this run; independence assumption in the inclusion-exclusion formula is a simplification the authors acknowledge is imperfect (weather events 'are not clearly correlated' per their own text, i.e. treated as roughly independent)."
+  }
+]

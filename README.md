@@ -15,6 +15,7 @@ simulation, and an expected-monetary-value (EMV) decision layer, with a local we
 | `data/` | Rules, risk library, productivity models, India labour norms, literature seed |
 | `scripts/` | Literature harvesting, screening and statistics scripts |
 | `tests/` | pytest suite |
+| `Research_Notes/`, `Literature_Evidence_Package.xlsx` | Evidence corpus the app loads (M##/R## records, research notes, full-text reviews) |
 | `docs/` | Handoff summary, case schema, statistical analysis reports |
 | `examples/` | Example case and demo script |
 
