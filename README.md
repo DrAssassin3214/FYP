@@ -34,6 +34,10 @@ python -m app.cli run case.json --out out    # writes register.md, register.csv,
 python examples/masonry_demo.py    # Monte Carlo + EMV option comparison
 ```
 
+Windows program (.exe): run `build_exe.bat` to produce `dist\FYP-Risk-Tool\FYP-Risk-Tool.exe`, or use the
+**Build Windows exe** workflow in the GitHub Actions tab (Run workflow) and download the zip it produces.
+Copy the whole `FYP-Risk-Tool` folder to move it; no Python is needed on the target computer.
+
 Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest`.
 
 ## Not in the repository

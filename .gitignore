@@ -10,3 +10,8 @@ data/*.jsonl
 Research_Papers/
 examples/output/
 out/
+dist/
+build/
+.venv/
+.venv-build/
+*.zip
