@@ -17,15 +17,16 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: python -m pip install -r requirements-dev.txt pyinstaller
+        run: python -m pip install -r requirements-dev.txt -r requirements-desktop.txt pyinstaller
 
       - name: Run tests
         run: python -m pytest -q
 
-      - name: Build exe
+      # ---------------------------------------------------------------- browser version (console)
+      - name: Build browser-version exe
         run: pyinstaller fyp_gui.spec --noconfirm --clean
 
-      - name: Smoke test the built exe
+      - name: Smoke test the browser-version exe
         shell: pwsh
         run: |
           $p = Start-Process -FilePath "dist\FYP-Risk-Tool\FYP-Risk-Tool.exe" -ArgumentList "--no-browser","--port","8765" -PassThru
@@ -42,11 +43,40 @@ jobs:
           if (-not $run.ok) { Stop-Process -Id $p.Id -Force; throw "example case did not run" }
           Stop-Process -Id $p.Id -Force
 
+      # ---------------------------------------------------------------- PySide6 desktop version
+      - name: Smoke test the desktop app from source
+        shell: pwsh
+        run: |
+          python -m gui.qt_app --smoke smoke_source.json
+          Get-Content smoke_source.json
+          $r = Get-Content smoke_source.json -Raw | ConvertFrom-Json
+          if (-not $r.ok) { throw "desktop app (source) self-test failed" }
+
+      - name: Build desktop exe
+        run: pyinstaller fyp_desktop.spec --noconfirm --clean
+
+      - name: Smoke test the desktop exe
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist\FYP-Risk-Tool-Desktop\FYP-Risk-Tool-Desktop.exe" -ArgumentList "--smoke","smoke_exe.json" -PassThru
+          if (-not $p.WaitForExit(180000)) { Stop-Process -Id $p.Id -Force; throw "desktop exe timed out" }
+          if (-not (Test-Path smoke_exe.json)) { throw "desktop exe wrote no result (exit code $($p.ExitCode))" }
+          Get-Content smoke_exe.json
+          $r = Get-Content smoke_exe.json -Raw | ConvertFrom-Json
+          if (-not $r.ok) { throw "desktop exe self-test failed" }
+
       - name: Zip
         shell: pwsh
-        run: Compress-Archive -Path dist\FYP-Risk-Tool -DestinationPath FYP-Risk-Tool-windows.zip
+        run: |
+          Compress-Archive -Path dist\FYP-Risk-Tool -DestinationPath FYP-Risk-Tool-windows.zip
+          Compress-Archive -Path dist\FYP-Risk-Tool-Desktop -DestinationPath FYP-Risk-Tool-Desktop-windows.zip
 
       - uses: actions/upload-artifact@v4
         with:
           name: FYP-Risk-Tool-windows
           path: FYP-Risk-Tool-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FYP-Risk-Tool-Desktop-windows
+          path: FYP-Risk-Tool-Desktop-windows.zip
