@@ -638,13 +638,8 @@ const ACTIONS = {
   },
   example: async () => {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
-    const r = await get("/api/example");
-    if (r.ok) loadCase(r.data, { msg: "ILLUSTRATIVE example loaded: every number is a placeholder, not evidence." });
-  },
-  "analysis-example": async () => {
-    if (!(await guardDiscard("The ILLUSTRATIVE cost and options example"))) return;
-    const r = await get("/api/example-analysis");
-    if (r.ok) { loadCase(r.data, { msg: "ILLUSTRATIVE analysis example loaded: every number is a placeholder, not evidence." }); S.ui.analysis = null; S.ui.analysisProblems = null; go("analysis"); }
+    const r = await get("/api/example-analysis");   // the one example: register, matrix, rules and the cost / options inputs
+    if (r.ok) { loadCase(r.data, { msg: "ILLUSTRATIVE example loaded: every number is a placeholder, not evidence." }); S.ui.analysis = null; S.ui.analysisProblems = null; }
   },
   "analysis-run": async () => {
     S.ui.analysisBusy = true; S.ui.analysisProblems = null; renderScreen();

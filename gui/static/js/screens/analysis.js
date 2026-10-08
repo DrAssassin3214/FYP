@@ -29,7 +29,7 @@ function inputs() {
     </div></div></section>
   <section class="card mb-5"><header class="card-h"><h2>Candidate responses</h2><span class="sub">${mits.length} entered</span></header><div class="card-b">
     ${mits.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Response</th><th>Targets risk</th><th>Cost</th><th>Probability after</th><th>Delay after</th></tr></thead><tbody>${rows}</tbody></table></div>`
-      : alertBox("info", "No responses entered yet", "The tool does not invent a response or its effect. Load the illustrative example to see the layout, or add responses in the case file (see docs/case_schema.md); the catalogue below lists where to look.")}
+      : alertBox("info", "No responses entered yet", "The tool does not invent a response or its effect. Use Load example in the top bar to see the layout, or add responses in the case file (see docs/case_schema.md); the catalogue below lists where to look.")}
   </div></section>`;
 }
 
@@ -81,15 +81,14 @@ function results() {
   const a = S.ui.analysis;
   if (S.ui.analysisBusy) return alertBox("info", "Running the simulation", "10,000 iterations per option; this takes a few seconds.");
   if (S.ui.analysisProblems) return alertBox("warn", "The analysis could not run", `<ul>${S.ui.analysisProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
-  if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or load the illustrative example), then press <strong>Run analysis</strong>.");
+  if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or use Load example in the top bar), then press <strong>Run analysis</strong>.");
   return `${stale() ? alertBox("info", "Inputs changed", "These results are from the previous inputs. Run the analysis again to update them.") : ""}
     <div${stale() ? ' class="is-stale-view"' : ""}>${commandBanner(a)}${chartsSection(a)}${optionsTable(a)}${emvTable(a)}${sensitivity(a)}
     <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section></div>`;
 }
 
 export function render() {
-  const actions = `<button type="button" class="btn" data-action="analysis-example">${icon("flask")}<span>Load illustrative example</span></button>
-    <button type="button" class="btn btn-primary" data-action="analysis-run"${S.ui.analysisBusy ? " disabled" : ""}>${icon("sparkle")}<span>Run analysis</span></button>
+  const actions = `<button type="button" class="btn btn-primary" data-action="analysis-run"${S.ui.analysisBusy ? " disabled" : ""}>${icon("sparkle")}<span>Run analysis</span></button>
     <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
     <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>`;
   return `${screenHead(7, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
