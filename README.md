@@ -31,7 +31,7 @@ expert-survey and site data. See `docs/Project_Handoff_Summary.md` sections 8 an
 ## Run
 
 Windows: double-click `setup_windows.bat` (creates `.venv`, installs the requirements, starts the GUI).
-Next time use `gui\run_gui.bat`.
+Next time use `gui\run_gui.bat`. To update an existing folder to the latest GitHub version and start it, double-click `update_and_run.bat` (needs Git; replaces repository files, leaves your own files alone).
 
 Any platform:
 
