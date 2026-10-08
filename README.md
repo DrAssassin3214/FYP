@@ -5,13 +5,13 @@ selected Indian building projects (NICMAR final year project). The official titl
 larger scope; the current scope is below.
 
 **Current scope (since 2026-09-28):** an offline decision-support tool for delay risk in one activity,
-brick/blockwork masonry: risk **identification** (risk library, 11 site-fact rules, evidence-cited AI
+brick/blockwork masonry: risk **identification** (risk library of 46 risks, 22 site-fact rules, evidence-cited AI
 suggestions) -> risk **register** -> **5x5 probability-impact matrix** -> exports (report.html, matrix.png/svg,
 register.md/csv, case JSON), with a local web GUI. Risks without entered numbers are placed on the matrix
-from a **labelled literature seed**: relative importance index (RII) values from published surveys, turned
-into an ordinal band. An RII measures importance, not probability or days of delay, so the seed is an
+at a **labelled literature tier (Assumption)** from the **literature seed**: relative importance index (RII) values from published surveys (182 rows from 11 studies, 5 of them seed studies), turned
+into an ordinal band for 30 of the 46 library risks; the other 16 have no survey value and stay off the matrix until you enter numbers. An RII measures importance, not probability or days of delay, so the seed is an
 ordinal starting position and an Assumption of this tool, not a validated prediction; replace it with
-expert-survey and site data. See `docs/Project_Handoff_Summary.md` section 8 for the limits.
+expert-survey and site data. See `docs/Project_Handoff_Summary.md` sections 8 and 9 for the limits and the 2026-10-08 committee upgrades.
 
 **Out of scope and not in the UI:** the earlier Monte Carlo schedule simulation, the expected-monetary-value
 (EMV) decision layer, mitigation decisions and the labour-productivity models. That code is still in

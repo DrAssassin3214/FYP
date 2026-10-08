@@ -102,3 +102,22 @@ None of these was fixed by this work (code is not mine). Items that touch docume
 **needs code change:** F01 (scripts print circular figures), F02 (seeded-cell colours and labels), F11 (p-value method), F15 (example labels), F18 (output label for +1), F19 and F20 (generator text in `scripts/corpus_statistics.py`, `scripts/stats_corpus.py`), F21, F22, F23, F26, H1 to M10 and L1 to L14 above, `gui/README_GUI.md` (F17), `Project_Overview_Report.html` banner (file absent).
 
 **decision for supervisor:** title versus scope (F07); corpus size (F08, three versions, none chosen); entering all 39 A14 rows and the omitted A10/A21 rows, then re-running the statistics (F03); second-coder check of mappings (F12); M01 truncation handling (F13); risk-library evidence updates (F16); M14 recompute on W/(4N) (V-M14); standardised pooled ranking versus the current seed (and the loss of the held-out check if the pooled ranking is adopted); HAS25 real title, A15 details (V-A15); legacy data files (F27, F28).
+
+
+## 6. Code changes made after the committee review (2026-10-08)
+
+| ID | Status now | What was done |
+|---|---|---|
+| M7 | FIXED in code | The unenforced claim in the Markdown/HTML exports was replaced by a statement of what the tool does and does not do; tests updated. |
+| M4 (probability axis) | FIXED in code | `probability_class` has the same 1e-9 relative edge tolerance as `impact_class`. |
+| F15 | FIXED in code | `impact_bin_edges_source` added; example delays carry the ILLUSTRATIVE note and it survives into the result and CSV (`delay_note`). |
+| F18 | FIXED in code | The "+1 class for a rule flag" is labelled Assumption in every export and the GUI. |
+| F02 | PARTLY fixed in code (smaller fallback) | Seeded placements are labelled "literature tier (Assumption)", drawn as grey dashed chips, excluded from level totals and from the CSV `level`; scores kept. Full uncoloured-tier display and dropping the +1 step remain **decision for supervisor**. |
+| F22, F23 | FIXED in code | `literature_seed.py` docstring and `scripts/stats_tool.py` wording corrected; `build_rii_workbook.py` "built from every factor" removed. |
+| M10, L6 | FIXED in code | CSV marks literature-tier rows (`tier`, empty `level`); ILLUSTRATIVE `note` kept. |
+| F17 | FIXED in docs | `gui/README_GUI.md` updated to the current behaviour and counts. |
+| Rules | FIXED in data and code | RL-MAT, RL-MAT2, RL-HGT, RL-WX, RL-PLAN fixed; RL-WX2, RL-PACE and 9 more rules added (22 in total). |
+| Library | FIXED in data | 8 new risks without seed rows; all 16 unseeded risks carry `seed_status`. |
+| Register | ADDED | owner, trigger, response type, action, review date. |
+
+Deferred: **decision for supervisor** (not done): event / condition tag, risk merges and removals (R-TRN, R-OVT/R-FAT, R-PRD), site-language renames and re-categorisation, uncoloured-tier option B, entering the omitted A14 rows. Still **needs code change**: H1 (NaN in the CLI JSON writer), M1, M2, M3, M5, M6, M8, M9 and L1 to L14 except those listed above, F01, F11, F19, F20, F21, F26.

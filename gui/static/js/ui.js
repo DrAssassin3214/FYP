@@ -210,8 +210,19 @@ export function segmented(options, value, o = {}) {
 }
 
 // ------------------------------------------------------------------ blocks
+/** Same test as the exports (register_report._is_illustrative): the project text or any p / delay note says ILLUSTRATIVE. */
+export function isIllustrative() {
+  const c = S.case;
+  if (!c) return false;
+  const txt = `${c.project?.name || ""} ${c.project?.notes || ""}`.toLowerCase();
+  if (txt.includes("illustrative")) return true;
+  return (c.risks || []).some((r) => [r.p, r.delay].some((x) => String(x?.note || "").toLowerCase().includes("illustrative")));
+}
+export function illustrativeBanner() {
+  return isIllustrative() ? `<div class="alert alert-warn illus-banner" role="note">${icon("flask")}<div class="a-body"><strong>ILLUSTRATIVE case: every number is a placeholder, not evidence and not site data.</strong></div></div>` : "";
+}
 export function screenHead(n, title, lede = "", actions = "") {
-  return `<div class="screen-head"><span class="step">Step ${n}</span><div class="titles"><h1 tabindex="-1">${h(title)}</h1>${lede ? `<p class="lede">${lede}</p>` : ""}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
+  return `${illustrativeBanner()}<div class="screen-head"><span class="step">Step ${n}</span><div class="titles"><h1 tabindex="-1">${h(title)}</h1>${lede ? `<p class="lede">${lede}</p>` : ""}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
 }
 export function alertBox(kind, title, body = "", o = {}) {
   const ic = o.icon || { warn: "alert", danger: "alert", info: "info", neutral: "info", ok: "checkCircle" }[kind];

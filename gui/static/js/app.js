@@ -103,8 +103,9 @@ function renderKpi() {
   el.innerHTML = [
     item("Risks in register", s.n_risks),
     item("Complete", `${s.n_complete}<small>/ ${s.n_risks}</small>`),
-    item("On matrix", s.n_on_matrix),
+    item("On matrix (entered numbers)", s.n_on_matrix_entered ?? s.n_on_matrix),
     ...["Extreme", "High", "Moderate", "Low"].map((k) => s.levels[k] ? item(k, s.levels[k]) : ""),
+    s.n_seeded ? item("Literature tier (Assumption)", s.n_seeded, "", "is-tier") : "",
     item("Rule-flagged", s.n_flagged),
     s.n_flagged_missing ? item("Flagged, not in register", s.n_flagged_missing, "", "pref") : "",
     isStale() ? `<span class="badge chip-stale" title="Inputs have problems">${icon("alert")}Showing last valid state</span>` : "",
@@ -749,6 +750,7 @@ async function boot() {
   document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-tip]"); if (el && el !== tipTarget) showTip(el); else if (!el && tipTarget) hideTip(); });
   document.addEventListener("focusin", (e) => { const el = e.target.closest("[data-tip]"); if (el) showTip(el); else hideTip(); });
   document.addEventListener("focusout", hideTip);
+  document.addEventListener("click", (e) => { if (e.target.closest(".navlink")) hideTip(); });   // a rail tooltip must not stay over the heading after a click
   window.addEventListener("scroll", hideTip, { passive: true });
   document.addEventListener("keydown", (e) => {
     if (e.target.matches(".chip-add") && e.key === "Enter") { e.preventDefault(); addEvidence(e.target); return; }

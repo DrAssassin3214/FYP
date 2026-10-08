@@ -1,38 +1,474 @@
 [
-  {"id": "RL-LAB", "description": "Required workers exceed workers available", "risk_id": "R-LAB", "level": "elevated",
-   "all_of": [{"fact": "required_workers", "op": "gt", "other_fact": "available_workers"}],
-   "source": "Assumption", "evidence_ids": ["M01", "M07"], "confidence": "Moderate",
-   "rationale": "Logical shortfall condition; carries no numeric threshold. Risk existence: M01, M07."},
-  {"id": "RL-MAT", "description": "Supplier lead time exceeds the material buffer", "risk_id": "R-MAT", "level": "elevated",
-   "all_of": [{"fact": "material_lead_time_days", "op": "gt", "other_fact": "material_buffer_days"}],
-   "source": "Assumption", "evidence_ids": ["M01", "M06"], "confidence": "Moderate",
-   "rationale": "Logical stock-out condition. Risk existence: M01, M06."},
-  {"id": "RL-MAT2", "description": "Stock on site covers fewer days than the planned duration", "risk_id": "R-MAT", "level": "elevated",
-   "all_of": [{"fact": "material_stock_days", "op": "lt", "other_fact": "planned_duration_days"}],
-   "source": "Assumption", "evidence_ids": ["M01"], "confidence": "Low",
-   "rationale": "Restocking is required during the activity. Whether it fails depends on lead time (see RL-MAT)."},
-  {"id": "RL-TOOL", "description": "Tools or equipment shortage expected", "risk_id": "R-TOOL", "level": "elevated",
-   "all_of": [{"fact": "tools_shortage", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M01"], "confidence": "Low", "rationale": "User-declared condition."},
-  {"id": "RL-WX", "description": "Activity period overlaps the monsoon / rainy season", "risk_id": "R-WX", "level": "elevated",
-   "all_of": [{"fact": "monsoon_overlap", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["R08", "M01"], "confidence": "Moderate", "rationale": "Calendar overlap declared by the user."},
-  {"id": "RL-HGT", "description": "Masonry is done at height", "risk_id": "R-SAFE", "level": "elevated",
-   "all_of": [{"fact": "work_at_height", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M01"], "confidence": "Low", "rationale": "M01 ranks working at heights among the listed factors."},
-  {"id": "RL-PAY", "description": "Payment delays occurred previously or are expected", "risk_id": "R-PAY", "level": "elevated",
-   "all_of": [{"fact": "payment_delay_expected", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M01"], "confidence": "Low", "rationale": "User-declared condition."},
-  {"id": "RL-DES", "description": "Drawings or details are incomplete", "risk_id": "R-DES", "level": "elevated",
-   "all_of": [{"fact": "design_incomplete", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M06", "M13"], "confidence": "Low", "rationale": "User-declared condition."},
-  {"id": "RL-RWK", "description": "Rework was frequent in earlier work on this site or crew", "risk_id": "R-RWK", "level": "elevated",
-   "all_of": [{"fact": "prior_rework_history", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M03", "M15"], "confidence": "Low", "rationale": "User-declared condition."},
-  {"id": "RL-PLAN", "description": "Schedule was compressed relative to the achievable pace", "risk_id": "R-PLAN", "level": "elevated",
-   "all_of": [{"fact": "schedule_compressed", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M01"], "confidence": "Low", "rationale": "User-declared condition."},
-  {"id": "RL-SKILL", "description": "Skilled masons are fewer than needed", "risk_id": "R-SKILL", "level": "elevated",
-   "all_of": [{"fact": "skilled_masons_short", "op": "eq", "value": true}],
-   "source": "Assumption", "evidence_ids": ["M15"], "confidence": "Low", "rationale": "User-declared condition."}
+  {
+    "id": "RL-LAB",
+    "description": "Required workers exceed workers available",
+    "risk_id": "R-LAB",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "required_workers",
+        "op": "gt",
+        "other_fact": "available_workers"
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01",
+      "M07"
+    ],
+    "confidence": "Moderate",
+    "rationale": "Logical shortfall condition; carries no numeric threshold. Risk existence: M01, M07."
+  },
+  {
+    "id": "RL-MAT",
+    "description": "Stock on site runs out before a new delivery can arrive (for the material with the longest lead time)",
+    "risk_id": "R-MAT",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "material_stock_days",
+        "op": "le",
+        "other_fact": "material_lead_time_days"
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01",
+      "M06"
+    ],
+    "confidence": "Moderate",
+    "rationale": "Logical stock-out condition: stock days at or below the lead time leave no margin (a tie is a stock-out risk). Carries no numeric threshold. Risk existence: M01, M06.",
+    "priority": 1
+  },
+  {
+    "id": "RL-MAT2",
+    "description": "Stock on site covers fewer days than the planned duration",
+    "risk_id": "R-MAT",
+    "level": "normal",
+    "all_of": [
+      {
+        "fact": "material_stock_days",
+        "op": "lt",
+        "other_fact": "planned_duration_days"
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "Restocking is required during the activity, so the risk is relevant; it is not raised to elevated by this fact alone. Whether it fails depends on lead time (see RL-MAT, which wins when both fire).",
+    "priority": 0
+  },
+  {
+    "id": "RL-TOOL",
+    "description": "Tools or equipment shortage expected",
+    "risk_id": "R-TOOL",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "tools_shortage",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition."
+  },
+  {
+    "id": "RL-WX",
+    "description": "Activity period overlaps the monsoon / rainy season",
+    "risk_id": "R-WX",
+    "level": "normal",
+    "all_of": [
+      {
+        "fact": "monsoon_overlap",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "R08",
+      "M01"
+    ],
+    "confidence": "Moderate",
+    "rationale": "Calendar overlap declared by the user. Internal walls can continue in rain, so monsoon alone marks the risk as relevant only (see RL-WX2 for external walls).",
+    "priority": 0
+  },
+  {
+    "id": "RL-HGT",
+    "description": "Masonry is done at height and scaffolding is not ready",
+    "risk_id": "R-SAFE",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "work_at_height",
+        "op": "eq",
+        "value": true
+      },
+      {
+        "fact": "scaffolding_ready",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "Work at height alone applies to almost every superstructure wall, so it is raised only when scaffolding is not ready. M01 ranks working at heights among the listed factors."
+  },
+  {
+    "id": "RL-PAY",
+    "description": "Payment delays occurred previously or are expected",
+    "risk_id": "R-PAY",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "payment_delay_expected",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition."
+  },
+  {
+    "id": "RL-DES",
+    "description": "Drawings or details are incomplete",
+    "risk_id": "R-DES",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "design_incomplete",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M06",
+      "M13"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition."
+  },
+  {
+    "id": "RL-RWK",
+    "description": "Rework was frequent in earlier work on this site or crew",
+    "risk_id": "R-RWK",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "prior_rework_history",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M03",
+      "M15"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition."
+  },
+  {
+    "id": "RL-PLAN",
+    "description": "Planner or site engineer judges the programme faster than the gang can achieve",
+    "risk_id": "R-PLAN",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "schedule_compressed",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared (subjective) condition. See RL-PACE for the checkable form."
+  },
+  {
+    "id": "RL-SKILL",
+    "description": "Skilled masons are fewer than needed",
+    "risk_id": "R-SKILL",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "skilled_masons_short",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M15"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition."
+  },
+  {
+    "id": "RL-WX2",
+    "description": "Monsoon overlaps the activity and external walls are in scope",
+    "risk_id": "R-WX",
+    "level": "elevated",
+    "priority": 1,
+    "all_of": [
+      {
+        "fact": "monsoon_overlap",
+        "op": "eq",
+        "value": true
+      },
+      {
+        "fact": "external_walls_in_scope",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "A09",
+      "P1-05"
+    ],
+    "confidence": "Low",
+    "rationale": "Logical condition declared by the user; external walls are the work that rain stops. Risk existence: A09 (Kolkata monsoon), P1-05."
+  },
+  {
+    "id": "RL-PACE",
+    "description": "Planned daily output is higher than the output achieved last week",
+    "risk_id": "R-PLAN",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "planned_daily_output",
+        "op": "gt",
+        "other_fact": "achieved_daily_output_last_week"
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M01"
+    ],
+    "confidence": "Low",
+    "rationale": "Checkable form of RL-PLAN: both facts are User Input in the same unit (the user chooses it once); no norm is used."
+  },
+  {
+    "id": "RL-FRONT",
+    "description": "Floors or walls planned for the next 7 days are not de-propped, cleared and handed over",
+    "risk_id": "R-FRONT",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "work_front_ready",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "D01",
+      "P1-05"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition. Risk existence: D01, P1-05. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey."
+  },
+  {
+    "id": "RL-VT",
+    "description": "Masonry is above the ground floor and no hoist or material lift is available",
+    "risk_id": "R-VT",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "masonry_floor_level",
+        "op": "ge",
+        "value": 1
+      },
+      {
+        "fact": "hoist_available",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "P1-02",
+      "P3-02"
+    ],
+    "confidence": "Low",
+    "rationale": "Floor 0 is the ground floor, so the only number is the floor index 1. Risk existence (related): P1-02, P3-02. Expert Judgment, to be confirmed by the expert survey."
+  },
+  {
+    "id": "RL-SCAF",
+    "description": "Scaffolding is not ready",
+    "risk_id": "R-SCAF",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "scaffolding_ready",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "P1-05",
+      "P3-01"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition. Risk existence: P1-05, P3-01. Expert Judgment, to be confirmed by the expert survey."
+  },
+  {
+    "id": "RL-MORT",
+    "description": "Sand or cement stock runs out before a new delivery can arrive",
+    "risk_id": "R-MORT",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "sand_cement_stock_days",
+        "op": "le",
+        "other_fact": "sand_cement_lead_time_days"
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "A02",
+      "D01"
+    ],
+    "confidence": "Low",
+    "rationale": "Same logical stock-out condition as RL-MAT, for mortar materials. Risk existence: A02, D01."
+  },
+  {
+    "id": "RL-GPAY",
+    "description": "The gang's weekly payment or the labour contractor's bill is overdue",
+    "risk_id": "R-GPAY",
+    "level": "elevated",
+    "all_of": [
+      {
+        "fact": "gang_payment_overdue",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "A08",
+      "D21"
+    ],
+    "confidence": "Low",
+    "rationale": "User-declared condition. Risk existence: A08 (abstract only), D21."
+  },
+  {
+    "id": "RL-OPEN",
+    "description": "Door/window frames, MEP sleeve layout or lintel-level plan is not ready",
+    "risk_id": "R-OPEN",
+    "level": "elevated",
+    "any_of": [
+      {
+        "fact": "frames_on_site",
+        "op": "eq",
+        "value": false
+      },
+      {
+        "fact": "mep_sleeve_layout_marked",
+        "op": "eq",
+        "value": false
+      },
+      {
+        "fact": "lintel_level_plan_issued",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "M10",
+      "M06"
+    ],
+    "confidence": "Low",
+    "rationale": "Any one of the three being 'No' fires the rule. If one is left blank and the others are 'Yes', the rule is reported as not evaluable. Risk existence (related): M10, M06."
+  },
+  {
+    "id": "RL-FEST",
+    "description": "A major festival, harvest or election falls inside the activity window",
+    "risk_id": "R-FEST",
+    "level": "normal",
+    "priority": 0,
+    "all_of": [
+      {
+        "fact": "festival_or_harvest_in_window",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "A21",
+      "A03",
+      "A08"
+    ],
+    "confidence": "Low",
+    "rationale": "Calendar fact declared by the user: the risk is relevant only. Expert Judgment (to be confirmed by the expert survey) for the Indian form."
+  },
+  {
+    "id": "RL-FEST2",
+    "description": "A festival, harvest or election falls inside the window and the gang is mostly migrant",
+    "risk_id": "R-FEST",
+    "level": "elevated",
+    "priority": 1,
+    "all_of": [
+      {
+        "fact": "festival_or_harvest_in_window",
+        "op": "eq",
+        "value": true
+      },
+      {
+        "fact": "gang_mostly_migrant",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "A21",
+      "A03",
+      "A08"
+    ],
+    "confidence": "Low",
+    "rationale": "Raised above RL-FEST (priority 1) when the gang is mostly migrant. Expert Judgment, to be confirmed by the expert survey."
+  },
+  {
+    "id": "RL-HEAT",
+    "description": "The activity overlaps peak summer",
+    "risk_id": "R-HEAT",
+    "level": "normal",
+    "priority": 0,
+    "all_of": [
+      {
+        "fact": "summer_overlap",
+        "op": "eq",
+        "value": true
+      }
+    ],
+    "source": "Assumption",
+    "evidence_ids": [
+      "P2-08",
+      "M15"
+    ],
+    "confidence": "Low",
+    "rationale": "Calendar fact declared by the user: the risk is relevant only. Heat figures from brick-making (P2-06) are not used."
+  }
 ]

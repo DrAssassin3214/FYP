@@ -4,6 +4,7 @@ import { S, isStale, riskIds } from "../state.js";
 import { field, textInput, textArea, selectInput, paramWidget, distWidget, screenHead, statusBadge, sourceBadge, evChips, icon, alertBox, ul, term, emptyState, tipIcon } from "../ui.js";
 import { screenProblems } from "../problems.js";
 
+const RESPONSE_OPTIONS = [{ value: "", label: "not chosen" }, ...["avoid", "reduce", "transfer", "accept"].map((v) => ({ value: v, label: v }))];
 const isBlank = (v) => v === null || v === undefined || v === "";
 
 function delayText(d) {
@@ -22,7 +23,7 @@ function resultLine(rid) {
   const mx = (r.matrix || []).find((x) => x.risk_id === rid);
   const flag = row?.flag;
   const parts = [];
-  if (mx && mx.basis === "literature-seed") parts.push(`<span>matrix <b>${h(mx.level)}</b> (p class ${mx.p_class} × impact ${mx.impact_class}) · <b>literature seed</b>: survey RII importance rank ${row?.seed?.rank} of ${row?.seed?.n_seeded} (a ranking, not a probability or a delay; the same class is used on both axes, an Assumption)${row?.seed?.raised_by_rule ? "; probability class raised by 1 for a rule flag (Assumption, capped at 5)" : ""}. Enter probability and delay to replace it</span>`);
+  if (mx && mx.basis === "literature-seed") parts.push(`<span><b>literature tier ${mx.tier} (Assumption)</b>, not an assessed level: survey RII importance rank ${row?.seed?.rank} of ${row?.seed?.n_seeded} (a ranking, not a probability or a delay; the same class is used on both axes, an Assumption; matrix cell p class ${mx.p_class} × impact ${mx.impact_class})${row?.seed?.raised_by_rule ? "; probability class raised by 1 for a rule flag (Assumption, capped at 5)" : ""}. Enter probability and delay to replace it</span>`);
   else if (mx) parts.push(`<span>matrix <b>${h(mx.level)}</b> (p class ${mx.p_class} × impact ${mx.impact_class})</span><span>expected delay if it occurs <b>${fmtIn(mx.expected_delay_if_occurs_days, 2)} d</b></span>`);
   else if (row && !row.complete) parts.push("<span>not on the matrix yet: enter probability and delay with their sources</span>");
   else parts.push("<span>not on the matrix: see the notes on the Risk matrix step</span>");
@@ -58,6 +59,14 @@ export function riskCard(r, i) {
     </div>
     <div class="subhead">Extra delay if it occurs (working days)</div>
     ${distWidget(`${base}.delay`, r.delay, { label: `Delay of ${r.id}` })}
+    <div class="subhead">Response (text only; the tool does not quantify its effect)</div>
+    <div class="form-grid">
+      ${field({ label: "Owner", control: textInput(`${base}.owner`, r.owner, { id: `r${i}-owner`, placeholder: "who watches and acts" }), forId: `r${i}-owner` })}
+      ${field({ label: "Early-warning sign (trigger)", control: textInput(`${base}.trigger`, r.trigger, { id: `r${i}-trig`, placeholder: "what you would see first" }), forId: `r${i}-trig`, cls: "span-2" })}
+      ${field({ label: "Response type", control: selectInput(`${base}.response_type`, r.response_type || "", RESPONSE_OPTIONS, { id: `r${i}-rt` }), forId: `r${i}-rt`, hint: "Avoid, reduce, transfer or accept (Dey, 2011; Baker et al., 1999)." })}
+      ${field({ label: "Response action", control: textInput(`${base}.response_action`, r.response_action, { id: `r${i}-ra`, placeholder: "what will be done" }), forId: `r${i}-ra`, cls: "span-2" })}
+      ${field({ label: "Review date", control: `<input class="input" type="date" id="r${i}-rd" data-bind="${h(base)}.review_date" data-t="text" value="${h(r.review_date || "")}">`, forId: `r${i}-rd` })}
+    </div>
     <div class="subhead">Evidence ${tipIcon("evidence")}</div>
     ${evChips(r.evidence_ids, `${base}.evidence_ids`)}
   </div>`;
@@ -68,8 +77,9 @@ export function riskCard(r, i) {
         <div class="rcard-title"><span class="name">${h(r.name || "Unnamed risk")}</span>${statusBadge(r.status)}</div>
         <div class="rcard-meta">
           ${r.category ? `<span class="m">${h(r.category)}</span>` : ""}
-          <span class="m">p ${pTxt} ${p.source ? sourceBadge(p.source) : ""}</span>
-          <span class="m">delay ${delayText(r.delay)} ${r.delay?.source ? sourceBadge(r.delay.source) : ""}</span>
+          <span class="m">p ${pTxt} ${p.source ? sourceBadge(p.source, true) : ""}</span>
+          <span class="m">delay ${delayText(r.delay)} ${r.delay?.source ? sourceBadge(r.delay.source, true) : ""}</span>
+          ${r.owner ? `<span class="m">owner <b>${h(r.owner)}</b></span>` : ""}${r.response_type ? `<span class="m">response <b>${h(r.response_type)}</b></span>` : ""}
           <span class="m">${evChips(r.evidence_ids)}</span>
         </div>
         ${resultLine(r.id)}
@@ -84,7 +94,8 @@ export function riskCard(r, i) {
 
 function libItem(L, inReg) {
   const scope = L.scope === "project" ? ' <span class="badge" title="Affects the whole project more than this one activity">project-level</span>' : "";
-  return `<div class="lib-item"><div class="t"><span class="mono faint">${h(L.id)}</span> ${h(L.name)}${scope}</div>
+  const noSeed = L.seed_status ? ` <span class="badge" title="${h(L.seed_status)}">no survey value</span>` : "";
+  return `<div class="lib-item"><div class="t"><span class="mono faint">${h(L.id)}</span> ${h(L.name)}${scope}${noSeed}</div>
     <div class="n">${h(L.description)}<br><span class="faint">${h(L.evidence_note)}</span></div>
     <div class="row">${evChips(L.existence_evidence)}<span class="spacer"></span>${inReg.has(L.id)
       ? `<span class="badge b-ok">${icon("check")}In register</span>`

@@ -1,14 +1,14 @@
 ﻿"""Statistical analysis of the TOOL: how reliable is the literature ranking that places risks on the matrix?
 
 The tool turns survey importance indices (RII) into a rank and a 5-band class per risk (app/literature_seed.py), for two bases:
-  seed : 5 seed studies, direct matches only (6 studies held out for validation)
+  seed : 5 seed studies, direct matches only (the other 6 studies are held out; only some overlap enough with the library for a held-out comparison)
   all  : all 11 studies, direct + related matches
-This script measures, for each basis and each of the 38 library risks:
+This script measures, for each basis and each library risk with a survey value:
   * the point estimate (mean of per-study means), rank and class exactly as the app computes them;
   * a bootstrap over STUDIES (resample the studies with replacement, 5,000 times, recompute rank and class): 95% rank interval,
     how often the risk keeps its class, and how often it is even covered;
   * agreement between the two bases (Spearman, Kendall tau, exact and +-1 class agreement);
-and it summarises the existing validation results in docs/rii_statistics.json (held-out studies, Kendall's W, leave-one-out).
+and it summarises the existing held-out comparison results in docs/rii_statistics.json (held-out studies, Kendall's W, leave-one-out).
 The unit of analysis is the STUDY (n = 5 or 11): intervals are wide because few studies cover each risk, and that is reported, not hidden.
 
 Run: python scripts/stats_tool.py -> docs/tool_statistics.json and docs/Tool_Statistical_Analysis.md
@@ -180,7 +180,7 @@ def write_md(R: dict, data: dict) -> None:
           f"On the {g['n_common']} risks ranked in both: Spearman rho = {g['spearman']:.2f} (p {pv(g['p_spearman'])}), Kendall tau = {g['kendall_tau']:.2f} (p {pv(g['p_tau'])}); "
           f"same class for {g['exact_class']:.0%} of risks, within one class for {g['within_one_class']:.0%}. "
           "The all-studies basis adds the held-out studies and weaker 'related' matches, so agreement below 1 is expected; it shows how much the choice of basis moves the placement.", "",
-          "## 6. Validation against held-out studies (default basis)", "",
+          "## 6. Held-out comparison (default basis; agreement is weak, not a validation)", "",
           "| Held-out study | Risks compared | Spearman rho | p (permutation) | 95% CI for rho |", "|---|---:|---:|---:|---|"]
     for v in R["existing"]["validation"]:
         if v.get("tested"):
@@ -195,7 +195,7 @@ def write_md(R: dict, data: dict) -> None:
           "* The placement is a **relative starting order**. Where studies agree, it is a defensible prioritisation; where a risk rests on one study or the interval spans much of the list, treat its class as provisional.",
           "* Held-out agreement is mixed: see the table in section 6. A result that is not significant, or negative, is reported as it is; it is why the tool states that a survey importance index is not a probability or a number of days.",
           "* Entering a probability and a delay range for a risk replaces its placement; the statistics above then no longer apply to that risk.",
-          "* Pooling all studies uses all the data but removes the held-out check, so its agreement with other studies can no longer be tested.",
+          "* Pooling all studies uses all the data but leaves no held-out studies, so its agreement with other studies can no longer be tested.",
           "* RII scales differ between studies (1-4 vs 1-5) and several studies print only their top factors, so values are comparable as rankings, not as magnitudes.", ""]
     (ROOT / "docs" / "Tool_Statistical_Analysis.md").write_text("\n".join(L), encoding="utf-8")
 

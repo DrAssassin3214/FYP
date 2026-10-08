@@ -363,3 +363,12 @@ def test_example_case_results_are_unchanged_and_json_safe():
                    "R-PLAN": (1, 3, "Low")}
     json.dumps({k: v for k, v in res.items() if k != "report_markdown"}, allow_nan=False)
     assert deepcopy(example_case()) == example_case()
+
+
+def test_probability_class_edge_tolerance_matches_impact_class():
+    from app.engine.matrix import probability_class
+    assert probability_class(0.2) == 2 and probability_class(0.4) == 3 and probability_class(0.8) == 5
+    assert probability_class(0.1 + 0.3) == 3 and probability_class(0.6 - 1e-16) == 4   # on the 0.6 edge up to rounding
+    assert probability_class(0.39999999999999997) == 3           # binary rounding of 0.4
+    assert probability_class(0.399) == 2 and probability_class(0.2 - 1e-6) == 1       # clearly below stays below
+    assert probability_class(1.0) == 5 and probability_class(0.0) == 1

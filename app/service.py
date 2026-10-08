@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import json
 import math
+import re
+from datetime import date
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
@@ -29,6 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = [s.value for s in Source]
 _SRC = {s.value: s for s in Source}
 LEVELS = ("Extreme", "High", "Moderate", "Low")
+TIER_LABEL = "literature tier (Assumption)"
 
 
 class CaseError(ValueError):
@@ -168,6 +171,32 @@ def _dist(d: Any, where: str, problems: list[str]) -> Optional[DelayDist]:
     return dd
 
 
+RESPONSE_TYPES = ("avoid", "reduce", "transfer", "accept")        # Dey (2011) D14; Baker et al. (1999) D16
+REGISTER_TEXT_FIELDS = ("owner", "trigger", "response_type", "response_action", "review_date")
+_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _register_fields(d: Mapping, where: str, problems: list[str]) -> dict:
+    """Optional, text-only register columns (never numeric): owner, trigger (early-warning sign), response type
+    (avoid / reduce / transfer / accept), response action and review date (YYYY-MM-DD). Blank is fine; a wrong
+    value is a problem."""
+    out = {k: _text(d.get(k), f"{where}.{k}", problems) for k in REGISTER_TEXT_FIELDS}
+    rt = out["response_type"]
+    if rt and rt not in RESPONSE_TYPES:
+        problems.append(f"{where}.response_type: '{rt}' is not one of {list(RESPONSE_TYPES)}")
+    rd = out["review_date"]
+    if rd:
+        ok = bool(_ISO_DATE.match(rd))
+        if ok:
+            try:
+                date.fromisoformat(rd)
+            except ValueError:
+                ok = False
+        if not ok:
+            problems.append(f"{where}.review_date: '{rd}' is not a date in the form YYYY-MM-DD")
+    return out
+
+
 def _risk(d: Mapping, where: str, problems: list[str], warnings: list[str],
           partial: Optional[dict] = None) -> Optional[Risk]:
     """A risk is built only when its probability AND delay are both entered.  Missing numbers are
@@ -181,6 +210,7 @@ def _risk(d: Mapping, where: str, problems: list[str], warnings: list[str],
         return None
     for k in ("name", "category", "description"):
         _text(d.get(k), f"{where}.{k}", problems)
+    _register_fields(d, where, problems)
     ev = _ids(d.get("evidence_ids"), f"{where}.evidence_ids", problems)
     st = d.get("status")
     st = RiskStatus.EXPERT_USER.value if _blank(st) else st
@@ -213,6 +243,7 @@ def _risk(d: Mapping, where: str, problems: list[str], warnings: list[str],
         problems.append(f"{where}.delay: expected an object with kind, min/most likely/max and source "
                         f"(got {type(dd).__name__} '{dd}')")
     else:
+        _text(dd.get("note"), f"{where}.delay.note", problems)
         kind = _dist_kind(dd, f"{where}.delay", problems)
         if kind is not None:
             needed = _REQUIRED[kind]
@@ -320,6 +351,7 @@ def template_case() -> dict:
         "facts": {},
         "risks": [],
         "impact_bin_edges_fraction": None,
+        "impact_bin_edges_source": None,
     }
 
 
@@ -332,23 +364,29 @@ def example_case() -> dict:
     def risk(rid, name, cat, p, a, m, b, ev):
         return {"id": rid, "name": name, "category": cat, "status": "literature-supported", "evidence_ids": ev,
                 "p": {"value": p, "source": A, "note": note},
-                "delay": {"kind": "pert", "a": a, "m": m, "b": b, "source": A}}
+                "delay": {"kind": "pert", "a": a, "m": m, "b": b, "source": A, "note": note}}
 
     return {
         "project": {"name": "ILLUSTRATIVE example", "location": "n/a", "construction_type": "Residential building",
                     "notes": "Demonstration only. Every probability, delay and the planned duration is a placeholder "
                              "labelled Assumption, not site data and not evidence. The evidence IDs (M01, M02, ...) "
                              "point to real literature records supporting that each risk exists, not its size. "
-                             "Its site facts cover every input of the bundled rules, so the rule engine flags the "
-                             "risks that are in the register and nothing is left over. Replace all numbers with "
+                             "Its site facts cover every input of the bundled rules and none of them points to a risk "
+                             "that is missing from the register. Replace all numbers with "
                              "your own before drawing any conclusion."},
         "activity": {"id": "MAS-01", "name": "Brick masonry, ground-floor walls",
                      "planned_duration_days": {"value": 16, "source": A, "note": note}},
         "facts": {"required_workers": 6, "available_workers": 5, "material_lead_time_days": 6,
-                  "material_buffer_days": 3, "material_stock_days": 2, "tools_shortage": False,
-                  "monsoon_overlap": True, "work_at_height": True, "payment_delay_expected": False,
+                  "material_stock_days": 2, "tools_shortage": False,
+                  "monsoon_overlap": True, "external_walls_in_scope": True,
+                  "work_at_height": True, "scaffolding_ready": True, "payment_delay_expected": False,
                   "design_incomplete": False, "prior_rework_history": True, "schedule_compressed": True,
-                  "skilled_masons_short": True},
+                  "planned_daily_output": 10, "achieved_daily_output_last_week": 8,
+                  "skilled_masons_short": True, "work_front_ready": True, "masonry_floor_level": 0,
+                  "hoist_available": True, "sand_cement_stock_days": 8, "sand_cement_lead_time_days": 5,
+                  "gang_payment_overdue": False, "frames_on_site": True, "mep_sleeve_layout_marked": True,
+                  "lintel_level_plan_issued": True, "festival_or_harvest_in_window": False,
+                  "gang_mostly_migrant": False, "summer_overlap": False},
         "risks": [risk("R-MAT", "Brick / material shortage", "Material", 0.50, 1, 3, 8, ["M01", "M06"]),
                   risk("R-LAB", "Labour absenteeism / shortage", "Labour", 0.35, 1, 2, 6, ["M01", "M07", "M15"]),
                   risk("R-RWK", "Rework due to workmanship", "Quality", 0.25, 1, 2, 5, ["M03", "M15"]),
@@ -357,6 +395,7 @@ def example_case() -> dict:
                   risk("R-SAFE", "Unsafe conditions / work at height", "Safety", 0.30, 1, 2, 6, ["M01"]),
                   risk("R-SKILL", "Unskilled or unqualified labour", "Labour", 0.22, 1, 2, 5, ["M15", "M14"])],
         "impact_bin_edges_fraction": [0.02, 0.05, 0.10, 0.20],
+        "impact_bin_edges_source": {"source": A, "note": "ILLUSTRATIVE placeholder, not evidence"},
     }
 
 
@@ -450,6 +489,20 @@ def parse_case(case: Mapping) -> dict:
                     problems.append("impact_bin_edges_fraction must be strictly ascending, unique values between 0 and 1")
                     edges = None
 
+    edges_source = None
+    es = case.get("impact_bin_edges_source")
+    if es is not None:
+        if not isinstance(es, Mapping):
+            problems.append("impact_bin_edges_source: expected an object with source and note")
+        else:
+            note_e = _text(es.get("note"), "impact_bin_edges_source.note", problems)
+            if not _blank(es.get("source")):                  # a blank picker in the GUI means "not given yet"
+                src_e = _source(es.get("source"), "impact_bin_edges_source", problems)
+                if src_e is not None:
+                    edges_source = {"source": src_e.value, "note": note_e}
+    if edges and edges_source is None:
+        warnings.append("impact bin edges have no Source (add impact_bin_edges_source); exports print 'Source: not given'")
+
     use_seed = case.get("use_literature_seed")
     if use_seed is None:
         use_seed = True
@@ -483,7 +536,7 @@ def parse_case(case: Mapping) -> dict:
         raise CaseError(problems)
     return {"project": dict(project), "activity": {"id": str(a.get("id") or "ACT"), "name": a.get("name") or ""},
             "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts,
-            "impact_edges": edges, "warnings": warnings, "partial": partial, "use_seed": use_seed,
+            "impact_edges": edges, "edges_source": edges_source, "warnings": warnings, "partial": partial, "use_seed": use_seed,
             "seed_basis": seed_basis}
 
 
@@ -492,6 +545,18 @@ def _param_row(p: Optional[Param]) -> Optional[dict]:
     if p is None:
         return None
     return {"value": p.value, "source": p.source.value, "note": p.note}
+
+
+def matrix_settings(edges, edges_source) -> dict:
+    """Every setting that turns numbers into classes and levels, with its Source, so that each export can print
+    them. The impact edges are the user's; the probability edges and the level thresholds are tool defaults."""
+    return {
+        "impact_edges": list(edges) if edges else None,
+        "impact_edges_source": (edges_source or {}).get("source") or "not given",
+        "impact_edges_note": (edges_source or {}).get("note") or "",
+        "p_edges": list(DEFAULT_P_EDGES), "p_edges_source": "Assumption",
+        "level_thresholds": list(MATRIX_SCORE_THRESHOLDS), "level_thresholds_source": "Assumption",
+    }
 
 
 def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) -> dict:
@@ -550,6 +615,7 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
                 matrix.append({"risk_id": rid, "p": None, "expected_delay_if_occurs_days": None,
                                "p_class": sd["p_class"], "impact_class": sd["impact_class"], "score": score,
                                "level": matrix_level(sd["p_class"], sd["impact_class"]), "basis": "literature-seed",
+                               "tier": sd["tier"], "tier_label": TIER_LABEL, "raised_by_rule": sd["raised_by_rule"],
                                "note": note})
         if seeds:
             warnings[:] = [w for w in warnings if not any(w.startswith(f"{rid}: not on the matrix yet") for rid in seeds)]
@@ -569,13 +635,20 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
             "evidence_ids": list(r.get("evidence_ids") or []),
             "p": _param_row(b.p) if b else _param_row((pc["partial"].get(rid) or {}).get("p")),
             "delay": ({"kind": b.delay.kind, "a": b.delay.a, "m": b.delay.m, "b": b.delay.b, "lam": b.delay.lam,
-                       "source": b.delay.source.value, "mean": b.delay.mean()} if b else None),
+                       "source": b.delay.source.value, "mean": b.delay.mean(),
+                       "note": (r.get("delay") or {}).get("note") or ""} if b else None),
             "complete": b is not None,
             "seed": seeds.get(rid),
+            **{k: (r.get(k) or "") for k in REGISTER_TEXT_FIELDS},
             "flag": {"level": fl["level"], "rules": fl["rules"]} if fl else None,
         })
 
-    levels = {k: sum(1 for m in matrix if m["level"] == k) for k in LEVELS}
+    entered_rows = [m for m in matrix if m.get("basis") != "literature-seed"]
+    # levels count ONLY rows placed from entered numbers; seeded rows are a literature tier, not an assessed level
+    levels = {k: sum(1 for m in entered_rows if m["level"] == k) for k in LEVELS}
+    high_consequence = sorted(({"risk_id": m["risk_id"], "p": m["p"], "p_class": m["p_class"],
+                                "impact_class": m["impact_class"], "level": m["level"]}
+                               for m in entered_rows if m["impact_class"] == 5), key=lambda x: (-x["p"], x["risk_id"]))
     n_flagged = sum(1 for fl in rule_out["flags"].values() if fl["level"] == "elevated")
     result = {
         "ok": True,
@@ -585,8 +658,11 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
         "risks": rows,
         "matrix": matrix,
         "summary": {"n_risks": len(rows), "n_complete": len(risks), "n_incomplete": len(rows) - len(risks),
-                    "n_on_matrix": len(matrix), "n_seeded": len(seeds), "levels": levels, "n_flagged": n_flagged,
+                    "n_on_matrix": len(matrix), "n_on_matrix_entered": len(entered_rows),
+                    "n_seeded": len(seeds), "levels": levels, "n_flagged": n_flagged,
                     "n_flagged_missing": len(flagged_missing)},
+        "matrix_settings": matrix_settings(edges, pc["edges_source"]),
+        "high_consequence": high_consequence,
         "rules": rule_out,
         "rule_base_issues": problems,
         "warnings": warnings,

@@ -7,13 +7,15 @@ Method:
   1. Keep only values from SEED studies (RII surveys from India / Sri Lanka) whose factor maps DIRECTLY to a tool risk.
   2. Per risk, average each study's direct items first (one study counts once), then average across studies.
   3. Rank the risks by that mean RII and split them into five equal-count bands (class 5 = most important).
-  4. The band is used for BOTH matrix axes, because a survey importance index measures neither probability nor
-     days lost. A rule flag ("elevated") raises the probability class by one (capped at 5).
+  4. The band (the "literature tier", 1-5) is used for BOTH matrix axes, because a survey importance index measures
+     neither probability nor days lost. A rule flag ("elevated") raises the probability class by one (capped at 5).
+     Both steps are ASSUMPTIONS, labelled so in every output.
 The placement is therefore a relative ranking, not an estimate. Numbers the user enters always replace it.
 
-Basis "all" (opt-in, case field `seed_basis`): uses EVERY study in the dataset (seed and validation) and both direct and
-related mappings, with the same per-study averaging and banding. It uses all the data but removes the held-out validation
-studies, so the validation agreement tests no longer apply to it, and "related" rows are weaker matches. Default stays "seed".
+Basis "all" (opt-in, case field `seed_basis`): uses EVERY study in the dataset (seed and held-out) and both direct and
+related mappings, with the same per-study averaging and banding. It pools the held-out studies, so no held-out
+comparison remains for it (do not report basis "all" next to an agreement check), and "related" rows are weaker
+matches. Default stays "seed".
 """
 from __future__ import annotations
 
@@ -83,6 +85,6 @@ def seed_for(risk_id: str, elevated: bool = False, basis: str = "seed") -> Optio
     if not s or s["class"] is None:
         return None
     p_class = min(N_CLASSES, s["class"] + 1) if elevated else s["class"]
-    return {"p_class": p_class, "impact_class": s["class"], "rank": s["rank"], "n_seeded": s["n_seeded"],
+    return {"p_class": p_class, "impact_class": s["class"], "tier": s["class"], "rank": s["rank"], "n_seeded": s["n_seeded"],
             "mean_rii": s["mean_rii"], "evidence_ids": s["evidence_ids"], "raised_by_rule": bool(elevated and p_class > s["class"])}
 

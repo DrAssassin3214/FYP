@@ -218,7 +218,8 @@
     "existence_evidence": [
       "M10"
     ],
-    "evidence_note": "M10 (Middle East): inadequate training RII 0.459. Survey rankings show importance, not probability."
+    "evidence_note": "M10 (Middle East): inadequate training RII 0.459. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-PRD",
@@ -229,7 +230,8 @@
     "existence_evidence": [
       "M15"
     ],
-    "evidence_note": "M15 (Brazil): low labor productivity RII 0.73. Survey rankings show importance, not probability."
+    "evidence_note": "M15 (Brazil): low labor productivity RII 0.73. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-STR",
@@ -279,7 +281,8 @@
       "M10",
       "M14"
     ],
-    "evidence_note": "M10 (Middle East): proportion of work subcontracted RII 0.761; M14 (Indonesia): types of work contracts RII 0.66. Survey rankings show importance, not probability."
+    "evidence_note": "M10 (Middle East): proportion of work subcontracted RII 0.761; M14 (Indonesia): types of work contracts RII 0.66. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-CTR",
@@ -314,7 +317,8 @@
       "M06",
       "M14"
     ],
-    "evidence_note": "M06 (India): customer/client satisfaction RII 0.73 (related); M06 (India): urgency emphasized by the owner while issuing tender RII 0.674 (related); M14 (Indonesia): the owner/supervisor cannot decide RII 0.412. Survey rankings show importance, not probability."
+    "evidence_note": "M06 (India): customer/client satisfaction RII 0.73 (related); M06 (India): urgency emphasized by the owner while issuing tender RII 0.674 (related); M14 (Indonesia): the owner/supervisor cannot decide RII 0.412. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-CST",
@@ -337,7 +341,8 @@
       "M06",
       "M10"
     ],
-    "evidence_note": "M06 (India): quality RII 0.754 (related); M10 (Middle East): stringent inspections RII 0.732; M10 (Middle East): inspection delay RII 0.638. Survey rankings show importance, not probability."
+    "evidence_note": "M06 (India): quality RII 0.754 (related); M10 (Middle East): stringent inspections RII 0.732; M10 (Middle East): inspection delay RII 0.638. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-DEF",
@@ -348,7 +353,8 @@
     "existence_evidence": [
       "M15"
     ],
-    "evidence_note": "M15 (Brazil): delay for defective material RII 0.485. Survey rankings show importance, not probability."
+    "evidence_note": "M15 (Brazil): delay for defective material RII 0.485. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-SITE",
@@ -434,7 +440,8 @@
     "existence_evidence": [
       "M10"
     ],
-    "evidence_note": "M10 (Middle East): government policies RII 0.698. Survey rankings show importance, not probability."
+    "evidence_note": "M10 (Middle East): government policies RII 0.698. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
   },
   {
     "id": "R-SOC",
@@ -456,6 +463,113 @@
     "existence_evidence": [
       "A21"
     ],
-    "evidence_note": "A21 (Thailand): contractor financial issues RII 0.777. Survey rankings show importance, not probability."
+    "evidence_note": "A21 (Thailand): contractor financial issues RII 0.777. Survey rankings show importance, not probability.",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-FRONT",
+    "name": "Work front not released (slab not de-shuttered, props or debris in place, frame not handed over)",
+    "category": "Site",
+    "description": "Masonry follows the RCC frame; if the floor is not de-propped, cleared and handed over, the gang waits or is split.",
+    "existence_evidence": [
+      "D01",
+      "P1-05"
+    ],
+    "evidence_note": "D01 (Vignesh, 2017, India): prerequisite work not completed is a leading cause of incomplete weekly assignments; P1-05 (Thomas & Sudhakumar, 2014, Kerala): 'time lost, work not ready' is a variable in a masonry productivity model (not significant there). Existence only, not size. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-VT",
+    "name": "Hoist or material lift unavailable or broken (bricks and mortar to upper floors)",
+    "category": "Equipment",
+    "description": "Above the ground floor, bricks and mortar must be lifted; without the hoist they are head-loaded on stairs.",
+    "existence_evidence": [
+      "P1-02",
+      "P3-02"
+    ],
+    "evidence_note": "P1-02 (Parthasarathy et al., 2018, India): hoist hours enter a blockwork resource model for tall buildings; P3-02 (CPWD Analysis of Rates): extra rate for lifting above a floor height (clause to be checked before citing). Related support only. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-MORT",
+    "name": "Mortar materials short or poor (cement, sand, or mixer down)",
+    "category": "Material",
+    "description": "Bricks on site are of no use without sand and cement; sand supply in particular can be erratic. R-MAT covers bricks and blocks.",
+    "existence_evidence": [
+      "A02",
+      "D01"
+    ],
+    "evidence_note": "A02 (Ponmalar et al., 2018, Chennai): shortage of river sand reported as a severe cause; D01 (Vignesh, 2017, India): local ban on fine aggregate and a lorry strike disrupted supply. Existence only, not size. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-GPAY",
+    "name": "Gang wages or labour-contractor running bill overdue",
+    "category": "Labour",
+    "description": "Masons stop work or leave when the weekly advance or running bill is paid late. R-PAY covers client-to-contractor payment.",
+    "existence_evidence": [
+      "A08",
+      "D21"
+    ],
+    "evidence_note": "A08 (Loganathan & Kalidindi, 2016, India; abstract only): payment delays among the drivers of absenteeism and turnover; D21 (Prasad et al., 2019, India): late payment flows from contractor to sub-contractor. Existence only, not size. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-OPEN",
+    "name": "Openings, lintels, door/window frames and MEP sleeves not coordinated",
+    "category": "Design",
+    "description": "Masonry stops at sill or lintel level waiting for frames, lintel casting or electrical and plumbing positions, or walls are broken later for chases.",
+    "existence_evidence": [
+      "M10",
+      "M06"
+    ],
+    "evidence_note": "M10 and M06: coordination among design disciplines and among stakeholders appear as productivity factors (related, general construction, not masonry-specific). Existence only, not size. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-SCAF",
+    "name": "Scaffolding not available, not erected or not passed safe",
+    "category": "Equipment",
+    "description": "Above about chest height the gang needs scaffolding; without it they stop or work unsafely. R-TOOL covers small plant and tools.",
+    "existence_evidence": [
+      "P1-05",
+      "P3-01"
+    ],
+    "evidence_note": "P1-05 (Thomas & Sudhakumar, 2014, Kerala): 'scaffolding not ready' is a variable in a masonry productivity model (not significant there); P3-01 (IS 7272): the labour constants are stated to include scaffolding work (clause to be checked before citing). Existence only, not size. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-FEST",
+    "name": "Festival, harvest or election season exodus of the migrant gang",
+    "category": "Labour",
+    "description": "Migrant masons go home around major festivals, harvest or elections; some do not return on time.",
+    "existence_evidence": [
+      "A21",
+      "A03",
+      "A08"
+    ],
+    "evidence_note": "A21 (Ouansrimeang & Wisaeang, 2024, Thailand; non-India): festival and harvest labour shortage; A03 and A08 (Loganathan & Kalidindi, India; abstracts only): migrant workforce and absenteeism. No India-specific festival effect was found in the corpus, so the Indian form is Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
+  },
+  {
+    "id": "R-HEAT",
+    "name": "Peak-summer heat cuts effective working hours",
+    "category": "Weather",
+    "description": "Heavy outdoor work slows in extreme heat; gangs shift hours or stop at midday.",
+    "existence_evidence": [
+      "P2-08",
+      "M15",
+      "P2-06"
+    ],
+    "evidence_note": "P2-08 (Venugopal et al., 2026, Tamil Nadu): perceived productivity loss of outdoor workers including construction; M15 (Brazil): climate (heat, rain) among delay causes; P2-06 (Sett & Sahu, 2014): brick-making, not brick-laying, so existence context only. Masonry-specific form: Expert Judgment, to be confirmed by the expert survey.",
+    "scope": "activity",
+    "seed_status": "no survey RII value; enter probability and delay"
   }
 ]

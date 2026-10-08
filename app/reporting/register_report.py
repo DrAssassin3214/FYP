@@ -12,6 +12,9 @@ from typing import Mapping, Optional
 from app.engine.matrix import matrix_level
 
 LEVELS = ("Extreme", "High", "Moderate", "Low")
+AI_NOTE = (
+    "This tool does not generate probabilities, delays or costs. Each number shown was entered with the S"
+    "ource printed next to it. The AI suggestion feature can propose risk names, mechanisms and evidence IDs only; its numeric fields and any figures in its text are rejected (guard rules G2, G7, G9).")
 _SQUARE = {"Low": "🟩", "Moderate": "🟨", "High": "🟧", "Extreme": "🟥"}
 
 
@@ -52,9 +55,53 @@ def _is_illustrative(result: Mapping) -> bool:
     return False
 
 
+def settings_text(result: Mapping) -> str:
+    """One paragraph naming every setting that turns numbers into classes and levels, each with its Source."""
+    ms = result.get("matrix_settings") or {}
+    ie = ms.get("impact_edges")
+    imp = ("Impact edges " + " / ".join(f"{x:g}" for x in ie) + " of planned duration (Source: "
+           + _t(ms.get("impact_edges_source") or "not given")
+           + (f", {_t(ms['impact_edges_note'])}" if ms.get("impact_edges_note") else "") + ")") if ie \
+        else "Impact edges not entered (Source: not given)"
+    pe = ms.get("p_edges") or [0.2, 0.4, 0.6, 0.8]
+    th = ms.get("level_thresholds") or [5, 10, 15]
+    return (imp + ". Probability edges " + " / ".join(f"{x:g}" for x in pe) + " (Source: Assumption, tool default). "
+            "Level = probability class x impact class; thresholds " + " / ".join(f"{x:g}" for x in th)
+            + " give Low / Moderate / High / Extreme (Source: Assumption, tool default). A value exactly on an edge "
+            "goes to the higher class.")
+
+
+TIER_LABEL = "literature tier (Assumption)"
+CLASS1_NOTE = ("Assumption: level = probability class x impact class with the thresholds above. A risk in probability "
+               "class 1 is Low whatever its impact (a known weakness of multiplicative risk matrices, Cox, 2008); "
+               "risks with impact class 5 are therefore also listed separately. That list is a filter, not a score.")
+SEED_NOTE = ("Placements marked literature tier (Assumption) come from survey Relative Importance Index values in the "
+             "evidence store, not from entered numbers: the rank band (1-5) is used for both axes and a rule flag raises "
+             "the probability class by one (both are Assumptions). An importance index is neither a probability nor a "
+             "delay, so these cells are a starting point to replace with your own numbers.")
+
+
+def _is_seed(m: Optional[Mapping]) -> bool:
+    return bool(m) and m.get("basis") == "literature-seed"
+
+
+def _mx_text(m: Optional[Mapping]) -> str:
+    """Matrix column text: a level for entered numbers; 'literature tier (Assumption)' for seeded placements."""
+    if not m:
+        return "not placed"
+    if _is_seed(m):
+        return (f"{TIER_LABEL}: tier {m.get('tier', m['impact_class'])}, p{m['p_class']} x i{m['impact_class']}"
+                + ("; p class +1 for rule flag (Assumption)" if m.get("raised_by_rule") else ""))
+    return f"{m['level']} (p{m['p_class']} x i{m['impact_class']})"
+
+
+def _response_rows(rows) -> list:
+    return [r for r in rows if any(r.get(k) for k in ("owner", "trigger", "response_type", "response_action", "review_date"))]
+
+
 def _basis(r: Mapping, m: Optional[Mapping]) -> str:
     if m and m.get("basis") == "literature-seed":
-        return "literature seed (RII class, not a probability)"
+        return "literature seed (RII tier, not a probability; tier is an Assumption)"
     if r.get("p") and r.get("delay"):
         return "entered numbers"
     return "incomplete (probability and/or delay not entered)"
@@ -95,8 +142,11 @@ def generate_register_report(result: Mapping, evidence_index: Optional[Mapping[s
     L += ["## Summary", "",
           f"- Risks in the register: **{s['n_risks']}** ({s['n_complete']} with probability and delay entered, "
           f"{s['n_incomplete']} still incomplete)",
-          f"- Placed on the matrix: **{s['n_on_matrix']}**"
-          + (" (" + ", ".join(f"{s['levels'][k]} {k}" for k in LEVELS if s["levels"].get(k)) + ")" if s["n_on_matrix"] else ""),
+          f"- Placed on the matrix: **{s['n_on_matrix']}**, of which **{s.get('n_seeded', 0)}** at a {TIER_LABEL} "
+          "(from the survey ranking, not from entered numbers) and "
+          f"**{s.get('n_on_matrix_entered', s['n_on_matrix'] - s.get('n_seeded', 0))}** from entered numbers"
+          + (" (levels of the entered ones: " + ", ".join(f"{s['levels'][k]} {k}" for k in LEVELS if s["levels"].get(k)) + ")"
+             if s["levels"] and any(s["levels"].values()) else ""),
           f"- Risks flagged as elevated by the site-fact rules: **{s['n_flagged']}**, of which "
           f"**{s['n_flagged_missing']}** are not in the register", ""]
 
@@ -112,30 +162,66 @@ def generate_register_report(result: Mapping, evidence_index: Optional[Mapping[s
                 basis=_md(_basis(r, m)),
                 p=_md(_p_text(p) + (f" ({p['source']})" if p else "")),
                 d=_md(_delay_text(d) + (f" ({d['source']})" if d else "")),
-                mx=_md((f"{m['level']} (p{m['p_class']} x i{m['impact_class']})" + (" [literature seed]" if m.get("basis") == "literature-seed" else "")) if m else "not placed"),
+                mx=_md(_mx_text(m)),
                 ev=_md(", ".join(_t(e) for e in (r.get("evidence_ids") or [])) or "none")))
     else:
         L.append("No risks in the register.")
+    L.append("")
+
+    resp = _response_rows(rows)
+    L += ["## Responses", "",
+          "Owner, early-warning sign, response type (avoid / reduce / transfer / accept) and action are text entered by "
+          "the team. They carry no numbers and the tool does not quantify their effect.", ""]
+    if resp:
+        L += ["| ID | Owner | Early-warning sign (trigger) | Response type | Response action | Review date |",
+              "|---|---|---|---|---|---|"]
+        L += ["| {} | {} | {} | {} | {} | {} |".format(_md(r["id"]), _md(r.get("owner")), _md(r.get("trigger")),
+                                                  _md(r.get("response_type")), _md(r.get("response_action")),
+                                                  _md(r.get("review_date"))) for r in resp]
+    else:
+        L.append("No owner, trigger or response entered yet.")
     L.append("")
 
     L += ["## Risk matrix", ""]
     if matrix:
         cells: dict[tuple[int, int], list[str]] = {}
         for m in matrix.values():
-            cells.setdefault((m["p_class"], m["impact_class"]), []).append(m["risk_id"])
+            cells.setdefault((m["p_class"], m["impact_class"]), []).append(m["risk_id"] + ("†" if _is_seed(m) else ""))
         L += ["Probability class (rows) by impact class (columns). Impact is the expected delay if the risk occurs, as a "
               "fraction of the planned duration, binned by the edges you entered. Ordinal prioritisation only.", "",
+              settings_text(result), "",
               "| p class \\ impact | 1 | 2 | 3 | 4 | 5 |", "|---|---|---|---|---|---|"]
         for pc in range(5, 0, -1):
             L.append(f"| {pc} | " + " | ".join(
                 _SQUARE[matrix_level(pc, ic)] + " " + (", ".join(_md(x) for x in cells.get((pc, ic), [])) or "") for ic in range(1, 6)) + " |")
-        L += ["", "Colour key: " + "  ".join(f"{_SQUARE[k]} {k}" for k in LEVELS)]
+        L += ["", "Colour key: " + "  ".join(f"{_SQUARE[k]} {k}" for k in LEVELS)
+              + (f"  ·  † = {TIER_LABEL}: placed from the survey ranking, not an assessed level" if any(_is_seed(m) for m in matrix.values()) else "")]
+        L += ["", CLASS1_NOTE]
+        entered = [m for m in matrix.values() if not _is_seed(m)]
+        seeded = [m for m in matrix.values() if _is_seed(m)]
         L += ["", "| Risk | p | p class | Expected delay (d) | Impact class | Score | Level |", "|---|---|---|---|---|---|---|"]
-        for m in sorted(matrix.values(), key=lambda x: -x["score"]):
-            seed = m.get("basis") == "literature-seed"
-            L.append(f"| {_md(m['risk_id'])} | {'literature seed' if seed else format(m['p'], 'g')} | {m['p_class']} | "
-                     f"{'literature seed' if seed else format(m['expected_delay_if_occurs_days'], '.2f')} | "
-                     f"{m['impact_class']} | {m['score']} | {m['level']} |")
+        for m in sorted(entered, key=lambda x: -x["score"]):
+            L.append(f"| {_md(m['risk_id'])} | {format(m['p'], 'g')} | {m['p_class']} | "
+                     f"{format(m['expected_delay_if_occurs_days'], '.2f')} | {m['impact_class']} | {m['score']} | {m['level']} |")
+        if seeded:
+            L += ["", f"### {TIER_LABEL[0].upper() + TIER_LABEL[1:]}", "",
+                  "Not an assessed level: the tier is the survey rank band (1 = least important, 5 = most important); the "
+                  "score is tier x tier, kept for ordering only (Assumption).", "",
+                  "| Risk | Literature tier | p class | Impact class | Score (Assumption) |", "|---|---|---|---|---|"]
+            for m in sorted(seeded, key=lambda x: -x["score"]):
+                L.append(f"| {_md(m['risk_id'])} | {m.get('tier', m['impact_class'])} | {m['p_class']}"
+                         f"{' (+1 rule flag)' if m.get('raised_by_rule') else ''} | {m['impact_class']} | {m['score']} |")
+        hc = result.get("high_consequence")
+        if hc is None:
+            hc = sorted(({"risk_id": m["risk_id"], "p": m["p"], "p_class": m["p_class"], "impact_class": 5, "level": m["level"]}
+                         for m in entered if m["impact_class"] == 5), key=lambda x: -x["p"])
+        L += ["", "### High-consequence list (impact class 5, entered numbers only)", "",
+              "A filter, not a score: every risk whose impact class is 5, whatever its level, sorted by p."]
+        if hc:
+            L += ["", "| Risk | p (Source: as entered) | p class | Level |", "|---|---|---|---|"]
+            L += [f"| {_md(x['risk_id'])} | {format(x['p'], 'g')} | {x['p_class']} | {x['level']} |" for x in hc]
+        else:
+            L += ["", "No risk with entered numbers is in impact class 5."]
     else:
         L.append("The matrix was not computed. See the notes below.")
     L.append("")
@@ -153,12 +239,9 @@ def generate_register_report(result: Mapping, evidence_index: Optional[Mapping[s
     L += ["## Notes and limits", ""]
     L += [f"- {_t(w).replace(chr(10), ' ')}" for w in result["warnings"]] or ["- none"]
     if s.get("n_seeded"):
-        L += [f"- {s['n_seeded']} risk(s) marked ""literature seed"" have no probability or delay entered. Their matrix "
-              "cell is a relative ranking from survey Relative Importance Index values in the evidence store (the rank band "
-              "is used for both axes; a rule flag raises the probability class by one). An importance index is neither a "
-              "probability nor a delay, so treat these cells as a starting point and replace them with your own numbers."]
+        L += [f"- {s['n_seeded']} risk(s) marked {TIER_LABEL} have no probability or delay entered. " + SEED_NOTE]
     L += ["- Probabilities and delays are inputs from you, site records or cited sources, each labelled with its Source. "
-          "No number here was produced by AI.",
+          + AI_NOTE,
           "- The matrix is a prioritisation aid, not a quantity.", ""]
 
     cited = sorted({_t(e) for r in rows for e in (r.get("evidence_ids") or [])})
@@ -172,7 +255,8 @@ def generate_register_report(result: Mapping, evidence_index: Optional[Mapping[s
 def register_csv(result: Mapping) -> str:
     """CSV text (no BOM; callers encode as utf-8-sig so Excel on Windows decodes unicode). Every text cell
     is neutralised against formula injection. 'basis' says whether p/delay are entered numbers or a
-    literature seed (RII class, not a probability); 'case'/'note' carry the ILLUSTRATIVE flag."""
+    literature seed (RII tier, not a probability); seeded rows have an empty `level` and a `tier` text instead;
+    'case'/'note' carry the ILLUSTRATIVE flag."""
     matrix = {m["risk_id"]: m for m in result["matrix"]}
     case_name = _t((result.get("project") or {}).get("name"))
     note = "ILLUSTRATIVE: placeholder numbers, not evidence" if _is_illustrative(result) else ""
@@ -180,7 +264,8 @@ def register_csv(result: Mapping) -> str:
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["id", "name", "category", "status", "basis", "p", "p_source", "delay_kind", "delay_min",
                 "delay_most_likely", "delay_max", "delay_source", "expected_delay_days", "p_class", "impact_class",
-                "score", "level", "evidence_ids", "case", "note"])
+                "score", "level", "evidence_ids", "case", "note", "delay_note", "expected_delay_source", "tier",
+                "owner", "trigger", "response_type", "response_action", "review_date"])
     for r in result["risks"]:
         p, d, m = r.get("p") or {}, r.get("delay") or {}, matrix.get(r["id"]) or {}
         seed = m.get("basis") == "literature-seed"
@@ -188,6 +273,10 @@ def register_csv(result: Mapping) -> str:
             r["id"], r["name"], r["category"], r["status"], _basis(r, m or None),
             p.get("value", ""), p.get("source", ""), d.get("kind", ""), d.get("a", ""), d.get("m", ""), d.get("b", ""),
             d.get("source", ""), "" if seed else m.get("expected_delay_if_occurs_days", ""), m.get("p_class", ""),
-            m.get("impact_class", ""), m.get("score", ""), m.get("level", ""),
-            ";".join(_t(e) for e in (r.get("evidence_ids") or [])), case_name, note]])
+            m.get("impact_class", ""), m.get("score", ""), "" if seed else m.get("level", ""),
+            ";".join(_t(e) for e in (r.get("evidence_ids") or [])), case_name, note, d.get("note", ""),
+            "Derived Calculation" if (not seed and m.get("expected_delay_if_occurs_days") is not None) else "",
+            f"{TIER_LABEL}: tier {m.get('tier', m.get('impact_class'))}" if seed else "",
+            r.get("owner", ""), r.get("trigger", ""), r.get("response_type", ""), r.get("response_action", ""),
+            r.get("review_date", "")]])
     return buf.getvalue()

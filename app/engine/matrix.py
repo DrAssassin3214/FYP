@@ -19,10 +19,13 @@ EDGE_REL_TOL = 1e-9     # relative tolerance for "exactly on an edge" (absorbs b
 
 
 def probability_class(p: float, edges: Sequence[float] = DEFAULT_P_EDGES) -> int:
-    """Class 1..5 from p.  Lower-edge-inclusive: a value exactly on an edge goes to the HIGHER class (0.2 -> 2)."""
+    """Class 1..5 from p.  Lower-edge-inclusive: a value exactly on an edge goes to the HIGHER class (0.2 -> 2).
+    "Exactly on an edge" uses the same 1e-9 relative tolerance as impact_class, so a p that is 0.39999999999999997
+    only because of binary rounding is still the 0.4 edge."""
     if not 0.0 <= p <= 1.0:
         raise ValueError("p must be in [0,1]")
-    return bisect_right(list(edges), p) + 1
+    n_reached = sum(1 for e in edges if p >= e or math.isclose(p, e, rel_tol=EDGE_REL_TOL, abs_tol=0.0))
+    return n_reached + 1
 
 
 def impact_class(expected_delay_days: float, baseline_days: float, edges_fraction: Sequence[float]) -> int:

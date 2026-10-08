@@ -316,7 +316,7 @@ lines = [
     ("t", "Seed studies (used by the model): RII surveys from India and Sri Lanka, closest to Indian masonry sites: M01 (India, masonry), A02 (India, masonry), M06 (India), A14 (Sri Lanka), A15 (Sri Lanka)."),
     ("t", "Validation studies (held out, never used by the model): M10 (Middle East meta-analysis of 10 surveys), M15 (Brazil), M14 (Indonesia, workers), plus A10, A21 and HAS25 with too few overlapping risks to test."),
     ("h", "Step by step (sheet 'Seed_Calculation' does this with live formulas)"),
-    ("t", "1. Map each factor to one of the tool's library risks (38 risks in 11 categories, built from every factor in the studies). Direct = names the same cause (e.g. 'Material shortages' -> R-MAT). Related = overlaps but is broader, narrower or an outcome (e.g. 'Accidents' -> R-SAFE); Related values are shown but not used."),
+    ("t", "1. Map each factor to one of the tool's library risks (the risk library; only the factors entered in the seed dataset are mapped, not every factor in each paper). Direct = names the same cause (e.g. 'Material shortages' -> R-MAT). Related = overlaps but is broader, narrower or an outcome (e.g. 'Accidents' -> R-SAFE); Related values are shown but not used."),
     ("t", "2. For each risk and seed study, average that study's Direct values, so one study counts once even if it lists two matching factors."),
     ("t", "3. Seed mean RII for the risk = average across the seed studies that have a value."),
     ("t", "4. Rank the seeded risks by seed mean RII and split them into five equal-count bands (with 30 seeded risks, six per band): top band -> class 5, ... bottom band -> class 1. Risks with no seed-study value (for example R-TRN, R-PRD, R-GOV) are not seeded."),

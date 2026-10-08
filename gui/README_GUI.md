@@ -27,9 +27,9 @@ probability, delay or matrix placement.
 | # | Screen | What you do / what you see |
 |---|---|---|
 | 1 | Case & Activity | Project details, activity name and the **planned duration** in working days (with its Source). Impact on the matrix is measured as a fraction of this duration. |
-| 2 | Site facts & Rules | Declare site facts (Yes / No / Unknown, or a number). Rules flag risks as relevant or elevated; rules that lack a fact are shown as not evaluable, never guessed. Changing a fact adds any flagged risk that is missing from the register, with probability and delay left empty (Open / Load never adds anything: a saved case is restored exactly). |
-| 3 | Risk register | Risk cards: probability and a delay range (PERT, triangular, uniform or fixed), each with a Source, plus status and evidence chips. Side panel: the curated library and **AI suggestions**. A risk with numbers missing stays in the register, off the matrix, with a note. |
-| 4 | Risk matrix | Enter four impact bin edges (fractions of the planned duration). A 5x5 grid places every complete risk; a table lists p class, expected delay if it occurs, impact class, score and level. Ordinal prioritisation only. |
+| 2 | Site facts & Rules | Declare site facts (Yes / No / Unknown, or a number) for the 22 site-fact rules. Rules flag risks as relevant or elevated; rules that lack a fact are shown as not evaluable, never guessed. Changing a fact adds any flagged risk that is missing from the register, with probability and delay left empty (Open / Load never adds anything: a saved case is restored exactly). |
+| 3 | Risk register | Risk cards: probability and a delay range (PERT, triangular, uniform or fixed), each with a Source, plus status and evidence chips. Side panel: the library of 46 risks (16 of them have no survey value) and **AI suggestions**. Each card also has text-only owner, early-warning sign, response type (avoid / reduce / transfer / accept), action and review date. A risk with numbers missing stays in the register, off the matrix, with a note. |
+| 4 | Risk matrix | Enter four impact bin edges (fractions of the planned duration) with their Source. A 5x5 grid places every complete risk; a table lists p class, expected delay if it occurs, impact class, score and level. Ordinal prioritisation only. |
 | 5 | Evidence | Curated evidence records; search reaches the whole corpus, including the bulk literature harvest. |
 | 6 | Export | Download `register.md`, `register.csv` and the case JSON. |
 
@@ -51,7 +51,7 @@ Source) are shown as problems and the register keeps its last valid state until 
 
 ## Literature seed (what the matrix shows for risks without numbers)
 
-The seed is an **importance ranking** from general building-construction surveys (RII). It is **not a probability and not a delay**. Two Assumptions turn it into a matrix cell: (1) the same RII class is used for BOTH the probability and impact axes; (2) a rule flag raises the probability class by 1 (capped at 5). Agreement with the held-out surveys is weak and not statistically significant (only held-out surveys with enough overlap can be compared). Matrix colours are the same in both themes (Low #4fcf6f, Moderate #ffd93d, High #ff9626, Extreme #ff4b4b, dark ink, contrast 5.6:1 or better).
+The seed is an **importance ranking** from general building-construction surveys (RII). It is **not a probability and not a delay**. Two Assumptions turn it into a matrix cell: (1) the same RII class is used for BOTH the probability and impact axes; (2) a rule flag raises the probability class by 1 (capped at 5). Such risks are shown as a grey dashed **literature tier (Assumption)** chip, are not counted in the level totals, and the cell colour under them is not an assessed level. The seed dataset has 182 rows from 11 studies; 30 of the 46 library risks have a seed value. Agreement with the held-out surveys is weak and not statistically significant (only held-out surveys with enough overlap can be compared). Matrix colours are the same in both themes (Low #4fcf6f, Moderate #ffd93d, High #ff9626, Extreme #ff4b4b, dark ink, contrast 5.6:1 or better).
 
 If the server cannot check the case (HTTP 500, unreadable reply) the summary strip shows the server's problem text instead of "Checking the case".
 
