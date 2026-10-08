@@ -6,6 +6,8 @@ This tool covers three things: identifying risks (curated library, site-fact rul
 suggestions over a cited evidence corpus), keeping the risk register, and placing the register on a
 probability x impact matrix. A case is a plain dict / JSON file (schema in docs/case_schema.md).
 
+    analysis = run_analysis(case_dict)  # optional second step: Monte Carlo, cost / EMV, response options, decision command
+
 Nothing in here invents a number: every numeric input carries a Source, values that are present but
 wrong are rejected with a message, and a risk whose probability or delay is simply not entered yet is
 kept in the register but left off the matrix, with a note saying what is missing.
@@ -770,3 +772,25 @@ def evidence_index_from_workbook(path: Optional[Path] = None) -> dict[str, str]:
         s = _store()
     return {r.evidence_id: r.citation for r in s.all()}
 
+
+
+def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) -> dict:
+    """Monte Carlo schedule risk, cost / EMV, response options and the decision command for the same case
+    (implemented in app/analysis.py; imported here lazily so the register flow keeps its light start-up)."""
+    from app.analysis import run_analysis as _run
+
+    return _run(case, evidence_index)
+
+
+def example_analysis_case() -> dict:
+    """ILLUSTRATIVE case with a cost model, a deadline and six responses; every number is a placeholder."""
+    from app.analysis import example_analysis_case as _example
+
+    return _example()
+
+
+def mitigation_catalogue() -> list[dict]:
+    """Candidate response actions (no effect sizes, no costs), from data/mitigation_catalogue.json."""
+    from app.engine.options import load_catalogue
+
+    return load_catalogue()

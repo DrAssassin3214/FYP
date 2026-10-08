@@ -11,6 +11,7 @@ import * as sRisks from "./screens/risks.js";
 import * as sMatrix from "./screens/matrix.js";
 import * as sEv from "./screens/evidence.js";
 import * as sRep from "./screens/report.js";
+import * as sAna from "./screens/analysis.js";
 import { initCursor } from "./cursor.js";
 
 const SCREENS = [
@@ -18,8 +19,9 @@ const SCREENS = [
   { id: "rules", n: 2, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
   { id: "risks", n: 3, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
   { id: "matrix", n: 4, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
-  { id: "evidence", n: 5, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
-  { id: "report", n: 6, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
+  { id: "analysis", n: 5, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
+  { id: "evidence", n: 6, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
+  { id: "report", n: 7, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
 ];
 const BY_ID = Object.fromEntries(SCREENS.map((s) => [s.id, s]));
 const screenEl = () => $("#screen");
@@ -638,6 +640,23 @@ const ACTIONS = {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
     const r = await get("/api/example");
     if (r.ok) loadCase(r.data, { msg: "ILLUSTRATIVE example loaded: every number is a placeholder, not evidence." });
+  },
+  "analysis-example": async () => {
+    if (!(await guardDiscard("The ILLUSTRATIVE cost and options example"))) return;
+    const r = await get("/api/example-analysis");
+    if (r.ok) { loadCase(r.data, { msg: "ILLUSTRATIVE analysis example loaded: every number is a placeholder, not evidence." }); S.ui.analysis = null; S.ui.analysisProblems = null; go("analysis"); }
+  },
+  "analysis-run": async () => {
+    S.ui.analysisBusy = true; S.ui.analysisProblems = null; renderScreen();
+    const r = await post("/api/analyze", S.case);
+    S.ui.analysisBusy = false;
+    if (r.ok) { S.ui.analysis = r.data; S.ui.analysisKey = caseKey(); }
+    else S.ui.analysisProblems = r.data?.problems || ["The analysis failed."];
+    renderScreen();
+  },
+  "analysis-dl": () => {
+    const a = S.ui.analysis;
+    if (a) download("analysis.md", new Blob([a.report_markdown || ""], { type: "text/markdown" }));
   },
   "dl-report": () => downloadFrom("/api/report", "register.md"),
   "dl-csv": () => downloadFrom("/api/register-csv", "register.csv"),

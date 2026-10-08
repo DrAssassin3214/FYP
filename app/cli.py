@@ -3,6 +3,8 @@
     python -m app.cli template > my_case.json     # blank case
     python -m app.cli example  > example.json     # ILLUSTRATIVE placeholder case
     python -m app.cli run my_case.json --out out/ # register.md, register.csv, result.json
+    python -m app.cli example-analysis > a.json   # ILLUSTRATIVE case with cost model, deadline and responses
+    python -m app.cli analyze a.json --out out/   # analysis.md, analysis.json: EMV, options, AUTHORIZE / ACCEPT command
 """
 from __future__ import annotations
 
@@ -66,14 +68,38 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("template")
     sub.add_parser("example")
+    sub.add_parser("example-analysis")
     r = sub.add_parser("run")
     r.add_argument("case")
     r.add_argument("--out", default=None)
+    an = sub.add_parser("analyze")
+    an.add_argument("case")
+    an.add_argument("--out", default=None)
     a = ap.parse_args(argv)
     if a.cmd == "template":
         print(json.dumps(service.template_case(), indent=2))
     elif a.cmd == "example":
         print(json.dumps(service.example_case(), indent=2))
+    elif a.cmd == "example-analysis":
+        print(json.dumps(service.example_analysis_case(), indent=2))
+    elif a.cmd == "analyze":
+        try:
+            case = json.loads(Path(a.case).read_text(encoding="utf-8-sig"))
+            res = service.run_analysis(case, service.evidence_index_from_workbook())
+        except service.CaseError as e:
+            print("Case has problems:", file=sys.stderr)
+            for p in e.problems:
+                print(f"  - {p}", file=sys.stderr)
+            return 2
+        if a.out:
+            out = Path(a.out)
+            out.mkdir(parents=True, exist_ok=True)
+            (out / "analysis.md").write_text(res["report_markdown"], encoding="utf-8")
+            (out / "analysis.json").write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+        cmd = res["command"]
+        print(f"{cmd['command']}: {cmd['reason']}")
+        for w in res["warnings"]:
+            print("note:", w)
     else:
         try:
             case = _load_case(a.case)

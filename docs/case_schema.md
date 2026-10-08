@@ -21,3 +21,32 @@ Time units are WORKING DAYS.
 and any rule `flag`), `matrix` (p class, impact class, score, level and expected delay if it occurs, for every
 complete risk; literature-seed placements carry no expected delay and are marked `basis: literature-seed`), `summary` (counts and level totals), `rules` (fired, not evaluable, flags), `rule_base_issues`,
 `matrix_settings` (impact edges with Source, probability edges and level thresholds, both Assumption), `high_consequence` (entered-number risks in impact class 5, a filter and not a score), `warnings`, and `report_markdown`. Literature-tier rows also carry `tier`, `tier_label` and `raised_by_rule`; `summary.levels` counts only rows from entered numbers (`n_on_matrix_entered`). The register CSV appends `delay_note`, `expected_delay_source`, `tier`, `owner`, `trigger`, `response_type`, `response_action`, `review_date`; `level` is empty for literature-tier rows. The command line writes `register.md`, `register.csv` and `result.json`.
+
+## Analysis blocks (cost / EMV, responses and the decision)
+
+`python -m app.cli example-analysis` prints an ILLUSTRATIVE case that has all of these; `python -m app.cli analyze case.json --out out/`
+runs `service.run_analysis` and writes `analysis.md` and `analysis.json`. The register blocks above are unchanged. Time is in working
+days; every number is a `{"value", "source", ...}` object.
+
+| Block | Fields | Notes |
+|---|---|---|
+| `activity.deadline_days` | {value, source} | optional; needed for liquidated damages, `P(T > deadline)` and the deadline criterion |
+| `risks[].direct_cost_if_occurs` | {value, source} | optional; money lost if the risk occurs, on top of the cost of its delay days |
+| `cost` | `cost_per_delay_day` (required, no default), `ld_per_day_after_deadline` (optional), `currency` (default INR) | cost of one extra working day; liquidated damages are charged per day after the deadline |
+| `mitigations[]` | id, risk_id, action, strategy (avoid, mitigate, transfer, accept, monitor), `cost` (required), `p_after` and/or `delay_after`, `secondary_risks[]`, feasible, infeasible_reason, time_to_implement_days, mechanism, evidence_ids, `catalogue_id` | effect sizes have no defaults: enter p after and/or delay after with a source (normally Expert Judgment). A response with neither is reported and left out. `catalogue_id` links it to `data/mitigation_catalogue.json` |
+| `options[]` | id, label, mitigation_ids[] | optional. Blank = generated: each modelled response alone, then combinations of responses that target different risks (at most 40). At most one response per risk in an option. ACCEPT is always added |
+| `constraints` | max_p_exceed_deadline (0 to 1), max_mitigation_budget | optional, no defaults. Options that break a constraint are removed before ranking |
+| `simulation` | n (default 10,000, at most 200,000), seed (default 12345), criterion, correlation[{a, b, rho}] | criterion: `min_expected_total_cost` (default), `min_deadline_exceedance`, `min_p90_duration` |
+
+`run_analysis` returns `summary`, `cost`, `event_emv`, `sensitivity`, `convergence`, `value_at_stake` (expected cost that disappears if a
+risk could not occur: the ceiling on what any response to it can be worth), `option_suggestions` (candidate actions from the catalogue for the
+costliest risks, and what must be elicited for each; never an effect size), `mitigation_checks` (net benefit and break-even targets per
+response), `decision` (every option on the same random draws), `command`, `decision_stability` (same choice under three seeds?),
+`decision_sensitivity` (preferred option as the cost per delay day is scaled), `assumptions`, `audit`, `explanation`, `report_markdown`.
+
+`command.command` is one of `AUTHORIZE MITIGATION` (a response is preferred under the criterion), `ACCEPT RISK` (accepting is preferred),
+`NO ADMISSIBLE OPTION` (every option breaks a constraint) or `NO RESPONSE EVALUATED` (no response with a modelled effect was entered, so no
+advice is given). It is always worded as preferred under the stated criterion among the options evaluated, never as optimal.
+
+HTTP: `POST /api/analyze`, `POST /api/analysis-report`, `GET /api/mitigation-catalogue`, `GET /api/example-analysis`.
+
