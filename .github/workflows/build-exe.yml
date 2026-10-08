@@ -20,7 +20,13 @@ jobs:
         run: python -m pip install -r requirements-dev.txt -r requirements-desktop.txt pyinstaller
 
       - name: Run tests
-        run: python -m pytest -q
+        shell: pwsh
+        run: |
+          python -m pytest -q --tb=line -p no:cacheprovider 2>&1 | Tee-Object -FilePath pytest_out.txt
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content pytest_out.txt | Where-Object { $_ -match "^(FAILED|ERROR)|Error|assert" } | Select-Object -First 15 | ForEach-Object { Write-Host "::error::$_" }
+            exit 1
+          }
 
       # ---------------------------------------------------------------- browser version (console)
       - name: Build browser-version exe
