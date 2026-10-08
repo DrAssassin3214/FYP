@@ -1,0 +1,44 @@
+== From 00_front.md, 01_introduction.md, 02_literature_review.md (writer: front/ch1/ch2) ==
+Standards (no bibliographic detail in repo; years omitted rather than guessed):
+- ISO 31000 (edition year, title wording). The chapter also says the standard has communication/consultation and monitoring/review throughout: this is general knowledge, NOT from a repo file. Check against the standard.
+- IEC 31010 (edition year, title). The chapter says it catalogues risk-assessment techniques, matrix and Monte Carlo among them: not from a repo file. Check.
+Cox (2008): only the abstract was read per Research_Notes/B_methods.md B27; the chapter attributes to it only the four problems listed there. Duijm (2015): only title/journal/volume/pages are in the repo (methods.md reference list); chapter says only "recommendations on the use and design of risk matrices"; DOI missing. Read the paper before the final version.
+Author initials not recorded in repo (APA needs them): Abeysinghe & Jayathilaka; Adebowale & Agumba; Ameyaw et al.; Bedford et al.; Curto et al.; Dixit et al.; Djohim et al.; Fowler et al.; Gerek et al.; Guha & Biswas; Hahn; Herrerias-Velasco et al.; Ichsan et al.; Loekito et al.; Loganathan & Kalidindi (2015, 2016); Manoharan et al. (also full author list, volume, pages); Mehta & Gaikwad; Noushad et al.; Ouansrimeang & Wisaeang; Pinky Devi & Sindhu (which part is the family name?); Ponmalar et al.; Rana et al.; Soundarya et al.; Starczyk-Kolbyk & Jedras; Tankkar & Wanjari; Trietsch et al.; Williams et al.
+Titles not recorded in repo: Hassoon et al. (2025) (seed file's title field is a placeholder; real title and authors needed); Rana et al. (2023); Starczyk-Kolbyk & Jedras (2025).
+Venue/ID details to check: Almeida et al. (2021) DOI e5194 vs e5120 inside the PDF; Sargent (2013) venue discrepancy (J. Simulation vs Winter Simulation Conference); Guha & Biswas (2008) DOI from a ResearchGate page; Ponmalar et al. (2018) DOI not independently verified; Loganathan & Kalidindi (2015) no DOI/pages; Herrerias-Velasco et al. (2011) issue number; M14 (Loekito et al.) year printed 2026, published online 2025.
+Read at abstract/snippet depth only (the text says so where it matters): Loganathan & Kalidindi (2015, 2016), Guha & Biswas (2008), Mehta & Gaikwad, Tankkar & Wanjari, Noushad et al., Lawaju et al. (abstract/notes), Rana et al., Djohim et al., Gheewala et al., Starczyk-Kolbyk & Jedras, Canesi et al., Hassoon et al., Zorrilla et al., Martin et al. (title only), Gao et al. (2026), Romzi & Doh, Abu Hasan et al., Abd Aziz et al. Soundarya et al. and Pinky Devi & Sindhu were read as fetch-tool summaries ("probably right, re-check against the PDF before citing", Research_Notes/A_masonry_india.md).
+Not cited on purpose (research notes mark them leads/snippet only): Kar & Jha (2020), Vidyasagar Reddy & Hanumantha Rao (2022), Kaja & Jauswal (2023), Abbasian-Hosseini et al. (2014), Ha & Kim (2021), Karthik Dasari & Rao (2016).
+
+== From 07_discussion.md, 08_conclusions.md, appendices (writer: ch7/ch8/appendices) ==
+Abeysinghe & Jayathilaka (2022): author initials not in repo.
+Adebowale & Agumba (2023): author initials not in repo.
+Almeida et al. (2021): surname form ("Almeida" vs "Galvao de Almeida") and initials derived from the full given names printed in data/literature_seed.json; DOI inconsistent inside the PDF (e5194 vs e5120).
+Baker, Ponniah & Smith (1999): initials, volume, issue and pages not in repo.
+Brooke (1996): publication details (book, editors, pages, publisher) not in repo; initial from general knowledge.
+Dixit et al. (2019): initials not in repo.
+Duijm (2015): no DOI in repo.
+Gheewala et al. (2025): volume, issue and pages not in repo (online 23 Dec 2025).
+Ichsan et al. (2025): initials not in repo.
+IEC 31010: year, edition and title not in repo.
+ISO 31000:2018: full title and publisher location not in repo.
+Loekito et al. (2026): initials not in repo.
+Manoharan et al. (2022): full author list, volume, issue and pages not in repo ("et al." in reference list is not APA 7).
+Ponmalar et al. (2018): initials and full journal name (IJETMR) not in repo.
+
+[Chapters 3-4, 2026-10-08] Details not in the repository and left out or flagged in refs_used_ch3_ch4.txt:
+- ISO 31000 and IEC 31010: edition years not recorded in the repo or committee notes; cited as "n.d.".
+- Hassoon et al. (2025, HAS25): real title and full author list not recorded (seed title is a placeholder); cannot be cited fully in APA.
+- Manoharan et al. (2022, A15): full author list, volume and pages not recorded (Audit V-A15).
+- Ponmalar, Aravindraj & Nandhini (2018, A02): author initials and full journal name for "IJETMR" not recorded.
+- Abeysinghe & Jayathilaka (2022), Adebowale & Agumba (2023), Dixit et al. (2019), Loekito et al. (2026), Ouansrimeang & Wisaeang (2024), Pinky Devi & Sindhu (2025): given names/initials not recorded in the seed file.
+- Almeida et al. (2021, M15): surname form of the first author (Galvao de Almeida) and the DOI inconsistency inside the PDF (e5194 vs e5120).
+- Soundarya et al. (2025, A11): author names, volume and article number not recorded; values not verified against the PDF.
+- Karthik & Rao, Int. J. Construction Management 22(3): year differs by source (2019 online, 2022 issue); possible same survey as M01.
+
+== From 05_system_design.md, 06_verification.md (writer: ch5/ch6) ==
+Baker, Ponniah & Smith (1999): initials, volume, issue and pages not in repo (D_mitigation.md D16, abstract only). Chapter 5 cites it only for "response taxonomy / risk reduction most common" (the register response-type field).
+Dey (2011): complete in repo (D14, Crossref-verified per notes); cited only for the avoid/reduce/transfer/absorb taxonomy. Note the tool's response types are avoid, reduce, transfer, accept (not "absorb").
+Herrerias-Velasco et al. (2011), Trietsch et al. (2012), Prins et al. (2022): initials not recorded; Prins et al. is an arXiv preprint (not peer reviewed).
+Cox (2008) and Duijm (2015): see the front/ch1/ch2 note; chapters 5 and 6 attribute to Cox only the four problems from the abstract (poor resolution, errors, suboptimal allocation, ambiguous inputs/outputs) and to Duijm only the title.
+Default LLM model identifiers ("claude-sonnet-5", "gemini-3.8-flash") are constants in app/ai_layer/clients.py; chapter 5 does not name them and makes no claim that they exist.
+Not in repo / not verified: the Windows .exe build and the Qt window were not run; pytest was run from a uv tool environment (not in the system Python); QA scripts live outside the repo (scratchpad/qa).

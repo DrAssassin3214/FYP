@@ -699,3 +699,7 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
   .topbar, .rail, .footer, .kpi-strip, .toasts { display: none !important; }
   .shell { display: block; }
 }
+
+/* a number plus its unit and Source picker must never clip the value: stack them in form-grid cells */
+.form-grid .param { grid-template-columns: 1fr; }
+.input-group .input { min-width: 7ch; }
