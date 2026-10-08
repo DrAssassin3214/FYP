@@ -179,6 +179,7 @@ class Mitigation:
     time_to_implement_days: float = 0.0
     evidence_ids: tuple[str, ...] = ()
     mechanism: str = ""
+    catalogue_id: str = ""                # optional link to data/mitigation_catalogue.json (candidate action it models)
 
     def validate(self) -> None:
         if self.cost.value < 0:

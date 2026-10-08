@@ -12,7 +12,10 @@ parameter changes, not by sampling noise.
 """
 from __future__ import annotations
 
+import hashlib
+import threading
 import zlib
+from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Mapping, Optional, Sequence
 
@@ -22,6 +25,36 @@ from scipy import stats
 from .models import Activity, DelayDist, Risk
 
 DEFAULT_QUANTILES = (0.10, 0.50, 0.80, 0.85, 0.90, 0.95)
+
+
+# The Beta inverse CDF (scipy) dominates the run time, and comparing many response options re-evaluates the SAME
+# (shape, uniforms) pairs again and again (common random numbers keep the draws of untouched risks identical across
+# options).  Memoising it returns exactly the same numbers, only sooner; results are stored read-only.
+_PPF_CACHE: "OrderedDict[tuple, np.ndarray]" = OrderedDict()
+_PPF_LOCK = threading.Lock()
+_PPF_BUDGET_BYTES = 64 * 1024 * 1024
+_ppf_bytes = 0
+
+
+def _beta_ppf(u: np.ndarray, alpha: float, beta: float) -> np.ndarray:
+    global _ppf_bytes
+    key = (float(alpha), float(beta), u.shape, hashlib.blake2b(np.ascontiguousarray(u).tobytes(), digest_size=16).digest())
+    with _PPF_LOCK:
+        hit = _PPF_CACHE.get(key)
+        if hit is not None:
+            _PPF_CACHE.move_to_end(key)
+            return hit
+    val = stats.beta.ppf(u, alpha, beta)
+    if val.nbytes <= _PPF_BUDGET_BYTES // 8:
+        val.flags.writeable = False
+        with _PPF_LOCK:
+            if key not in _PPF_CACHE:
+                _PPF_CACHE[key] = val
+                _ppf_bytes += val.nbytes
+                while _ppf_bytes > _PPF_BUDGET_BYTES and _PPF_CACHE:
+                    _, old = _PPF_CACHE.popitem(last=False)
+                    _ppf_bytes -= old.nbytes
+    return val
 
 
 def _stream(seed: int, risk_id: str) -> np.random.Generator:
@@ -45,7 +78,7 @@ def delay_ppf(dist: DelayDist, u: np.ndarray) -> np.ndarray:
         return np.where(u < c, low, high)
     alpha = 1.0 + dist.lam * (m - a) / (b - a)
     beta = 1.0 + dist.lam * (b - m) / (b - a)
-    return a + (b - a) * stats.beta.ppf(u, alpha, beta)
+    return a + (b - a) * _beta_ppf(u, alpha, beta)
 
 
 @dataclass

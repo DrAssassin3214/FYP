@@ -23,7 +23,7 @@ expert-survey and site data. See `docs/Project_Handoff_Summary.md` section 8 for
 |---|---|
 | `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (also legacy, unused code: simulation, EMV, decision, productivity models) |
 | `gui/` | Local offline GUI, as a web page (`python -m gui`) or a PySide6 desktop window (`python -m gui.qt_app`); see `gui/README_GUI.md` |
-| `data/` | Rules, risk library, productivity models, India labour norms, literature seed |
+| `data/` | Rules, risk library, mitigation catalogue (candidate actions, no numbers), productivity models, India labour norms, literature seed |
 | `scripts/` | Literature harvesting, screening and statistics scripts |
 | `tests/` | pytest suite |
 | `Research_Notes/`, `Literature_Evidence_Package.xlsx` | Evidence corpus the app loads (M##/R## records, research notes, full-text reviews) |
@@ -43,6 +43,8 @@ python -m gui                      # opens http://127.0.0.1:8765/
 python -m app.cli example > case.json
 python -m app.cli run case.json --out out    # writes register.md, register.csv, result.json
 python examples/masonry_demo.py    # legacy demo (Monte Carlo + EMV option comparison); out of the current scope
+python -m app.cli example-analysis > a.json   # case with cost model, deadline and responses (ILLUSTRATIVE)
+python -m app.cli analyze a.json --out out    # writes analysis.md: EMV, options, AUTHORIZE / ACCEPT command
 ```
 
 Desktop app (PySide6 window, no browser): `run_desktop.bat` runs it from source; `build_desktop_exe.bat`

@@ -362,6 +362,38 @@ def create_app() -> Flask:
             return _problems([_describe(e)])
         return _json(res)
 
+    # ---------------------------------------------------------------- cost / EMV, options and the decision
+    @app.post("/api/analyze")
+    def analyze():
+        """Monte Carlo schedule, cost and event EMV, option comparison and the AUTHORIZE / ACCEPT command for a case
+        that carries a cost model and (optionally) mitigations.  Wraps service.run_analysis; nothing is added here."""
+        try:
+            res = service.run_analysis(_case_from_request(), evidence_index())
+        except service.CaseError as e:
+            return _problems(e.problems)
+        except _INPUT_ERRORS as e:
+            return _problems([_describe(e)])
+        return _json(res)
+
+    @app.post("/api/analysis-report")
+    def analysis_report():
+        try:
+            res = service.run_analysis(_case_from_request(), evidence_index())
+        except service.CaseError as e:
+            return _problems(e.problems)
+        except _INPUT_ERRORS as e:
+            return _problems([_describe(e)])
+        return Response(res["report_markdown"], mimetype="text/markdown",
+                        headers={"Content-Disposition": 'attachment; filename="analysis.md"'})
+
+    @app.get("/api/mitigation-catalogue")
+    def mitigation_catalogue():
+        return _json({"entries": service.mitigation_catalogue()})
+
+    @app.get("/api/example-analysis")
+    def example_analysis():
+        return _json(service.example_analysis_case())
+
     @app.post("/api/suggest-risks")
     def suggest_risks():
         d = _json_object()
