@@ -13,9 +13,7 @@ into an ordinal band for 30 of the 46 library risks; the other 16 have no survey
 ordinal starting position and an Assumption of this tool, not a validated prediction; replace it with
 expert-survey and site data. See `docs/Project_Handoff_Summary.md` sections 8 and 9 for the limits and the 2026-10-08 committee upgrades.
 
-**Out of scope and not in the UI:** the earlier Monte Carlo schedule simulation, the expected-monetary-value
-(EMV) decision layer, mitigation decisions and the labour-productivity models. That code is still in
-`app/` and `examples/` (unused by the interface) and is not part of the current deliverable.
+**Optional decision layer (added 2026-10-08 at the team's request):** a Cost, options & decision screen (`app/analysis.py`, `python -m app.cli analyze`) runs a Monte Carlo schedule simulation, delay-cost/EMV analysis and a response comparison. It uses only numbers the user enters, each with a Source; it has no default costs or effect sizes, never uses literature-tier (RII) placements as probabilities, and words its output as 'preferred under the stated criterion', not optimal. The earlier labour-productivity models (`app/productivity/`) remain out of scope and unused by the interface.
 
 ## Layout
 
