@@ -37,7 +37,7 @@ export function evidenceList() {
 }
 
 export function render() {
-  return `${screenHead(5, "Evidence", "The literature records behind the evidence IDs. Curated records are listed; search reaches the full corpus, including the bulk literature harvest.")}
+  return `${screenHead(6, "Evidence", "The literature records behind the evidence IDs. Curated records are listed; search reaches the full corpus, including the bulk literature harvest.")}
   <section class="card"><header class="card-h"><h2>${icon("book")} Evidence browser</h2><span class="sub">${S.health?.evidence_records?.toLocaleString?.() ?? S.evidenceList.length} records in the corpus</span></header><div class="card-b">
     <div class="row mb-4">
       <label class="sr-only" for="ev-q">Search evidence</label>

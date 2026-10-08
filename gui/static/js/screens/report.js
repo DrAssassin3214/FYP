@@ -11,7 +11,7 @@ export function render() {
     <button type="button" class="btn" data-action="dl-report">${icon("download")}<span>register.md</span></button>
     <button type="button" class="btn" data-action="dl-csv">${icon("download")}<span>register.csv</span></button>
     <button type="button" class="btn" data-action="save">${icon("save")}<span>case JSON</span></button>`;
-  return `${screenHead(6, "Export", "Download the colour-coded matrix as an image (PNG or SVG), a printable report with the matrix (HTML: open it and use Print to save as PDF), the register as Markdown or CSV, and the case file. Downloads always use the <strong>current</strong> inputs.", actions)}
+  return `${screenHead(7, "Export", "Download the colour-coded matrix as an image (PNG or SVG), a printable report with the matrix (HTML: open it and use Print to save as PDF), the register as Markdown or CSV, and the case file. Downloads always use the <strong>current</strong> inputs.", actions)}
   ${staleNote()}
   ${isStale() ? alertBox("info", "Preview vs download", "The preview below is the last valid state; a download is refused until the input problems are resolved.") : ""}
   <div id="report-live">${preview()}</div>`;

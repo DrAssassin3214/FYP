@@ -9,6 +9,7 @@ export function classify(p) {
   let m;
   const s = String(p);
   if ((m = s.match(/^risks\[(\d+)\]/))) return { screen: "risks", key: `risks.${m[1]}` };
+  if (/^(cost|mitigations|options|constraints|simulation)\b/.test(s)) return { screen: "analysis", key: null };
   if (/^activity\.planned_duration_days/.test(s)) return { screen: "case", key: "activity.planned_duration_days" };
   if ((m = s.match(/^activity\.(\w+)/))) return { screen: "case", key: `activity.${m[1]}` };
   if (/^impact_bin_edges/.test(s)) return { screen: "matrix", key: "impact_bin_edges_fraction" };
@@ -33,7 +34,7 @@ export function checkFailure() {
 }
 
 export const SCREEN_TITLES = {
-  case: "Case & Activity", rules: "Site facts & Rules", risks: "Risk register", matrix: "Risk matrix",
+  case: "Case & Activity", rules: "Site facts & Rules", risks: "Risk register", matrix: "Risk matrix", analysis: "Cost, options & decision",
 };
 
 export function problemsFor(screen) {
