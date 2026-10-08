@@ -319,6 +319,25 @@ def parse_analysis(case: Mapping) -> dict:
             "mitigations": mits, "options": options, "constraints": Constraints(max_p, budget), "warnings": warnings}
 
 
+# ----------------------------------------------------------------------------------------------- chart data
+HIST_BINS = 40
+
+
+def duration_histogram(duration, bins: int = HIST_BINS) -> dict:
+    """Derived Calculation: histogram of the simulated activity durations (working days), for the distribution chart.
+
+    A fixed-size summary (at most `bins` bins) of the same draws that give summary.percentiles; it adds no number of
+    its own.  counts sum to n; share = counts / n."""
+    import numpy as np
+
+    x = np.asarray(duration, dtype=float)
+    counts, edges = np.histogram(x, bins=bins)
+    n = int(x.size)
+    return {"bins": int(len(counts)), "edges": [float(e) for e in edges], "counts": [int(c) for c in counts],
+            "share": [float(c) / n for c in counts], "n": n,
+            "basis": "Derived Calculation of the simulated durations (equal-width bins between the smallest and largest simulated duration)"}
+
+
 # ----------------------------------------------------------------------------------------------- running
 def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) -> dict:
     pa = parse_analysis(case)
@@ -383,7 +402,7 @@ def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = No
         "baseline": {"planned_days": activity.baseline_duration_days.value,
                      "basis": f"planned duration entered as {activity.baseline_duration_days.source.value}"},
         "n_used": n, "seed": seed, "criterion": crit,
-        "summary": summary, "cost": cost_sum,
+        "summary": summary, "cost": cost_sum, "histogram": duration_histogram(res.duration),
         "event_emv": event_emv(risks, cost), "sensitivity": sensitivity(res), "convergence": convergence(res),
         "value_at_stake": stake,
         "option_suggestions": suggestions,

@@ -100,7 +100,8 @@ POST_ROUTES = ["/api/validate", "/api/run", "/api/report", "/api/register-csv", 
 
 
 @pytest.mark.parametrize("route", POST_ROUTES)
-@pytest.mark.parametrize("body", ["[]", '"text"', "42", "null", "{not json", "", "[" * 100000, "[" * 60 + "]" * 60])
+@pytest.mark.parametrize("body", ["[]", '"text"', "42", "null", "{not json", "", "[" * 100000, "[" * 60 + "]" * 60],
+                         ids=["empty-list", "string", "number", "null", "bad-json", "empty", "deep-open-brackets", "deep-balanced"])
 def test_every_post_route_returns_clean_json_error_for_odd_bodies(client, route, body):
     r = client.post(route, data=body, content_type="application/json")
     assert r.status_code in (400, 422), (route, body[:20], r.status_code)

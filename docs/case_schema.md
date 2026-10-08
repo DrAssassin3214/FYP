@@ -39,6 +39,8 @@ days; every number is a `{"value", "source", ...}` object.
 | `simulation` | n (default 10,000, at most 200,000), seed (default 12345), criterion, correlation[{a, b, rho}] | criterion: `min_expected_total_cost` (default), `min_deadline_exceedance`, `min_p90_duration` |
 
 `run_analysis` returns `summary`, `cost`, `event_emv`, `sensitivity`, `convergence`, `value_at_stake` (expected cost that disappears if a
+
+New result field `histogram` (Derived Calculation of the simulated durations, no new input): `{bins: 40, edges[41], counts[40], share[40], n, basis}`; counts sum to `n`, share = counts / n, edges run from `summary.min` to `summary.max`. It is a bounded summary of the same draws that give `summary.percentiles`, and is deterministic for a fixed seed. The GUI charts also use `summary`, `sensitivity`, `value_at_stake`, `event_emv`, `decision.options` and `decision_sensitivity`; nothing else is added.
 risk could not occur: the ceiling on what any response to it can be worth), `option_suggestions` (candidate actions from the catalogue for the
 costliest risks, and what must be elicited for each; never an effect size), `mitigation_checks` (net benefit and break-even targets per
 response), `decision` (every option on the same random draws), `command`, `decision_stability` (same choice under three seeds?),

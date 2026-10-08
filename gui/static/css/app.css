@@ -703,3 +703,21 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 /* a number plus its unit and Source picker must never clip the value: stack them in form-grid cells */
 .form-grid .param { grid-template-columns: 1fr; }
 .input-group .input { min-width: 7ch; }
+
+/* ---- analysis charts (inline SVG; colours from the --chart-* tokens, so both themes work without a redraw) */
+.ac-grid-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: var(--s-5); }
+.ac-fig { margin: 0; min-width: 0; }
+.ac-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-3); margin-bottom: var(--s-2); }
+.ac-head h3 { margin: 0; font-size: var(--fs-md, 1rem); }
+.ac-illus { font-size: var(--fs-2xs); font-weight: 700; color: var(--warn); background: var(--warn-soft); border: 1px solid var(--warn-border); border-radius: 999px; padding: 1px 8px; }
+.ac-fig figcaption { margin-top: var(--s-2); font-size: var(--fs-xs); color: var(--text-2); }
+.ac-svg { display: block; width: 100%; height: auto; font-family: var(--font-sans); font-size: 12px; overflow: visible; }
+.ac-svg .ac-ink { fill: var(--chart-ink); } .ac-svg .ac-mut { fill: var(--chart-muted); }
+.ac-svg .ac-grid { stroke: var(--chart-grid); stroke-width: 1; } .ac-svg .ac-axis { stroke: var(--chart-axis); stroke-width: 1; }
+.ac-svg .ac-c1 { fill: var(--chart-1); } .ac-svg .ac-c2 { fill: var(--chart-2); }
+.ac-svg .ac-ink-l { stroke: var(--chart-ink); } .ac-svg .ac-crit-l { stroke: var(--chart-critical); } .ac-svg .ac-crit-t { fill: var(--chart-critical); }
+.ac-svg .ac-sel rect { stroke: var(--chart-ink); stroke-width: 2.5; }
+.ac-svg .ac-line { fill: none; stroke: var(--chart-1); stroke-width: 2; }
+.ac-svg .ac-pt { fill: var(--chart-1); stroke: var(--surface); stroke-width: 1.5; }
+.ac-svg .ac-pt-open { fill: var(--surface); stroke: var(--chart-1); stroke-width: 2; }
+.ac-svg text { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }

@@ -658,6 +658,7 @@ const ACTIONS = {
     const a = S.ui.analysis;
     if (a) download("analysis.md", new Blob([a.report_markdown || ""], { type: "text/markdown" }));
   },
+  "analysis-charts-dl": () => downloadFrom("/api/analysis-charts-html", "analysis_charts.html"),
   "dl-report": () => downloadFrom("/api/report", "register.md"),
   "dl-csv": () => downloadFrom("/api/register-csv", "register.csv"),
   "toggle-edges": () => { S.ui.showEdges = !S.ui.showEdges; renderScreen(); },

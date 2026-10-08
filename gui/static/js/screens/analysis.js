@@ -4,6 +4,7 @@ import { S, caseKey } from "../state.js";
 import { h } from "../util.js";
 import { screenHead, alertBox, icon, field, paramWidget, fid } from "../ui.js";
 import { renderMarkdown } from "../markdown.js";
+import { chartsSection } from "../analysis_charts.js";
 
 const money = (v, nd = 0) => (v === null || v === undefined ? "n/a" : Number(v).toLocaleString("en-IN", { maximumFractionDigits: nd, minimumFractionDigits: nd }));
 const pct = (v) => (v === null || v === undefined ? "n/a" : `${(v * 100).toFixed(1)}%`);
@@ -82,14 +83,15 @@ function results() {
   if (S.ui.analysisProblems) return alertBox("warn", "The analysis could not run", `<ul>${S.ui.analysisProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
   if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or load the illustrative example), then press <strong>Run analysis</strong>.");
   return `${stale() ? alertBox("info", "Inputs changed", "These results are from the previous inputs. Run the analysis again to update them.") : ""}
-    <div${stale() ? ' class="is-stale-view"' : ""}>${commandBanner(a)}${optionsTable(a)}${emvTable(a)}${sensitivity(a)}
+    <div${stale() ? ' class="is-stale-view"' : ""}>${commandBanner(a)}${chartsSection(a)}${optionsTable(a)}${emvTable(a)}${sensitivity(a)}
     <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section></div>`;
 }
 
 export function render() {
   const actions = `<button type="button" class="btn" data-action="analysis-example">${icon("flask")}<span>Load illustrative example</span></button>
     <button type="button" class="btn btn-primary" data-action="analysis-run"${S.ui.analysisBusy ? " disabled" : ""}>${icon("sparkle")}<span>Run analysis</span></button>
-    <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>`;
+    <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
+    <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>`;
   return `${screenHead(7, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
   ${inputs()}<div id="analysis-live">${results()}</div>`;
 }

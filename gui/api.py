@@ -19,6 +19,7 @@ Routes
     POST /api/register-csv    register.csv download
     POST /api/matrix-svg      colour-coded matrix graphic (SVG)
     POST /api/report-html     printable report with the graphical matrix
+    POST /api/analysis-charts-html  analysis charts (PNG embedded) with data tables
 """
 from __future__ import annotations
 
@@ -385,6 +386,21 @@ def create_app() -> Flask:
             return _problems([_describe(e)])
         return Response(res["report_markdown"], mimetype="text/markdown",
                         headers={"Content-Disposition": 'attachment; filename="analysis.md"'})
+
+    @app.post("/api/analysis-charts-html")
+    def analysis_charts_html():
+        """Self-contained HTML export of the analysis charts (matplotlib PNGs embedded, with data tables)."""
+        try:
+            res = service.run_analysis(_case_from_request(), evidence_index())
+            from app.reporting.analysis_charts import analysis_html
+
+            page = analysis_html(res)
+        except service.CaseError as e:
+            return _problems(e.problems)
+        except _INPUT_ERRORS as e:
+            return _problems([_describe(e)])
+        return Response(page, mimetype="text/html",
+                        headers={"Content-Disposition": 'attachment; filename="analysis_charts.html"'})
 
     @app.get("/api/mitigation-catalogue")
     def mitigation_catalogue():
