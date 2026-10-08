@@ -57,7 +57,7 @@ The date at which these roles were assigned relative to the first agreement calc
 
 | ID | Study (as recorded in the seed file) | Country | N respondents | Scale | Masonry-specific? | Role | Rows | Entered subset |
 |---|---|---|---|---|---|---|--:|---|
-| M01 | Karthik and Rao (2019) | India (Telangana) | 44 | 1-5 | No (field case: AAC blocks) | seed | 28 | only factors with RII >= 0.700 are printed (28 of 38); truncated list |
+| M01 | Karthik and Rao (2019a) | India (Telangana) | 44 | 1-5 | No (field case: AAC blocks) | seed | 28 | only factors with RII >= 0.700 are printed (28 of 38); truncated list |
 | A02 | Ponmalar et al. (2018) | India (Chennai) | not reported | 1-4 | No | seed | 14 | 14 of 35 factors |
 | M06 | Dixit et al. (2019) | India | 201 (206 in text) | 1-5 | No | seed | 40 | 40 table rows |
 | A14 | Abeysinghe and Jayathilaka (2022) | Sri Lanka | 163 | 1-5 | No (26.4% of respondents on road projects) | seed | 5 | 5 of 39 factors |
@@ -149,7 +149,7 @@ With the same class on both axes, a seeded risk can only land on the diagonal: s
 
 ### The Assumption register
 
-Table 3.5 lists every assumption that changes a number in this report, where it is used, why it was made, and which analysis tests it. Items AS-1 to AS-7 define the tool; AS-8 to AS-13 define how literature values are combined; AS-14 to AS-16 concern the analysis itself.
+The labels AS-1 to AS-16 are local to this chapter and Chapter 4; the full register in Appendix H uses its own numbering (AS-01 to AS-18), and the two are not the same list. Table 3.5 lists every assumption that changes a number in this report, where it is used, why it was made, and which analysis tests it. Items AS-1 to AS-7 define the tool; AS-8 to AS-13 define how literature values are combined; AS-14 to AS-16 concern the analysis itself.
 
 **Table 3.5.** Assumption register (Source label of every row: Assumption)
 
@@ -198,7 +198,7 @@ The committee's methods review fixed one family of analyses, A1 to A7, before th
 - *Tier rule* (Assumption, AS-14). A risk is in Tier 1 if it is in class 5 in at least 80% of the resamples in which it is present and it rests on at least two seed studies; "Tier lower" is the same with classes 1 and 2; a risk that meets a threshold but rests on one study is flagged "not assessable"; all others are "unresolved".
 - *Critical correlations.* For each n the smallest $|\rho|$ whose two-sided permutation p is at most 0.05, so that the reader knows what a check of that size could detect.
 
-All random draws use one generator seed, `numpy.random.default_rng(20261008)`. All variants named in the plan are reported, whether or not they look favourable. Software: Python 3.13.16, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2 (versions read from the interpreter used for this report). The command `PYTHONPATH=/usr/local/lib/python3.13/dist-packages python analysis/run_all.py` clears `analysis/out/`, reruns S0 to S5 in about 26 seconds, asserts that every output carries the label "Derived Calculation" and an n, and writes a manifest of SHA-256 hashes. The command was run twice for this report and the two manifests were identical. Because `analysis/out/` is excluded from version control, the result could not be compared with an earlier run of the same files; the check that remains is the identical second run and agreement with the figures of the committee plan where those are quoted.
+All random draws use one generator seed, `numpy.random.default_rng(20261008)`. All variants named in the plan are reported, whether or not they look favourable. Software: Python 3.13.16, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2 (versions read from the interpreter used for this report). The command `PYTHONPATH=/usr/local/lib/python3.13/dist-packages python analysis/run_all.py` clears `analysis/out/`, reruns S0 to S5 in about 32 seconds, asserts that every output carries the label "Derived Calculation" and an n, and writes a manifest of SHA-256 hashes. The command was run twice for this report and the two manifests were identical. Because `analysis/out/` is excluded from version control, the result could not be compared with an earlier run of the same files; the check that remains is the identical second run and agreement with the figures of the committee plan where those are quoted.
 
 **What was and was not pre-specified.** The family was written down in the committee plan on 2026-10-08, after the ten-risk analyses and after the library was widened to 38 risks. It is therefore a specification made after the data were known, not a pre-registration. Its protection against forking paths is that the variants are enumerated, none is dropped and every one is reported. The 38-risk run is a second look at data first examined on 10 risks and is exploratory.
 
@@ -215,7 +215,7 @@ Verification asks whether the software does what its specification says. Validat
 
 S0 probes small behaviours of the repository code. Results relevant here: `run_case` does not expose the probability edges (classification uses the default edges, although a docstring suggests otherwise), so S2 varies them through the matrix functions and asserts agreement at the defaults; the example case's R-WX, with p = 0.20, lies exactly on the first probability edge; and switching the seed basis to "all" (held-out studies and related mappings pooled) changes the class of 24 of the 30 common risks. The S0 output also stores a finding text about a missing probability tolerance, which is stale: the tolerance was added after the committee review (Audit Corrections, Section 6), and the probe's recorded class for 0.1 + 0.7 is 5, as the tolerant rule expects.
 
-Engine defects found by the audit (H1, M1 to M10, L1 to L14) were partly fixed on 2026-10-08. Those still open, including the CLI's handling of NaN and booleans, are listed in the audit and in Chapter 6. They do not affect the seed or the analyses reported here, which do not pass NaN or booleans.
+Engine defects found by the audit (H1, M1 to M10, L1 to L14) were partly fixed on 2026-10-08. Those still open are listed in the audit and in Chapter 6; NaN and boolean inputs are now rejected by the case validator. None of them affects the seed or the analyses reported here.
 
 ## 3.10 Future expert survey and second-coder design
 
@@ -294,7 +294,7 @@ Table 3.9 collects the threats by type, with what has been done and what remains
 | Statistical conclusion | 5 seed studies; 14 of 30 seeded risks rest on one study; overlaps of 1 to 19 risks give low power; multiple testing | exact or permutation p, Holm, n for every statistic, critical rho | reported |
 | Statistical conclusion | Intervals ignore mapping and scale uncertainty, so they understate it | stated with each interval | open |
 | External | General building surveys, not masonry-specific; two Sri Lankan studies; road projects in A14; manager-dominated respondents; dated surveys | study table and limits stated | open |
-| Reliability of the tool | Engine defects (NaN, booleans, edge rounding) | partly fixed, tests, S0 probes | partly open |
+| Reliability of the tool | Engine defects (NaN, booleans, edge rounding) | partly fixed, tests, S0 probes | partly open (NaN, booleans, edge rounding fixed) |
 | Ecological | No site data; example is ILLUSTRATIVE; no user evaluation | no claim of accuracy on real sites | open |
 | Corpus | Three corpus counts and a fourth record count unreconciled | reported, not resolved | open (supervisor decision) |
 

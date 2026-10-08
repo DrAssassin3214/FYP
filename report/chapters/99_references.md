@@ -80,9 +80,9 @@ International Electrotechnical Commission. (n.d.). IEC 31010: Risk management: R
 
 International Organization for Standardization. (n.d.). ISO 31000: Risk management: Guidelines. [Edition year not in repository; verify against the standard]
 
-Karthik, D., & Rao, C. B. K. (2019). Identifying the significant factors affecting masonry labour productivity in India. International Journal of Construction Management, 22(3), 464-472. https://doi.org/10.1080/15623599.2019.1631978 [check: year is 2019 online and 2022 for the issue; the text cites it as "2022 or 2019"; used only as a source not entered in the seed]
+Karthik, D., & Rao, C. B. K. (2019a). The analysis of essential factors responsible for loss of labour productivity in building construction projects in India. Engineering Journal, 23(2), 55-70. https://doi.org/10.4186/ej.2019.23.2.55
 
-Karthik, D., & Rao, C. B. K. (2019). The analysis of essential factors responsible for loss of labour productivity in building construction projects in India. Engineering Journal, 23(2), 55-70. https://doi.org/10.4186/ej.2019.23.2.55
+Karthik, D., & Rao, C. B. K. (2019b). Identifying the significant factors affecting masonry labour productivity in India. International Journal of Construction Management, 22(3), 464-472. https://doi.org/10.1080/15623599.2019.1631978 [check: year is 2019 online and 2022 for the issue; the text cites it as "2022 or 2019"; used only as a source not entered in the seed]
 
 Kendall, M. G., & Babington Smith, B. (1939). The problem of m rankings. The Annals of Mathematical Statistics, 10(3), 275-287.
 
@@ -118,13 +118,13 @@ Ponmalar, Aravindraj, & Nandhini. (2018). Study on factors influencing labour pr
 
 Prins, [initials not recorded], Kammouh, [initials not recorded], & Wolfert, [initials not recorded]. (2022). Multi-criteria optimization and automated network restructuring to mitigate construction projects delays on-the-run (an extension of the Mitigation Controller). arXiv:2206.09823 [preprint, not peer reviewed; cited only as an example of the Bernoulli x Beta-PERT risk-event structure, Research_Notes/B_methods.md B18; INCOMPLETE: initials]
 
-Project team. (2026). Audit corrections, 2026-10-08 [Unpublished project document]. FYP repository, docs/Audit_Corrections_2026-10-08.md.
+Project team. (2026a). Audit corrections, 2026-10-08 [Unpublished project document]. FYP repository, docs/Audit_Corrections_2026-10-08.md.
 
-Project team. (2026). Literature database report [Unpublished project document]. FYP repository, docs/Literature_Database_Report.md.
+Project team. (2026b). Literature database report [Unpublished project document]. FYP repository, docs/Literature_Database_Report.md.
 
-Project team. (2026). Project handoff summary, Sections 5, 8 and 9 [Unpublished project document]. FYP repository, docs/Project_Handoff_Summary.md.
+Project team. (2026c). Project handoff summary, Sections 5, 8 and 9 [Unpublished project document]. FYP repository, docs/Project_Handoff_Summary.md.
 
-Project team. (2026). Statistical analysis of the literature database [Unpublished project document]. FYP repository, docs/Corpus_Statistical_Analysis.md.
+Project team. (2026d). Statistical analysis of the literature database [Unpublished project document]. FYP repository, docs/Corpus_Statistical_Analysis.md.
 
 Rana, [initials not recorded], Sharma, [initials not recorded], Neupane, [initials not recorded], & Shrestha, [initials not recorded]. (2023). [Title not recorded in the repository; bricklaying labour productivity in Surkhet]. Advances in Engineering and Technology: An International Journal, 3(1), 103-119. https://doi.org/10.3126/aet.v3i1.60628 [INCOMPLETE: title, initials] †
 
@@ -147,5 +147,7 @@ Trietsch, [initials not recorded], Mazmanyan, [initials not recorded], Gevorgyan
 Vilibic, K., Sigmund, Z., & Zavrski, I. (2026). Intelligent risk identification in construction projects: A case study of an AI-based framework. Buildings, 16(2), Article 409. https://doi.org/10.3390/buildings16020409
 
 Williams, [initials not recorded], Wilson, [initials not recorded], & Wilson, [initials not recorded]. (2021). A comparison of prior elicitation aggregation using the Classical Method and SHELF. Journal of the Royal Statistical Society: Series A (Statistics in Society), 184(3), 920-940. https://doi.org/10.1111/rssa.12691 [INCOMPLETE: initials] †
+
+Works Department, Government of Odisha. (2006). Analysis of rates 2006. https://works.odisha.gov.in/sites/default/files/2022-02/document2013-03-07_29.pdf
 
 Zorrilla, J., Seijo, S., Arenal, U., & Mena, J. R. (2026). AI-driven decision support system for proactive risk management in construction projects. Intelligent Infrastructure and Construction, 2(2), Article 4. https://doi.org/10.3390/iic2020004
