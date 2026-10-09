@@ -63,6 +63,18 @@ def _write_outputs(res: dict, out_dir: str) -> None:
         raise CliError(f"cannot write to --out {out_dir}: {e.strerror or e}")
 
 
+def _write_analysis_outputs(res: dict, out_dir: str) -> None:
+    out = Path(out_dir)
+    if out.exists() and not out.is_dir():
+        raise CliError(f"--out {out_dir} is a file; give a folder")
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "analysis.md").write_text(res["report_markdown"], encoding="utf-8")
+        (out / "analysis.json").write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+    except OSError as e:
+        raise CliError(f"cannot write to --out {out_dir}: {e.strerror or e}")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="fyp-risk")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -84,18 +96,21 @@ def main(argv=None) -> int:
         print(json.dumps(service.example_analysis_case(), indent=2))
     elif a.cmd == "analyze":
         try:
-            case = json.loads(Path(a.case).read_text(encoding="utf-8-sig"))
+            case = _load_case(a.case)
             res = service.run_analysis(case, service.evidence_index_from_workbook())
+            if a.out:
+                _write_analysis_outputs(res, a.out)
+        except CliError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
         except service.CaseError as e:
             print("Case has problems:", file=sys.stderr)
             for p in e.problems:
                 print(f"  - {p}", file=sys.stderr)
             return 2
-        if a.out:
-            out = Path(a.out)
-            out.mkdir(parents=True, exist_ok=True)
-            (out / "analysis.md").write_text(res["report_markdown"], encoding="utf-8")
-            (out / "analysis.json").write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
+            print(f"error: the case could not be processed ({type(e).__name__}: {e})", file=sys.stderr)
+            return 2
         cmd = res["command"]
         print(f"{cmd['command']}: {cmd['reason']}")
         for w in res["warnings"]:

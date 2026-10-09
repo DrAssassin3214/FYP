@@ -3,7 +3,7 @@
     "name": "ILLUSTRATIVE analysis example",
     "location": "n/a",
     "construction_type": "Residential building",
-    "notes": "Demonstration only. Every probability, delay and the planned duration is a placeholder labelled Assumption, not site data and not evidence. The evidence IDs (M01, M02, ...) point to real literature records supporting that each risk exists, not its size. Its site facts cover every input of the bundled rules, so the rule engine flags the risks that are in the register and nothing is left over. Replace all numbers with your own before drawing any conclusion."
+    "notes": "Demonstration only. Every probability, delay and the planned duration is a placeholder labelled Assumption, not site data and not evidence. The evidence IDs (M01, M02, ...) point to real literature records supporting that each risk exists, not its size. Its site facts cover every input of the bundled rules and none of them points to a risk that is missing from the register. Replace all numbers with your own before drawing any conclusion."
   },
   "activity": {
     "id": "MAS-01",
@@ -23,16 +23,31 @@
     "required_workers": 6,
     "available_workers": 5,
     "material_lead_time_days": 6,
-    "material_buffer_days": 3,
     "material_stock_days": 2,
     "tools_shortage": false,
     "monsoon_overlap": true,
+    "external_walls_in_scope": true,
     "work_at_height": true,
+    "scaffolding_ready": true,
     "payment_delay_expected": false,
     "design_incomplete": false,
     "prior_rework_history": true,
     "schedule_compressed": true,
-    "skilled_masons_short": true
+    "planned_daily_output": 10,
+    "achieved_daily_output_last_week": 8,
+    "skilled_masons_short": true,
+    "work_front_ready": true,
+    "masonry_floor_level": 0,
+    "hoist_available": true,
+    "sand_cement_stock_days": 8,
+    "sand_cement_lead_time_days": 5,
+    "gang_payment_overdue": false,
+    "frames_on_site": true,
+    "mep_sleeve_layout_marked": true,
+    "lintel_level_plan_issued": true,
+    "festival_or_harvest_in_window": false,
+    "gang_mostly_migrant": false,
+    "summer_overlap": false
   },
   "risks": [
     {
@@ -54,7 +69,8 @@
         "a": 1,
         "m": 3,
         "b": 8,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -77,7 +93,8 @@
         "a": 1,
         "m": 2,
         "b": 6,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -99,7 +116,8 @@
         "a": 1,
         "m": 2,
         "b": 5,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -120,7 +138,8 @@
         "a": 1,
         "m": 2,
         "b": 7,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -141,7 +160,8 @@
         "a": 1,
         "m": 1,
         "b": 3,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -162,7 +182,8 @@
         "a": 1,
         "m": 2,
         "b": 6,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     },
     {
@@ -184,7 +205,8 @@
         "a": 1,
         "m": 2,
         "b": 5,
-        "source": "Assumption"
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
       }
     }
   ],
@@ -194,6 +216,10 @@
     0.1,
     0.2
   ],
+  "impact_bin_edges_source": {
+    "source": "Assumption",
+    "note": "ILLUSTRATIVE placeholder, not evidence"
+  },
   "cost": {
     "cost_per_delay_day": {
       "value": 8000,

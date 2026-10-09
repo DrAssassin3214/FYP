@@ -154,6 +154,14 @@ def simulate(
         raise ValueError("risk ids must be unique")
     for r in risks:
         r.validate()
+    # Each risk draws from a stream keyed by crc32(id).  Two different ids with the same crc32 (about 2e-7 for a
+    # 46-risk register) would share a stream and become perfectly correlated, so refuse instead of mis-simulating.
+    keys: dict[int, str] = {}
+    for name in [*ids, "__latent__", "__baseline__"]:
+        h = zlib.crc32(name.encode("utf-8"))
+        if h in keys and keys[h] != name:
+            raise ValueError(f"risk ids '{keys[h]}' and '{name}' would share one random stream (same CRC32); rename one")
+        keys[h] = name
 
     k = len(risks)
     t0 = activity.baseline_duration_days.value
@@ -284,7 +292,8 @@ def convergence(res: SimResult, quantiles: Sequence[float] = (0.5, 0.8, 0.9), ch
     shrinks roughly as 1/sqrt(n) for the mean and depends on density for tails.
     """
     rows = []
-    for c in np.linspace(res.n / checkpoints, res.n, checkpoints).astype(int):
+    # at least one draw per checkpoint: for n < checkpoints the raw spacing rounds down to 0 (an empty slice)
+    for c in np.unique(np.maximum(1, np.linspace(res.n / checkpoints, res.n, checkpoints).astype(int))):
         x = res.duration[:c]
         row = {"n": int(c), "mean": float(x.mean())}
         for q in quantiles:
