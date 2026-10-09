@@ -1,0 +1,3642 @@
+{
+ "checks": [
+  {
+   "id": "V1-mean-PERT(1,3,8)",
+   "desc": "mean PERT(1,3,8): hand vs tool formula",
+   "hand": 3.5,
+   "tool": 3.5,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(1,3,8)",
+   "desc": "variance PERT(1,3,8): hand vs tool formula",
+   "hand": 1.6071428571428572,
+   "tool": 1.6071428571428572,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(1,3,8)",
+   "desc": "mean PERT(1,3,8): hand vs integral of tool inverse-CDF",
+   "hand": 3.5,
+   "tool": 3.4999999973935982,
+   "abs_diff": 2.6064017610849533e-09,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(1,3,8)",
+   "desc": "variance PERT(1,3,8): hand vs variance of tool inverse-CDF",
+   "hand": 1.6071428571428572,
+   "tool": 1.6071428328649147,
+   "abs_diff": 2.4277942545225528e-08,
+   "tol": 0.0032142857142857147,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(1,3,8)",
+   "desc": "inverse-CDF round trip via independent CDF PERT(1,3,8)",
+   "hand": 0.0,
+   "tool": 9.992007221626409e-16,
+   "abs_diff": 9.992007221626409e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-PERT(1,2,6)",
+   "desc": "mean PERT(1,2,6): hand vs tool formula",
+   "hand": 2.5,
+   "tool": 2.5,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(1,2,6)",
+   "desc": "variance PERT(1,2,6): hand vs tool formula",
+   "hand": 0.75,
+   "tool": 0.7500000000000001,
+   "abs_diff": 1.1102230246251565e-16,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(1,2,6)",
+   "desc": "mean PERT(1,2,6): hand vs integral of tool inverse-CDF",
+   "hand": 2.5,
+   "tool": 2.4999999971667752,
+   "abs_diff": 2.8332247659079712e-09,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(1,2,6)",
+   "desc": "variance PERT(1,2,6): hand vs variance of tool inverse-CDF",
+   "hand": 0.75,
+   "tool": 0.7499999804265469,
+   "abs_diff": 1.9573453080568015e-08,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(1,2,6)",
+   "desc": "inverse-CDF round trip via independent CDF PERT(1,2,6)",
+   "hand": 0.0,
+   "tool": 9.992007221626409e-16,
+   "abs_diff": 9.992007221626409e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-PERT(0,1,3)",
+   "desc": "mean PERT(0,1,3): hand vs tool formula",
+   "hand": 1.1666666666666667,
+   "tool": 1.1666666666666667,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(0,1,3)",
+   "desc": "variance PERT(0,1,3): hand vs tool formula",
+   "hand": 0.3055555555555555,
+   "tool": 0.3055555555555555,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(0,1,3)",
+   "desc": "mean PERT(0,1,3): hand vs integral of tool inverse-CDF",
+   "hand": 1.1666666666666667,
+   "tool": 1.1666666658281946,
+   "abs_diff": 8.384721805754225e-10,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(0,1,3)",
+   "desc": "variance PERT(0,1,3): hand vs variance of tool inverse-CDF",
+   "hand": 0.3055555555555555,
+   "tool": 0.30555555212438745,
+   "abs_diff": 3.4311680718879245e-09,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(0,1,3)",
+   "desc": "inverse-CDF round trip via independent CDF PERT(0,1,3)",
+   "hand": 0.0,
+   "tool": 1.1102230246251565e-15,
+   "abs_diff": 1.1102230246251565e-15,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-PERT(1,3,8) lam=6",
+   "desc": "mean PERT(1,3,8) lam=6: hand vs tool formula",
+   "hand": 3.375,
+   "tool": 3.375,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(1,3,8) lam=6",
+   "desc": "variance PERT(1,3,8) lam=6: hand vs tool formula",
+   "hand": 1.2204861111111112,
+   "tool": 1.2204861111111112,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(1,3,8) lam=6",
+   "desc": "mean PERT(1,3,8) lam=6: hand vs integral of tool inverse-CDF",
+   "hand": 3.375,
+   "tool": 3.374999994388251,
+   "abs_diff": 5.611748843392661e-09,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(1,3,8) lam=6",
+   "desc": "variance PERT(1,3,8) lam=6: hand vs variance of tool inverse-CDF",
+   "hand": 1.2204861111111112,
+   "tool": 1.2204860574834464,
+   "abs_diff": 5.3627664753364e-08,
+   "tol": 0.0024409722222222224,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(1,3,8) lam=6",
+   "desc": "inverse-CDF round trip via independent CDF PERT(1,3,8) lam=6",
+   "hand": 0.0,
+   "tool": 1.1102230246251565e-15,
+   "abs_diff": 1.1102230246251565e-15,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-PERT(2,2,9) m=a",
+   "desc": "mean PERT(2,2,9) m=a: hand vs tool formula",
+   "hand": 3.1666666666666665,
+   "tool": 3.1666666666666665,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(2,2,9) m=a",
+   "desc": "variance PERT(2,2,9) m=a: hand vs tool formula",
+   "hand": 0.9722222222222222,
+   "tool": 0.9722222222222222,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(2,2,9) m=a",
+   "desc": "mean PERT(2,2,9) m=a: hand vs integral of tool inverse-CDF",
+   "hand": 3.1666666666666665,
+   "tool": 3.166666657964744,
+   "abs_diff": 8.701922737941459e-09,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(2,2,9) m=a",
+   "desc": "variance PERT(2,2,9) m=a: hand vs variance of tool inverse-CDF",
+   "hand": 0.9722222222222222,
+   "tool": 0.9722221251235458,
+   "abs_diff": 9.709867643259429e-08,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(2,2,9) m=a",
+   "desc": "inverse-CDF round trip via independent CDF PERT(2,2,9) m=a",
+   "hand": 0.0,
+   "tool": 2.7755575615628914e-16,
+   "abs_diff": 2.7755575615628914e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-PERT(2,9,9) m=b",
+   "desc": "mean PERT(2,9,9) m=b: hand vs tool formula",
+   "hand": 7.833333333333333,
+   "tool": 7.833333333333333,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-PERT(2,9,9) m=b",
+   "desc": "variance PERT(2,9,9) m=b: hand vs tool formula",
+   "hand": 0.9722222222222224,
+   "tool": 0.9722222222222222,
+   "abs_diff": 2.220446049250313e-16,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-PERT(2,9,9) m=b",
+   "desc": "mean PERT(2,9,9) m=b: hand vs integral of tool inverse-CDF",
+   "hand": 7.833333333333333,
+   "tool": 7.8333333420352576,
+   "abs_diff": 8.701924514298298e-09,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-PERT(2,9,9) m=b",
+   "desc": "variance PERT(2,9,9) m=b: hand vs variance of tool inverse-CDF",
+   "hand": 0.9722222222222224,
+   "tool": 0.972222125123546,
+   "abs_diff": 9.709867643259429e-08,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-PERT(2,9,9) m=b",
+   "desc": "inverse-CDF round trip via independent CDF PERT(2,9,9) m=b",
+   "hand": 0.0,
+   "tool": 1.3322676295501878e-15,
+   "abs_diff": 1.3322676295501878e-15,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-Triangular(1,3,8)",
+   "desc": "mean Triangular(1,3,8): hand vs tool formula",
+   "hand": 4.0,
+   "tool": 4.0,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-Triangular(1,3,8)",
+   "desc": "variance Triangular(1,3,8): hand vs tool formula",
+   "hand": 2.1666666666666665,
+   "tool": 2.1666666666666665,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-Triangular(1,3,8)",
+   "desc": "mean Triangular(1,3,8): hand vs integral of tool inverse-CDF",
+   "hand": 4.0,
+   "tool": 3.9999999999531908,
+   "abs_diff": 4.680922316424585e-11,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-Triangular(1,3,8)",
+   "desc": "variance Triangular(1,3,8): hand vs variance of tool inverse-CDF",
+   "hand": 2.1666666666666665,
+   "tool": 2.1666666651650313,
+   "abs_diff": 1.5016352605812244e-09,
+   "tol": 0.004333333333333333,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-Triangular(1,3,8)",
+   "desc": "inverse-CDF round trip via independent CDF Triangular(1,3,8)",
+   "hand": 0.0,
+   "tool": 2.7755575615628914e-16,
+   "abs_diff": 2.7755575615628914e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-Triangular(0,0,4)",
+   "desc": "mean Triangular(0,0,4): hand vs tool formula",
+   "hand": 1.3333333333333333,
+   "tool": 1.3333333333333333,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-Triangular(0,0,4)",
+   "desc": "variance Triangular(0,0,4): hand vs tool formula",
+   "hand": 0.8888888888888888,
+   "tool": 0.8888888888888888,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-Triangular(0,0,4)",
+   "desc": "mean Triangular(0,0,4): hand vs integral of tool inverse-CDF",
+   "hand": 1.3333333333333333,
+   "tool": 1.3333333332472448,
+   "abs_diff": 8.608846968627404e-11,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-Triangular(0,0,4)",
+   "desc": "variance Triangular(0,0,4): hand vs variance of tool inverse-CDF",
+   "hand": 0.8888888888888888,
+   "tool": 0.8888888884297503,
+   "abs_diff": 4.5913850499346154e-10,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-Triangular(0,0,4)",
+   "desc": "inverse-CDF round trip via independent CDF Triangular(0,0,4)",
+   "hand": 0.0,
+   "tool": 1.6653345369377348e-16,
+   "abs_diff": 1.6653345369377348e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-Uniform(2,10)",
+   "desc": "mean Uniform(2,10): hand vs tool formula",
+   "hand": 6.0,
+   "tool": 6.0,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-Uniform(2,10)",
+   "desc": "variance Uniform(2,10): hand vs tool formula",
+   "hand": 5.333333333333333,
+   "tool": 5.333333333333333,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-Uniform(2,10)",
+   "desc": "mean Uniform(2,10): hand vs integral of tool inverse-CDF",
+   "hand": 6.0,
+   "tool": 6.0,
+   "abs_diff": 0.0,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-Uniform(2,10)",
+   "desc": "variance Uniform(2,10): hand vs variance of tool inverse-CDF",
+   "hand": 5.333333333333333,
+   "tool": 5.333333333332,
+   "abs_diff": 1.333155807969888e-12,
+   "tol": 0.010666666666666666,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-Uniform(2,10)",
+   "desc": "inverse-CDF round trip via independent CDF Uniform(2,10)",
+   "hand": 0.0,
+   "tool": 1.1102230246251565e-16,
+   "abs_diff": 1.1102230246251565e-16,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-mean-Fixed(4)",
+   "desc": "mean Fixed(4): hand vs tool formula",
+   "hand": 4,
+   "tool": 4,
+   "abs_diff": 0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-var-Fixed(4)",
+   "desc": "variance Fixed(4): hand vs tool formula",
+   "hand": 0.0,
+   "tool": 0.0,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qmean-Fixed(4)",
+   "desc": "mean Fixed(4): hand vs integral of tool inverse-CDF",
+   "hand": 4,
+   "tool": 4.0,
+   "abs_diff": 0.0,
+   "tol": 0.0002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-qvar-Fixed(4)",
+   "desc": "variance Fixed(4): hand vs variance of tool inverse-CDF",
+   "hand": 0.0,
+   "tool": 0.0,
+   "abs_diff": 0.0,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V1-cdf-Fixed(4)",
+   "desc": "inverse-CDF round trip via independent CDF Fixed(4)",
+   "hand": 0.0,
+   "tool": 0.0,
+   "abs_diff": 0.0,
+   "tol": 1e-05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-MAT",
+   "desc": "E[D|occurs] R-MAT",
+   "hand": 3.5,
+   "tool": 3.5,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-MAT",
+   "desc": "event EMV R-MAT (INR)",
+   "hand": 14000.0,
+   "tool": 14000.0,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-LAB",
+   "desc": "E[D|occurs] R-LAB",
+   "hand": 2.5,
+   "tool": 2.5,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-LAB",
+   "desc": "event EMV R-LAB (INR)",
+   "hand": 7000.0,
+   "tool": 7000.0,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-RWK",
+   "desc": "E[D|occurs] R-RWK",
+   "hand": 2.3333333333333335,
+   "tool": 2.3333333333333335,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-RWK",
+   "desc": "event EMV R-RWK (INR)",
+   "hand": 4666.666666666667,
+   "tool": 4666.666666666667,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-WX",
+   "desc": "E[D|occurs] R-WX",
+   "hand": 2.6666666666666665,
+   "tool": 2.6666666666666665,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-WX",
+   "desc": "event EMV R-WX (INR)",
+   "hand": 4266.666666666667,
+   "tool": 4266.666666666667,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-PLAN",
+   "desc": "E[D|occurs] R-PLAN",
+   "hand": 1.3333333333333333,
+   "tool": 1.3333333333333333,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-PLAN",
+   "desc": "event EMV R-PLAN (INR)",
+   "hand": 1066.6666666666667,
+   "tool": 1066.6666666666667,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-SAFE",
+   "desc": "E[D|occurs] R-SAFE",
+   "hand": 2.5,
+   "tool": 2.5,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-SAFE",
+   "desc": "event EMV R-SAFE (INR)",
+   "hand": 6000.0,
+   "tool": 6000.0,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-mean-R-SKILL",
+   "desc": "E[D|occurs] R-SKILL",
+   "hand": 2.3333333333333335,
+   "tool": 2.3333333333333335,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-emv-R-SKILL",
+   "desc": "event EMV R-SKILL (INR)",
+   "hand": 4106.666666666667,
+   "tool": 4106.666666666667,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-Edelay",
+   "desc": "expected total delay (days)",
+   "hand": 5.138333333333334,
+   "tool": 5.138333333333334,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-Var",
+   "desc": "variance of total delay",
+   "hand": 10.79384007936508,
+   "tool": 10.79384007936508,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V2-EMVsum",
+   "desc": "sum of event EMV (INR)",
+   "hand": 41106.666666666664,
+   "tool": 41106.666666666664,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-grid-mean",
+   "desc": "grid-convolution mean vs closed-form sum p*mu (validates the exact reference itself)",
+   "hand": 5.138333333333334,
+   "tool": 5.138333071661296,
+   "abs_diff": 2.616720378156856e-07,
+   "tol": 0.002,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-grid-var",
+   "desc": "grid-convolution variance vs closed form (validates the exact reference itself)",
+   "hand": 10.79384007936508,
+   "tool": 10.793843627151873,
+   "abs_diff": 3.547786793234309e-06,
+   "tol": 0.02,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-grid-p0",
+   "desc": "P(no risk occurs) grid vs product(1-p)",
+   "hand": 0.09582300000000002,
+   "tool": 0.09582299999999991,
+   "abs_diff": 1.1102230246251565e-16,
+   "tol": 0.0005,
+   "pass": true,
+   "note": "mass at zero also contains tiny mass of delays < H/2, so tolerance 5e-4"
+  },
+  {
+   "id": "V3-TEC10-ACCEPT",
+   "desc": "total expected cost ACCEPT (n=10k), |diff| <= 4 SE",
+   "hand": 50792.737468916785,
+   "tool": 50821.048140364735,
+   "abs_diff": 28.31067144795088,
+   "tol": 1547.0375024709256,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-ACCEPT",
+   "desc": "total expected cost ACCEPT (n=200k), |diff| <= 4 SE",
+   "hand": 50792.737468916785,
+   "tool": 50960.92718644909,
+   "abs_diff": 168.1897175323029,
+   "tol": 341.42546510223406,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-ACCEPT",
+   "desc": "P90 duration ACCEPT (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 25.567684403710352,
+   "tool": 25.58520824114354,
+   "abs_diff": 0.017523837433188305,
+   "tol": 0.0478506578494806,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-ACCEPT",
+   "desc": "P(duration > deadline) ACCEPT (n=200k), |diff| <= 4 SE",
+   "hand": 0.601851201915087,
+   "tool": 0.604075,
+   "abs_diff": 0.00222379808491302,
+   "tol": 0.006374182386458069,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-ACCEPT",
+   "desc": "expected delay ACCEPT (n=200k)",
+   "hand": 5.138333071661296,
+   "tool": 5.152092234489206,
+   "abs_diff": 0.013759162827910565,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF",
+   "desc": "total expected cost O-M-BUF (n=10k), |diff| <= 4 SE",
+   "hand": 45008.17833798767,
+   "tool": 44929.42687221056,
+   "abs_diff": 78.75146577710984,
+   "tol": 1364.7775941719663,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF",
+   "desc": "total expected cost O-M-BUF (n=200k), |diff| <= 4 SE",
+   "hand": 45008.17833798767,
+   "tool": 45197.684443778126,
+   "abs_diff": 189.50610579045315,
+   "tol": 303.4774188522046,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF",
+   "desc": "P90 duration O-M-BUF (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.23361573398894,
+   "tool": 24.276544355996926,
+   "abs_diff": 0.04292862200798453,
+   "tol": 0.049670155690094905,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF",
+   "desc": "P(duration > deadline) O-M-BUF (n=200k), |diff| <= 4 SE",
+   "hand": 0.4630017727103893,
+   "tool": 0.464895,
+   "abs_diff": 0.0018932272896107216,
+   "tol": 0.006461099765528675,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF",
+   "desc": "expected delay O-M-BUF (n=200k)",
+   "hand": 4.088333071653194,
+   "tool": 4.104001364248003,
+   "abs_diff": 0.01566829259480862,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP",
+   "desc": "total expected cost O-M-SUP (n=10k), |diff| <= 4 SE",
+   "hand": 47900.45790345223,
+   "tool": 48045.50975667175,
+   "abs_diff": 145.05185321952013,
+   "tol": 1490.5876324420647,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP",
+   "desc": "total expected cost O-M-SUP (n=200k), |diff| <= 4 SE",
+   "hand": 47900.45790345223,
+   "tool": 48083.18424875854,
+   "abs_diff": 182.72634530630603,
+   "tol": 327.24425910493613,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP",
+   "desc": "P90 duration O-M-SUP (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.98061427556211,
+   "tool": 25.005940564791675,
+   "abs_diff": 0.02532628922956448,
+   "tol": 0.04854432512043559,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP",
+   "desc": "P(duration > deadline) O-M-SUP (n=200k), |diff| <= 4 SE",
+   "hand": 0.5324264873127381,
+   "tool": 0.53509,
+   "abs_diff": 0.0026635126872618375,
+   "tol": 0.00646110920646424,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP",
+   "desc": "expected delay O-M-SUP (n=200k)",
+   "hand": 4.613333071657245,
+   "tool": 4.628789575610412,
+   "abs_diff": 0.015456503953166667,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-GANG",
+   "desc": "total expected cost O-M-GANG (n=10k), |diff| <= 4 SE",
+   "hand": 57661.15388526036,
+   "tool": 57736.61981204953,
+   "abs_diff": 75.46592678916932,
+   "tol": 1472.8252259219537,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-GANG",
+   "desc": "total expected cost O-M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 57661.15388526036,
+   "tool": 57817.04223565203,
+   "abs_diff": 155.88835039166588,
+   "tol": 323.3135288959044,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-GANG",
+   "desc": "P90 duration O-M-GANG (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 25.195087139836392,
+   "tool": 25.212096922908042,
+   "abs_diff": 0.01700978307165002,
+   "tol": 0.048419728405733484,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-GANG",
+   "desc": "P(duration > deadline) O-M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 0.5872740834675179,
+   "tool": 0.58889,
+   "abs_diff": 0.0016159165324821645,
+   "tol": 0.006400895980593043,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-GANG",
+   "desc": "expected delay O-M-GANG (n=200k)",
+   "hand": 4.971666406633456,
+   "tool": 4.984859508761456,
+   "abs_diff": 0.013193102128000511,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-COV",
+   "desc": "total expected cost O-M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 50818.42901182477,
+   "tool": 50770.29496546284,
+   "abs_diff": 48.13404636193445,
+   "tol": 1494.1649031895076,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-COV",
+   "desc": "total expected cost O-M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 50818.42901182477,
+   "tool": 51012.58881080273,
+   "abs_diff": 194.15979897795478,
+   "tol": 331.1052978140064,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-COV",
+   "desc": "P90 duration O-M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 25.260310689813466,
+   "tool": 25.2865772336196,
+   "abs_diff": 0.026266543806134024,
+   "tol": 0.05017221134273207,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-COV",
+   "desc": "P(duration > deadline) O-M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.5784813436208796,
+   "tool": 0.580885,
+   "abs_diff": 0.0024036563791204335,
+   "tol": 0.006413231167976588,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-COV",
+   "desc": "expected delay O-M-COV (n=200k)",
+   "hand": 4.92499973857862,
+   "tool": 4.940930368472208,
+   "abs_diff": 0.015930629893587955,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-QC",
+   "desc": "total expected cost O-M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 49623.94417181877,
+   "tool": 49518.36637854935,
+   "abs_diff": 105.57779326942546,
+   "tol": 1504.549203919658,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-QC",
+   "desc": "total expected cost O-M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 49623.94417181877,
+   "tool": 49753.37196741373,
+   "abs_diff": 129.4277955949583,
+   "tol": 332.1373070389171,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-QC",
+   "desc": "P90 duration O-M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 25.261890672356575,
+   "tool": 25.282067423424476,
+   "abs_diff": 0.02017675106790051,
+   "tol": 0.04953848996480879,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-QC",
+   "desc": "P(duration > deadline) O-M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.5749906816026886,
+   "tool": 0.576455,
+   "abs_diff": 0.001464318397311426,
+   "tol": 0.006419544166313988,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-QC",
+   "desc": "expected delay O-M-QC (n=200k)",
+   "hand": 4.904999738328114,
+   "tool": 4.9153253604587395,
+   "abs_diff": 0.010325622130625156,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-GANG",
+   "desc": "total expected cost O-M-BUF+M-GANG (n=10k), |diff| <= 4 SE",
+   "hand": 51944.314481965375,
+   "tool": 51932.50867833906,
+   "abs_diff": 11.805803626317356,
+   "tol": 1289.481495055463,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-GANG",
+   "desc": "total expected cost O-M-BUF+M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 51944.314481965375,
+   "tool": 52123.219537072146,
+   "abs_diff": 178.9050551067703,
+   "tol": 284.3051953145162,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-GANG",
+   "desc": "P90 duration O-M-BUF+M-GANG (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.84822125644304,
+   "tool": 23.887628252285083,
+   "abs_diff": 0.0394069958420431,
+   "tol": 0.0484890560264266,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-GANG",
+   "desc": "P(duration > deadline) O-M-BUF+M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 0.4384895128077413,
+   "tool": 0.44001,
+   "abs_diff": 0.0015204871922587238,
+   "tol": 0.006439830626499169,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-GANG",
+   "desc": "expected delay O-M-BUF+M-GANG (n=200k)",
+   "hand": 3.9216664066253415,
+   "tool": 3.9367686385202534,
+   "abs_diff": 0.015102231894911888,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-COV",
+   "desc": "total expected cost O-M-BUF+M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 45163.109173601006,
+   "tool": 45023.428886182155,
+   "abs_diff": 139.68028741885064,
+   "tol": 1311.244390859826,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-COV",
+   "desc": "total expected cost O-M-BUF+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 45163.109173601006,
+   "tool": 45375.14151567369,
+   "abs_diff": 212.03234207268542,
+   "tol": 292.48381993797113,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-COV",
+   "desc": "P90 duration O-M-BUF+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.919274729593198,
+   "tool": 23.967871228213905,
+   "abs_diff": 0.04859649862070725,
+   "tol": 0.047727951967156276,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-COV",
+   "desc": "P(duration > deadline) O-M-BUF+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.4343856847389118,
+   "tool": 0.436835,
+   "abs_diff": 0.0024493152610881586,
+   "tol": 0.006436306416603795,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-COV",
+   "desc": "expected delay O-M-BUF+M-COV (n=200k)",
+   "hand": 3.8749997385705175,
+   "tool": 3.892839498231005,
+   "abs_diff": 0.017839759660487342,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-QC",
+   "desc": "total expected cost O-M-BUF+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 43992.095122726765,
+   "tool": 43774.44522327921,
+   "abs_diff": 217.64989944755507,
+   "tol": 1319.5657868048825,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-QC",
+   "desc": "total expected cost O-M-BUF+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 43992.095122726765,
+   "tool": 44143.43559629639,
+   "abs_diff": 151.340473569624,
+   "tol": 293.80455790981915,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-QC",
+   "desc": "P90 duration O-M-BUF+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.92430861764248,
+   "tool": 23.975330697264127,
+   "abs_diff": 0.051022079621645844,
+   "tol": 0.04746321279347264,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-QC",
+   "desc": "P(duration > deadline) O-M-BUF+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.43128867701391677,
+   "tool": 0.43241,
+   "abs_diff": 0.0011213229860832508,
+   "tol": 0.006431086475346651,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-QC",
+   "desc": "expected delay O-M-BUF+M-QC (n=200k)",
+   "hand": 3.854999738320006,
+   "tool": 3.867234490217536,
+   "abs_diff": 0.012234751897530316,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-GANG",
+   "desc": "total expected cost O-M-SUP+M-GANG (n=10k), |diff| <= 4 SE",
+   "hand": 54802.734183612934,
+   "tool": 55002.7074116138,
+   "abs_diff": 199.9732280008684,
+   "tol": 1415.14640776699,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-GANG",
+   "desc": "total expected cost O-M-SUP+M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 54802.734183612934,
+   "tool": 54973.25515582371,
+   "abs_diff": 170.52097221077565,
+   "tol": 308.89311384445995,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-GANG",
+   "desc": "P90 duration O-M-SUP+M-GANG (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.609345293577377,
+   "tool": 24.630981666710746,
+   "abs_diff": 0.021636373133368636,
+   "tol": 0.0489019266913666,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-GANG",
+   "desc": "P(duration > deadline) O-M-SUP+M-GANG (n=200k), |diff| <= 4 SE",
+   "hand": 0.5128817981376296,
+   "tool": 0.514895,
+   "abs_diff": 0.0020132018623704173,
+   "tol": 0.006470151129212524,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-GANG",
+   "desc": "expected delay O-M-SUP+M-GANG (n=200k)",
+   "hand": 4.4466664066294035,
+   "tool": 4.461556849882663,
+   "abs_diff": 0.014890443253259278,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-COV",
+   "desc": "total expected cost O-M-SUP+M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 47990.76909271292,
+   "tool": 48072.55945769076,
+   "abs_diff": 81.79036497783818,
+   "tol": 1440.0664647463675,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-COV",
+   "desc": "total expected cost O-M-SUP+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 47990.76909271292,
+   "tool": 48197.90744343439,
+   "abs_diff": 207.1383507214705,
+   "tol": 316.6431114033233,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-COV",
+   "desc": "P90 duration O-M-SUP+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.674050813687558,
+   "tool": 24.695721602085257,
+   "abs_diff": 0.021670788397699425,
+   "tol": 0.049472821857194024,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-COV",
+   "desc": "P(duration > deadline) O-M-SUP+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.5064335141798955,
+   "tool": 0.50935,
+   "abs_diff": 0.0029164858201045085,
+   "tol": 0.006471353956018244,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-COV",
+   "desc": "expected delay O-M-SUP+M-COV (n=200k)",
+   "hand": 4.399999738574571,
+   "tool": 4.417627709593414,
+   "abs_diff": 0.01762797101884317,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-QC",
+   "desc": "total expected cost O-M-SUP+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 46808.019647272755,
+   "tool": 46805.280172850325,
+   "abs_diff": 2.739474422429339,
+   "tol": 1445.4757779646109,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-QC",
+   "desc": "total expected cost O-M-SUP+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 46808.019647272755,
+   "tool": 46951.9813906762,
+   "abs_diff": 143.96174340344442,
+   "tol": 317.80102070369094,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-QC",
+   "desc": "P90 duration O-M-SUP+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.675941657675097,
+   "tool": 24.70085825021568,
+   "abs_diff": 0.02491659254058476,
+   "tol": 0.04920720289382573,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-QC",
+   "desc": "P(duration > deadline) O-M-SUP+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.5031396793083024,
+   "tool": 0.50504,
+   "abs_diff": 0.0019003206916976545,
+   "tol": 0.006471908750410723,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-QC",
+   "desc": "expected delay O-M-SUP+M-QC (n=200k)",
+   "hand": 4.3799997383240585,
+   "tool": 4.392022701579945,
+   "abs_diff": 0.012022963255886587,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-GANG+M-COV",
+   "desc": "total expected cost O-M-GANG+M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 57696.217278260636,
+   "tool": 57700.129122223494,
+   "abs_diff": 3.9118439628582564,
+   "tol": 1416.3356910603582,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-GANG+M-COV",
+   "desc": "total expected cost O-M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 57696.217278260636,
+   "tool": 57880.48583423564,
+   "abs_diff": 184.26855597500253,
+   "tol": 312.6270038870316,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-GANG+M-COV",
+   "desc": "P90 duration O-M-GANG+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.88251929089386,
+   "tool": 24.912320633228617,
+   "abs_diff": 0.029801342334756953,
+   "tol": 0.0476576055811475,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-GANG+M-COV",
+   "desc": "P(duration > deadline) O-M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.5627355803815411,
+   "tool": 0.564465,
+   "abs_diff": 0.0017294196184588495,
+   "tol": 0.006434810153997575,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-GANG+M-COV",
+   "desc": "expected delay O-M-GANG+M-COV (n=200k)",
+   "hand": 4.758333073550777,
+   "tool": 4.773697642744458,
+   "abs_diff": 0.015364569193680566,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-GANG+M-QC",
+   "desc": "total expected cost O-M-GANG+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 56505.99996620973,
+   "tool": 56444.83577567967,
+   "abs_diff": 61.164190530063934,
+   "tol": 1430.209796287099,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-GANG+M-QC",
+   "desc": "total expected cost O-M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 56505.99996620973,
+   "tool": 56622.44576432223,
+   "abs_diff": 116.44579811249423,
+   "tol": 313.65144050095944,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-GANG+M-QC",
+   "desc": "P90 duration O-M-GANG+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.88543048173463,
+   "tool": 24.91353818284672,
+   "abs_diff": 0.028107701112091377,
+   "tol": 0.04789095974993217,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-GANG+M-QC",
+   "desc": "P(duration > deadline) O-M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.5594847319123954,
+   "tool": 0.56031,
+   "abs_diff": 0.0008252680876045249,
+   "tol": 0.0064394837889105985,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-GANG+M-QC",
+   "desc": "expected delay O-M-GANG+M-QC (n=200k)",
+   "hand": 4.738333073300267,
+   "tool": 4.74809263473099,
+   "abs_diff": 0.009759561430723096,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-COV+M-QC",
+   "desc": "total expected cost O-M-COV+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 49674.01122937123,
+   "tool": 49490.81141922481,
+   "abs_diff": 183.19981014641962,
+   "tol": 1450.7442735817406,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-COV+M-QC",
+   "desc": "total expected cost O-M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 49674.01122937123,
+   "tool": 49828.72533435299,
+   "abs_diff": 154.71410498175828,
+   "tol": 321.6209072510269,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-COV+M-QC",
+   "desc": "P90 duration O-M-COV+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.952746980971018,
+   "tool": 24.986138649615537,
+   "abs_diff": 0.03339166864451926,
+   "tol": 0.04712392950941301,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-COV+M-QC",
+   "desc": "P(duration > deadline) O-M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.5506352251274607,
+   "tool": 0.55244,
+   "abs_diff": 0.001804774872539383,
+   "tol": 0.006447471608903198,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-COV+M-QC",
+   "desc": "expected delay O-M-COV+M-QC (n=200k)",
+   "hand": 4.69166640524544,
+   "tool": 4.704163494441741,
+   "abs_diff": 0.01249708919630077,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-GANG+M-COV",
+   "desc": "total expected cost O-M-BUF+M-GANG+M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 52118.23408672531,
+   "tool": 52044.40402916492,
+   "abs_diff": 73.8300575603862,
+   "tol": 1232.79414462067,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-GANG+M-COV",
+   "desc": "total expected cost O-M-BUF+M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 52118.23408672531,
+   "tool": 52320.567763459585,
+   "abs_diff": 202.3336767342771,
+   "tol": 272.9488872439113,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-GANG+M-COV",
+   "desc": "P90 duration O-M-BUF+M-GANG+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.528895438508293,
+   "tool": 23.56192740996241,
+   "abs_diff": 0.03303197145411829,
+   "tol": 0.048154105624015106,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-GANG+M-COV",
+   "desc": "P(duration > deadline) O-M-BUF+M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.40812266920734375,
+   "tool": 0.41014,
+   "abs_diff": 0.002017330792656258,
+   "tol": 0.006399319769237058,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-GANG+M-COV",
+   "desc": "expected delay O-M-BUF+M-GANG+M-COV (n=200k)",
+   "hand": 3.7083330735426725,
+   "tool": 3.725606772503255,
+   "abs_diff": 0.017273698960582617,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-GANG+M-QC",
+   "desc": "total expected cost O-M-BUF+M-GANG+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 50955.15663082992,
+   "tool": 50810.9739276758,
+   "abs_diff": 144.1827031541252,
+   "tol": 1243.9969365986728,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-GANG+M-QC",
+   "desc": "total expected cost O-M-BUF+M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 50955.15663082992,
+   "tool": 51095.38764696335,
+   "abs_diff": 140.23101613342442,
+   "tol": 274.285252370652,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-GANG+M-QC",
+   "desc": "P90 duration O-M-BUF+M-GANG+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.53727489177367,
+   "tool": 23.583111160347116,
+   "abs_diff": 0.04583626857344569,
+   "tol": 0.04870141722026532,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-GANG+M-QC",
+   "desc": "P(duration > deadline) O-M-BUF+M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.40554614499079517,
+   "tool": 0.406075,
+   "abs_diff": 0.0005288550092048538,
+   "tol": 0.00639252177570015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-GANG+M-QC",
+   "desc": "expected delay O-M-BUF+M-GANG+M-QC (n=200k)",
+   "hand": 3.688333073292154,
+   "tool": 3.7000017644897865,
+   "abs_diff": 0.011668691197632253,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-BUF+M-COV+M-QC",
+   "desc": "total expected cost O-M-BUF+M-COV+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 44179.817292595486,
+   "tool": 43904.590957730805,
+   "abs_diff": 275.2263348646811,
+   "tol": 1265.3818003118797,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-BUF+M-COV+M-QC",
+   "desc": "total expected cost O-M-BUF+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 44179.817292595486,
+   "tool": 44353.325104050455,
+   "abs_diff": 173.50781145496876,
+   "tol": 282.66474356357196,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-BUF+M-COV+M-QC",
+   "desc": "P90 duration O-M-BUF+M-COV+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 23.607662642308217,
+   "tool": 23.647029686711896,
+   "abs_diff": 0.03936704440367933,
+   "tol": 0.04852143514548189,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-BUF+M-COV+M-QC",
+   "desc": "P(duration > deadline) O-M-BUF+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.40205915747712434,
+   "tool": 0.403935,
+   "abs_diff": 0.0018758425228756481,
+   "tol": 0.006388817752197054,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-BUF+M-COV+M-QC",
+   "desc": "expected delay O-M-BUF+M-COV+M-QC (n=200k)",
+   "hand": 3.641666405237329,
+   "tool": 3.6560726242005384,
+   "abs_diff": 0.014406218963209483,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-GANG+M-COV",
+   "desc": "total expected cost O-M-SUP+M-GANG+M-COV (n=10k), |diff| <= 4 SE",
+   "hand": 54907.22568249302,
+   "tool": 55042.09247951099,
+   "abs_diff": 134.86679701796675,
+   "tol": 1361.6834117508322,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-GANG+M-COV",
+   "desc": "total expected cost O-M-SUP+M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 54907.22568249302,
+   "tool": 55104.19266294814,
+   "abs_diff": 196.96698045511584,
+   "tol": 297.9347619024753,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-GANG+M-COV",
+   "desc": "P90 duration O-M-SUP+M-GANG+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.298178947474266,
+   "tool": 24.323678258906675,
+   "abs_diff": 0.02549931143240869,
+   "tol": 0.0486957120033069,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-GANG+M-COV",
+   "desc": "P(duration > deadline) O-M-SUP+M-GANG+M-COV (n=200k), |diff| <= 4 SE",
+   "hand": 0.4854291247944425,
+   "tool": 0.48776,
+   "abs_diff": 0.0023308752055575255,
+   "tol": 0.006470795744831115,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-GANG+M-COV",
+   "desc": "expected delay O-M-SUP+M-GANG+M-COV (n=200k)",
+   "hand": 4.233333073546729,
+   "tool": 4.2503949838656645,
+   "abs_diff": 0.01706191031893578,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-GANG+M-QC",
+   "desc": "total expected cost O-M-SUP+M-GANG+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 53730.57829851985,
+   "tool": 53786.09552891664,
+   "abs_diff": 55.517230396784726,
+   "tol": 1369.7225975080705,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-GANG+M-QC",
+   "desc": "total expected cost O-M-SUP+M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 53730.57829851985,
+   "tool": 53862.587605672314,
+   "abs_diff": 132.00930715246068,
+   "tol": 299.0944754102167,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-GANG+M-QC",
+   "desc": "P90 duration O-M-SUP+M-GANG+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.301732253832604,
+   "tool": 24.329532074096928,
+   "abs_diff": 0.027799820264323927,
+   "tol": 0.0484042565939906,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-GANG+M-QC",
+   "desc": "P(duration > deadline) O-M-SUP+M-GANG+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.48251543845159534,
+   "tool": 0.483505,
+   "abs_diff": 0.0009895615484046827,
+   "tol": 0.006469701690045992,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-GANG+M-QC",
+   "desc": "expected delay O-M-SUP+M-GANG+M-QC (n=200k)",
+   "hand": 4.213333073296212,
+   "tool": 4.224789975852196,
+   "abs_diff": 0.011456902555983639,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-SUP+M-COV+M-QC",
+   "desc": "total expected cost O-M-SUP+M-COV+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 46926.91426098338,
+   "tool": 46862.88581756594,
+   "abs_diff": 64.02844341743912,
+   "tol": 1394.0923598920176,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-SUP+M-COV+M-QC",
+   "desc": "total expected cost O-M-SUP+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 46926.91426098338,
+   "tool": 47094.86912667161,
+   "abs_diff": 167.95486568823253,
+   "tol": 307.02529179762877,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-SUP+M-COV+M-QC",
+   "desc": "P90 duration O-M-SUP+M-COV+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.367819231526113,
+   "tool": 24.396276353701193,
+   "abs_diff": 0.02845712217508023,
+   "tol": 0.048375351560193,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-SUP+M-COV+M-QC",
+   "desc": "P(duration > deadline) O-M-SUP+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.4763471913022924,
+   "tool": 0.478705,
+   "abs_diff": 0.002357808697707575,
+   "tol": 0.0064680780922002695,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-SUP+M-COV+M-QC",
+   "desc": "expected delay O-M-SUP+M-COV+M-QC (n=200k)",
+   "hand": 4.166666405241386,
+   "tool": 4.180860835562948,
+   "abs_diff": 0.014194430321561313,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-GANG+M-COV+M-QC",
+   "desc": "total expected cost O-M-GANG+M-COV+M-QC (n=10k), |diff| <= 4 SE",
+   "hand": 56567.29725319534,
+   "tool": 56430.57663564374,
+   "abs_diff": 136.72061755160394,
+   "tol": 1372.762951156129,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-GANG+M-COV+M-QC",
+   "desc": "total expected cost O-M-GANG+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 56567.29725319534,
+   "tool": 56711.51939137574,
+   "abs_diff": 144.22213818039745,
+   "tol": 302.7498084613008,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-GANG+M-COV+M-QC",
+   "desc": "P90 duration O-M-GANG+M-COV+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 24.570676901950964,
+   "tool": 24.594796187996717,
+   "abs_diff": 0.024119286045753086,
+   "tol": 0.045826235297008897,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-GANG+M-COV+M-QC",
+   "desc": "P(duration > deadline) O-M-GANG+M-COV+M-QC (n=200k), |diff| <= 4 SE",
+   "hand": 0.5339922320502339,
+   "tool": 0.535105,
+   "abs_diff": 0.0011127679497661136,
+   "tol": 0.006461099765528675,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-GANG+M-COV+M-QC",
+   "desc": "expected delay O-M-GANG+M-COV+M-QC (n=200k)",
+   "hand": 4.524999740217586,
+   "tool": 4.536930768713992,
+   "abs_diff": 0.011931028496405816,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC10-O-M-MECH",
+   "desc": "total expected cost O-M-MECH (n=10k), |diff| <= 4 SE",
+   "hand": 51580.12444470402,
+   "tool": 51554.91606510115,
+   "abs_diff": 25.20837960287463,
+   "tol": 1485.8293274954706,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-TEC200-O-M-MECH",
+   "desc": "total expected cost O-M-MECH (n=200k), |diff| <= 4 SE",
+   "hand": 51580.12444470402,
+   "tool": 51760.56892238989,
+   "abs_diff": 180.44447768586542,
+   "tol": 329.4871319406768,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-P90-O-M-MECH",
+   "desc": "P90 duration O-M-MECH (n=200k): hand inside tool 95% CI (+0.02 d grid slack)",
+   "hand": 25.189482677126506,
+   "tool": 25.214865721731275,
+   "abs_diff": 0.025383044604769367,
+   "tol": 0.046406417927887564,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-pexc-O-M-MECH",
+   "desc": "P(duration > deadline) O-M-MECH (n=200k), |diff| <= 4 SE",
+   "hand": 0.5699643592302905,
+   "tool": 0.572525,
+   "abs_diff": 0.0025606407697094102,
+   "tol": 0.006424840104455753,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-Edel-O-M-MECH",
+   "desc": "expected delay O-M-MECH (n=200k)",
+   "hand": 4.858333071661466,
+   "tool": 4.8732991991581365,
+   "abs_diff": 0.014966127496670367,
+   "tol": 0.06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-seed2024",
+   "desc": "second seed n=200k: all |z| of TEC vs exact <= 4",
+   "hand": 0.0,
+   "tool": 1.03830688965353,
+   "abs_diff": 1.03830688965353,
+   "tol": 4.0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V3-decision",
+   "desc": "preferred option by hand == tool (n=200k)",
+   "hand": 0.0,
+   "tool": 0.0,
+   "abs_diff": 0.0,
+   "tol": 0.0,
+   "pass": true,
+   "note": "hand O-M-BUF+M-QC / tool O-M-BUF+M-QC"
+  },
+  {
+   "id": "V4-net-M-BUF",
+   "desc": "net benefit M-BUF (INR)",
+   "hand": 2400.0,
+   "tool": 2400.0,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-BUF",
+   "desc": "break-even required reduction M-BUF",
+   "hand": 0.42857142857142855,
+   "tool": 0.42857142857142855,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-pmax-M-BUF",
+   "desc": "max p-after that still pays M-BUF",
+   "hand": 0.2857142857142857,
+   "tool": 0.2857142857142857,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-net-M-SUP",
+   "desc": "net benefit M-SUP (INR)",
+   "hand": 1200.0000000000018,
+   "tool": 1200.0,
+   "abs_diff": 1.8189894035458565e-12,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-SUP",
+   "desc": "break-even required reduction M-SUP",
+   "hand": 0.21428571428571427,
+   "tool": 0.21428571428571427,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-pmax-M-SUP",
+   "desc": "max p-after that still pays M-SUP",
+   "hand": 0.39285714285714285,
+   "tool": 0.39285714285714285,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-net-M-GANG",
+   "desc": "net benefit M-GANG (INR)",
+   "hand": -7666.666666666666,
+   "tool": -7666.666666666666,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-GANG",
+   "desc": "break-even required reduction M-GANG",
+   "hand": 1.2857142857142858,
+   "tool": 1.2857142857142858,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-net-M-COV",
+   "desc": "net benefit M-COV (INR)",
+   "hand": -793.3333333333326,
+   "tool": -793.3333333333326,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-COV",
+   "desc": "break-even required reduction M-COV",
+   "hand": 0.5859375,
+   "tool": 0.5859375,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-pmax-M-COV",
+   "desc": "max p-after that still pays M-COV",
+   "hand": 0.08281250000000001,
+   "tool": 0.08281250000000001,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-net-M-QC",
+   "desc": "net benefit M-QC (INR)",
+   "hand": 366.6666666666665,
+   "tool": 366.66666666666697,
+   "abs_diff": 4.547473508864641e-13,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-QC",
+   "desc": "break-even required reduction M-QC",
+   "hand": 0.3214285714285714,
+   "tool": 0.3214285714285714,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-pmax-M-QC",
+   "desc": "max p-after that still pays M-QC",
+   "hand": 0.16964285714285715,
+   "tool": 0.16964285714285715,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-net-M-MECH",
+   "desc": "net benefit M-MECH (INR)",
+   "hand": -1760.0,
+   "tool": -1760.0,
+   "abs_diff": 0.0,
+   "tol": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-be-M-MECH",
+   "desc": "break-even required reduction M-MECH",
+   "hand": 0.9740259740259739,
+   "tool": 0.9740259740259739,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V4-pmax-M-MECH",
+   "desc": "max p-after that still pays M-MECH",
+   "hand": 0.005714285714285727,
+   "tool": 0.005714285714285727,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V5-example",
+   "desc": "example risks: hand class/score/level == tool (count of mismatches)",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V5-level25",
+   "desc": "all 25 (p-class x impact-class) cells: level hand == tool (mismatches)",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V5-pclass",
+   "desc": "p-class on 20010 values incl. exact edges: mismatches",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V5-iclass",
+   "desc": "impact-class on 20004 values incl. exact edges: mismatches",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V5-trap",
+   "desc": "ratios exactly on the 4 impact edges (0.32,0.8,1.6,3.2 d on 16 d) -> classes 2,3,4,5",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": "got (2, 3, 4, 5)"
+  },
+  {
+   "id": "V6-fired",
+   "desc": "set of fired rules identical (symmetric difference size)",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V6-levels",
+   "desc": "per-risk resolved level identical (mismatches)",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V6-spot-RL-LAB",
+   "desc": "required_workers 6 > available_workers 5 -> fires",
+   "hand": 1,
+   "tool": 1,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V6-spot-RL-MAT",
+   "desc": "stock 2 d <= lead 6 d -> fires",
+   "hand": 1,
+   "tool": 1,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V7-seed",
+   "desc": "seed rank / mean RII / class for 30 seeded risks: mismatches",
+   "hand": 0,
+   "tool": 0,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": "[]"
+  },
+  {
+   "id": "V7-cap",
+   "desc": "elevated flag raises probability class by 1, capped at 5 (top-ranked stays 5)",
+   "hand": 5,
+   "tool": 5,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V7-raise",
+   "desc": "elevated flag on lowest class raises p-class 1->2, impact class unchanged",
+   "hand": 2,
+   "tool": 2,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V7-noflag",
+   "desc": "no flag: p-class == impact-class == tier",
+   "hand": 1,
+   "tool": 1,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-lin",
+   "desc": "linear model M03: 34.36 - 1.71*5 = 25.81 m2/day (crew of 2)",
+   "hand": 25.81,
+   "tool": 25.81,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-lin3",
+   "desc": "linear model P1-01: 0.53 - 0.08*3 + 0.4*2 + 0.36*4 = 2.53 m2/hour/worker",
+   "hand": 2.5300000000000002,
+   "tool": 2.5300000000000002,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-crew",
+   "desc": "M03 scaled to a crew of 4 (linear): 25.81/2*4 = 51.62 m2/day",
+   "hand": 51.62,
+   "tool": 51.62,
+   "abs_diff": 0.0,
+   "tol": 1e-09,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-hours",
+   "desc": "P1-01: m2/hour/worker * 8 h * 3 workers",
+   "hand": 60.72,
+   "tool": 60.720000000000006,
+   "abs_diff": 7.105427357601002e-15,
+   "tol": 1e-09,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-t0",
+   "desc": "baseline mode = 1000/(2*25) = 20 d",
+   "hand": 20.0,
+   "tool": 20.0,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-tmin",
+   "desc": "baseline min = 1000/(2*30)",
+   "hand": 16.666666666666668,
+   "tool": 16.666666666666668,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-tmax",
+   "desc": "baseline max = 1000/(2*20)",
+   "hand": 25.0,
+   "tool": 25.0,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-is7272",
+   "desc": "IS 7272 1-brick: 6 masons / 0.94 mason-days per m3 = 6.383 m3/day",
+   "hand": 6.382978723404256,
+   "tool": 6.382978723404256,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-cpwd",
+   "desc": "CPWD superstructure: 6 masons / (0.47+0.47) = 6.383 m3/day",
+   "hand": 6.382978723404256,
+   "tool": 6.382978723404256,
+   "abs_diff": 0.0,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V8-support",
+   "desc": "required mazdoor for 6 masons = 6*1.8/0.94 = 11.489",
+   "hand": 11.489361702127662,
+   "tool": 11.48936170212766,
+   "abs_diff": 1.7763568394002505e-15,
+   "tol": 1e-12,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V9-zmean",
+   "desc": "mean of z-scores of E[delay] over 200 seeds is ~0 (|avg| <= 0.30 ~ 4 SE)",
+   "hand": 0.0,
+   "tool": -0.03697984124672339,
+   "abs_diff": 0.03697984124672339,
+   "tol": 0.3,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V9-zsd",
+   "desc": "sd of z-scores of E[delay] ~ 1 (reported standard error is honest)",
+   "hand": 1.0,
+   "tool": 1.0368384144121352,
+   "abs_diff": 0.0368384144121352,
+   "tol": 0.2,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V9-cov",
+   "desc": "95% CI coverage of the analytic mean over 200 seeds (92%..98%)",
+   "hand": 0.95,
+   "tool": 0.935,
+   "abs_diff": 0.014999999999999902,
+   "tol": 0.035,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V9-covp90",
+   "desc": "P90 CI coverage of the exact P90 over 200 seeds (>= 90%)",
+   "hand": 0.95,
+   "tool": 0.925,
+   "abs_diff": 0.02499999999999991,
+   "tol": 0.05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V9-pany",
+   "desc": "mean z of P(any delay) ~ 0",
+   "hand": 0.0,
+   "tool": 0.021063477833310865,
+   "abs_diff": 0.021063477833310865,
+   "tol": 0.3,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-joint--0.5",
+   "desc": "P(A and B) at rho=-0.5: bivariate-normal CDF vs tool, 4 SE",
+   "hand": 0.053484529063614394,
+   "tool": 0.053298333333333336,
+   "abs_diff": 0.00018619573028105796,
+   "tol": 0.0012618827733692447,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-margA--0.5",
+   "desc": "marginal P(A)=0.40 preserved at rho=-0.5",
+   "hand": 0.4,
+   "tool": 0.39915666666666666,
+   "abs_diff": 0.0008433333333333626,
+   "tol": 0.0025298221281347035,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-joint-0.0",
+   "desc": "P(A and B) at rho=0.0: bivariate-normal CDF vs tool, 4 SE",
+   "hand": 0.12,
+   "tool": 0.12007666666666666,
+   "abs_diff": 7.666666666666933e-05,
+   "tol": 0.0017780941570722424,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-margA-0.0",
+   "desc": "marginal P(A)=0.40 preserved at rho=0.0",
+   "hand": 0.4,
+   "tool": 0.39915666666666666,
+   "abs_diff": 0.0008433333333333626,
+   "tol": 0.0025298221281347035,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-joint-0.6",
+   "desc": "P(A and B) at rho=0.6: bivariate-normal CDF vs tool, 4 SE",
+   "hand": 0.20850391071040064,
+   "tool": 0.20837166666666668,
+   "abs_diff": 0.00013224404373396448,
+   "tol": 0.0021978085704141828,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-margA-0.6",
+   "desc": "marginal P(A)=0.40 preserved at rho=0.6",
+   "hand": 0.4,
+   "tool": 0.39915666666666666,
+   "abs_diff": 0.0008433333333333626,
+   "tol": 0.0025298221281347035,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-joint-0.95",
+   "desc": "P(A and B) at rho=0.95: bivariate-normal CDF vs tool, 4 SE",
+   "hand": 0.2872188689791172,
+   "tool": 0.28686833333333334,
+   "abs_diff": 0.000350535645783856,
+   "tol": 0.0024365170106034543,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V10-margA-0.95",
+   "desc": "marginal P(A)=0.40 preserved at rho=0.95",
+   "hand": 0.4,
+   "tool": 0.39915666666666666,
+   "abs_diff": 0.0008433333333333626,
+   "tol": 0.0025298221281347035,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V11-ex1",
+   "desc": "examples/example_case.json equals service.example_case()",
+   "hand": 1,
+   "tool": 1,
+   "abs_diff": 0,
+   "tol": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "V11-ex2",
+   "desc": "examples/example_analysis_case.json equals example_analysis_case()",
+   "hand": 1,
+   "tool": 0,
+   "abs_diff": 1,
+   "tol": 0,
+   "pass": false,
+   "note": ""
+  }
+ ],
+ "results": {
+  "V1": [
+   {
+    "case": "PERT(1,3,8)",
+    "hand_mean": 3.5,
+    "tool_mean": 3.5,
+    "quad_mean": 3.4999999973935982,
+    "hand_var": 1.6071428571428572,
+    "tool_var": 1.6071428571428572,
+    "quad_var": 1.6071428328649147,
+    "max_cdf_roundtrip_err": 9.992007221626409e-16
+   },
+   {
+    "case": "PERT(1,2,6)",
+    "hand_mean": 2.5,
+    "tool_mean": 2.5,
+    "quad_mean": 2.4999999971667752,
+    "hand_var": 0.75,
+    "tool_var": 0.7500000000000001,
+    "quad_var": 0.7499999804265469,
+    "max_cdf_roundtrip_err": 9.992007221626409e-16
+   },
+   {
+    "case": "PERT(0,1,3)",
+    "hand_mean": 1.1666666666666667,
+    "tool_mean": 1.1666666666666667,
+    "quad_mean": 1.1666666658281946,
+    "hand_var": 0.3055555555555555,
+    "tool_var": 0.3055555555555555,
+    "quad_var": 0.30555555212438745,
+    "max_cdf_roundtrip_err": 1.1102230246251565e-15
+   },
+   {
+    "case": "PERT(1,3,8) lam=6",
+    "hand_mean": 3.375,
+    "tool_mean": 3.375,
+    "quad_mean": 3.374999994388251,
+    "hand_var": 1.2204861111111112,
+    "tool_var": 1.2204861111111112,
+    "quad_var": 1.2204860574834464,
+    "max_cdf_roundtrip_err": 1.1102230246251565e-15
+   },
+   {
+    "case": "PERT(2,2,9) m=a",
+    "hand_mean": 3.1666666666666665,
+    "tool_mean": 3.1666666666666665,
+    "quad_mean": 3.166666657964744,
+    "hand_var": 0.9722222222222222,
+    "tool_var": 0.9722222222222222,
+    "quad_var": 0.9722221251235458,
+    "max_cdf_roundtrip_err": 2.7755575615628914e-16
+   },
+   {
+    "case": "PERT(2,9,9) m=b",
+    "hand_mean": 7.833333333333333,
+    "tool_mean": 7.833333333333333,
+    "quad_mean": 7.8333333420352576,
+    "hand_var": 0.9722222222222224,
+    "tool_var": 0.9722222222222222,
+    "quad_var": 0.972222125123546,
+    "max_cdf_roundtrip_err": 1.3322676295501878e-15
+   },
+   {
+    "case": "Triangular(1,3,8)",
+    "hand_mean": 4.0,
+    "tool_mean": 4.0,
+    "quad_mean": 3.9999999999531908,
+    "hand_var": 2.1666666666666665,
+    "tool_var": 2.1666666666666665,
+    "quad_var": 2.1666666651650313,
+    "max_cdf_roundtrip_err": 2.7755575615628914e-16
+   },
+   {
+    "case": "Triangular(0,0,4)",
+    "hand_mean": 1.3333333333333333,
+    "tool_mean": 1.3333333333333333,
+    "quad_mean": 1.3333333332472448,
+    "hand_var": 0.8888888888888888,
+    "tool_var": 0.8888888888888888,
+    "quad_var": 0.8888888884297503,
+    "max_cdf_roundtrip_err": 1.6653345369377348e-16
+   },
+   {
+    "case": "Uniform(2,10)",
+    "hand_mean": 6.0,
+    "tool_mean": 6.0,
+    "quad_mean": 6.0,
+    "hand_var": 5.333333333333333,
+    "tool_var": 5.333333333333333,
+    "quad_var": 5.333333333332,
+    "max_cdf_roundtrip_err": 1.1102230246251565e-16
+   },
+   {
+    "case": "Fixed(4)",
+    "hand_mean": 4,
+    "tool_mean": 4,
+    "quad_mean": 4.0,
+    "hand_var": 0.0,
+    "tool_var": 0.0,
+    "quad_var": 0.0,
+    "max_cdf_roundtrip_err": 0.0
+   }
+  ],
+  "V2": [
+   {
+    "risk": "R-MAT",
+    "p": 0.5,
+    "abc": "1/3/8",
+    "hand_mean": 3.5,
+    "tool_mean": 3.5,
+    "hand_emv": 14000.0,
+    "tool_emv": 14000.0
+   },
+   {
+    "risk": "R-LAB",
+    "p": 0.35,
+    "abc": "1/2/6",
+    "hand_mean": 2.5,
+    "tool_mean": 2.5,
+    "hand_emv": 7000.0,
+    "tool_emv": 7000.0
+   },
+   {
+    "risk": "R-RWK",
+    "p": 0.25,
+    "abc": "1/2/5",
+    "hand_mean": 2.3333333333333335,
+    "tool_mean": 2.3333333333333335,
+    "hand_emv": 4666.666666666667,
+    "tool_emv": 4666.666666666667
+   },
+   {
+    "risk": "R-WX",
+    "p": 0.2,
+    "abc": "1/2/7",
+    "hand_mean": 2.6666666666666665,
+    "tool_mean": 2.6666666666666665,
+    "hand_emv": 4266.666666666667,
+    "tool_emv": 4266.666666666667
+   },
+   {
+    "risk": "R-PLAN",
+    "p": 0.1,
+    "abc": "1/1/3",
+    "hand_mean": 1.3333333333333333,
+    "tool_mean": 1.3333333333333333,
+    "hand_emv": 1066.6666666666667,
+    "tool_emv": 1066.6666666666667
+   },
+   {
+    "risk": "R-SAFE",
+    "p": 0.3,
+    "abc": "1/2/6",
+    "hand_mean": 2.5,
+    "tool_mean": 2.5,
+    "hand_emv": 6000.0,
+    "tool_emv": 6000.0
+   },
+   {
+    "risk": "R-SKILL",
+    "p": 0.22,
+    "abc": "1/2/5",
+    "hand_mean": 2.3333333333333335,
+    "tool_mean": 2.3333333333333335,
+    "hand_emv": 4106.666666666667,
+    "tool_emv": 4106.666666666667
+   }
+  ],
+  "V2_totals": {
+   "E_delay": 5.138333333333334,
+   "Var": 10.79384007936508,
+   "sd": 3.285398009277579,
+   "EMV_sum": 41106.666666666664,
+   "P_any": 0.904177
+  },
+  "V3_hand_options": {
+   "ACCEPT": {
+    "E_delay": 5.138333071661296,
+    "P50": 20.879105024870118,
+    "P80": 23.898872302344266,
+    "P90": 25.567684403710352,
+    "P95": 26.980512647941847,
+    "p_exceed": 0.601851201915087,
+    "E_LD_days": 1.9372145791252846,
+    "E_cost": 50792.737468916785,
+    "mit_cost": 0.0,
+    "TEC": 50792.737468916785
+   },
+   "O-M-BUF": {
+    "E_delay": 4.088333071653194,
+    "P50": 19.69972989635541,
+    "P80": 22.57497493412503,
+    "P90": 24.23361573398894,
+    "P95": 25.664701485048024,
+    "p_exceed": 0.4630017727103893,
+    "E_LD_days": 1.2603027529524233,
+    "E_cost": 39008.17833798767,
+    "mit_cost": 6000.0,
+    "TEC": 45008.17833798767
+   },
+   "O-M-SUP": {
+    "E_delay": 4.613333071657245,
+    "P50": 20.276204473175067,
+    "P80": 23.285470375067767,
+    "P90": 24.98061427556211,
+    "P95": 26.42183019377385,
+    "p_exceed": 0.5324264873127381,
+    "E_LD_days": 1.5987586660388537,
+    "E_cost": 44900.45790345223,
+    "mit_cost": 3000.0,
+    "TEC": 47900.45790345223
+   },
+   "O-M-GANG": {
+    "E_delay": 4.971666406633456,
+    "P50": 20.7126142512936,
+    "P80": 23.603483187327477,
+    "P90": 25.195087139836392,
+    "P95": 26.541402157857995,
+    "p_exceed": 0.5872740834675179,
+    "E_LD_days": 1.777564526438543,
+    "E_cost": 48661.15388526036,
+    "mit_cost": 9000.0,
+    "TEC": 57661.15388526036
+   },
+   "O-M-COV": {
+    "E_delay": 4.92499973857862,
+    "P50": 20.6670985068078,
+    "P80": 23.626752422152727,
+    "P90": 25.260310689813466,
+    "P95": 26.64320463305367,
+    "p_exceed": 0.5784813436208796,
+    "E_LD_days": 1.783686220639163,
+    "E_cost": 48318.42901182477,
+    "mit_cost": 2500.0,
+    "TEC": 50818.42901182477
+   },
+   "O-M-QC": {
+    "E_delay": 4.904999738328114,
+    "P50": 20.638928706691868,
+    "P80": 23.615802044795295,
+    "P90": 25.261890672356575,
+    "P95": 26.657407155814116,
+    "p_exceed": 0.5749906816026886,
+    "E_LD_days": 1.776789253038772,
+    "E_cost": 48123.94417181877,
+    "mit_cost": 1500.0,
+    "TEC": 49623.94417181877
+   },
+   "O-M-BUF+M-GANG": {
+    "E_delay": 3.9216664066253415,
+    "P50": 19.539842940368466,
+    "P80": 22.260969372898945,
+    "P90": 23.84822125644304,
+    "P95": 25.224587721040272,
+    "p_exceed": 0.4384895128077413,
+    "E_LD_days": 1.1141966457925283,
+    "E_cost": 36944.314481965375,
+    "mit_cost": 15000.0,
+    "TEC": 51944.314481965375
+   },
+   "O-M-BUF+M-COV": {
+    "E_delay": 3.8749997385705175,
+    "P50": 19.476974915586172,
+    "P80": 22.29379998505658,
+    "P90": 23.919274729593198,
+    "P95": 25.327023640391833,
+    "p_exceed": 0.4343856847389118,
+    "E_LD_days": 1.1326222530073737,
+    "E_cost": 36663.109173601006,
+    "mit_cost": 8500.0,
+    "TEC": 45163.109173601006
+   },
+   "O-M-BUF+M-QC": {
+    "E_delay": 3.854999738320006,
+    "P50": 19.45149372339725,
+    "P80": 22.28879299101742,
+    "P90": 23.92430861764248,
+    "P95": 25.34269488957706,
+    "p_exceed": 0.43128867701391677,
+    "E_LD_days": 1.1304194432333443,
+    "E_cost": 36492.095122726765,
+    "mit_cost": 7500.0,
+    "TEC": 43992.095122726765
+   },
+   "O-M-SUP+M-GANG": {
+    "E_delay": 4.4466664066294035,
+    "P50": 20.102477815702308,
+    "P80": 22.986760211340282,
+    "P90": 24.609345293577377,
+    "P95": 25.989528532298948,
+    "p_exceed": 0.5128817981376296,
+    "E_LD_days": 1.4458805861155413,
+    "E_cost": 42802.734183612934,
+    "mit_cost": 12000.0,
+    "TEC": 54802.734183612934
+   },
+   "O-M-SUP+M-COV": {
+    "E_delay": 4.399999738574571,
+    "P50": 20.054068069817,
+    "P80": 23.009620952442766,
+    "P90": 24.674050813687558,
+    "P95": 26.087522272574876,
+    "p_exceed": 0.5064335141798955,
+    "E_LD_days": 1.4581542368232707,
+    "E_cost": 42490.76909271292,
+    "mit_cost": 5500.0,
+    "TEC": 47990.76909271292
+   },
+   "O-M-SUP+M-QC": {
+    "E_delay": 4.3799997383240585,
+    "P50": 20.02642403948407,
+    "P80": 23.001070306794055,
+    "P90": 24.675941657675097,
+    "P95": 26.10091219802041,
+    "p_exceed": 0.5031396793083024,
+    "E_LD_days": 1.4536043481360565,
+    "E_cost": 42308.019647272755,
+    "mit_cost": 4500.0,
+    "TEC": 46808.019647272755
+   },
+   "O-M-GANG+M-COV": {
+    "E_delay": 4.758333073550777,
+    "P50": 20.5018437554039,
+    "P80": 23.329263683312853,
+    "P90": 24.88251929089386,
+    "P95": 26.19564155215839,
+    "p_exceed": 0.5627355803815411,
+    "E_LD_days": 1.6259105379708838,
+    "E_cost": 46196.217278260636,
+    "mit_cost": 11500.0,
+    "TEC": 57696.217278260636
+   },
+   "O-M-GANG+M-QC": {
+    "E_delay": 4.738333073300267,
+    "P50": 20.47648152731661,
+    "P80": 23.318133459514403,
+    "P90": 24.88543048173463,
+    "P95": 26.21263343781045,
+    "p_exceed": 0.5594847319123954,
+    "E_LD_days": 1.61986707596152,
+    "E_cost": 46005.99996620973,
+    "mit_cost": 10500.0,
+    "TEC": 56505.99996620973
+   },
+   "O-M-COV+M-QC": {
+    "E_delay": 4.69166640524544,
+    "P50": 20.42466919795431,
+    "P80": 23.342266240705623,
+    "P90": 24.952746980971018,
+    "P95": 26.317476189921933,
+    "p_exceed": 0.5506352251274607,
+    "E_LD_days": 1.6281359974815413,
+    "E_cost": 45674.01122937123,
+    "mit_cost": 4000.0,
+    "TEC": 49674.01122937123
+   },
+   "O-M-BUF+M-GANG+M-COV": {
+    "E_delay": 3.7083330735426725,
+    "P50": 19.325193423325505,
+    "P80": 21.972368502370365,
+    "P90": 23.528895438508293,
+    "P95": 24.88020833821634,
+    "p_exceed": 0.40812266920734375,
+    "E_LD_days": 0.9903138996767847,
+    "E_cost": 34618.23408672531,
+    "mit_cost": 17500.0,
+    "TEC": 52118.23408672531
+   },
+   "O-M-BUF+M-GANG+M-QC": {
+    "E_delay": 3.688333073292154,
+    "P50": 19.298572695335185,
+    "P80": 21.966684629788215,
+    "P90": 23.53727489177367,
+    "P95": 24.898534396118304,
+    "p_exceed": 0.40554614499079517,
+    "E_LD_days": 0.9896984088985372,
+    "E_cost": 34455.15663082992,
+    "mit_cost": 16500.0,
+    "TEC": 50955.15663082992
+   },
+   "O-M-BUF+M-COV+M-QC": {
+    "E_delay": 3.641666405237329,
+    "P50": 19.23375733300049,
+    "P80": 22.00752744219868,
+    "P90": 23.607662642308217,
+    "P95": 25.003054957131575,
+    "p_exceed": 0.40205915747712434,
+    "E_LD_days": 1.009297210139371,
+    "E_cost": 34179.817292595486,
+    "mit_cost": 10000.0,
+    "TEC": 44179.817292595486
+   },
+   "O-M-SUP+M-GANG+M-COV": {
+    "E_delay": 4.233333073546729,
+    "P50": 19.886186061864073,
+    "P80": 22.709299377076643,
+    "P90": 24.298178947474266,
+    "P95": 25.648598557048302,
+    "p_exceed": 0.4854291247944425,
+    "E_LD_days": 1.3081122188238377,
+    "E_cost": 40407.22568249302,
+    "mit_cost": 14500.0,
+    "TEC": 54907.22568249302
+   },
+   "O-M-SUP+M-GANG+M-QC": {
+    "E_delay": 4.213333073296212,
+    "P50": 19.862672578769896,
+    "P80": 22.70044034723965,
+    "P90": 24.301732253832604,
+    "P95": 25.663930201407418,
+    "p_exceed": 0.48251543845159534,
+    "E_LD_days": 1.3047827424300311,
+    "E_cost": 40230.57829851985,
+    "mit_cost": 13500.0,
+    "TEC": 53730.57829851985
+   },
+   "O-M-SUP+M-COV+M-QC": {
+    "E_delay": 4.166666405241386,
+    "P50": 19.80401181115582,
+    "P80": 22.724974850244674,
+    "P90": 24.367819231526113,
+    "P95": 25.764541318191352,
+    "p_exceed": 0.4763471913022924,
+    "E_LD_days": 1.3187166038104574,
+    "E_cost": 39926.91426098338,
+    "mit_cost": 7000.0,
+    "TEC": 46926.91426098338
+   },
+   "O-M-GANG+M-COV+M-QC": {
+    "E_delay": 4.524999740217586,
+    "P50": 20.266935464345863,
+    "P80": 23.042533766146803,
+    "P90": 24.570676901950964,
+    "P95": 25.86384883431834,
+    "p_exceed": 0.5339922320502339,
+    "E_LD_days": 1.4734598662909317,
+    "E_cost": 43567.29725319534,
+    "mit_cost": 13000.0,
+    "TEC": 56567.29725319534
+   },
+   "O-M-MECH": {
+    "E_delay": 4.858333071661466,
+    "P50": 20.593634289588067,
+    "P80": 23.554116116238436,
+    "P90": 25.189482677126506,
+    "P95": 26.574826980887213,
+    "p_exceed": 0.5699643592302905,
+    "E_LD_days": 1.742691974282459,
+    "E_cost": 47580.12444470402,
+    "mit_cost": 4000.0,
+    "TEC": 51580.12444470402
+   }
+  },
+  "timing": {
+   "n10000_s": 1.8220322132110596,
+   "n200000_s": 18.907038927078247
+  },
+  "V3_rows": [
+   {
+    "option": "ACCEPT",
+    "mit_cost": 0.0,
+    "hand_TEC": 50792.737468916785,
+    "tool_TEC_10k": 50821.048140364735,
+    "z10": 0.07319970305240339,
+    "tool_TEC_200k": 50960.92718644909,
+    "z200": 1.9704413961265759,
+    "se200": 85.35636627555851,
+    "hand_P90": 25.567684403710352,
+    "tool_P90_200k": 25.58520824114354,
+    "tool_P90_CI": [
+     25.558649750349524,
+     25.614351066048485
+    ],
+    "hand_pexc": 0.601851201915087,
+    "tool_pexc_200k": 0.604075,
+    "feasible": true,
+    "hand_Edelay": 5.138333071661296,
+    "tool_Edelay_200k": 5.152092234489206
+   },
+   {
+    "option": "O-M-BUF",
+    "mit_cost": 6000.0,
+    "hand_TEC": 45008.17833798767,
+    "tool_TEC_10k": 44929.42687221056,
+    "z10": -0.2308111332231819,
+    "tool_TEC_200k": 45197.684443778126,
+    "z200": 2.497795144128912,
+    "se200": 75.86935471305115,
+    "hand_P90": 24.23361573398894,
+    "tool_P90_200k": 24.276544355996926,
+    "tool_P90_CI": [
+     24.246471777706798,
+     24.305812089086988
+    ],
+    "hand_pexc": 0.4630017727103893,
+    "tool_pexc_200k": 0.464895,
+    "feasible": true,
+    "hand_Edelay": 4.088333071653194,
+    "tool_Edelay_200k": 4.104001364248003
+   },
+   {
+    "option": "O-M-SUP",
+    "mit_cost": 3000.0,
+    "hand_TEC": 47900.45790345223,
+    "tool_TEC_10k": 48045.50975667175,
+    "z10": 0.38924743520614963,
+    "tool_TEC_200k": 48083.18424875854,
+    "z200": 2.233516282988016,
+    "se200": 81.81106477623403,
+    "hand_P90": 24.98061427556211,
+    "tool_P90_200k": 25.005940564791675,
+    "tool_P90_CI": [
+     24.977964746783776,
+     25.035053397024647
+    ],
+    "hand_pexc": 0.5324264873127381,
+    "tool_pexc_200k": 0.53509,
+    "feasible": true,
+    "hand_Edelay": 4.613333071657245,
+    "tool_Edelay_200k": 4.628789575610412
+   },
+   {
+    "option": "O-M-GANG",
+    "mit_cost": 9000.0,
+    "hand_TEC": 57661.15388526036,
+    "tool_TEC_10k": 57736.61981204953,
+    "z10": 0.204955551985279,
+    "tool_TEC_200k": 57817.04223565203,
+    "z200": 1.928633805384079,
+    "se200": 80.8283822239761,
+    "hand_P90": 25.195087139836392,
+    "tool_P90_200k": 25.212096922908042,
+    "tool_P90_CI": [
+     25.1852675066108,
+     25.242106963422266
+    ],
+    "hand_pexc": 0.5872740834675179,
+    "tool_pexc_200k": 0.58889,
+    "feasible": true,
+    "hand_Edelay": 4.971666406633456,
+    "tool_Edelay_200k": 4.984859508761456
+   },
+   {
+    "option": "O-M-COV",
+    "mit_cost": 2500.0,
+    "hand_TEC": 50818.42901182477,
+    "tool_TEC_10k": 50770.29496546284,
+    "z10": -0.12885872572481252,
+    "tool_TEC_200k": 51012.58881080273,
+    "z200": 2.3455958000046406,
+    "se200": 82.7763244535016,
+    "hand_P90": 25.260310689813466,
+    "tool_P90_200k": 25.2865772336196,
+    "tool_P90_CI": [
+     25.255843470525466,
+     25.31618789321093
+    ],
+    "hand_pexc": 0.5784813436208796,
+    "tool_pexc_200k": 0.580885,
+    "feasible": true,
+    "hand_Edelay": 4.92499973857862,
+    "tool_Edelay_200k": 4.940930368472208
+   },
+   {
+    "option": "O-M-QC",
+    "mit_cost": 1500.0,
+    "hand_TEC": 49623.94417181877,
+    "tool_TEC_10k": 49518.36637854935,
+    "z10": -0.2806895061839752,
+    "tool_TEC_200k": 49753.37196741373,
+    "z200": 1.5587263803495948,
+    "se200": 83.03432675972927,
+    "hand_P90": 25.261890672356575,
+    "tool_P90_200k": 25.282067423424476,
+    "tool_P90_CI": [
+     25.251653093426558,
+     25.310730073356176
+    ],
+    "hand_pexc": 0.5749906816026886,
+    "tool_pexc_200k": 0.576455,
+    "feasible": true,
+    "hand_Edelay": 4.904999738328114,
+    "tool_Edelay_200k": 4.9153253604587395
+   },
+   {
+    "option": "O-M-BUF+M-GANG",
+    "mit_cost": 15000.0,
+    "hand_TEC": 51944.314481965375,
+    "tool_TEC_10k": 51932.50867833906,
+    "z10": -0.03662186288546798,
+    "tool_TEC_200k": 52123.219537072146,
+    "z200": 2.517084570457523,
+    "se200": 71.07629882862905,
+    "hand_P90": 23.84822125644304,
+    "tool_P90_200k": 23.887628252285083,
+    "tool_P90_CI": [
+     23.8595465939123,
+     23.916524705965152
+    ],
+    "hand_pexc": 0.4384895128077413,
+    "tool_pexc_200k": 0.44001,
+    "feasible": true,
+    "hand_Edelay": 3.9216664066253415,
+    "tool_Edelay_200k": 3.9367686385202534
+   },
+   {
+    "option": "O-M-BUF+M-COV",
+    "mit_cost": 8500.0,
+    "hand_TEC": 45163.109173601006,
+    "tool_TEC_10k": 45023.428886182155,
+    "z10": -0.42609993497019333,
+    "tool_TEC_200k": 45375.14151567369,
+    "z200": 2.899747987668548,
+    "se200": 73.12095498449278,
+    "hand_P90": 23.919274729593198,
+    "tool_P90_200k": 23.967871228213905,
+    "tool_P90_CI": [
+     23.939588812573962,
+     23.995044716508275
+    ],
+    "hand_pexc": 0.4343856847389118,
+    "tool_pexc_200k": 0.436835,
+    "feasible": true,
+    "hand_Edelay": 3.8749997385705175,
+    "tool_Edelay_200k": 3.892839498231005
+   },
+   {
+    "option": "O-M-BUF+M-QC",
+    "mit_cost": 7500.0,
+    "hand_TEC": 43992.095122726765,
+    "tool_TEC_10k": 43774.44522327921,
+    "z10": -0.6597621782073011,
+    "tool_TEC_200k": 44143.43559629639,
+    "z200": 2.060423768048918,
+    "se200": 73.45113947745479,
+    "hand_P90": 23.92430861764248,
+    "tool_P90_200k": 23.975330697264127,
+    "tool_P90_CI": [
+     23.947460790578685,
+     24.00238721616563
+    ],
+    "hand_pexc": 0.43128867701391677,
+    "tool_pexc_200k": 0.43241,
+    "feasible": true,
+    "hand_Edelay": 3.854999738320006,
+    "tool_Edelay_200k": 3.867234490217536
+   },
+   {
+    "option": "O-M-SUP+M-GANG",
+    "mit_cost": 12000.0,
+    "hand_TEC": 54802.734183612934,
+    "tool_TEC_10k": 55002.7074116138,
+    "z10": 0.5652368600261319,
+    "tool_TEC_200k": 54973.25515582371,
+    "z200": 2.2081550486960975,
+    "se200": 77.22327846111499,
+    "hand_P90": 24.609345293577377,
+    "tool_P90_200k": 24.630981666710746,
+    "tool_P90_CI": [
+     24.60184017815,
+     24.659644031532732
+    ],
+    "hand_pexc": 0.5128817981376296,
+    "tool_pexc_200k": 0.514895,
+    "feasible": true,
+    "hand_Edelay": 4.4466664066294035,
+    "tool_Edelay_200k": 4.461556849882663
+   },
+   {
+    "option": "O-M-SUP+M-COV",
+    "mit_cost": 5500.0,
+    "hand_TEC": 47990.76909271292,
+    "tool_TEC_10k": 48072.55945769076,
+    "z10": 0.22718497230540968,
+    "tool_TEC_200k": 48197.90744343439,
+    "z200": 2.616679071948969,
+    "se200": 79.16077785083083,
+    "hand_P90": 24.674050813687558,
+    "tool_P90_200k": 24.695721602085257,
+    "tool_P90_CI": [
+     24.66764558098258,
+     24.726591224696968
+    ],
+    "hand_pexc": 0.5064335141798955,
+    "tool_pexc_200k": 0.50935,
+    "feasible": true,
+    "hand_Edelay": 4.399999738574571,
+    "tool_Edelay_200k": 4.417627709593414
+   },
+   {
+    "option": "O-M-SUP+M-QC",
+    "mit_cost": 4500.0,
+    "hand_TEC": 46808.019647272755,
+    "tool_TEC_10k": 46805.280172850325,
+    "z10": -0.0075808241526864484,
+    "tool_TEC_200k": 46951.9813906762,
+    "z200": 1.8119733295340223,
+    "se200": 79.45025517592273,
+    "hand_P90": 24.675941657675097,
+    "tool_P90_200k": 24.70085825021568,
+    "tool_P90_CI": [
+     24.67387285549224,
+     24.732287261279893
+    ],
+    "hand_pexc": 0.5031396793083024,
+    "tool_pexc_200k": 0.50504,
+    "feasible": true,
+    "hand_Edelay": 4.3799997383240585,
+    "tool_Edelay_200k": 4.392022701579945
+   },
+   {
+    "option": "O-M-GANG+M-COV",
+    "mit_cost": 11500.0,
+    "hand_TEC": 57696.217278260636,
+    "tool_TEC_10k": 57700.129122223494,
+    "z10": 0.011047787576205479,
+    "tool_TEC_200k": 57880.48583423564,
+    "z200": 2.3576793262758367,
+    "se200": 78.1567509717579,
+    "hand_P90": 24.88251929089386,
+    "tool_P90_200k": 24.912320633228617,
+    "tool_P90_CI": [
+     24.883578046826262,
+     24.938893257988557
+    ],
+    "hand_pexc": 0.5627355803815411,
+    "tool_pexc_200k": 0.564465,
+    "feasible": true,
+    "hand_Edelay": 4.758333073550777,
+    "tool_Edelay_200k": 4.773697642744458
+   },
+   {
+    "option": "O-M-GANG+M-QC",
+    "mit_cost": 10500.0,
+    "hand_TEC": 56505.99996620973,
+    "tool_TEC_10k": 56444.83577567967,
+    "z10": -0.17106354798813275,
+    "tool_TEC_200k": 56622.44576432223,
+    "z200": 1.4850344436678975,
+    "se200": 78.41286012523986,
+    "hand_P90": 24.88543048173463,
+    "tool_P90_200k": 24.91353818284672,
+    "tool_P90_CI": [
+     24.88651470306654,
+     24.942296622566403
+    ],
+    "hand_pexc": 0.5594847319123954,
+    "tool_pexc_200k": 0.56031,
+    "feasible": true,
+    "hand_Edelay": 4.738333073300267,
+    "tool_Edelay_200k": 4.74809263473099
+   },
+   {
+    "option": "O-M-COV+M-QC",
+    "mit_cost": 4000.0,
+    "hand_TEC": 49674.01122937123,
+    "tool_TEC_10k": 49490.81141922481,
+    "z10": -0.5051195127425673,
+    "tool_TEC_200k": 49828.72533435299,
+    "z200": 1.924179697198641,
+    "se200": 80.40522681275672,
+    "hand_P90": 24.952746980971018,
+    "tool_P90_200k": 24.986138649615537,
+    "tool_P90_CI": [
+     24.95847378704747,
+     25.012721646066296
+    ],
+    "hand_pexc": 0.5506352251274607,
+    "tool_pexc_200k": 0.55244,
+    "feasible": true,
+    "hand_Edelay": 4.69166640524544,
+    "tool_Edelay_200k": 4.704163494441741
+   },
+   {
+    "option": "O-M-BUF+M-GANG+M-COV",
+    "mit_cost": 17500.0,
+    "hand_TEC": 52118.23408672531,
+    "tool_TEC_10k": 52044.40402916492,
+    "z10": -0.23955356336674896,
+    "tool_TEC_200k": 52320.567763459585,
+    "z200": 2.96515115012678,
+    "se200": 68.23722181097783,
+    "hand_P90": 23.528895438508293,
+    "tool_P90_200k": 23.56192740996241,
+    "tool_P90_CI": [
+     23.5323846163138,
+     23.58869282756183
+    ],
+    "hand_pexc": 0.40812266920734375,
+    "tool_pexc_200k": 0.41014,
+    "feasible": true,
+    "hand_Edelay": 3.7083330735426725,
+    "tool_Edelay_200k": 3.725606772503255
+   },
+   {
+    "option": "O-M-BUF+M-GANG+M-QC",
+    "mit_cost": 16500.0,
+    "hand_TEC": 50955.15663082992,
+    "tool_TEC_10k": 50810.9739276758,
+    "z10": -0.46361111964905144,
+    "tool_TEC_200k": 51095.38764696335,
+    "z200": 2.045039095925215,
+    "se200": 68.571313092663,
+    "hand_P90": 23.53727489177367,
+    "tool_P90_200k": 23.583111160347116,
+    "tool_P90_CI": [
+     23.552699493999075,
+     23.610102328439606
+    ],
+    "hand_pexc": 0.40554614499079517,
+    "tool_pexc_200k": 0.406075,
+    "feasible": true,
+    "hand_Edelay": 3.688333073292154,
+    "tool_Edelay_200k": 3.7000017644897865
+   },
+   {
+    "option": "O-M-BUF+M-COV+M-QC",
+    "mit_cost": 10000.0,
+    "hand_TEC": 44179.817292595486,
+    "tool_TEC_10k": 43904.590957730805,
+    "z10": -0.8700183131979482,
+    "tool_TEC_200k": 44353.325104050455,
+    "z200": 2.455315923274265,
+    "se200": 70.66618589089299,
+    "hand_P90": 23.607662642308217,
+    "tool_P90_200k": 23.647029686711896,
+    "tool_P90_CI": [
+     23.619604443137945,
+     23.67664731342891
+    ],
+    "hand_pexc": 0.40205915747712434,
+    "tool_pexc_200k": 0.403935,
+    "feasible": true,
+    "hand_Edelay": 3.641666405237329,
+    "tool_Edelay_200k": 3.6560726242005384
+   },
+   {
+    "option": "O-M-SUP+M-GANG+M-COV",
+    "mit_cost": 14500.0,
+    "hand_TEC": 54907.22568249302,
+    "tool_TEC_10k": 55042.09247951099,
+    "z10": 0.39617666148861147,
+    "tool_TEC_200k": 55104.19266294814,
+    "z200": 2.644431004927047,
+    "se200": 74.48369047561883,
+    "hand_P90": 24.298178947474266,
+    "tool_P90_200k": 24.323678258906675,
+    "tool_P90_CI": [
+     24.293751732204306,
+     24.35114315621092
+    ],
+    "hand_pexc": 0.4854291247944425,
+    "tool_pexc_200k": 0.48776,
+    "feasible": true,
+    "hand_Edelay": 4.233333073546729,
+    "tool_Edelay_200k": 4.2503949838656645
+   },
+   {
+    "option": "O-M-SUP+M-GANG+M-QC",
+    "mit_cost": 13500.0,
+    "hand_TEC": 53730.57829851985,
+    "tool_TEC_10k": 53786.09552891664,
+    "z10": 0.16212693138825904,
+    "tool_TEC_200k": 53862.587605672314,
+    "z200": 1.7654529656076876,
+    "se200": 74.77361885255418,
+    "hand_P90": 24.301732253832604,
+    "tool_P90_200k": 24.329532074096928,
+    "tool_P90_CI": [
+     24.30039696688243,
+     24.357205480070412
+    ],
+    "hand_pexc": 0.48251543845159534,
+    "tool_pexc_200k": 0.483505,
+    "feasible": true,
+    "hand_Edelay": 4.213333073296212,
+    "tool_Edelay_200k": 4.224789975852196
+   },
+   {
+    "option": "O-M-SUP+M-COV+M-QC",
+    "mit_cost": 7000.0,
+    "hand_TEC": 46926.91426098338,
+    "tool_TEC_10k": 46862.88581756594,
+    "z10": -0.18371363407342273,
+    "tool_TEC_200k": 47094.86912667161,
+    "z200": 2.188156743763475,
+    "se200": 76.75632294940719,
+    "hand_P90": 24.367819231526113,
+    "tool_P90_200k": 24.396276353701193,
+    "tool_P90_CI": [
+     24.36755720352332,
+     24.424307906643705
+    ],
+    "hand_pexc": 0.4763471913022924,
+    "tool_pexc_200k": 0.478705,
+    "feasible": true,
+    "hand_Edelay": 4.166666405241386,
+    "tool_Edelay_200k": 4.180860835562948
+   },
+   {
+    "option": "O-M-GANG+M-COV+M-QC",
+    "mit_cost": 13000.0,
+    "hand_TEC": 56567.29725319534,
+    "tool_TEC_10k": 56430.57663564374,
+    "z10": -0.39838084918145267,
+    "tool_TEC_200k": 56711.51939137574,
+    "z200": 1.9054960122140951,
+    "se200": 75.6874521153252,
+    "hand_P90": 24.570676901950964,
+    "tool_P90_200k": 24.594796187996717,
+    "tool_P90_CI": [
+     24.570228612564346,
+     24.621881083158364
+    ],
+    "hand_pexc": 0.5339922320502339,
+    "tool_pexc_200k": 0.535105,
+    "feasible": true,
+    "hand_Edelay": 4.524999740217586,
+    "tool_Edelay_200k": 4.536930768713992
+   },
+   {
+    "option": "O-M-MECH",
+    "mit_cost": 4000.0,
+    "hand_TEC": 51580.12444470402,
+    "tool_TEC_10k": 51554.91606510115,
+    "z10": -0.06786345951419909,
+    "tool_TEC_200k": 51760.56892238989,
+    "z200": 2.19061031759327,
+    "se200": 82.3717829851692,
+    "hand_P90": 25.189482677126506,
+    "tool_P90_200k": 25.214865721731275,
+    "tool_P90_CI": [
+     25.18938341184475,
+     25.242196247700527
+    ],
+    "hand_pexc": 0.5699643592302905,
+    "tool_pexc_200k": 0.572525,
+    "feasible": false,
+    "hand_Edelay": 4.858333071661466,
+    "tool_Edelay_200k": 4.8732991991581365
+   }
+  ],
+  "V3_seed2024": {
+   "max_abs_z": 1.03830688965353,
+   "mean_z": 0.35117243776266605,
+   "worst": [
+    "O-M-SUP+M-GANG",
+    1.03830688965353
+   ]
+  },
+  "V3_maxz": {
+   "n10k": 0.8700183131979482,
+   "n200k": 2.96515115012678
+  },
+  "V3_decision": {
+   "hand_best": "O-M-BUF+M-QC",
+   "tool10k": "O-M-BUF+M-QC",
+   "tool200k": "O-M-BUF+M-QC",
+   "top5": [
+    [
+     "O-M-BUF+M-QC",
+     43992.095122726765
+    ],
+    [
+     "O-M-BUF+M-COV+M-QC",
+     44179.817292595486
+    ],
+    [
+     "O-M-BUF",
+     45008.17833798767
+    ],
+    [
+     "O-M-BUF+M-COV",
+     45163.109173601006
+    ],
+    [
+     "O-M-SUP+M-QC",
+     46808.019647272755
+    ]
+   ],
+   "command10k": "AUTHORIZE MITIGATION",
+   "stable_flag": true
+  },
+  "V4": [
+   {
+    "mit": "M-BUF",
+    "risk": "R-MAT",
+    "before": 14000.0,
+    "after": 5600.000000000001,
+    "secondary": 0,
+    "cost": 6000,
+    "hand_net": 2400.0,
+    "tool_net": 2400.0,
+    "hand_required_reduction": 0.42857142857142855,
+    "tool_required_reduction": 0.42857142857142855
+   },
+   {
+    "mit": "M-SUP",
+    "risk": "R-MAT",
+    "before": 14000.0,
+    "after": 9799.999999999998,
+    "secondary": 0,
+    "cost": 3000,
+    "hand_net": 1200.0000000000018,
+    "tool_net": 1200.0,
+    "hand_required_reduction": 0.21428571428571427,
+    "tool_required_reduction": 0.21428571428571427
+   },
+   {
+    "mit": "M-GANG",
+    "risk": "R-LAB",
+    "before": 7000.0,
+    "after": 3266.6666666666665,
+    "secondary": 2400.0,
+    "cost": 9000,
+    "hand_net": -7666.666666666666,
+    "tool_net": -7666.666666666666,
+    "hand_required_reduction": 1.2857142857142858,
+    "tool_required_reduction": 1.2857142857142858
+   },
+   {
+    "mit": "M-COV",
+    "risk": "R-WX",
+    "before": 4266.666666666667,
+    "after": 2559.9999999999995,
+    "secondary": 0,
+    "cost": 2500,
+    "hand_net": -793.3333333333326,
+    "tool_net": -793.3333333333326,
+    "hand_required_reduction": 0.5859375,
+    "tool_required_reduction": 0.5859375
+   },
+   {
+    "mit": "M-QC",
+    "risk": "R-RWK",
+    "before": 4666.666666666667,
+    "after": 2800.0000000000005,
+    "secondary": 0,
+    "cost": 1500,
+    "hand_net": 366.6666666666665,
+    "tool_net": 366.66666666666697,
+    "hand_required_reduction": 0.3214285714285714,
+    "tool_required_reduction": 0.3214285714285714
+   },
+   {
+    "mit": "M-MECH",
+    "risk": "R-SKILL",
+    "before": 4106.666666666667,
+    "after": 1866.666666666667,
+    "secondary": 0,
+    "cost": 4000,
+    "hand_net": -1760.0,
+    "tool_net": -1760.0,
+    "hand_required_reduction": 0.9740259740259739,
+    "tool_required_reduction": 0.9740259740259739
+   }
+  ],
+  "V5_rows": [
+   {
+    "risk": "R-MAT",
+    "p": 0.5,
+    "mean": 3.5,
+    "ratio": 0.21875,
+    "pc": 3,
+    "ic": 5,
+    "score": 15,
+    "level": "High"
+   },
+   {
+    "risk": "R-LAB",
+    "p": 0.35,
+    "mean": 2.5,
+    "ratio": 0.15625,
+    "pc": 2,
+    "ic": 4,
+    "score": 8,
+    "level": "Moderate"
+   },
+   {
+    "risk": "R-RWK",
+    "p": 0.25,
+    "mean": 2.3333333333333335,
+    "ratio": 0.14583333333333334,
+    "pc": 2,
+    "ic": 4,
+    "score": 8,
+    "level": "Moderate"
+   },
+   {
+    "risk": "R-WX",
+    "p": 0.2,
+    "mean": 2.6666666666666665,
+    "ratio": 0.16666666666666666,
+    "pc": 2,
+    "ic": 4,
+    "score": 8,
+    "level": "Moderate"
+   },
+   {
+    "risk": "R-PLAN",
+    "p": 0.1,
+    "mean": 1.3333333333333333,
+    "ratio": 0.08333333333333333,
+    "pc": 1,
+    "ic": 3,
+    "score": 3,
+    "level": "Low"
+   },
+   {
+    "risk": "R-SAFE",
+    "p": 0.3,
+    "mean": 2.5,
+    "ratio": 0.15625,
+    "pc": 2,
+    "ic": 4,
+    "score": 8,
+    "level": "Moderate"
+   },
+   {
+    "risk": "R-SKILL",
+    "p": 0.22,
+    "mean": 2.3333333333333335,
+    "ratio": 0.14583333333333334,
+    "pc": 2,
+    "ic": 4,
+    "score": 8,
+    "level": "Moderate"
+   }
+  ],
+  "V6": {
+   "n_rules": 22,
+   "hand_fired": [
+    "RL-LAB",
+    "RL-MAT",
+    "RL-MAT2",
+    "RL-PLAN",
+    "RL-RWK",
+    "RL-SKILL",
+    "RL-WX"
+   ],
+   "tool_fired": [
+    "RL-LAB",
+    "RL-MAT",
+    "RL-MAT2",
+    "RL-PLAN",
+    "RL-RWK",
+    "RL-SKILL",
+    "RL-WX"
+   ],
+   "hand_level": {
+    "R-LAB": "elevated",
+    "R-MAT": "elevated",
+    "R-WX": "normal",
+    "R-RWK": "elevated",
+    "R-PLAN": "elevated",
+    "R-SKILL": "elevated"
+   },
+   "tool_level": {
+    "R-LAB": "elevated",
+    "R-MAT": "elevated",
+    "R-WX": "normal",
+    "R-RWK": "elevated",
+    "R-PLAN": "elevated",
+    "R-SKILL": "elevated"
+   }
+  },
+  "V7": {
+   "n_seeded": 30,
+   "class_sizes": {
+    "1": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6,
+    "5": 6
+   }
+  },
+  "V9": {
+   "avg_z_mean": -0.03697984124672339,
+   "sd_z_mean": 1.0368384144121352,
+   "cov_mean": 0.935,
+   "cov_p90": 0.925,
+   "avg_z_pany": 0.021063477833310865
+  },
+  "V10": [
+   {
+    "rho": -0.5,
+    "hand_joint": 0.053484529063614394,
+    "tool_joint": 0.053298333333333336,
+    "marg_A": 0.39915666666666666,
+    "marg_B": 0.30019
+   },
+   {
+    "rho": 0.0,
+    "hand_joint": 0.12,
+    "tool_joint": 0.12007666666666666,
+    "marg_A": 0.39915666666666666,
+    "marg_B": 0.30044166666666666
+   },
+   {
+    "rho": 0.6,
+    "hand_joint": 0.20850391071040064,
+    "tool_joint": 0.20837166666666668,
+    "marg_A": 0.39915666666666666,
+    "marg_B": 0.3002416666666667
+   },
+   {
+    "rho": 0.95,
+    "hand_joint": 0.2872188689791172,
+    "tool_joint": 0.28686833333333334,
+    "marg_A": 0.39915666666666666,
+    "marg_B": 0.2994
+   }
+  ],
+  "V11": {
+   "ex1": true,
+   "ex2": false
+  }
+ }
+}

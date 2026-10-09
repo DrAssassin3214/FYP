@@ -1,0 +1,518 @@
+[
+ {
+  "area": "CLI",
+  "test": "template prints valid JSON, exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI",
+  "test": "example prints valid JSON, exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI",
+  "test": "example-analysis prints valid JSON, exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI",
+  "test": "run example writes register.md/.csv/result.json, exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI",
+  "test": "register.csv parses and has one row per risk + header",
+  "pass": true,
+  "detail": "8 rows"
+ },
+ {
+  "area": "CLI",
+  "test": "analyze example writes analysis.md/.json, exit 0, prints a command",
+  "pass": true,
+  "detail": "(\"AUTHORIZE MITIGATION: Under the criterion 'minimum total expected cost  TEC = C_mitigation + E[C_residual]', 'Buffer sto\", '')"
+ },
+ {
+  "area": "CLI",
+  "test": "run shipped examples/example_case.json -> exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI",
+  "test": "analyze shipped examples/example_analysis_case.json -> exit 0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: missing file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: case file not found: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/does_not_exist.json"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: missing file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: case file not found: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/does_not_exist.json"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: empty file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/empty.json is empty"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: empty file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/empty.json is empty"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: invalid JSON",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/junk.json is not valid JSON: Expecting property name enclosed in doub"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: invalid JSON",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/junk.json is not valid JSON: Expecting property name enclosed in doub"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: JSON array",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/arr.json must contain a JSON object (a case), not a list"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: JSON array",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/arr.json must contain a JSON object (a case), not a list"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: UTF-16 file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/u16.json is saved as UTF-16; re-save it as UTF-8 (in Notepad: Save As"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: UTF-16 file",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/u16.json is saved as UTF-16; re-save it as UTF-8 (in Notepad: Save As"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: binary garbage",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/bin.json is saved as UTF-16; re-save it as UTF-8 (in Notepad: Save As"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: binary garbage",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/bin.json is saved as UTF-16; re-save it as UTF-8 (in Notepad: Save As"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: a folder",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/dir.json is a folder, not a case file"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: a folder",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/dir.json is a folder, not a case file"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: p = 7 (out of range)",
+  "pass": true,
+  "detail": "exit 2; stderr tail:   - risks[0]: R-MAT: probability must be in [0,1]"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: p = 7 (out of range)",
+  "pass": true,
+  "detail": "exit 2; stderr tail:   - risks[0]: R-MAT: probability must be in [0,1]"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: JSON null",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/null.json must contain a JSON object (a case), not a NoneType"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: JSON null",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/null.json must contain a JSON object (a case), not a NoneType"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: JSON number",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/num.json must contain a JSON object (a case), not a int"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: JSON number",
+  "pass": true,
+  "detail": "exit 2; stderr tail: error: /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/num.json must contain a JSON object (a case), not a int"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "run: analysis case without cost model",
+  "pass": false,
+  "detail": "exit 0; stderr tail: (none)"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "analyze: analysis case without cost model",
+  "pass": true,
+  "detail": "exit 2; stderr tail:   - cost.cost_per_delay_day: input required (cost of one extra working day, with a source); it has no default"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "no arguments -> usage error (exit 2), no traceback",
+  "pass": true,
+  "detail": "isk [-h] {template,example,example-analysis,run,analyze} ...\nfyp-risk: error: the following arguments are required: cmd\n"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "unknown command -> exit 2, no traceback",
+  "pass": true,
+  "detail": " error: argument cmd: invalid choice: 'bogus' (choose from 'template', 'example', 'example-analysis', 'run', 'analyze')\n"
+ },
+ {
+  "area": "CLI-errors",
+  "test": "--out pointing at a file -> clean error",
+  "pass": true,
+  "detail": "error: --out /tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/ex.json is a file; give a folder\n"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /favicon.ico",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/health",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/meta",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/template",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/example",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/risk-library",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/rules",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/evidence",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/evidence?ids=M01,ZZZ",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/evidence?q=brick",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/settings",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/mitigation-catalogue",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET /api/example-analysis",
+  "pass": true,
+  "detail": "status 200"
+ },
+ {
+  "area": "API-GET",
+  "test": "unknown /api path -> 404 JSON",
+  "pass": true,
+  "detail": "404"
+ },
+ {
+  "area": "API-GET",
+  "test": "GET on a POST-only route -> 405 JSON",
+  "pass": true,
+  "detail": "405"
+ },
+ {
+  "area": "API-SEC",
+  "test": "foreign Host header rejected (DNS-rebinding guard) -> 403",
+  "pass": true,
+  "detail": "403"
+ },
+ {
+  "area": "API-SEC",
+  "test": "Host: localhost accepted",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-SEC",
+  "test": "Host: 127.0.0.1.evil.com rejected",
+  "pass": true,
+  "detail": "403"
+ },
+ {
+  "area": "API-SEC",
+  "test": "GET /api/settings never returns a raw key field",
+  "pass": true,
+  "detail": "['configured', 'source', 'provider', 'masked_key', 'model', 'settings_path']"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "validate example -> ok",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "run example -> 7 risks on matrix",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "report.md download",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "register.csv has BOM + header",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "matrix SVG is well-formed XML",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "report HTML download",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "analyze example-analysis -> command present",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "analysis.md download contains the command",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "analysis charts HTML contains embedded PNGs",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-FLOW",
+  "test": "suggest-risks offline retrieval -> ok",
+  "pass": true,
+  "detail": "200"
+ },
+ {
+  "area": "API-ROBUST",
+  "test": "12 POST routes x 13 malformed bodies: no HTTP 5xx",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "API-ROBUST",
+  "test": "every 4xx error response is JSON (never an HTML page)",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "API-ROBUST",
+  "test": "21 MB body -> 413 JSON",
+  "pass": true,
+  "detail": "413"
+ },
+ {
+  "area": "API-ROBUST",
+  "test": "120 mutated analysis cases via /api/analyze: no 5xx, JSON errors only",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "API-ROBUST",
+  "test": "/api/analyze response is strict JSON (no NaN/Infinity tokens)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "FRONTEND",
+  "test": "index.html: all 4 /static references exist",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "FRONTEND",
+  "test": "every /api path called from JS (17) exists as a Flask route",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "FRONTEND",
+  "test": "all relative ES-module imports resolve to files",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "FRONTEND",
+  "test": "node --check: all 23 JS modules parse",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "PACKAGING",
+  "test": "launcher / Qt wrapper files parse (PySide6 itself NOT installed here: Qt window not executed)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "PACKAGING",
+  "test": "gui.qt_app imports without PySide6 (imports must be lazy so --help / tests work)",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "PACKAGING",
+  "test": "fyp_gui.spec: data paths exist (4 found)",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "PACKAGING",
+  "test": "fyp_desktop.spec: data paths exist (4 found)",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "PACKAGING",
+  "test": "third-party imports in app/ and gui/ (['PySide6', 'flask', 'matplotlib', 'numpy', 'openpyxl', 'scipy', 'werkzeug']) are all listed in requirements*.txt",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "PACKAGING",
+  "test": "GitHub workflow YAML parses",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "DATA",
+  "test": "data/india_labour_norms.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/literature_seed.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/mitigation_catalogue.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/productivity_models.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/risk_library_masonry.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/rules_masonry.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "data/screening_report.json is valid JSON",
+  "pass": true,
+  "detail": "True"
+ },
+ {
+  "area": "DATA",
+  "test": "Literature_Evidence_Package.xlsx present (evidence store source)",
+  "pass": true,
+  "detail": ""
+ }
+]

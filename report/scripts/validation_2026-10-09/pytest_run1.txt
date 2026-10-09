@@ -1,0 +1,22 @@
+........................................................sss............. [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 41%]
+........................................................................ [ 54%]
+........................................................................ [ 68%]
+........................................................................ [ 82%]
+........................................................................ [ 96%]
+.....................                                                    [100%]
+============================= slowest 8 durations ==============================
+5.12s call     tests/test_analysis.py::test_result_is_reproducible_and_input_is_not_modified
+4.33s call     tests/test_analysis_charts.py::test_histogram_is_deterministic_for_a_fixed_seed
+4.02s call     tests/test_analysis_charts.py::test_endpoint_returns_html_and_reports_problems
+3.74s call     tests/test_analysis_charts.py::test_png_charts_and_html_export
+3.26s call     tests/test_analysis.py::test_analyze_route_wraps_the_service
+2.08s call     tests/test_engine.py::test_simulated_moments_match_analytic_including_variance
+2.08s call     tests/test_analysis.py::test_deadline_criterion_and_constraints
+1.96s setup    tests/test_analysis_charts.py::test_histogram_shape_and_consistency
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_corpus.py:118: bulk harvest not run yet
+SKIPPED [1] tests/test_corpus.py:128: literature.db not built
+SKIPPED [1] tests/test_corpus.py:134: literature.db not built (scripts/build_literature_db.py)
+522 passed, 3 skipped in 49.78s

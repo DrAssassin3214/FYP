@@ -1,0 +1,33 @@
+{
+ "fuzz": {
+  "run_case_register": {
+   "CaseError": 2245,
+   "ok": 1755
+  },
+  "run_case_analysis": {
+   "CaseError": 1058,
+   "ok": 1942
+  },
+  "run_analysis": {
+   "ok": 271,
+   "CaseError": 429
+  }
+ },
+ "unique_bugs": {
+  "run_case_register": [],
+  "run_case_analysis": [],
+  "run_analysis": []
+ },
+ "bug_cases": {
+  "run_case_register": [],
+  "run_case_analysis": [],
+  "run_analysis": []
+ },
+ "invariants": {
+  "cases": 140,
+  "ok": 140,
+  "caseerr": 0,
+  "unhandled": 0,
+  "fails": {}
+ }
+}
