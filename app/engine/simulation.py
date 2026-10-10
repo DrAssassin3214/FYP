@@ -19,6 +19,8 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Mapping, Optional, Sequence
 
+from functools import lru_cache
+
 import numpy as np
 from scipy import stats
 
@@ -236,10 +238,16 @@ def simulate_until_precise(
         n *= 2
 
 
+@lru_cache(maxsize=16)
+def _z_two_sided(conf: float) -> float:
+    """Standard-normal quantile for a two-sided interval; cached because summarise() asks for it hundreds of times."""
+    return float(stats.norm.ppf(0.5 + conf / 2))
+
+
 def quantile_ci(sorted_x: np.ndarray, q: float, conf: float = 0.95) -> tuple[float, float]:
     """Distribution-free CI for a quantile from order statistics (normal approx. of ranks)."""
     n = len(sorted_x)
-    z = stats.norm.ppf(0.5 + conf / 2)
+    z = _z_two_sided(conf)
     half = z * np.sqrt(n * q * (1 - q))
     lo = int(max(np.floor(n * q - half), 0))
     hi = int(min(np.ceil(n * q + half), n - 1))
@@ -271,13 +279,16 @@ def summarise(
         "percentile_ci95": {},
         "delay_percentiles": {},
     }
-    for q in quantiles:
+    qs = list(quantiles)
+    q_t = np.quantile(t, qs + [0.90, 0.95]) if qs else np.quantile(t, [0.90, 0.95])   # one call per array, not one per quantile
+    q_d = np.quantile(d, qs) if qs else []
+    for i, q in enumerate(qs):
         key = f"P{int(round(q * 100))}"
-        out["percentiles"][key] = float(np.quantile(t, q))
+        out["percentiles"][key] = float(q_t[i])
         out["percentile_ci95"][key] = quantile_ci(t, q)
-        out["delay_percentiles"][key] = float(np.quantile(d, q))
-    for q in (0.90, 0.95):
-        cut = np.quantile(t, q)
+        out["delay_percentiles"][key] = float(q_d[i])
+    for j, q in enumerate((0.90, 0.95)):
+        cut = q_t[len(qs) + j]
         out[f"cvar_{int(q * 100)}"] = float(t[t >= cut].mean())     # mean duration in the worst (1-q) tail
     if deadline_days is not None:
         out["p_exceed_deadline"] = float((res.duration > deadline_days).mean())
