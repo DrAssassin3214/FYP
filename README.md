@@ -43,6 +43,7 @@ python -m app.cli run case.json --out out    # writes register.md, register.csv,
 python examples/masonry_demo.py    # legacy demo (Monte Carlo + EMV option comparison); out of the current scope
 python -m app.cli example-analysis > a.json   # case with cost model, deadline and responses (ILLUSTRATIVE)
 python -m app.cli analyze a.json --out out    # writes analysis.md: EMV, options, AUTHORIZE / ACCEPT command
+python -m app.cli manual-check a.json --out manual_check.xlsx   # Excel: hand formulas beside the tool's numbers (PASS / FAIL)
 ```
 
 Desktop app (PySide6 window, no browser): `run_desktop.bat` runs it from source; `build_desktop_exe.bat`

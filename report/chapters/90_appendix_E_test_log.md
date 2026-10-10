@@ -88,3 +88,5 @@ The run above is that of 8 October. On 9 October, after the defect fixes of Sect
 | test_validation_fixes.py | 32 | 32 | 0 | 0 |
 | test_validation_hardening.py | 140 | 140 | 0 | 0 |
 | **Total** | **557** | **554** | **3** | **0** |
+
+On 10 October 2026, after the manual-check export was added (`app/reporting/manual_check.py`, command `manual-check`, route `/api/manual-check-xlsx`), `python -m pytest tests -q` gave 561 passed and 3 skipped. The 7 added tests are in `tests/test_manual_check.py`. The totals in Table E.3 are those of 9 October and are not changed.
