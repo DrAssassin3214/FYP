@@ -6,3 +6,5 @@ Scripts v1 to v5 were written for this validation and were run with `python3 -I 
 - `after_fixes/`: the same scripts re-run on the fixed code. The probe of the CRC32 collision in `v4_edge.py` was changed to expect the refusal added by F5.
 - `v1b_p90.py`, `v1c_p90_bias.py`, `v1d_ci.py`: follow-up checks of the two P90 differences (20-million-draw reference, bias over seeds, interval coverage).
 - `pytest_run1.txt`: existing suite before the fixes (522 passed, 3 skipped). `pytest_v_final.txt`: after the fixes (554 passed, 3 skipped).
+
+- `../../tables/manual_calculation_check.xlsx`: the hand calculations as an Excel workbook with live formulas (9 sheets). Built by `build_manual_calc_xlsx.py <output.xlsx>` from the example case and `v1_results.json`, then recalculated with LibreOffice (836 formulas, 0 errors).
