@@ -1,0 +1,104 @@
+PASS [EDGE] all p = 0: delay 0, P(any)=0, P90 = planned, cost 0, no NaN
+PASS [EDGE] all p = 0 and no mitigations -> 'NO RESPONSE EVALUATED' (not a false 'ACCEPT')  (NO RESPONSE EVALUATED)
+PASS [EDGE] p = 1, fixed delays 2+3: duration exactly 21, cost = 8000*5 + 1000*1 = 41000  ((21.0, 41000.0))
+PASS [EDGE] n = 1 runs without error (std/CI degenerate cases)
+PASS [EDGE] n = 200000 (upper limit) accepted
+PASS [EDGE] n = 200001 rejected with a message  (('CaseError', ['simulation.n: must be a whole number from 1 to 200000']))
+PASS [EDGE] n = 0 rejected cleanly  (('CaseError', ['simulation.n: must be a whole number from 1 to 200000']))
+PASS [EDGE] n = -5 rejected cleanly  (('CaseError', ['simulation.n: must be a whole number from 1 to 200000']))
+PASS [EDGE] n = 2.5 rejected cleanly  (('CaseError', ['simulation.n: must be a whole number from 1 to 200000']))
+PASS [EDGE] n = 'x' rejected cleanly  (('CaseError', ["simulation.n: 'x' is not a number"]))
+PASS [EDGE] n = True rejected cleanly  (('CaseError', ['simulation.n: expected a whole number']))
+PASS [EDGE] seed = -1 rejected cleanly  (('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647']))
+PASS [EDGE] seed = 2147483648 rejected cleanly  (('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647']))
+PASS [EDGE] seed = 1.5 rejected cleanly  (('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647']))
+PASS [EDGE] seed = 2^31-1 accepted
+PASS [EDGE] degenerate PERT a=m=b=2 -> every occurrence delays exactly 2 d
+PASS [EDGE] zero-delay risk: delay 0, P(any delay)=0
+PASS [EDGE] huge values (1e9 d, 1e12 INR/d): finite, strict JSON
+PASS [EDGE] p = 1e-12 runs; matrix class 1
+PASS [EDGE] PERT lambda extremes 1e6 and 1e-9 give finite results
+FAIL [EDGE] PERT lambda = 0 rejected
+PASS [EDGE] a > m > b rejected  (('CaseError', ['risks[0].delay: require a <= m <= b']))
+PASS [EDGE] deadline < planned duration: LD charged on (baseline overrun + delay); E[cost] = LD*(6+E[D])  ((8493.809231025016, 8500.0))
+PASS [EDGE] deadline == planned: P(exceed) equals P(any delay) = 1-(0.5)(0.7) = 0.65  (0.64973)
+PASS [EDGE] LD > 0 with no deadline rejected with a message  (('CaseError', ['cost.ld_per_day_after_deadline: liquidated damages need activity.deadline_days']))
+PASS [EDGE] deadline = 0 rejected  (('CaseError', ['activity.deadline_days must be greater than 0']))
+PASS [EDGE] planned duration = 0 rejected  (('CaseError', ['activity.planned_duration_days must be greater than 0']))
+PASS [EDGE] empty risk register rejected with a message  (('CaseError', ['no complete risk in the register: enter probability and delay for at least one risk']))
+PASS [EDGE] negative cost per day rejected  (('CaseError', ['cost.cost_per_delay_day: must be 0 or more']))
+PASS [EDGE] cost per day = 0 accepted (all costs 0, no divide-by-zero)
+PASS [MITIG] mitigation targeting an unknown risk rejected  (('CaseError', ["mitigations[1] (M2): target risk 'NOPE' is not a complete risk in the register"]))
+PASS [MITIG] p_after = 1.5 rejected  (('CaseError', ['mitigations[0] (M1).p_after: probability must be between 0 and 1']))
+PASS [MITIG] negative mitigation cost rejected  (('CaseError', ['mitigations[0] (M1): M1: cost must be >= 0']))
+PASS [MITIG] duplicate mitigation id rejected  (('CaseError', ["mitigations[1]: duplicate id 'M1'"]))
+PASS [MITIG] mitigation with no modelled effect is left out and reported (not silently simulated)  (['M1: no modelled effect (enter p after and/or delay after, normally as Expert Judgment); it is left out of the options'])
+PASS [MITIG] explicit option with two responses to the same risk rejected  (('CaseError', ['options[0] (BOTH): two mitigations target the same risk; an option may contain at most one per risk']))
+PASS [MITIG] zero-cost mitigation that removes the risk -> AUTHORIZE MITIGATION, cost/day-avoided is null not inf
+PASS [MITIG] absurdly expensive mitigation -> ACCEPT RISK  (ACCEPT RISK)
+PASS [MITIG] budget = 0 removes every paid response; ACCEPT remains selected
+PASS [MITIG] impossible deadline-probability limit (0.0) -> NO ADMISSIBLE OPTION  (NO ADMISSIBLE OPTION)
+PASS [MITIG] criterion min_p90_duration selects the response that lowers it  (O-M1)
+PASS [MITIG] criterion min_deadline_exceedance selects the response that lowers it  (O-M1)
+PASS [MITIG] min_deadline_exceedance without a deadline rejected  (('CaseError', ["simulation.criterion: 'min_deadline_exceedance' needs activity.deadline_days"]))
+PASS [CORR] rho = 1 (singular) rejected with a message  (('CaseError', ['correlation matrix is singular or not positive definite (|rho| = 1 or inconsistent set); use |rho| < 1']))
+PASS [CORR] rho = -1 (singular) rejected with a message  (('CaseError', ['correlation matrix is singular or not positive definite (|rho| = 1 or inconsistent set); use |rho| < 1']))
+PASS [CORR] rho = 1.5 rejected with a message  (('CaseError', ['simulation.correlation[0].rho: must be between -1 and 1']))
+PASS [CORR] rho = 'x' rejected with a message  (('CaseError', ['simulation.correlation[0].rho: not a number']))
+PASS [CORR] rho = 0.999 accepted (strict positive definite)
+PASS [CORR] self-correlation rejected  (('CaseError', ['simulation.correlation[0]: a and b must be two different complete risks in the register']))
+PASS [CORR] conflicting duplicate pair (0.3 vs 0.6) rejected  (('CaseError', ['conflicting correlations given for (X2, X1)']))
+PASS [CORR] positive occurrence correlation (0.8) raises the std of duration and leaves the mean unchanged  ((2.3196770571921945, 2.7418756949404033, 2.4934707104469025, 2.4959264938201513))
+PASS [RNG] sanity: crc32('plumless') == crc32('buckeroo') (known collision pair)
+PASS [RNG] FIXED F5: colliding CRC32 ids are refused with a message instead of silently correlating
+   (collision probability for a 46-risk register ~ 46*45/2/2^32 = 2.4e-07)
+PASS [RNG] no CRC32 collision among the 46 shipped library risk ids
+PASS [IDS] unicode / spaces / CSV-hostile characters in risk ids work in analysis
+PASS [IDS] numeric risk id (5) and text id ('6') both accepted
+PASS [IDS] ids differing only by case ('X' vs 'x') treated as distinct
+PASS [IDS] duplicate risk id rejected  (('CaseError', ["risks[1]: duplicate id 'X'"]))
+PASS [OPTIONS] 7 independent cheap responses: options are truncated (7 + 21 + 35 = 63 -> 40)  ({'skipped_no_effect': [], 'n_generated': 40, 'truncated': True, 'max_size': 3, 'max_options': 40})
+FAIL [OPTIONS] truncation is surfaced to the user in warnings or the exported report -> warnings=['the preferred option changes with the random seed: the options are too close to separate at this number of iterations, so do not present the choice as firm']
+   with 7 near-free responses, the tool's preferred option has 3 responses (max combination size 3, cap 40 options)
+PASS [OPTIONS] an explicit 7-response option beats the tool's auto-generated best (auto search is limited to <= 3 responses)  (ALL7 total 11226 vs auto-best 60068)
+   6 responses -> options generated: 40 truncated: True (6+15+20 = 41 > 40)
+PASS [SHAPES] run_analysis: mitigations = true -> clean result or CaseError  (('CaseError', ['mitigations: expected a list']))
+PASS [SHAPES] run_analysis: mitigations = 5 -> clean result or CaseError  (('CaseError', ['mitigations: expected a list']))
+PASS [SHAPES] run_analysis: mitigations = 'x' -> clean result or CaseError  (('CaseError', ['mitigations: expected a list']))
+PASS [SHAPES] run_analysis: options = true -> clean result or CaseError  (('CaseError', ['options: expected a list']))
+PASS [SHAPES] run_analysis: options = 5 -> clean result or CaseError  (('CaseError', ['options: expected a list']))
+PASS [SHAPES] run_analysis: constraints = 5 -> clean result or CaseError  (('CaseError', ['constraints: expected an object']))
+PASS [SHAPES] run_analysis: constraints = [1] -> clean result or CaseError  (('CaseError', ['constraints: expected an object']))
+PASS [SHAPES] run_analysis: simulation = 5 -> clean result or CaseError  (('CaseError', ['simulation: expected an object']))
+PASS [SHAPES] run_analysis: simulation = [1] -> clean result or CaseError  (('CaseError', ['simulation: expected an object']))
+PASS [SHAPES] run_analysis: simulation.correlation = 5 -> clean result or CaseError  (('CaseError', ['simulation.correlation: expected a list']))
+PASS [SHAPES] run_analysis: cost = 5 -> clean result or CaseError  (('CaseError', ['cost.cost_per_delay_day: input required (cost of one extra working day, with a source); it has no default']))
+PASS [SHAPES] run_analysis: mitigation.secondary_risks = 5 -> clean result or CaseError  (('CaseError', ['mitigations[0] (M1).secondary_risks: expected a list']))
+PASS [SHAPES] run_analysis: mitigation.secondary_risks = true -> clean result or CaseError  (('CaseError', ['mitigations[0] (M1).secondary_risks: expected a list']))
+PASS [SHAPES] run_analysis: mitigation.evidence_ids = 5 -> clean result or CaseError  (('CaseError', ['mitigations[0] (M1).evidence_ids: expected a list of ids']))
+PASS [SHAPES] run_analysis: mitigation.evidence_ids = [1, 'a'] -> clean result or CaseError
+PASS [SHAPES] run_analysis: mitigation.evidence_ids = [[1]] -> clean result or CaseError  (('CaseError', ['mitigations[0] (M1).evidence_ids: each id must be text or a whole number']))
+PASS [SHAPES] run_analysis: mitigation.evidence_ids = 'M01' (bare string) -> clean result or CaseError
+PASS [SHAPES] run_analysis: mitigation.time_to_implement_days = 'x' -> clean result or CaseError  (('CaseError', ["mitigations[0] (M1).time_to_implement_days: 'x' is not a number"]))
+PASS [SHAPES] run_analysis: risk.direct_cost_if_occurs = 5 -> clean result or CaseError
+   unhandled shapes: 0 of 19
+PASS [PERF] 40 risks + 12 responses at n=10,000 finishes in a usable time  (11.7s; options evaluated 41)
+PASS [PERF] 40-risk analysis result is strict JSON and its size is reasonable  (0.15 MB)
+   7 risks + 5 responses at n=200,000: 20.4s
+PASS [PERF] n=200,000 with 5 responses finishes within 60 s  (20.4s)
+   Cd x0.25  tool picks ACCEPT                 hand-exact picks ACCEPT                 gap to runner-up    231.2 INR  ok
+   Cd x0.5   tool picks O-M-BUF+M-QC           hand-exact picks O-M-BUF+M-QC           gap to runner-up     82.7 INR  ok
+   Cd x0.75  tool picks O-M-BUF+M-QC           hand-exact picks O-M-BUF+M-QC           gap to runner-up    549.4 INR  ok
+   Cd x1.0   tool picks O-M-BUF+M-QC           hand-exact picks O-M-BUF+M-QC           gap to runner-up    187.7 INR  ok
+   Cd x1.5   tool picks O-M-BUF+M-COV+M-QC     hand-exact picks O-M-BUF+M-COV+M-QC     gap to runner-up    665.6 INR  ok
+   Cd x2.0   tool picks O-M-BUF+M-COV+M-QC     hand-exact picks O-M-BUF+M-COV+M-QC     gap to runner-up   1518.9 INR  ok
+   Cd x4.0   tool picks O-M-BUF+M-COV+M-QC     hand-exact picks O-M-BUF+M-COV+M-QC     gap to runner-up   4932.3 INR  ok
+PASS [DECISION] decision_sensitivity (Cd x0.25 .. x4): tool's preferred option equals the exact hand-computed optimum at every multiplier
+   flips reported by tool between multipliers: [[0.25, 0.5], [1.0, 1.5]] | stability flag: True ['O-M-BUF+M-QC', 'O-M-BUF+M-QC', 'O-M-BUF+M-QC']
+   report table says: {'expected_delay': 5.1323, 'se': 0.0334, 'p_any': 0.8975, 'P90': 25.638, 'p_exceed': 0.5981, 'E_cost': 50821.0}
+   code at HEAD gives: {'expected_delay': 5.1323, 'se': 0.0334, 'p_any': 0.8975, 'P90': 25.6384, 'p_exceed': 0.5981, 'E_cost': 50821.0481}
+PASS [DRIFT] numbers quoted in report/tables/hand_check_output.txt (TOOL line, n=10000 seed 12345) are reproduced by the current code  (quoted {'expected_delay': 5.1323, 'se': 0.0334, 'p_any': 0.8975, 'P90': 25.638, 'p_exceed': 0.5981, 'E_cost': 50821.0} vs now {'expected_delay': 5.1322848108272, 'se': 0.033410615988256155, 'p_any': 0.8975, 'P90': 25.638426813494632, 'p_exceed': 0.5981, 'E_cost': 50821.048140364735})
+
+EDGE/SHAPE/PERF CHECKS: 85   passed 83   failed 2
+  FAIL EDGE | PERT lambda = 0 rejected | None
+  FAIL OPTIONS | truncation is surfaced to the user in warnings or the exported report | warnings=['the preferred option changes with the random seed: the options are too close to separate at this number of iterations, so do not present the choice as firm']

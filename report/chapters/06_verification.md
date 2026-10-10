@@ -212,6 +212,57 @@ Fourteen of the seventeen were re-probed or have a named guard test that passed;
 
 On the "Cost, options & decision" screen at a viewport width of 1280 px, the number fields for the response costs and the deadline are too narrow for their values. A measurement in the page shows the deadline field (value 20) with a client width of 20 px and a content width of 41 px, and the cost fields (value 6000) 37 px wide against 56 px of content, so the digits are cut off (Figure 5.11 shows "60" for 6,000 and an empty-looking deadline). The stored values are correct and are the ones used in the analysis; the display misleads the user about what is entered. This is a usability defect in a part of the tool that decides on money. It is not fixed, and it is listed with the known defects below.
 
+### 6.7.4 Independent validation and bug testing, 9 October 2026
+
+A further check was made on 9 October 2026 against the repository head. Its references were built without reading the tool's output: closed-form formulas; an exact distribution of the project duration by grid convolution (step 0.005 days, fast Fourier transform); a 20-million-draw simulation in plain numpy; and a bivariate-normal probability for the occurrence correlation. The inputs were the ILLUSTRATIVE example (planned duration 16 days, deadline 20 days, delay cost 8,000 INR per day, liquidated damages 5,000 INR per day, seven risks, six candidate responses); these are placeholders, so the checks show that the arithmetic is right, not that the numbers describe a site. The scripts, their first-run outputs and their post-fix re-runs are in `report/scripts/validation_2026-10-09/`.
+
+**Test count.** The 513 passed quoted in Section 6.2 and Appendix E is the run of 8 October. At the repository head on 9 October, before any fix, the suite gave 522 passed and 3 skipped, because a file of nine chart tests (`test_analysis_charts.py`) had been added. After the fixes below it gives 554 passed and 3 skipped (557 collected, 0 failed), including 32 new regression tests in `tests/test_validation_fixes.py`. Table 6.1 and Appendix E Table E.1 keep the 8 October run; Table E.3 gives the later one.
+
+**Table 6.5.** Results of the 9 October validation, before and after the fixes. Source: `report/scripts/validation_2026-10-09/` (Derived Calculation from the script outputs).
+
+| Test set | Checks | Passed before | Passed after | Cause of the failures before |
+|---|---|---|---|---|
+| Hand and exact calculation (`v1`) | 242 | 239 | 240 | Two P90 differences of 0.049 and 0.051 days at n = 200,000 (sampling noise, below); one example file out of date (F6, fixed) |
+| Command-line, API, front-end and packaging flows (`v2`) | 86 | 79 | 85 | Six failures of `analyze` on a bad file (F1, fixed); one wrong expectation of the test script |
+| Edge cases, wrong-shape inputs, performance (`v4`) | 85 | 68 | 83 | n = 1 (F4) and 14 wrong-shape inputs (F2, F3), all fixed; two wrong expectations of the test script |
+| Fuzzing (`v3`) | 7,700 mutated inputs | 12 unhandled errors | 0 | Wrong-type containers and mixed-type evidence ids in the analysis (F2, F3) |
+| Invariants on random valid cases (`v3`) | 140 | 140 | 140 | None |
+
+**What agreed.** For all ten distribution shapes tried (PERT with the mode at either end and with lambda = 6, triangular, uniform, fixed), the tool's mean and variance equalled the closed form to six decimals and a numerical integral. The event expected monetary value, p x E[D] x 8,000, equalled the hand value for all seven risks; the total expected delay was 5.13833 days (variance 10.79384) and the probability of any delay 0.90418 by hand and by tool. The classification into the 5 x 5 matrix matched on the seven example risks and on an exhaustive grid (0 of 20,010 probability-class and 0 of 20,004 impact-class mismatches, 0 of 25 level mismatches); the independent rule evaluator fired the same 7 of 22 rules; and the literature seed re-ranked into five classes of six with no mismatch. The Gaussian-copula joint probability agreed with the bivariate-normal value to within 0.0003 at correlations of -0.5, 0, 0.6 and 0.95. The six per-response net benefits agreed to the rupee.
+
+The exact distribution gives, for accepting the risk, a P90 duration of 25.568 days, a probability of finishing after day 20 of 0.6019 and an expected cost of 50,792.7 INR. At n = 10,000 and seed 12345 the tool gave 25.638 days, 0.5981 and 50,821 INR, which are the figures already printed in `report/tables/hand_check_output.txt` and reproduced by the current code.
+
+**Table 6.6.** The five lowest total expected costs among the 23 options, from the exact distribution (INR). The tool chose the same first option at n = 10,000 and n = 200,000. Source: `v1_output.txt` (Derived Calculation).
+
+| Option | Total expected cost (INR) |
+|---|---|
+| O-M-BUF+M-QC | 43,992 |
+| O-M-BUF+M-COV+M-QC | 44,180 |
+| O-M-BUF | 45,008 |
+| O-M-BUF+M-COV | 45,163 |
+| O-M-SUP+M-QC | 46,808 |
+
+The gap between the first and second option is 187.7 INR, which is small against the cost scale: the choice between them is not firm, and the tool's seed-stability check exists for this reason. When the delay cost was scaled from 0.25 to 4 times, the tool's preferred option equalled the exact optimum at every scale (accept at 0.25; O-M-BUF+M-QC from 0.5 to 1; O-M-BUF+M-COV+M-QC from 1.5 to 4).
+
+**The two P90 differences.** At n = 200,000 the exact P90 duration lay 0.049 and 0.051 days outside the tool's 95% interval for two options. A 20-million-draw reference and a test over 100 independent seeds found no bias in the P90; over 200 seeds of 10,000 draws the mean z-score was -0.037 (expected 0, standard error 0.07) and the interval covered the exact mean in 93.5% of runs. One miss in 23 options at 95% is expected by chance, and the largest option-cost z-score at n = 200,000 was 2.97 for one option (1.04 with a second seed). These are treated as sampling noise, not defects.
+
+**Defects found and fixed.** Six defects were found. None changed a number for a valid case; all concerned the handling of invalid or extreme input. They are fixed on branch `fix/validation-f1-f6`.
+
+**Table 6.7.** Defects of the 9 October validation. Source: `report/scripts/validation_2026-10-09/`; regression tests in `tests/test_validation_fixes.py`.
+
+| ID | Where | Problem found | Fix | Status |
+|---|---|---|---|---|
+| F1 | `app/cli.py`, `analyze` | A missing, empty, invalid, UTF-16, binary or folder case file ended in a Python traceback (6 of 6 cases); `run` handled the same files cleanly | `analyze` uses the same loader and error handling as `run` | Implemented and tested |
+| F2 | `app/analysis.py` | A wrong-type container (a number or true for `mitigations`, `options`, `secondary_risks`; a number or list for `constraints`, `simulation`; a number for `simulation.correlation`) raised an unhandled error; 14 of 19 shapes | Each container is type-checked and reported as a case problem | Implemented and tested |
+| F3 | `app/analysis.py`, `app/engine/decision.py` | Mixed-type or nested evidence ids failed when sorted; a bare string was split into characters | Ids are converted to text; a bare string is one id | Implemented and tested |
+| F4 | `app/engine/simulation.py`, `convergence()` | For n below 10 the checkpoints were empty; n = 1 raised an error | At least one draw per checkpoint | Implemented and tested |
+| F5 | `app/engine/simulation.py`, `simulate()` | Two risk ids with the same CRC32 would share one random stream and become perfectly correlated (probability about 2 x 10^-7 for 46 risks; none in the library) | The simulation refuses such ids and asks for a rename. The hash was not changed, because that would change every seeded result in this report | Implemented and tested |
+| F6 | `examples/example_analysis_case.json` | The file differed from the function that generates the example | Regenerated; a test compares the two | Implemented and tested |
+
+One limit was documented and not changed (F7): automatic option generation stops at combinations of three responses and 40 options, and the report prints this when it applies. In a stress case an explicitly entered seven-response option cost 11,226 INR against 60,068 INR for the best automatic option.
+
+**What this did not cover.** The Qt window and the Windows executables were not run, because PySide6 could not be installed in the environment; the browser front end was checked for syntax and references, not operated by a person; the legacy productivity and India-norm modules had a light check only; and no coverage tool was available. This is verification of the software. It is not validation against a site, and it does not change the findings of Section 6.10.
+
 ## 6.8 Audit findings and what was corrected
 
 ### 6.8.1 The audit
@@ -263,6 +314,7 @@ This section lists what is known to be wrong or unfinished, so that nothing in t
 6. The Windows executables and the Qt desktop window were not built or run in this verification (Section 5.11.2).
 7. Retrieval is lexical; no test measures how good the retrieved records are, and the guard is pattern-based (Section 5.8.4).
 8. The `explain` module with guard rule G6, and 13 test functions of the earlier decision features, are not exposed or run.
+9. Automatic option generation stops at three responses and 40 options (F7, Section 6.7.4); the user can enter larger options by hand.
 
 **Deferred decisions** (Audit_Corrections section 6 and Handoff section 9): an event-or-condition tag on library risks; merging and removing risks (R-TRN into R-SKILL, R-OVT with R-FAT, removal of R-PRD), which would change the seed mapping and every band; renaming risks into site language; the uncoloured-tier display and dropping the +1 step; entering the 34 omitted A14 factors; a second-coder check of the mappings (F12); handling of the truncated M01 table (F13); updating the stale `existence_evidence` of core risks (F16); recomputing M14 on its stated scale (V-M14); the sensitivity table of thresholds in the interface; the title-versus-scope decision (F07); the real title of HAS25 and the details of A15 (V-A15, V-HAS25).
 
@@ -281,4 +333,4 @@ The verification stops where the evidence stops. The following were not done, an
 
 ## 6.11 Summary
 
-The automated suite passes (513 passed, 3 skipped for missing optional data, 0 failed, 516 collected), but more than half of it guards defects that were found and fixed, and under a tenth covers out-of-scope code. For the ILLUSTRATIVE example, an independent calculation reproduces every matrix cell, the nine fired rules, the tier arithmetic and the closed-form delay and EMV, and a second simulator agrees with the Monte Carlo layer within sampling error. Fuzz and QA probing found 17 defects, most of which are now fixed and guarded by tests, and this verification found one more, a display defect in the decision screen. The audit confirmed that the transcribed survey values match the papers and corrected a set of over-claims about what the seed shows. The tool has not been evaluated by experts or users, has not been run on any real project, and its Windows builds were not exercised here; those gaps limit what can be concluded about its worth, and they are the main limitations carried into Chapter 7.
+The automated suite passes (513 passed on 8 October and 554 passed on 9 October, after the fixes of Section 6.7.4; 3 skipped for missing optional data, 0 failed), but more than half of it guards defects that were found and fixed, and under a tenth covers out-of-scope code. For the ILLUSTRATIVE example, an independent calculation reproduces every matrix cell, the nine fired rules, the tier arithmetic and the closed-form delay and EMV, and a second simulator agrees with the Monte Carlo layer within sampling error. A further independent validation on 9 October (Section 6.7.4) reproduced the closed-form figures and the exact option costs, and found six input-handling defects, now fixed. Fuzz and QA probing found 17 defects, most of which are now fixed and guarded by tests, and this verification found one more, a display defect in the decision screen. The audit confirmed that the transcribed survey values match the papers and corrected a set of over-claims about what the seed shows. The tool has not been evaluated by experts or users, has not been run on any real project, and its Windows builds were not exercised here; those gaps limit what can be concluded about its worth, and they are the main limitations carried into Chapter 7.

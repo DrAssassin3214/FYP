@@ -1,0 +1,14 @@
+[run_case(example register)] 4000 mutations: {'CaseError': 2245, 'ok': 1755}
+[run_case(example analysis case)] 3000 mutations: {'CaseError': 1058, 'ok': 1942}
+[run_analysis(n=300)] 700 mutations: {'ok': 271, 'CaseError': 429}
+fuzz time 166s
+
+== unique unhandled/odd outcomes in run_case_register: 0
+
+== unique unhandled/odd outcomes in run_case_analysis: 0
+
+== unique unhandled/odd outcomes in run_analysis: 0
+
+== Invariants on random valid cases
+random valid cases: 140; ran ok 140; rejected by CaseError 0; unhandled 0; time 52s
+  all invariants held on every case

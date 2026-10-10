@@ -1,0 +1,30 @@
+[run_case(example register)] 4000 mutations: {'CaseError': 2245, 'ok': 1755}
+[run_case(example analysis case)] 3000 mutations: {'CaseError': 1058, 'ok': 1942}
+[run_analysis(n=300)] 700 mutations: {'ok': 270, 'CaseError': 418, 'UNHANDLED TypeError': 12}
+fuzz time 171s
+
+== unique unhandled/odd outcomes in run_case_register: 0
+
+== unique unhandled/odd outcomes in run_case_analysis: 0
+
+== unique unhandled/odd outcomes in run_analysis: 8
+  - unhandled TypeError | '<' not supported between instances of 'float' and 'str'
+    tb: /decision.py", line 96, in evaluate_option |     "evidence_ids": sorted({e for m in mits for e in m.evidence_ids}), |                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: '<' not supported between instances of 'float' and 'str' | 
+  - unhandled TypeError | unhashable type: 'dict'
+    tb: ^^^^^^^^^^^^^^^^^^^^ |   File "/home/claude/drassassin3214/fyp/app/engine/decision.py", line 96, in evaluate_option |     "evidence_ids": sorted({e for m in mits for e in m.evidence_ids}), |                             ^ | TypeError: unhashable type: 'dict' | 
+  - unhandled TypeError | 'int' object is not iterable
+    tb: ems, ids) |   File "/home/claude/drassassin3214/fyp/app/analysis.py", line 128, in _mitigation |     for j, s in enumerate(d.get("secondary_risks") or []): |                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: 'int' object is not iterable | 
+  - unhandled TypeError | unhashable type: 'list'
+    tb: ^^^^^^^^^^^^^^^^^^^^ |   File "/home/claude/drassassin3214/fyp/app/engine/decision.py", line 96, in evaluate_option |     "evidence_ids": sorted({e for m in mits for e in m.evidence_ids}), |                             ^ | TypeError: unhashable type: 'list' | 
+  - unhandled TypeError | 'float' object is not iterable
+    tb: ne 155, in _mitigation |     feasible, str(d.get("infeasible_reason") or ""), tti, tuple(d.get("evidence_ids") or ()), |                                                           ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: 'float' object is not iterable | 
+  - unhandled TypeError | '<' not supported between instances of 'int' and 'str'
+    tb: ne/decision.py", line 96, in evaluate_option |     "evidence_ids": sorted({e for m in mits for e in m.evidence_ids}), |                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: '<' not supported between instances of 'int' and 'str' | 
+  - unhandled TypeError | 'int' object is not iterable
+    tb: line 155, in _mitigation |     feasible, str(d.get("infeasible_reason") or ""), tti, tuple(d.get("evidence_ids") or ()), |                                                           ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: 'int' object is not iterable | 
+  - unhandled TypeError | 'bool' object is not iterable
+    tb: se) |   File "/home/claude/drassassin3214/fyp/app/analysis.py", line 267, in parse_analysis |     for i, raw in enumerate(case.get("mitigations") or []): |                   ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | TypeError: 'bool' object is not iterable | 
+
+== Invariants on random valid cases
+random valid cases: 140; ran ok 140; rejected by CaseError 0; unhandled 0; time 53s
+  all invariants held on every case

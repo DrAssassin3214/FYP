@@ -92,6 +92,45 @@ def _opt_number(d: Mapping, key: str, where: str, problems: list[str], lo: float
     return f
 
 
+def _as_list(v, where: str, problems: list) -> list:
+    """A JSON list, or [] when absent.  Any other type is reported, never iterated (a number or true would crash)."""
+    if v is None:
+        return []
+    if isinstance(v, (list, tuple)):
+        return list(v)
+    problems.append(f"{where}: expected a list")
+    return []
+
+
+def _as_map(v, where: str, problems: list) -> Mapping:
+    """A JSON object, or {} when absent.  Any other type is reported, never read with .get()."""
+    if v is None:
+        return {}
+    if isinstance(v, Mapping):
+        return v
+    problems.append(f"{where}: expected an object")
+    return {}
+
+
+def _evidence_ids(v, where: str, problems: list) -> tuple:
+    """Evidence ids as strings.  A bare string is one id (not its characters)."""
+    if v is None:
+        return ()
+    if isinstance(v, str):
+        return (v,) if v.strip() else ()
+    if not isinstance(v, (list, tuple)):
+        problems.append(f"{where}.evidence_ids: expected a list of ids")
+        return ()
+    out = []
+    for e in v:
+        if isinstance(e, (str, int)) and not isinstance(e, bool):
+            out.append(str(e))
+        else:
+            problems.append(f"{where}.evidence_ids: each id must be text or a whole number")
+            return ()
+    return tuple(out)
+
+
 def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str]) -> Optional[Mitigation]:
     mid = d.get("id")
     if _blank(mid):
@@ -125,7 +164,7 @@ def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str])
         delay_after = _dist(da, f"{where} ({mid}).delay_after", problems)
 
     secondary: list[Risk] = []
-    for j, s in enumerate(d.get("secondary_risks") or []):
+    for j, s in enumerate(_as_list(d.get("secondary_risks"), f"{where} ({mid}).secondary_risks", problems)):
         if not isinstance(s, Mapping):
             problems.append(f"{where} ({mid}).secondary_risks[{j}]: expected an object")
             continue
@@ -149,10 +188,11 @@ def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str])
         problems.append(f"{where} ({mid}).feasible: expected true or false")
         feasible = True
     tti = _opt_number(d, "time_to_implement_days", f"{where} ({mid})", problems, 0.0) or 0.0
+    evidence = _evidence_ids(d.get("evidence_ids"), f"{where} ({mid})", problems)
     if len(problems) > n0 or cost is None:
         return None
     m = Mitigation(mid, str(rid), str(d.get("action") or mid), strategy, cost, p_after, delay_after, tuple(secondary),
-                   feasible, str(d.get("infeasible_reason") or ""), tti, tuple(d.get("evidence_ids") or ()),
+                   feasible, str(d.get("infeasible_reason") or ""), tti, evidence,
                    str(d.get("mechanism") or ""), str(d.get("catalogue_id") or ""))
     try:
         m.validate()
@@ -233,7 +273,7 @@ def parse_analysis(case: Mapping) -> dict:
             cost = CostModel(cdp, str(c.get("currency") or "INR"), ldp)
 
     # simulation settings
-    sim = case.get("simulation") or {}
+    sim = _as_map(case.get("simulation"), "simulation", problems)
     n = _int_setting(sim, "n", DEFAULT_N, 1, MAX_N, problems)
     seed = _int_setting(sim, "seed", DEFAULT_SEED, 0, 2**31 - 1, problems)
     criterion = sim.get("criterion") or "min_expected_total_cost"
@@ -243,7 +283,7 @@ def parse_analysis(case: Mapping) -> dict:
         problems.append("simulation.criterion: 'min_deadline_exceedance' needs activity.deadline_days")
     ids = {r.risk_id for r in risks}
     corr: dict[tuple[str, str], float] = {}
-    for i, row in enumerate(sim.get("correlation") or []):
+    for i, row in enumerate(_as_list(sim.get("correlation"), "simulation.correlation", problems)):
         w = f"simulation.correlation[{i}]"
         if not isinstance(row, Mapping) or _blank(row.get("a")) or _blank(row.get("b")) or _blank(row.get("rho")):
             problems.append(f"{w}: expected a, b and rho")
@@ -264,7 +304,7 @@ def parse_analysis(case: Mapping) -> dict:
     # mitigations
     mits: list[Mitigation] = []
     seen: set[str] = set()
-    for i, raw in enumerate(case.get("mitigations") or []):
+    for i, raw in enumerate(_as_list(case.get("mitigations"), "mitigations", problems)):
         if not isinstance(raw, Mapping):
             problems.append(f"mitigations[{i}]: expected an object")
             continue
@@ -285,7 +325,7 @@ def parse_analysis(case: Mapping) -> dict:
     # options and constraints
     options: list[Option] = []
     oids: set[str] = set()
-    for i, raw in enumerate(case.get("options") or []):
+    for i, raw in enumerate(_as_list(case.get("options"), "options", problems)):
         w = f"options[{i}]"
         if not isinstance(raw, Mapping) or _blank(raw.get("id")):
             problems.append(f"{w}: id is required")
@@ -295,7 +335,7 @@ def parse_analysis(case: Mapping) -> dict:
             problems.append(f"{w}: duplicate option id '{oid}'")
             continue
         oids.add(oid)
-        mids = [str(x) for x in (raw.get("mitigation_ids") or [])]
+        mids = [str(x) for x in _as_list(raw.get("mitigation_ids"), f"{w} ({oid}).mitigation_ids", problems)]
         unknown = [x for x in mids if x not in by_id]
         if unknown:
             problems.append(f"{w} ({oid}): unknown or invalid mitigation(s): {', '.join(unknown)}")
@@ -306,7 +346,7 @@ def parse_analysis(case: Mapping) -> dict:
             continue
         options.append(Option(oid, str(raw.get("label") or oid), tuple(mids)))
 
-    con = case.get("constraints") or {}
+    con = _as_map(case.get("constraints"), "constraints", problems)
     max_p = _opt_number(con, "max_p_exceed_deadline", "constraints", problems, 0.0, 1.0)
     budget = _opt_number(con, "max_mitigation_budget", "constraints", problems, 0.0)
     if max_p is not None and deadline is None:

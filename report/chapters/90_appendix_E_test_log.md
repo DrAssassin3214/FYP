@@ -59,3 +59,34 @@ Two further files, `tests/test_explain.py` and `tests/test_india_norms.py`, are 
 ## E.2 Known defects not covered by the suite
 
 The engine audit of 2026-10-08 (`docs/Audit_Corrections_2026-10-08.md`, section 4) lists defects that were reported and, for the items marked FIXED in section 6 of that file, repaired and tested after the committee review. Items still marked "needs code change" there (for example H1, the CLI JSON writer accepting NaN; M1, booleans accepted as numbers; M2, M3, M5, M6, M8, M9 and L1 to L14 except those listed as fixed) are not guaranteed by this test log. Several of the test files named above (for example `test_validation_hardening.py`) were written after the audit and pin the repaired behaviour. This list is the one to re-check before any release of the tool.
+
+## E.3 Update of 9 October 2026
+
+The run above is that of 8 October. On 9 October, after the defect fixes of Section 6.7.4, the suite was run again with `python -m pytest tests -v` (Python 3.13, pytest 9.1.1) from the repository root. The result was **554 passed, 3 skipped in 44.9 s**: 557 tests in 19 files, 0 failed. The full log is `report/scripts/validation_2026-10-09/pytest_v_final.txt`. Two files are new since the table above: `test_analysis_charts.py` (9 tests, present at the repository head before the fixes) and `test_validation_fixes.py` (32 tests, one group per fix F1 to F6). The three skipped tests and their reasons are unchanged (Table E.2).
+
+**Table E.3.** Test results by file, 9 October 2026. Source: `pytest -v` run after the fixes (Derived Calculation from the log).
+
+| Test file | Tests | Passed | Skipped | Failed |
+|---|---|---|---|---|
+| test_ai_guard.py | 10 | 10 | 0 | 0 |
+| test_analysis.py | 29 | 29 | 0 | 0 |
+| test_analysis_charts.py | 9 | 9 | 0 | 0 |
+| test_corpus.py | 13 | 10 | 3 | 0 |
+| test_engine.py | 32 | 32 | 0 | 0 |
+| test_export_api_hardening.py | 129 | 129 | 0 | 0 |
+| test_gui_api.py | 14 | 14 | 0 | 0 |
+| test_gui_settings_api.py | 12 | 12 | 0 | 0 |
+| test_gui_static.py | 3 | 3 | 0 | 0 |
+| test_legacy_hardening.py | 26 | 26 | 0 | 0 |
+| test_options.py | 17 | 17 | 0 | 0 |
+| test_productivity.py | 13 | 13 | 0 | 0 |
+| test_relevance_guard.py | 14 | 14 | 0 | 0 |
+| test_report.py | 1 | 1 | 0 | 0 |
+| test_rules.py | 5 | 5 | 0 | 0 |
+| test_service.py | 42 | 42 | 0 | 0 |
+| test_settings.py | 16 | 16 | 0 | 0 |
+| test_validation_fixes.py | 32 | 32 | 0 | 0 |
+| test_validation_hardening.py | 140 | 140 | 0 | 0 |
+| **Total** | **557** | **554** | **3** | **0** |
+
+On 10 October 2026, after the manual-check export was added (`app/reporting/manual_check.py`, command `manual-check`, route `/api/manual-check-xlsx`), `python -m pytest tests -q` gave 561 passed and 3 skipped. The 7 added tests are in `tests/test_manual_check.py`. The totals in Table E.3 are those of 9 October and are not changed.

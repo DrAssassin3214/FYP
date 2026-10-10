@@ -1,0 +1,102 @@
+PASS [CLI] template prints valid JSON, exit 0
+PASS [CLI] example prints valid JSON, exit 0
+PASS [CLI] example-analysis prints valid JSON, exit 0
+PASS [CLI] run example writes register.md/.csv/result.json, exit 0
+PASS [CLI] register.csv parses and has one row per risk + header
+PASS [CLI] analyze example writes analysis.md/.json, exit 0, prints a command
+   analyze took 3.6s; output head: "AUTHORIZE MITIGATION: Under the criterion 'minimum total expected cost  TEC = C_mitigation + E[C_residual]', 'Buffer stock of bricks and mor"
+PASS [CLI] run shipped examples/example_case.json -> exit 0
+PASS [CLI] analyze shipped examples/example_analysis_case.json -> exit 0
+   shipped analysis example notes: ["note: impact bin edges have no Source (add impact_bin_edges_source); exports print 'Source: not given'"]
+PASS [CLI-errors] run: missing file
+FAIL [CLI-errors] analyze: missing file  -> exit 1; stderr tail: FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/does_not_exist.json
+PASS [CLI-errors] run: empty file
+FAIL [CLI-errors] analyze: empty file  -> exit 1; stderr tail: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+PASS [CLI-errors] run: invalid JSON
+FAIL [CLI-errors] analyze: invalid JSON  -> exit 1; stderr tail: json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+PASS [CLI-errors] run: JSON array
+PASS [CLI-errors] analyze: JSON array
+PASS [CLI-errors] run: UTF-16 file
+FAIL [CLI-errors] analyze: UTF-16 file  -> exit 1; stderr tail: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+PASS [CLI-errors] run: binary garbage
+FAIL [CLI-errors] analyze: binary garbage  -> exit 1; stderr tail: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+PASS [CLI-errors] run: a folder
+FAIL [CLI-errors] analyze: a folder  -> exit 1; stderr tail: IsADirectoryError: [Errno 21] Is a directory: '/tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/dir.json'
+PASS [CLI-errors] run: p = 7 (out of range)
+PASS [CLI-errors] analyze: p = 7 (out of range)
+PASS [CLI-errors] run: JSON null
+PASS [CLI-errors] analyze: JSON null
+PASS [CLI-errors] run: JSON number
+PASS [CLI-errors] analyze: JSON number
+FAIL [CLI-errors] run: analysis case without cost model  -> exit 0; stderr tail: (none)
+PASS [CLI-errors] analyze: analysis case without cost model
+PASS [CLI-errors] no arguments -> usage error (exit 2), no traceback
+PASS [CLI-errors] unknown command -> exit 2, no traceback
+PASS [CLI-errors] --out pointing at a file -> clean error
+PASS [API-GET] GET /
+PASS [API-GET] GET /favicon.ico
+PASS [API-GET] GET /api/health
+PASS [API-GET] GET /api/meta
+PASS [API-GET] GET /api/template
+PASS [API-GET] GET /api/example
+PASS [API-GET] GET /api/risk-library
+PASS [API-GET] GET /api/rules
+PASS [API-GET] GET /api/evidence
+PASS [API-GET] GET /api/evidence?ids=M01,ZZZ
+PASS [API-GET] GET /api/evidence?q=brick
+PASS [API-GET] GET /api/settings
+PASS [API-GET] GET /api/mitigation-catalogue
+PASS [API-GET] GET /api/example-analysis
+PASS [API-GET] unknown /api path -> 404 JSON
+PASS [API-GET] GET on a POST-only route -> 405 JSON
+PASS [API-SEC] foreign Host header rejected (DNS-rebinding guard) -> 403
+PASS [API-SEC] Host: localhost accepted
+PASS [API-SEC] Host: 127.0.0.1.evil.com rejected
+PASS [API-SEC] GET /api/settings never returns a raw key field
+PASS [API-FLOW] validate example -> ok
+PASS [API-FLOW] run example -> 7 risks on matrix
+PASS [API-FLOW] report.md download
+PASS [API-FLOW] register.csv has BOM + header
+PASS [API-FLOW] matrix SVG is well-formed XML
+PASS [API-FLOW] report HTML download
+PASS [API-FLOW] analyze example-analysis -> command present
+   /api/analyze took 2.0s -> AUTHORIZE MITIGATION / O-M-BUF+M-QC
+PASS [API-FLOW] analysis.md download contains the command
+PASS [API-FLOW] analysis charts HTML contains embedded PNGs
+PASS [API-FLOW] suggest-risks offline retrieval -> ok
+PASS [API-ROBUST] 12 POST routes x 13 malformed bodies: no HTTP 5xx
+PASS [API-ROBUST] every 4xx error response is JSON (never an HTML page)
+PASS [API-ROBUST] 21 MB body -> 413 JSON
+PASS [API-ROBUST] 120 mutated analysis cases via /api/analyze: no 5xx, JSON errors only
+PASS [API-ROBUST] /api/analyze response is strict JSON (no NaN/Infinity tokens)
+PASS [FRONTEND] index.html: all 4 /static references exist
+PASS [FRONTEND] every /api path called from JS (17) exists as a Flask route
+PASS [FRONTEND] all relative ES-module imports resolve to files
+PASS [FRONTEND] node --check: all 23 JS modules parse
+PASS [PACKAGING] launcher / Qt wrapper files parse (PySide6 itself NOT installed here: Qt window not executed)
+PASS [PACKAGING] gui.qt_app imports without PySide6 (imports must be lazy so --help / tests work)
+PASS [PACKAGING] fyp_gui.spec: data paths exist (4 found)
+PASS [PACKAGING] fyp_desktop.spec: data paths exist (4 found)
+PASS [PACKAGING] third-party imports in app/ and gui/ (['PySide6', 'flask', 'matplotlib', 'numpy', 'openpyxl', 'scipy', 'werkzeug']) are all listed in requirements*.txt
+PASS [PACKAGING] GitHub workflow YAML parses
+PASS [DATA] data/india_labour_norms.json is valid JSON
+PASS [DATA] data/literature_seed.json is valid JSON
+PASS [DATA] data/mitigation_catalogue.json is valid JSON
+PASS [DATA] data/productivity_models.json is valid JSON
+PASS [DATA] data/risk_library_masonry.json is valid JSON
+PASS [DATA] data/rules_masonry.json is valid JSON
+PASS [DATA] data/screening_report.json is valid JSON
+PASS [DATA] Literature_Evidence_Package.xlsx present (evidence store source)
+
+FLOW CHECKS: 86   passed 79   failed 7
+  FAIL CLI-errors | analyze: missing file | exit 1; stderr tail: FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/does_not_exist.json
+  FAIL CLI-errors | analyze: empty file | exit 1; stderr tail: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+  FAIL CLI-errors | analyze: invalid JSON | exit 1; stderr tail: json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+  FAIL CLI-errors | analyze: UTF-16 file | exit 1; stderr tail: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+  FAIL CLI-errors | analyze: binary garbage | exit 1; stderr tail: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+  FAIL CLI-errors | analyze: a folder | exit 1; stderr tail: IsADirectoryError: [Errno 21] Is a directory: '/tmp/claude-0/-home-claude/94413c1b-7fbd-5ab6-a3cb-d453cb325aed/scratchpad/flow_tmp/dir.json'
+  FAIL CLI-errors | run: analysis case without cost model | exit 0; stderr tail: (none)
+
+real	0m51.720s
+user	0m48.906s
+sys	0m1.394s

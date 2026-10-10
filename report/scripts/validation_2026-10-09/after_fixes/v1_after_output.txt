@@ -1,0 +1,76 @@
+inputs: T0=16 deadline=20 Cd=8000 LD=5000 risks=['R-MAT', 'R-LAB', 'R-RWK', 'R-WX', 'R-PLAN', 'R-SAFE', 'R-SKILL']
+
+== V1: distribution moments (hand closed form vs tool vs independent numerical integration)
+  PERT(1,3,8)          mean hand 3.500000 tool 3.500000 quad 3.500000 | var hand 1.607143 tool 1.607143 quad 1.607143 | cdf-roundtrip 9.99e-16
+  PERT(1,2,6)          mean hand 2.500000 tool 2.500000 quad 2.500000 | var hand 0.750000 tool 0.750000 quad 0.750000 | cdf-roundtrip 9.99e-16
+  PERT(0,1,3)          mean hand 1.166667 tool 1.166667 quad 1.166667 | var hand 0.305556 tool 0.305556 quad 0.305556 | cdf-roundtrip 1.11e-15
+  PERT(1,3,8) lam=6    mean hand 3.375000 tool 3.375000 quad 3.375000 | var hand 1.220486 tool 1.220486 quad 1.220486 | cdf-roundtrip 1.11e-15
+  PERT(2,2,9) m=a      mean hand 3.166667 tool 3.166667 quad 3.166667 | var hand 0.972222 tool 0.972222 quad 0.972222 | cdf-roundtrip 2.78e-16
+  PERT(2,9,9) m=b      mean hand 7.833333 tool 7.833333 quad 7.833333 | var hand 0.972222 tool 0.972222 quad 0.972222 | cdf-roundtrip 1.33e-15
+  Triangular(1,3,8)    mean hand 4.000000 tool 4.000000 quad 4.000000 | var hand 2.166667 tool 2.166667 quad 2.166667 | cdf-roundtrip 2.78e-16
+  Triangular(0,0,4)    mean hand 1.333333 tool 1.333333 quad 1.333333 | var hand 0.888889 tool 0.888889 quad 0.888889 | cdf-roundtrip 1.67e-16
+  Uniform(2,10)        mean hand 6.000000 tool 6.000000 quad 6.000000 | var hand 5.333333 tool 5.333333 quad 5.333333 | cdf-roundtrip 1.11e-16
+  Fixed(4)             mean hand 4.000000 tool 4.000000 quad 4.000000 | var hand 0.000000 tool 0.000000 quad 0.000000 | cdf-roundtrip 0.00e+00
+
+== V2: per-risk mean, EMV, expected delay, variance (hand vs tool)
+  R-MAT    p=0.5   a/m/b=1/3/8  mean hand 3.5000 tool 3.5000 | EMV hand   14000.00 tool   14000.00
+  R-LAB    p=0.35  a/m/b=1/2/6  mean hand 2.5000 tool 2.5000 | EMV hand    7000.00 tool    7000.00
+  R-RWK    p=0.25  a/m/b=1/2/5  mean hand 2.3333 tool 2.3333 | EMV hand    4666.67 tool    4666.67
+  R-WX     p=0.2   a/m/b=1/2/7  mean hand 2.6667 tool 2.6667 | EMV hand    4266.67 tool    4266.67
+  R-PLAN   p=0.1   a/m/b=1/1/3  mean hand 1.3333 tool 1.3333 | EMV hand    1066.67 tool    1066.67
+  R-SAFE   p=0.3   a/m/b=1/2/6  mean hand 2.5000 tool 2.5000 | EMV hand    6000.00 tool    6000.00
+  R-SKILL  p=0.22  a/m/b=1/2/5  mean hand 2.3333 tool 2.3333 | EMV hand    4106.67 tool    4106.67
+  total: E[delay] hand 5.13833 tool 5.13833; Var hand 10.79384 tool 10.79384; sum EMV hand 41106.67; P(any) hand 0.90418
+
+== V3: exact distribution by grid convolution (H = 0.005 d), all options
+  ACCEPT exact: E[delay] 5.13833 (closed form 5.13833)  P90 25.568  P(T>20) 0.6019  E[LD days] 1.9372  E[cost] 50792.7
+  options hand-computed: 23; best by hand (feasible only): O-M-BUF+M-QC  TEC 43992.1
+  tool run time: n=10k 1.9s  n=200k 20.0s
+  second seed (2024, n=200k): max |z| 1.04, mean z +0.35, worst ('O-M-SUP+M-GANG', 1.03830688965353)
+  option z-scores seed 12345 (n=200k): [(2.97, 'O-M-BUF+M-GANG+M-COV'), (2.9, 'O-M-BUF+M-COV'), (2.64, 'O-M-SUP+M-GANG+M-COV'), (2.62, 'O-M-SUP+M-COV')]
+  max |z| of TEC vs exact: n=10k 0.87   n=200k 2.97
+  decision: hand-best O-M-BUF+M-QC; tool(n=10k) O-M-BUF+M-QC [AUTHORIZE MITIGATION]; tool(n=200k) O-M-BUF+M-QC [AUTHORIZE MITIGATION]
+  top-5 by hand: [('O-M-BUF+M-QC', 43992), ('O-M-BUF+M-COV+M-QC', 44180), ('O-M-BUF', 45008), ('O-M-BUF+M-COV', 45163), ('O-M-SUP+M-QC', 46808)]  gap 1st-2nd: 187.7
+
+== V4: per-mitigation net benefit and break-even (hand vs tool)
+  M-BUF   on R-MAT  : EMV before   14000.0 after    5600.0 secondary      0.0 cost    6000 -> net hand    2400.0 tool    2400.0  pays(tool)=True
+  M-SUP   on R-MAT  : EMV before   14000.0 after    9800.0 secondary      0.0 cost    3000 -> net hand    1200.0 tool    1200.0  pays(tool)=True
+  M-GANG  on R-LAB  : EMV before    7000.0 after    3266.7 secondary   2400.0 cost    9000 -> net hand   -7666.7 tool   -7666.7  pays(tool)=False
+  M-COV   on R-WX   : EMV before    4266.7 after    2560.0 secondary      0.0 cost    2500 -> net hand    -793.3 tool    -793.3  pays(tool)=False
+  M-QC    on R-RWK  : EMV before    4666.7 after    2800.0 secondary      0.0 cost    1500 -> net hand     366.7 tool     366.7  pays(tool)=True
+  M-MECH  on R-SKILL: EMV before    4106.7 after    1866.7 secondary      0.0 cost    4000 -> net hand   -1760.0 tool   -1760.0  pays(tool)=False
+
+== V5: matrix classification (hand function vs tool): example risks + exhaustive grid + edge hits
+  R-MAT    p=0.5   mean=3.5000 ratio=0.2188 -> pc 3 ic 5 score 15 High     | tool 3 5 15 High  OK
+  R-LAB    p=0.35  mean=2.5000 ratio=0.1562 -> pc 2 ic 4 score  8 Moderate | tool 2 4  8 Moderate  OK
+  R-RWK    p=0.25  mean=2.3333 ratio=0.1458 -> pc 2 ic 4 score  8 Moderate | tool 2 4  8 Moderate  OK
+  R-WX     p=0.2   mean=2.6667 ratio=0.1667 -> pc 2 ic 4 score  8 Moderate | tool 2 4  8 Moderate  OK
+  R-PLAN   p=0.1   mean=1.3333 ratio=0.0833 -> pc 1 ic 3 score  3 Low      | tool 1 3  3 Low  OK
+  R-SAFE   p=0.3   mean=2.5000 ratio=0.1562 -> pc 2 ic 4 score  8 Moderate | tool 2 4  8 Moderate  OK
+  R-SKILL  p=0.22  mean=2.3333 ratio=0.1458 -> pc 2 ic 4 score  8 Moderate | tool 2 4  8 Moderate  OK
+  exact-edge impact classes (expect 2,3,4,5): (2, 3, 4, 5);  p-class mismatches 0/20010; impact mismatches 0/20004; level mismatches 0/25
+
+== V6: rule engine (independent evaluator over data/rules_masonry.json vs tool)
+  rules 22; fired by hand 9 / tool 9; per-risk levels hand {'R-LAB': 'elevated', 'R-MAT': 'elevated', 'R-WX': 'elevated', 'R-RWK': 'elevated', 'R-PLAN': 'elevated', 'R-SKILL': 'elevated'}
+
+== V7: literature-seed ranking and equal-count banding (independent recomputation from data/literature_seed.json)
+  seeded risks 30; class sizes {1: 6, 2: 6, 3: 6, 4: 6, 5: 6}; mismatches 0
+
+== V8: legacy productivity / India norms (hand vs tool)  [out of current scope, light check]
+
+== V9: statistical consistency over 200 independent seeds (n = 10,000 each)
+  mean: avg z -0.037 (expect ~0, SE 0.07), sd z 1.037 (expect ~1), 95% CI coverage 93.5%
+  P(any delay): avg z +0.021, sd z 0.914;  P90: hand value inside tool 95% CI in 92.5% of runs
+
+== V10: occurrence correlation (Gaussian copula) vs bivariate-normal probability
+  rho=-0.50: P(A&B) hand 0.0535 tool 0.0533; marginals 0.3992, 0.3002
+  rho=+0.00: P(A&B) hand 0.1200 tool 0.1201; marginals 0.3992, 0.3004
+  rho=+0.60: P(A&B) hand 0.2085 tool 0.2084; marginals 0.3992, 0.3002
+  rho=+0.95: P(A&B) hand 0.2872 tool 0.2869; marginals 0.3992, 0.2994
+
+== V11: shipped example JSON files equal the generator functions
+  example_case.json == service.example_case(): True;  example_analysis_case.json == example_analysis_case(): True
+
+TOTAL manual-validation checks: 242   passed: 240   failed: 2
+  FAIL V3-P90-O-M-BUF+M-COV P90 duration O-M-BUF+M-COV (n=200k): hand inside tool 95% CI (+0.02 d grid slack) hand 23.919274729593198 tool 23.967871228213905 diff 0.04859649862070725 tol 0.047727951967156276 
+  FAIL V3-P90-O-M-BUF+M-QC P90 duration O-M-BUF+M-QC (n=200k): hand inside tool 95% CI (+0.02 d grid slack) hand 23.92430861764248 tool 23.975330697264127 diff 0.051022079621645844 tol 0.04746321279347264 

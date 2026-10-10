@@ -1,0 +1,512 @@
+[
+ {
+  "area": "EDGE",
+  "test": "all p = 0: delay 0, P(any)=0, P90 = planned, cost 0, no NaN",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "EDGE",
+  "test": "all p = 0 and no mitigations -> 'NO RESPONSE EVALUATED' (not a false 'ACCEPT')",
+  "pass": true,
+  "detail": "NO RESPONSE EVALUATED"
+ },
+ {
+  "area": "EDGE",
+  "test": "p = 1, fixed delays 2+3: duration exactly 21, cost = 8000*5 + 1000*1 = 41000",
+  "pass": true,
+  "detail": "(21.0, 41000.0)"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 1 runs without error (std/CI degenerate cases)",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 200000 (upper limit) accepted",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 200001 rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.n: must be a whole number from 1 to 200000'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 0 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.n: must be a whole number from 1 to 200000'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = -5 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.n: must be a whole number from 1 to 200000'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 2.5 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.n: must be a whole number from 1 to 200000'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = 'x' rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', [\"simulation.n: 'x' is not a number\"])"
+ },
+ {
+  "area": "EDGE",
+  "test": "n = True rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.n: expected a whole number'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "seed = -1 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "seed = 2147483648 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "seed = 1.5 rejected cleanly",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.seed: must be a whole number from 0 to 2147483647'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "seed = 2^31-1 accepted",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "degenerate PERT a=m=b=2 -> every occurrence delays exactly 2 d",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "EDGE",
+  "test": "zero-delay risk: delay 0, P(any delay)=0",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "EDGE",
+  "test": "huge values (1e9 d, 1e12 INR/d): finite, strict JSON",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "p = 1e-12 runs; matrix class 1",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "PERT lambda extremes 1e6 and 1e-9 give finite results",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "PERT lambda = 0 rejected",
+  "pass": false,
+  "detail": "None"
+ },
+ {
+  "area": "EDGE",
+  "test": "a > m > b rejected",
+  "pass": true,
+  "detail": "('CaseError', ['risks[0].delay: require a <= m <= b'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "deadline < planned duration: LD charged on (baseline overrun + delay); E[cost] = LD*(6+E[D])",
+  "pass": true,
+  "detail": "(8493.809231025016, 8500.0)"
+ },
+ {
+  "area": "EDGE",
+  "test": "deadline == planned: P(exceed) equals P(any delay) = 1-(0.5)(0.7) = 0.65",
+  "pass": true,
+  "detail": "0.64973"
+ },
+ {
+  "area": "EDGE",
+  "test": "LD > 0 with no deadline rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['cost.ld_per_day_after_deadline: liquidated damages need activity.deadline_days'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "deadline = 0 rejected",
+  "pass": true,
+  "detail": "('CaseError', ['activity.deadline_days must be greater than 0'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "planned duration = 0 rejected",
+  "pass": true,
+  "detail": "('CaseError', ['activity.planned_duration_days must be greater than 0'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "empty risk register rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['no complete risk in the register: enter probability and delay for at least one risk'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "negative cost per day rejected",
+  "pass": true,
+  "detail": "('CaseError', ['cost.cost_per_delay_day: must be 0 or more'])"
+ },
+ {
+  "area": "EDGE",
+  "test": "cost per day = 0 accepted (all costs 0, no divide-by-zero)",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "MITIG",
+  "test": "mitigation targeting an unknown risk rejected",
+  "pass": true,
+  "detail": "('CaseError', [\"mitigations[1] (M2): target risk 'NOPE' is not a complete risk in the register\"])"
+ },
+ {
+  "area": "MITIG",
+  "test": "p_after = 1.5 rejected",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1).p_after: probability must be between 0 and 1'])"
+ },
+ {
+  "area": "MITIG",
+  "test": "negative mitigation cost rejected",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1): M1: cost must be >= 0'])"
+ },
+ {
+  "area": "MITIG",
+  "test": "duplicate mitigation id rejected",
+  "pass": true,
+  "detail": "('CaseError', [\"mitigations[1]: duplicate id 'M1'\"])"
+ },
+ {
+  "area": "MITIG",
+  "test": "mitigation with no modelled effect is left out and reported (not silently simulated)",
+  "pass": true,
+  "detail": "['M1: no modelled effect (enter p after and/or delay after, normally as Expert Judgment); it is left out of the options']"
+ },
+ {
+  "area": "MITIG",
+  "test": "explicit option with two responses to the same risk rejected",
+  "pass": true,
+  "detail": "('CaseError', ['options[0] (BOTH): two mitigations target the same risk; an option may contain at most one per risk'])"
+ },
+ {
+  "area": "MITIG",
+  "test": "zero-cost mitigation that removes the risk -> AUTHORIZE MITIGATION, cost/day-avoided is null not inf",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "MITIG",
+  "test": "absurdly expensive mitigation -> ACCEPT RISK",
+  "pass": true,
+  "detail": "ACCEPT RISK"
+ },
+ {
+  "area": "MITIG",
+  "test": "budget = 0 removes every paid response; ACCEPT remains selected",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "MITIG",
+  "test": "impossible deadline-probability limit (0.0) -> NO ADMISSIBLE OPTION",
+  "pass": true,
+  "detail": "NO ADMISSIBLE OPTION"
+ },
+ {
+  "area": "MITIG",
+  "test": "criterion min_p90_duration selects the response that lowers it",
+  "pass": true,
+  "detail": "O-M1"
+ },
+ {
+  "area": "MITIG",
+  "test": "criterion min_deadline_exceedance selects the response that lowers it",
+  "pass": true,
+  "detail": "O-M1"
+ },
+ {
+  "area": "MITIG",
+  "test": "min_deadline_exceedance without a deadline rejected",
+  "pass": true,
+  "detail": "('CaseError', [\"simulation.criterion: 'min_deadline_exceedance' needs activity.deadline_days\"])"
+ },
+ {
+  "area": "CORR",
+  "test": "rho = 1 (singular) rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['correlation matrix is singular or not positive definite (|rho| = 1 or inconsistent set); use |rho| < 1'])"
+ },
+ {
+  "area": "CORR",
+  "test": "rho = -1 (singular) rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['correlation matrix is singular or not positive definite (|rho| = 1 or inconsistent set); use |rho| < 1'])"
+ },
+ {
+  "area": "CORR",
+  "test": "rho = 1.5 rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.correlation[0].rho: must be between -1 and 1'])"
+ },
+ {
+  "area": "CORR",
+  "test": "rho = 'x' rejected with a message",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.correlation[0].rho: not a number'])"
+ },
+ {
+  "area": "CORR",
+  "test": "rho = 0.999 accepted (strict positive definite)",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "CORR",
+  "test": "self-correlation rejected",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.correlation[0]: a and b must be two different complete risks in the register'])"
+ },
+ {
+  "area": "CORR",
+  "test": "conflicting duplicate pair (0.3 vs 0.6) rejected",
+  "pass": true,
+  "detail": "('CaseError', ['conflicting correlations given for (X2, X1)'])"
+ },
+ {
+  "area": "CORR",
+  "test": "positive occurrence correlation (0.8) raises the std of duration and leaves the mean unchanged",
+  "pass": true,
+  "detail": "(2.3196770571921945, 2.7418756949404033, 2.4934707104469025, 2.4959264938201513)"
+ },
+ {
+  "area": "RNG",
+  "test": "sanity: crc32('plumless') == crc32('buckeroo') (known collision pair)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "RNG",
+  "test": "FIXED F5: colliding CRC32 ids are refused with a message instead of silently correlating",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "RNG",
+  "test": "no CRC32 collision among the 46 shipped library risk ids",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "area": "IDS",
+  "test": "unicode / spaces / CSV-hostile characters in risk ids work in analysis",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "IDS",
+  "test": "numeric risk id (5) and text id ('6') both accepted",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "IDS",
+  "test": "ids differing only by case ('X' vs 'x') treated as distinct",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "IDS",
+  "test": "duplicate risk id rejected",
+  "pass": true,
+  "detail": "('CaseError', [\"risks[1]: duplicate id 'X'\"])"
+ },
+ {
+  "area": "OPTIONS",
+  "test": "7 independent cheap responses: options are truncated (7 + 21 + 35 = 63 -> 40)",
+  "pass": true,
+  "detail": "{'skipped_no_effect': [], 'n_generated': 40, 'truncated': True, 'max_size': 3, 'max_options': 40}"
+ },
+ {
+  "area": "OPTIONS",
+  "test": "truncation is surfaced to the user in warnings or the exported report",
+  "pass": false,
+  "detail": "warnings=['the preferred option changes with the random seed: the options are too close to separate at this number of iterations, so do not present the choice as firm']"
+ },
+ {
+  "area": "OPTIONS",
+  "test": "an explicit 7-response option beats the tool's auto-generated best (auto search is limited to <= 3 responses)",
+  "pass": true,
+  "detail": "ALL7 total 11226 vs auto-best 60068"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigations = true -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigations = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigations = 'x' -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: options = true -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['options: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: options = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['options: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: constraints = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['constraints: expected an object'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: constraints = [1] -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['constraints: expected an object'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: simulation = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['simulation: expected an object'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: simulation = [1] -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['simulation: expected an object'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: simulation.correlation = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['simulation.correlation: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: cost = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['cost.cost_per_delay_day: input required (cost of one extra working day, with a source); it has no default'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.secondary_risks = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1).secondary_risks: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.secondary_risks = true -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1).secondary_risks: expected a list'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.evidence_ids = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1).evidence_ids: expected a list of ids'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.evidence_ids = [1, 'a'] -> clean result or CaseError",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.evidence_ids = [[1]] -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', ['mitigations[0] (M1).evidence_ids: each id must be text or a whole number'])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.evidence_ids = 'M01' (bare string) -> clean result or CaseError",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: mitigation.time_to_implement_days = 'x' -> clean result or CaseError",
+  "pass": true,
+  "detail": "('CaseError', [\"mitigations[0] (M1).time_to_implement_days: 'x' is not a number\"])"
+ },
+ {
+  "area": "SHAPES",
+  "test": "run_analysis: risk.direct_cost_if_occurs = 5 -> clean result or CaseError",
+  "pass": true,
+  "detail": "None"
+ },
+ {
+  "area": "PERF",
+  "test": "40 risks + 12 responses at n=10,000 finishes in a usable time",
+  "pass": true,
+  "detail": "11.7s; options evaluated 41"
+ },
+ {
+  "area": "PERF",
+  "test": "40-risk analysis result is strict JSON and its size is reasonable",
+  "pass": true,
+  "detail": "0.15 MB"
+ },
+ {
+  "area": "PERF",
+  "test": "n=200,000 with 5 responses finishes within 60 s",
+  "pass": true,
+  "detail": "20.4s"
+ },
+ {
+  "area": "DECISION",
+  "test": "decision_sensitivity (Cd x0.25 .. x4): tool's preferred option equals the exact hand-computed optimum at every multiplier",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "area": "DRIFT",
+  "test": "numbers quoted in report/tables/hand_check_output.txt (TOOL line, n=10000 seed 12345) are reproduced by the current code",
+  "pass": true,
+  "detail": "quoted {'expected_delay': 5.1323, 'se': 0.0334, 'p_any': 0.8975, 'P90': 25.638, 'p_exceed': 0.5981, 'E_cost': 50821.0} vs now {'expected_delay': 5.1322848108272, 'se': 0.033410615988256155, 'p_any': 0.8975, 'P90': 25.638426813494632, 'p_exceed': 0.5981, 'E_cost': 50821.048140364735}"
+ }
+]

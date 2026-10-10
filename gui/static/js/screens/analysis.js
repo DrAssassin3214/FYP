@@ -114,7 +114,8 @@ function results() {
 export function render() {
   const actions = `<button type="button" class="btn btn-primary" data-action="analysis-run"${S.ui.analysisBusy ? " disabled" : ""}>${icon("sparkle")}<span>Run analysis</span></button>
     <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
-    <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>`;
+    <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>
+    <button type="button" class="btn" data-action="analysis-manual-dl"${S.ui.analysis ? "" : " disabled"} title="Excel: hand formulas beside the tool's numbers">${icon("download")}<span>manual check (Excel)</span></button>`;
   return `${screenHead(7, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
   ${inputs()}<div id="analysis-live">${results()}</div>`;
 }
