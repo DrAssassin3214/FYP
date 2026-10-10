@@ -87,6 +87,9 @@ def main(argv=None) -> int:
     an = sub.add_parser("analyze")
     an.add_argument("case")
     an.add_argument("--out", default=None)
+    mc = sub.add_parser("manual-check", help="write an Excel workbook comparing hand formulas with the tool's numbers")
+    mc.add_argument("case")
+    mc.add_argument("--out", default="manual_check.xlsx")
     a = ap.parse_args(argv)
     if a.cmd == "template":
         print(json.dumps(service.template_case(), indent=2))
@@ -94,6 +97,27 @@ def main(argv=None) -> int:
         print(json.dumps(service.example_case(), indent=2))
     elif a.cmd == "example-analysis":
         print(json.dumps(service.example_analysis_case(), indent=2))
+    elif a.cmd == "manual-check":
+        try:
+            from app.reporting.manual_check import manual_check_xlsx
+
+            data = manual_check_xlsx(_load_case(a.case), evidence_index=service.evidence_index_from_workbook())
+            Path(a.out).write_bytes(data)
+        except CliError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+        except service.CaseError as e:
+            print("Case has problems:", file=sys.stderr)
+            for p in e.problems:
+                print(f"  - {p}", file=sys.stderr)
+            return 2
+        except OSError as e:
+            print(f"error: cannot write {a.out}: {e.strerror or e}", file=sys.stderr)
+            return 2
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
+            print(f"error: the case could not be processed ({type(e).__name__}: {e})", file=sys.stderr)
+            return 2
+        print(f"wrote {a.out}")
     elif a.cmd == "analyze":
         try:
             case = _load_case(a.case)

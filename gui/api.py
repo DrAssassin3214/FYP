@@ -20,6 +20,7 @@ Routes
     POST /api/matrix-svg      colour-coded matrix graphic (SVG)
     POST /api/report-html     printable report with the graphical matrix
     POST /api/analysis-charts-html  analysis charts (PNG embedded) with data tables
+    POST /api/manual-check-xlsx     Excel workbook: hand formulas beside the tool's numbers (PASS / FAIL)
 """
 from __future__ import annotations
 
@@ -401,6 +402,20 @@ def create_app() -> Flask:
             return _problems([_describe(e)])
         return Response(page, mimetype="text/html",
                         headers={"Content-Disposition": 'attachment; filename="analysis_charts.html"'})
+
+    @app.post("/api/manual-check-xlsx")
+    def manual_check_xlsx():
+        """Excel workbook that recomputes the closed-form numbers by hand (live formulas) beside the tool's own."""
+        try:
+            from app.reporting.manual_check import manual_check_xlsx as build
+
+            data = build(_case_from_request(), evidence_index=evidence_index())
+        except service.CaseError as e:
+            return _problems(e.problems)
+        except _INPUT_ERRORS as e:
+            return _problems([_describe(e)])
+        return Response(data, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        headers={"Content-Disposition": 'attachment; filename="manual_check.xlsx"'})
 
     @app.get("/api/mitigation-catalogue")
     def mitigation_catalogue():

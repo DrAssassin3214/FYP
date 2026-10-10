@@ -8,3 +8,7 @@ Scripts v1 to v5 were written for this validation and were run with `python3 -I 
 - `pytest_run1.txt`: existing suite before the fixes (522 passed, 3 skipped). `pytest_v_final.txt`: after the fixes (554 passed, 3 skipped).
 
 - `../../tables/manual_calculation_check.xlsx`: the hand calculations as an Excel workbook with live formulas (9 sheets). Built by `build_manual_calc_xlsx.py <output.xlsx>` from the example case and `v1_results.json`, then recalculated with LibreOffice (836 formulas, 0 errors).
+
+## Manual check export from the tool (10 October 2026)
+
+`python -m app.cli manual-check case.json --out manual_check.xlsx`, `POST /api/manual-check-xlsx`, and the "manual check (Excel)" button on the analysis screen write a workbook for the user's own case. Closed-form quantities (delay moments, event EMV, 5 x 5 class and level, net benefit of each response, expected total delay, probability of any delay) are recomputed as live Excel formulas beside the tool's pasted values, with a difference and PASS / FAIL. It does not check simulated percentiles, liquidated damages or the option comparison; the scripts in this folder do. `report/tables/tool_manual_check_example.xlsx` is the output for the bundled illustrative case (233 formulas, 23 checks, all PASS). Tests: `tests/test_manual_check.py` (7).
