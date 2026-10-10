@@ -1,0 +1,1081 @@
+{
+ "descriptive": [
+  {
+   "risk": "R-MAT",
+   "n_seed_studies": 3,
+   "seed_mean": 0.7889333333333334,
+   "seed_sd": 0.01813321078389958,
+   "seed_min": 0.777,
+   "seed_max": 0.8098,
+   "n_all_studies": 7,
+   "all_mean": 0.6931380952380952,
+   "all_sd": 0.12143754747403267,
+   "all_min": 0.508,
+   "all_max": 0.8098
+  },
+  {
+   "risk": "R-TOOL",
+   "n_seed_studies": 2,
+   "seed_mean": 0.75275,
+   "seed_sd": 0.01025304832720491,
+   "seed_min": 0.7455,
+   "seed_max": 0.76,
+   "n_all_studies": 5,
+   "all_mean": 0.6641,
+   "all_sd": 0.13195946347268922,
+   "all_min": 0.435,
+   "all_max": 0.76
+  },
+  {
+   "risk": "R-LAB",
+   "n_seed_studies": 3,
+   "seed_mean": 0.7661666666666667,
+   "seed_sd": 0.05242216452354228,
+   "seed_min": 0.723,
+   "seed_max": 0.8245,
+   "n_all_studies": 5,
+   "all_mean": 0.7383,
+   "all_sd": 0.059128673247418634,
+   "all_min": 0.66,
+   "all_max": 0.8245
+  },
+  {
+   "risk": "R-SKILL",
+   "n_seed_studies": 3,
+   "seed_mean": 0.7831111111111111,
+   "seed_sd": 0.02242105491951045,
+   "seed_min": 0.759,
+   "seed_max": 0.8033333333333333,
+   "n_all_studies": 6,
+   "all_mean": 0.7313888888888889,
+   "all_sd": 0.1073044302009043,
+   "all_min": 0.523,
+   "all_max": 0.8033333333333333
+  },
+  {
+   "risk": "R-PLAN",
+   "n_seed_studies": 2,
+   "seed_mean": 0.777092,
+   "seed_sd": 0.01966888222548505,
+   "seed_min": 0.763184,
+   "seed_max": 0.791,
+   "n_all_studies": 6,
+   "all_mean": 0.7068639999999999,
+   "all_sd": 0.13892122291428335,
+   "all_min": 0.475,
+   "all_max": 0.874
+  },
+  {
+   "risk": "R-SAFE",
+   "n_seed_studies": 1,
+   "seed_mean": 0.7865,
+   "seed_sd": null,
+   "seed_min": 0.7865,
+   "seed_max": 0.7865,
+   "n_all_studies": 2,
+   "all_mean": 0.62325,
+   "all_sd": 0.23087036405740774,
+   "all_min": 0.46,
+   "all_max": 0.7865
+  },
+  {
+   "risk": "R-WX",
+   "n_seed_studies": 4,
+   "seed_mean": 0.693379,
+   "seed_sd": 0.0517107148535646,
+   "seed_min": 0.6528,
+   "seed_max": 0.764,
+   "n_all_studies": 8,
+   "all_mean": 0.6528145,
+   "all_sd": 0.08580756990748876,
+   "all_min": 0.475,
+   "all_max": 0.764
+  },
+  {
+   "risk": "R-RWK",
+   "n_seed_studies": 2,
+   "seed_mean": 0.7560595,
+   "seed_sd": 0.02836841695442311,
+   "seed_min": 0.736,
+   "seed_max": 0.776119,
+   "n_all_studies": 4,
+   "all_mean": 0.75577975,
+   "all_sd": 0.016986073911197573,
+   "all_min": 0.736,
+   "all_max": 0.776119
+  },
+  {
+   "risk": "R-PAY",
+   "n_seed_studies": 3,
+   "seed_mean": 0.7733146666666667,
+   "seed_sd": 0.002343895333271801,
+   "seed_min": 0.771144,
+   "seed_max": 0.7758,
+   "n_all_studies": 5,
+   "all_mean": 0.7573888,
+   "all_sd": 0.025128355043655393,
+   "all_min": 0.716,
+   "all_max": 0.7758
+  },
+  {
+   "risk": "R-DES",
+   "n_seed_studies": 2,
+   "seed_mean": 0.7585375,
+   "seed_sd": 0.037529692411475996,
+   "seed_min": 0.732,
+   "seed_max": 0.785075,
+   "n_all_studies": 4,
+   "all_mean": 0.74626875,
+   "all_sd": 0.04264218067731376,
+   "all_min": 0.6924999999999999,
+   "all_max": 0.785075
+  },
+  {
+   "risk": "R-SUP",
+   "n_seed_studies": 1,
+   "seed_mean": 0.744,
+   "seed_sd": null,
+   "seed_min": 0.744,
+   "seed_max": 0.744,
+   "n_all_studies": 3,
+   "all_mean": 0.76,
+   "all_sd": 0.049959983987187165,
+   "all_min": 0.72,
+   "all_max": 0.816
+  },
+  {
+   "risk": "R-MOT",
+   "n_seed_studies": 1,
+   "seed_mean": 0.736,
+   "seed_sd": null,
+   "seed_min": 0.736,
+   "seed_max": 0.736,
+   "n_all_studies": 3,
+   "all_mean": 0.6346666666666667,
+   "all_sd": 0.15272960856799617,
+   "all_min": 0.459,
+   "all_max": 0.736
+  },
+  {
+   "risk": "R-INC",
+   "n_seed_studies": 1,
+   "seed_mean": 0.752,
+   "seed_sd": null,
+   "seed_min": 0.752,
+   "seed_max": 0.752,
+   "n_all_studies": 3,
+   "all_mean": 0.746,
+   "all_sd": 0.01825513626352865,
+   "all_min": 0.7255,
+   "all_max": 0.7605
+  },
+  {
+   "risk": "R-OVT",
+   "n_seed_studies": 2,
+   "seed_mean": 0.7062809999999999,
+   "seed_sd": 0.026472663674061946,
+   "seed_min": 0.687562,
+   "seed_max": 0.725,
+   "n_all_studies": 3,
+   "all_mean": 0.702854,
+   "all_sd": 0.019637564716634283,
+   "all_min": 0.687562,
+   "all_max": 0.725
+  },
+  {
+   "risk": "R-FAT",
+   "n_seed_studies": 1,
+   "seed_mean": 0.61,
+   "seed_sd": null,
+   "seed_min": 0.61,
+   "seed_max": 0.61,
+   "n_all_studies": 3,
+   "all_mean": 0.6648333333333333,
+   "all_sd": 0.056573698246918,
+   "all_min": 0.61,
+   "all_max": 0.723
+  },
+  {
+   "risk": "R-COM",
+   "n_seed_studies": 2,
+   "seed_mean": 0.6793035000000001,
+   "seed_sd": 0.0009849997461929233,
+   "seed_min": 0.678607,
+   "seed_max": 0.68,
+   "n_all_studies": 4,
+   "all_mean": 0.6396517500000001,
+   "all_sd": 0.08111312129109158,
+   "all_min": 0.518,
+   "all_max": 0.682
+  },
+  {
+   "risk": "R-DIS",
+   "n_seed_studies": 2,
+   "seed_mean": 0.77,
+   "seed_sd": 0.028284271247461926,
+   "seed_min": 0.75,
+   "seed_max": 0.79,
+   "n_all_studies": 2,
+   "all_mean": 0.77,
+   "all_sd": 0.028284271247461926,
+   "all_min": 0.75,
+   "all_max": 0.79
+  },
+  {
+   "risk": "R-STR",
+   "n_seed_studies": 1,
+   "seed_mean": 0.749254,
+   "seed_sd": null,
+   "seed_min": 0.749254,
+   "seed_max": 0.749254,
+   "n_all_studies": 1,
+   "all_mean": 0.749254,
+   "all_sd": null,
+   "all_min": 0.749254,
+   "all_max": 0.749254
+  },
+  {
+   "risk": "R-ACC",
+   "n_seed_studies": 2,
+   "seed_mean": 0.7045,
+   "seed_sd": 0.07707463914933367,
+   "seed_min": 0.65,
+   "seed_max": 0.759,
+   "n_all_studies": 4,
+   "all_mean": 0.624,
+   "all_sd": 0.12586500705120546,
+   "all_min": 0.455,
+   "all_max": 0.759
+  },
+  {
+   "risk": "R-MGT",
+   "n_seed_studies": 2,
+   "seed_mean": 0.733107,
+   "seed_sd": 0.03409244634812827,
+   "seed_min": 0.709,
+   "seed_max": 0.757214,
+   "n_all_studies": 3,
+   "all_mean": 0.6620713333333333,
+   "all_sd": 0.12537681310885732,
+   "all_min": 0.52,
+   "all_max": 0.757214
+  },
+  {
+   "risk": "R-CTR",
+   "n_seed_studies": 1,
+   "seed_mean": 0.746766,
+   "seed_sd": null,
+   "seed_min": 0.746766,
+   "seed_max": 0.746766,
+   "n_all_studies": 2,
+   "all_mean": 0.678383,
+   "all_sd": 0.09670816603575941,
+   "all_min": 0.61,
+   "all_max": 0.746766
+  },
+  {
+   "risk": "R-SCP",
+   "n_seed_studies": 1,
+   "seed_mean": 0.7641789999999999,
+   "seed_sd": null,
+   "seed_min": 0.7641789999999999,
+   "seed_max": 0.7641789999999999,
+   "n_all_studies": 1,
+   "all_mean": 0.7641789999999999,
+   "all_sd": null,
+   "all_min": 0.7641789999999999,
+   "all_max": 0.7641789999999999
+  },
+  {
+   "risk": "R-CST",
+   "n_seed_studies": 1,
+   "seed_mean": 0.7184079999999999,
+   "seed_sd": null,
+   "seed_min": 0.7184079999999999,
+   "seed_max": 0.7184079999999999,
+   "n_all_studies": 1,
+   "all_mean": 0.7184079999999999,
+   "all_sd": null,
+   "all_min": 0.7184079999999999,
+   "all_max": 0.7184079999999999
+  },
+  {
+   "risk": "R-SITE",
+   "n_seed_studies": 2,
+   "seed_mean": 0.761072,
+   "seed_sd": 0.014243959000221849,
+   "seed_min": 0.751,
+   "seed_max": 0.771144,
+   "n_all_studies": 2,
+   "all_mean": 0.761072,
+   "all_sd": 0.014243959000221849,
+   "all_min": 0.751,
+   "all_max": 0.771144
+  },
+  {
+   "risk": "R-STO",
+   "n_seed_studies": 1,
+   "seed_mean": 0.7,
+   "seed_sd": null,
+   "seed_min": 0.7,
+   "seed_max": 0.7,
+   "n_all_studies": 2,
+   "all_mean": 0.69,
+   "all_sd": 0.014142135623730885,
+   "all_min": 0.68,
+   "all_max": 0.7
+  },
+  {
+   "risk": "R-PRC",
+   "n_seed_studies": 2,
+   "seed_mean": 0.6695,
+   "seed_sd": 0.16899852070358484,
+   "seed_min": 0.55,
+   "seed_max": 0.789,
+   "n_all_studies": 2,
+   "all_mean": 0.6695,
+   "all_sd": 0.16899852070358484,
+   "all_min": 0.55,
+   "all_max": 0.789
+  },
+  {
+   "risk": "R-WAT",
+   "n_seed_studies": 1,
+   "seed_mean": 0.65,
+   "seed_sd": null,
+   "seed_min": 0.65,
+   "seed_max": 0.65,
+   "n_all_studies": 1,
+   "all_mean": 0.65,
+   "all_sd": null,
+   "all_min": 0.65,
+   "all_max": 0.65
+  },
+  {
+   "risk": "R-MTH",
+   "n_seed_studies": 1,
+   "seed_mean": 0.7,
+   "seed_sd": null,
+   "seed_min": 0.7,
+   "seed_max": 0.7,
+   "n_all_studies": 4,
+   "all_mean": 0.57875,
+   "all_sd": 0.12414339826721892,
+   "all_min": 0.444,
+   "all_max": 0.7
+  },
+  {
+   "risk": "R-ECO",
+   "n_seed_studies": 1,
+   "seed_mean": 0.6611940000000001,
+   "seed_sd": null,
+   "seed_min": 0.6611940000000001,
+   "seed_max": 0.6611940000000001,
+   "n_all_studies": 2,
+   "all_mean": 0.719597,
+   "all_sd": 0.08259431468327584,
+   "all_min": 0.6611940000000001,
+   "all_max": 0.778
+  },
+  {
+   "risk": "R-SOC",
+   "n_seed_studies": 1,
+   "seed_mean": 0.59403,
+   "seed_sd": null,
+   "seed_min": 0.59403,
+   "seed_max": 0.59403,
+   "n_all_studies": 1,
+   "all_mean": 0.59403,
+   "all_sd": null,
+   "all_min": 0.59403,
+   "all_max": 0.59403
+  }
+ ],
+ "difference_tests": {
+  "n_observations": 66,
+  "kruskal_all10": {
+   "H": 40.46701058919358,
+   "p": 0.07658601269003482,
+   "df": 29
+  },
+  "kruskal_without_R-WX": {
+   "H": 38.08655160829765,
+   "p": 0.09677248765416704,
+   "df": 28
+  },
+  "range_all10": 0.19490333333333343,
+  "range_without_R-WX": 0.19490333333333343,
+  "wx_vs_rest": {
+   "n_wx": 4,
+   "n_rest": 62,
+   "median_wx": 0.678358,
+   "median_rest": 0.751,
+   "U": 62.0,
+   "p_one_sided": 0.049147024428701294
+  }
+ },
+ "leave_one_study_out": [
+  {
+   "dropped": "A02",
+   "n_risks": 27,
+   "rho_vs_full_seed": 0.7832722832722833,
+   "max_rank_shift": 24.0
+  },
+  {
+   "dropped": "A14",
+   "n_risks": 30,
+   "rho_vs_full_seed": 0.9697374276813533,
+   "max_rank_shift": 9.0
+  },
+  {
+   "dropped": "A15",
+   "n_risks": 30,
+   "rho_vs_full_seed": 0.9862038273253227,
+   "max_rank_shift": 7.0
+  },
+  {
+   "dropped": "M01",
+   "n_risks": 25,
+   "rho_vs_full_seed": 0.9463358513197413,
+   "max_rank_shift": 7.0
+  },
+  {
+   "dropped": "M06",
+   "n_risks": 24,
+   "rho_vs_full_seed": 0.9628018500588803,
+   "max_rank_shift": 7.0
+  }
+ ],
+ "bootstrap_rank": [
+  {
+   "risk": "R-MAT",
+   "base_rank": 1.0,
+   "median": 2.2608695652173916,
+   "p2_5": 1.0,
+   "p97_5": 5.833333333333333,
+   "n_resamples": 4936
+  },
+  {
+   "risk": "R-TOOL",
+   "base_rank": 12.0,
+   "median": 11.875,
+   "p2_5": 8.565217391304348,
+   "p97_5": 18.846153846153847,
+   "n_resamples": 4575
+  },
+  {
+   "risk": "R-LAB",
+   "base_rank": 7.0,
+   "median": 7.6923076923076925,
+   "p2_5": 1.0,
+   "p97_5": 21.88,
+   "n_resamples": 4936
+  },
+  {
+   "risk": "R-SKILL",
+   "base_rank": 3.0,
+   "median": 3.5217391304347827,
+   "p2_5": 1.0,
+   "p97_5": 12.600000000000001,
+   "n_resamples": 4942
+  },
+  {
+   "risk": "R-PLAN",
+   "base_rank": 4.0,
+   "median": 4.222222222222221,
+   "p2_5": 1.0,
+   "p97_5": 16.263157894736842,
+   "n_resamples": 4653
+  },
+  {
+   "risk": "R-SAFE",
+   "base_rank": 2.0,
+   "median": 2.2608695652173916,
+   "p2_5": 1.0,
+   "p97_5": 7.444444444444444,
+   "n_resamples": 3373
+  },
+  {
+   "risk": "R-WX",
+   "base_rank": 24.0,
+   "median": 23.30769230769231,
+   "p2_5": 13.608695652173912,
+   "p97_5": 30.0,
+   "n_resamples": 4997
+  },
+  {
+   "risk": "R-RWK",
+   "base_rank": 11.0,
+   "median": 11.0,
+   "p2_5": 5.833333333333333,
+   "p97_5": 21.13888888888889,
+   "n_resamples": 4653
+  },
+  {
+   "risk": "R-PAY",
+   "base_rank": 5.0,
+   "median": 6.5769230769230775,
+   "p2_5": 4.0,
+   "p97_5": 12.447368421052632,
+   "n_resamples": 4947
+  },
+  {
+   "risk": "R-DES",
+   "base_rank": 10.0,
+   "median": 10.0,
+   "p2_5": 3.4166666666666665,
+   "p97_5": 23.555555555555557,
+   "n_resamples": 4653
+  },
+  {
+   "risk": "R-SUP",
+   "base_rank": 16.0,
+   "median": 16.0,
+   "p2_5": 12.347826086956522,
+   "p97_5": 19.961538461538463,
+   "n_resamples": 3373
+  },
+  {
+   "risk": "R-MOT",
+   "base_rank": 17.0,
+   "median": 17.0,
+   "p2_5": 15.5,
+   "p97_5": 22.19230769230769,
+   "n_resamples": 3373
+  },
+  {
+   "risk": "R-INC",
+   "base_rank": 13.0,
+   "median": 12.0,
+   "p2_5": 8.565217391304348,
+   "p97_5": 15.5,
+   "n_resamples": 3373
+  },
+  {
+   "risk": "R-OVT",
+   "base_rank": 20.0,
+   "median": 21.0,
+   "p2_5": 18.65217391304348,
+   "p97_5": 25.538461538461537,
+   "n_resamples": 4653
+  },
+  {
+   "risk": "R-FAT",
+   "base_rank": 29.0,
+   "median": 28.791666666666668,
+   "p2_5": 27.583333333333332,
+   "p97_5": 30.0,
+   "n_resamples": 3351
+  },
+  {
+   "risk": "R-COM",
+   "base_rank": 25.0,
+   "median": 25.0,
+   "p2_5": 21.076923076923077,
+   "p97_5": 27.76923076923077,
+   "n_resamples": 4632
+  },
+  {
+   "risk": "R-DIS",
+   "base_rank": 6.0,
+   "median": 7.304347826086956,
+   "p2_5": 2.208333333333333,
+   "p97_5": 15.5,
+   "n_resamples": 4644
+  },
+  {
+   "risk": "R-STR",
+   "base_rank": 14.0,
+   "median": 14.92,
+   "p2_5": 13.0,
+   "p97_5": 19.31578947368421,
+   "n_resamples": 3414
+  },
+  {
+   "risk": "R-ACC",
+   "base_rank": 21.0,
+   "median": 22.0,
+   "p2_5": 10.28,
+   "p97_5": 26.979166666666668,
+   "n_resamples": 4575
+  },
+  {
+   "risk": "R-MGT",
+   "base_rank": 18.0,
+   "median": 18.0,
+   "p2_5": 13.083333333333334,
+   "p97_5": 28.294117647058822,
+   "n_resamples": 4653
+  },
+  {
+   "risk": "R-CTR",
+   "base_rank": 15.0,
+   "median": 16.130434782608695,
+   "p2_5": 14.0,
+   "p97_5": 20.842105263157894,
+   "n_resamples": 3414
+  },
+  {
+   "risk": "R-SCP",
+   "base_rank": 8.0,
+   "median": 8.807692307692307,
+   "p2_5": 6.0,
+   "p97_5": 14.736842105263158,
+   "n_resamples": 3414
+  },
+  {
+   "risk": "R-CST",
+   "base_rank": 19.0,
+   "median": 19.0,
+   "p2_5": 17.391304347826086,
+   "p97_5": 24.200000000000003,
+   "n_resamples": 3414
+  },
+  {
+   "risk": "R-SITE",
+   "base_rank": 9.0,
+   "median": 9.458333333333334,
+   "p2_5": 6.0,
+   "p97_5": 14.384615384615385,
+   "n_resamples": 4632
+  },
+  {
+   "risk": "R-STO",
+   "base_rank": 22.5,
+   "median": 22.5,
+   "p2_5": 16.615384615384613,
+   "p97_5": 24.32608695652174,
+   "n_resamples": 3351
+  },
+  {
+   "risk": "R-PRC",
+   "base_rank": 26.0,
+   "median": 26.0,
+   "p2_5": 1.0,
+   "p97_5": 30.0,
+   "n_resamples": 4600
+  },
+  {
+   "risk": "R-WAT",
+   "base_rank": 28.0,
+   "median": 27.0,
+   "p2_5": 24.423076923076923,
+   "p97_5": 28.73913043478261,
+   "n_resamples": 3351
+  },
+  {
+   "risk": "R-MTH",
+   "base_rank": 22.5,
+   "median": 24.32608695652174,
+   "p2_5": 21.5,
+   "p97_5": 30.0,
+   "n_resamples": 3373
+  },
+  {
+   "risk": "R-ECO",
+   "base_rank": 27.0,
+   "median": 26.588235294117645,
+   "p2_5": 23.695652173913043,
+   "p97_5": 28.884615384615387,
+   "n_resamples": 3414
+  },
+  {
+   "risk": "R-SOC",
+   "base_rank": 30.0,
+   "median": 30.0,
+   "p2_5": 28.791666666666668,
+   "p97_5": 30.0,
+   "n_resamples": 3414
+  }
+ ],
+ "weighted_vs_unweighted": {
+  "rho": 0.8193146417445485,
+  "weights": "respondent counts: M01 44, M06 201, A14 163, A15 90 (A02 not reported, left unweighted via fallback)",
+  "weighted_means": {
+   "R-MAT": 0.8028280193236715,
+   "R-TOOL": 0.7454999999999999,
+   "R-LAB": 0.8029251207729468,
+   "R-SKILL": 0.7887761194029851,
+   "R-PLAN": 0.7681795265306122,
+   "R-SAFE": 0.7865000000000001,
+   "R-WX": 0.666721362745098,
+   "R-RWK": 0.7689139551020407,
+   "R-PAY": 0.7714773224489796,
+   "R-DES": 0.775543163265306,
+   "R-SUP": 0.7439999999999999,
+   "R-MOT": 0.736,
+   "R-INC": 0.752,
+   "R-OVT": 0.6942855591836735,
+   "R-FAT": 0.61,
+   "R-COM": 0.678607,
+   "R-DIS": 0.7768656716417911,
+   "R-STR": 0.749254,
+   "R-ACC": 0.759,
+   "R-MGT": 0.7485551591836735,
+   "R-CTR": 0.7467659999999999,
+   "R-SCP": 0.7641789999999999,
+   "R-CST": 0.7184079999999999,
+   "R-SITE": 0.771144,
+   "R-STO": 0.7,
+   "R-PRC": 0.789,
+   "R-WAT": 0.65,
+   "R-MTH": 0.7,
+   "R-ECO": 0.6611940000000001,
+   "R-SOC": 0.59403
+  }
+ },
+ "validation": [
+  {
+   "study": "M10",
+   "n": 19,
+   "tested": true,
+   "rho": 0.2817025282158755,
+   "p_t": 0.242644237815588,
+   "p_perm": 0.24035,
+   "tau": 0.1876840914874098,
+   "p_tau": 0.2626182904425206,
+   "ci95_lo": -0.1844751707758273,
+   "ci95_hi": 0.6836035481984206,
+   "critical_rho_5pct": 0.455530505763042
+  },
+  {
+   "study": "M15",
+   "n": 11,
+   "tested": true,
+   "rho": 0.6272727272727273,
+   "p_t": 0.03884525362035334,
+   "p_perm": 0.04465,
+   "tau": 0.41818181818181815,
+   "p_tau": 0.08656124739458072,
+   "ci95_lo": 0.08160605474417257,
+   "ci95_hi": 0.9070410190487324,
+   "critical_rho_5pct": 0.6020687774370083
+  },
+  {
+   "study": "M14",
+   "n": 13,
+   "tested": true,
+   "rho": -0.18131868131868134,
+   "p_t": 0.5532950092839335,
+   "p_perm": 0.55305,
+   "tau": -0.15384615384615383,
+   "p_tau": 0.5097745711721406,
+   "ci95_lo": -0.6460838215051699,
+   "ci95_hi": 0.35032430641037793,
+   "critical_rho_5pct": 0.5529426594945894
+  },
+  {
+   "study": "A10",
+   "n": 2,
+   "tested": false
+  },
+  {
+   "study": "A21",
+   "n": 1,
+   "tested": false
+  },
+  {
+   "study": "HAS25",
+   "n": 1,
+   "tested": false
+  }
+ ],
+ "pairwise_agreement": [
+  {
+   "a": "M01",
+   "b": "M06",
+   "n": 7,
+   "rho": 0.10714285714285716,
+   "p": 0.8191508555699912
+  },
+  {
+   "a": "M01",
+   "b": "A02",
+   "n": 7,
+   "rho": 0.3243374865704013,
+   "p": 0.477885479739931
+  },
+  {
+   "a": "M01",
+   "b": "M10",
+   "n": 15,
+   "rho": 0.2450808930480399,
+   "p": 0.3786504457403179
+  },
+  {
+   "a": "M01",
+   "b": "M15",
+   "n": 10,
+   "rho": 0.15197638592001614,
+   "p": 0.6751243317896832
+  },
+  {
+   "a": "M01",
+   "b": "M14",
+   "n": 11,
+   "rho": -0.16363636363636366,
+   "p": 0.6306852146425356
+  },
+  {
+   "a": "M06",
+   "b": "A02",
+   "n": 4,
+   "rho": 0.7378647873726218,
+   "p": 0.26213521262737816
+  },
+  {
+   "a": "M06",
+   "b": "M10",
+   "n": 8,
+   "rho": 0.28571428571428575,
+   "p": 0.49272624501695717
+  },
+  {
+   "a": "M06",
+   "b": "M15",
+   "n": 6,
+   "rho": 0.8857142857142858,
+   "p": 0.01884548104956266
+  },
+  {
+   "a": "M06",
+   "b": "M14",
+   "n": 4,
+   "rho": 0.19999999999999998,
+   "p": 0.8
+  },
+  {
+   "a": "A02",
+   "b": "A14",
+   "n": 4,
+   "rho": 0.6000000000000001,
+   "p": 0.4
+  },
+  {
+   "a": "A02",
+   "b": "M10",
+   "n": 10,
+   "rho": 0.6200636545536659,
+   "p": 0.055822633402221926
+  },
+  {
+   "a": "A02",
+   "b": "M15",
+   "n": 5,
+   "rho": 0.7,
+   "p": 0.1881204043741873
+  },
+  {
+   "a": "A02",
+   "b": "M14",
+   "n": 7,
+   "rho": -0.1785714285714286,
+   "p": 0.7016579425162727
+  },
+  {
+   "a": "M10",
+   "b": "M15",
+   "n": 9,
+   "rho": 0.7666666666666667,
+   "p": 0.01594401657897403
+  },
+  {
+   "a": "M10",
+   "b": "M14",
+   "n": 13,
+   "rho": 0.4450549450549451,
+   "p": 0.12752383613843682
+  },
+  {
+   "a": "M15",
+   "b": "M14",
+   "n": 6,
+   "rho": -0.4285714285714286,
+   "p": 0.3965014577259473
+  }
+ ],
+ "pairwise_summary": {
+  "n_pairs": 16,
+  "mean_rho": 0.3311773141861603,
+  "median_rho": 0.3050258861423435,
+  "min": -0.4285714285714286,
+  "max": 0.8857142857142858
+ },
+ "kendall_w": {
+  "studies": [
+   "M01",
+   "M10",
+   "M15",
+   "M14"
+  ],
+  "risks": [
+   "R-MAT",
+   "R-TOOL",
+   "R-SKILL",
+   "R-PLAN",
+   "R-WX",
+   "R-MTH"
+  ],
+  "k": 4,
+  "n": 6,
+  "W": 0.4,
+  "chi2": 8.0,
+  "p": 0.1562356275777222
+ },
+ "pooled_vs_seed": {
+  "rho": 0.5210813248397362,
+  "pooled_means": {
+   "R-MAT": 0.6931380952380952,
+   "R-TOOL": 0.6641,
+   "R-LAB": 0.7383,
+   "R-SKILL": 0.7313888888888889,
+   "R-PLAN": 0.7068639999999999,
+   "R-SAFE": 0.62325,
+   "R-WX": 0.6528145,
+   "R-RWK": 0.75577975,
+   "R-PAY": 0.7573888,
+   "R-DES": 0.74626875,
+   "R-SUP": 0.76,
+   "R-MOT": 0.6346666666666667,
+   "R-INC": 0.746,
+   "R-OVT": 0.702854,
+   "R-FAT": 0.6648333333333333,
+   "R-COM": 0.6396517500000001,
+   "R-DIS": 0.77,
+   "R-STR": 0.749254,
+   "R-ACC": 0.624,
+   "R-MGT": 0.6620713333333333,
+   "R-CTR": 0.678383,
+   "R-SCP": 0.7641789999999999,
+   "R-CST": 0.7184079999999999,
+   "R-SITE": 0.761072,
+   "R-STO": 0.69,
+   "R-PRC": 0.6695,
+   "R-WAT": 0.65,
+   "R-MTH": 0.57875,
+   "R-ECO": 0.719597,
+   "R-SOC": 0.59403
+  }
+ },
+ "pooled_rank_vs_seed": {
+  "rho": 0.7333407543431982,
+  "mean_normalised_rank": {
+   "R-MAT": 0.30983150836092016,
+   "R-TOOL": 0.5351031321619557,
+   "R-LAB": 0.5416109625668449,
+   "R-SKILL": 0.2071301247771836,
+   "R-PLAN": 0.40887445887445883,
+   "R-SAFE": 0.4579831932773109,
+   "R-WX": 0.6198070137145767,
+   "R-RWK": 0.2494747899159664,
+   "R-PAY": 0.20564043799337917,
+   "R-DES": 0.28776737967914434,
+   "R-SUP": 0.21988795518207283,
+   "R-MOT": 0.7016806722689076,
+   "R-INC": 0.24331550802139038,
+   "R-OVT": 0.7247262541380187,
+   "R-FAT": 0.5371572871572871,
+   "R-COM": 0.699134199134199,
+   "R-DIS": 0.47058823529411764,
+   "R-TRN": 1.0,
+   "R-PRD": 0.08333333333333333,
+   "R-STR": 0.5,
+   "R-ACC": 0.7257687165775402,
+   "R-MGT": 0.6510270774976658,
+   "R-SUB": 0.3035714285714286,
+   "R-CTR": 0.49404761904761907,
+   "R-SCP": 0.2857142857142857,
+   "R-CLI": 1.0,
+   "R-CST": 0.6428571428571429,
+   "R-QLT": 0.7272727272727273,
+   "R-DEF": 0.6666666666666666,
+   "R-SITE": 0.2767857142857143,
+   "R-STO": 0.6799242424242424,
+   "R-PRC": 0.8333333333333333,
+   "R-WAT": 0.7916666666666666,
+   "R-MTH": 0.8736471861471862,
+   "R-ECO": 0.474025974025974,
+   "R-GOV": 0.5681818181818182,
+   "R-SOC": 1.0
+  },
+  "n_studies_per_risk": {
+   "R-MAT": 6,
+   "R-TOOL": 5,
+   "R-LAB": 4,
+   "R-SKILL": 5,
+   "R-PLAN": 5,
+   "R-SAFE": 2,
+   "R-WX": 7,
+   "R-RWK": 4,
+   "R-PAY": 5,
+   "R-DES": 4,
+   "R-SUP": 3,
+   "R-MOT": 3,
+   "R-INC": 3,
+   "R-OVT": 3,
+   "R-FAT": 3,
+   "R-COM": 4,
+   "R-DIS": 1,
+   "R-TRN": 1,
+   "R-PRD": 1,
+   "R-STR": 1,
+   "R-ACC": 4,
+   "R-MGT": 3,
+   "R-SUB": 2,
+   "R-CTR": 2,
+   "R-SCP": 1,
+   "R-CLI": 1,
+   "R-CST": 1,
+   "R-QLT": 1,
+   "R-DEF": 1,
+   "R-SITE": 2,
+   "R-STO": 2,
+   "R-PRC": 2,
+   "R-WAT": 1,
+   "R-MTH": 4,
+   "R-ECO": 2,
+   "R-GOV": 1,
+   "R-SOC": 1,
+   "R-FIN": 0
+  }
+ },
+ "pooled_rank_order": [
+  "R-PRD",
+  "R-PAY",
+  "R-SKILL",
+  "R-SUP",
+  "R-INC",
+  "R-RWK",
+  "R-SITE",
+  "R-SCP",
+  "R-DES",
+  "R-SUB",
+  "R-MAT",
+  "R-PLAN",
+  "R-SAFE",
+  "R-DIS",
+  "R-ECO",
+  "R-CTR",
+  "R-STR",
+  "R-TOOL",
+  "R-FAT",
+  "R-LAB",
+  "R-GOV",
+  "R-WX",
+  "R-CST",
+  "R-MGT",
+  "R-DEF",
+  "R-STO",
+  "R-COM",
+  "R-MOT",
+  "R-OVT",
+  "R-ACC",
+  "R-QLT",
+  "R-WAT",
+  "R-PRC",
+  "R-MTH",
+  "R-TRN",
+  "R-CLI",
+  "R-SOC"
+ ]
+}

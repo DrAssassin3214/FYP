@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Masonry Delay-Risk Decision Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --bg: #f3f6f5;
+  --surface: #ffffff;
+  --ink: #16201e;
+  --ink-2: #48544f;
+  --line: #ccd5d1;
+  --accent: #0d6a65;
+  --accent-ink: #0a5450;
+  --key-fill: #e2f0ee;
+  --ai: #6a4db2;
+  --warn-bg: #fbeed0;
+  --warn-ink: #7a4f00;
+  --ok-bg: #dcefe3;
+  --ok-ink: #1f5a36;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1211; --surface: #141b19; --ink: #e3eae7; --ink-2: #9dafa8; --line: #2a3632;
+    --accent: #56c3bb; --accent-ink: #7fd6cf; --key-fill: #143230; --ai: #a58df0;
+    --warn-bg: #3a2c0d; --warn-ink: #f0c060; --ok-bg: #163524; --ok-ink: #8fd6a8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1211; --surface: #141b19; --ink: #e3eae7; --ink-2: #9dafa8; --line: #2a3632;
+  --accent: #56c3bb; --accent-ink: #7fd6cf; --key-fill: #143230; --ai: #a58df0;
+  --warn-bg: #3a2c0d; --warn-ink: #f0c060; --ok-bg: #163524; --ok-ink: #8fd6a8;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 15.5px/1.6 var(--sans); padding-inline: 20px; padding-block: 36px 64px; }
+.wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
+.kicker { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+h1 { font: 600 clamp(28px, 4.4vw, 44px)/1.1 var(--sans); margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.lede { font-size: 18px; line-height: 1.55; max-width: 62ch; margin: 0; color: var(--ink-2); }
+.meta { font: 400 13px/1.5 var(--mono); color: var(--ink-2); margin: 0 0 10px; }
+h2 { font: 600 24px/1.2 var(--sans); margin: 0 0 14px; text-wrap: balance; }
+h3 { font: 600 15px/1.3 var(--sans); margin: 0 0 6px; }
+p { margin: 0 0 12px; max-width: 72ch; }
+section { display: block; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; }
+ul.plain { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 72ch; }
+ol.steps { margin: 18px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px 32px; counter-reset: s; }
+ol.steps li { counter-increment: s; padding-left: 38px; position: relative; }
+ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border: 1.5px solid var(--accent); color: var(--accent-ink); border-radius: 50%; font: 500 13px/23px var(--mono); text-align: center; }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 16px 12px; }
+.fig { overflow-x: auto; }
+.fig svg { display: block; width: 100%; min-width: 980px; height: auto; color: var(--ink); }
+figcaption { font-size: 13.5px; color: var(--ink-2); margin-top: 10px; max-width: 90ch; }
+.node { fill: var(--surface); stroke: var(--ink-2); stroke-width: 1; }
+.node.key { fill: var(--key-fill); stroke: var(--accent); stroke-width: 1.5; }
+.node.quiet { fill: none; stroke-dasharray: 2 3; }
+.node.ai { fill: var(--surface); stroke: var(--ai); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.nhead { font: 600 12.5px var(--sans); fill: var(--ink); }
+.nline { font: 400 11px var(--sans); fill: var(--ink-2); white-space: pre; }
+.colhead { font: 500 11px var(--mono); fill: var(--accent-ink); letter-spacing: .06em; }
+.elabel { font: 400 10.5px var(--sans); fill: var(--ink-2); }
+.edge { fill: none; stroke: currentColor; stroke-width: 1.3; }
+.edge.dash { stroke: var(--ai); stroke-dasharray: 5 4; color: var(--ai); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--surface); border: 1px solid var(--line); }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font: 500 11.5px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; font-weight: 500; }
+code, .m { font: 400 13px var(--mono); }
+.tw { overflow-x: auto; }
+.badge { display: inline-block; font: 500 11px/1 var(--mono); padding: 4px 6px; border-radius: 3px; border: 1px solid var(--line); background: var(--bg); margin-right: 6px; }
+.st { display: inline-block; font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 3px; }
+.st.ok { background: var(--ok-bg); color: var(--ok-ink); }
+.st.wip { background: var(--warn-bg); color: var(--warn-ink); }
+pre { margin: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
+.note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; max-width: 72ch; color: var(--ink-2); }
+footer { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) { body { font-size: 15px; } ol.steps { grid-template-columns: 1fr; } }
+</style>
+
+</head><body>
+<div class="wrap">
+
+<header>
+  <span class="kicker">Final-year project · B.Tech Civil Engineering</span>
+  <h1>Masonry Delay-Risk Decision Support</h1>
+  <p class="lede">A tool that takes what is known about one brick or block masonry activity, runs it through a fixed simulation, and says which response is preferred and why. Every figure on screen traces to an input you gave or a paper it cites.</p>
+  <p class="meta">One activity: brick / blockwork masonry, India · written 28 Sep 2026</p>
+  <p class="note"><b>Update.</b> The interface and service were later reduced to risk identification, the risk register and the risk matrix. The simulation, cost and decision steps described in Figure 1 (steps 4 to 6) are no longer part of the app. The rules, the guarded AI layer, the evidence corpus and the literature harvest below are unchanged.</p>
+</header>
+
+<section>
+  <h2>What it does</h2>
+  <p>You describe the activity (quantity, crews, deadline), the risks that could delay it (each with a probability, a delay range and a cost, and where each number came from), and the mitigations you could pay for. The tool simulates the activity many thousands of times, reports how late it is likely to finish and what that costs, re-runs it for each mitigation option, and states which option is preferred under a rule you chose.</p>
+  <div class="cols">
+    <div>
+      <h3>It will not</h3>
+      <ul class="plain">
+        <li><b>Invent a number.</b> AI may suggest risks and cite papers. Probabilities, delays and costs come from you, from site records, or from a cited source.</li>
+        <li><b>Call anything optimal.</b> It reports the option preferred under the stated criterion, among the options actually evaluated.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>It also does not</h3>
+      <ul class="plain">
+        <li><b>Fit a new productivity equation.</b> Productivity comes from published models, or a range you enter, with warnings when you go outside a model's validity range.</li>
+        <li><b>Train on the papers.</b> The literature is a searchable evidence store the AI must cite from. No model is fitted to it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>How a run works</h2>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 1270 716" role="img" aria-label="Left-to-right flow: six input groups are validated, prepared, simulated by Monte Carlo, analysed and compared as options, and end as screens, a report and an audit file." xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs><text class="colhead" x="30" y="22">1  INPUTS</text><text class="colhead" x="242" y="22">2  VALIDATE</text><text class="colhead" x="454" y="22">3  PREPARE</text><text class="colhead" x="666" y="22">4  SIMULATE</text><text class="colhead" x="878" y="22">5  ANALYSE + DECIDE</text><text class="colhead" x="1090" y="22">6  OUTPUTS</text><rect class="node" x="30" y="44" width="172" height="76" rx="3"/><text class="nhead" x="40" y="63">Case + activity</text><text class="nline" x="40" y="81">quantity, crews, hours</text><text class="nline" x="40" y="96">deadline, each with</text><text class="nline" x="40" y="111">a Source label</text><rect class="node" x="30" y="134" width="172" height="76" rx="3"/><text class="nhead" x="40" y="153">Productivity choice</text><text class="nline" x="40" y="171">manual min / likely /</text><text class="nline" x="40" y="186">max, or published</text><text class="nline" x="40" y="201">models</text><rect class="node" x="30" y="224" width="172" height="61" rx="3"/><text class="nhead" x="40" y="243">Site facts</text><text class="nline" x="40" y="261">Yes / No / Unknown,</text><text class="nline" x="40" y="276">or a number</text><rect class="node" x="30" y="299" width="172" height="91" rx="3"/><text class="nhead" x="40" y="318">Risk register</text><text class="nline" x="40" y="336">probability p,</text><text class="nline" x="40" y="351">delay distribution,</text><text class="nline" x="40" y="366">direct cost, each</text><text class="nline" x="40" y="381">with a Source</text><rect class="node" x="30" y="404" width="172" height="61" rx="3"/><text class="nhead" x="40" y="423">Cost model</text><text class="nline" x="40" y="441">cost per delay day,</text><text class="nline" x="40" y="456">liquidated damages</text><rect class="node" x="30" y="479" width="172" height="76" rx="3"/><text class="nhead" x="40" y="498">Mitigations + options</text><text class="nline" x="40" y="516">action, p / delay after,</text><text class="nline" x="40" y="531">cost, constraints</text><rect class="node key" x="242" y="44" width="172" height="532" rx="3"/><text class="nhead" x="252" y="63">Case check</text><text class="nline" x="252" y="81">parse_case</text><text class="nline" x="252" y="96"></text><text class="nline" x="252" y="111">Every number must carry</text><text class="nline" x="252" y="126">a Source, or the run</text><text class="nline" x="252" y="141">is refused.</text><text class="nline" x="252" y="156"></text><text class="nline" x="252" y="171">Missing, non-numeric or</text><text class="nline" x="252" y="186">out-of-range inputs</text><text class="nline" x="252" y="201">come back as plain</text><text class="nline" x="252" y="216">messages, never as a</text><text class="nline" x="252" y="231">silent default of 0.</text><text class="nline" x="252" y="246"></text><text class="nline" x="252" y="261">Live: re-checked on</text><text class="nline" x="252" y="276">every edit in the GUI.</text><path class="edge" d="M 202 82.0 L 242 82.0" marker-end="url(#ah)"/><path class="edge" d="M 202 172.0 L 242 172.0" marker-end="url(#ah)"/><path class="edge" d="M 202 254.5 L 242 254.5" marker-end="url(#ah)"/><path class="edge" d="M 202 344.5 L 242 344.5" marker-end="url(#ah)"/><path class="edge" d="M 202 434.5 L 242 434.5" marker-end="url(#ah)"/><path class="edge" d="M 202 517.0 L 242 517.0" marker-end="url(#ah)"/><rect class="node" x="454" y="44" width="172" height="150" rx="3"/><text class="nhead" x="464" y="63">Baseline duration T0</text><text class="nline" x="464" y="81">published models -&gt;</text><text class="nline" x="464" y="96">m2/day per crew</text><text class="nline" x="464" y="111">unit + range checks</text><text class="nline" x="464" y="126">pooled by sample size</text><text class="nline" x="464" y="141">(or manual range)</text><text class="nline" x="464" y="156">-&gt; planned days T0</text><rect class="node" x="454" y="214" width="172" height="122" rx="3"/><text class="nhead" x="464" y="233">Rule engine</text><text class="nline" x="464" y="251">site facts -&gt; rules</text><text class="nline" x="464" y="266">fired / not evaluable;</text><text class="nline" x="464" y="281">elevated risks missing</text><text class="nline" x="464" y="296">from the register are</text><text class="nline" x="464" y="311">flagged as warnings</text><text class="nline" x="464" y="326">only, not a sim input</text><rect class="node quiet" x="454" y="344" width="172" height="66" rx="3"/><text class="nhead" x="464" y="363">Register + costs</text><text class="nline" x="464" y="381">passed through as</text><text class="nline" x="464" y="396">validated</text><rect class="node" x="454" y="430" width="172" height="146" rx="3"/><text class="nhead" x="464" y="449">Options + mitigations</text><text class="nline" x="464" y="467">each option = a set of</text><text class="nline" x="464" y="482">mitigations, at most</text><text class="nline" x="464" y="497">one per risk;</text><text class="nline" x="464" y="512">only p and delay change,</text><text class="nline" x="464" y="527">to the values you gave</text><path class="edge" d="M 414 119 L 454 119" marker-end="url(#ah)"/><path class="edge" d="M 414 267 L 454 267" marker-end="url(#ah)"/><path class="edge" d="M 414 377 L 454 377" marker-end="url(#ah)"/><path class="edge" d="M 414 503 L 454 503" marker-end="url(#ah)"/><rect class="node key" x="666" y="44" width="172" height="276" rx="3"/><text class="nhead" x="676" y="63">Monte Carlo</text><text class="nline" x="676" y="81">n runs, fixed seed</text><text class="nline" x="676" y="96"></text><text class="nline" x="676" y="111">each run:</text><text class="nline" x="676" y="126">  T0</text><text class="nline" x="676" y="141">  + sum over risks of</text><text class="nline" x="676" y="156">    occurs? Bernoulli(p)</text><text class="nline" x="676" y="171">    x extra delay drawn</text><text class="nline" x="676" y="186">    from Beta-PERT /</text><text class="nline" x="676" y="201">    triangular / uniform</text><text class="nline" x="676" y="216">    / fixed</text><text class="nline" x="676" y="231"></text><text class="nline" x="676" y="246">optional: correlated</text><text class="nline" x="676" y="261">risks (Gaussian copula),</text><text class="nline" x="676" y="276">productivity spread</text><rect class="node" x="666" y="340" width="172" height="236" rx="3"/><text class="nhead" x="676" y="359">Re-run per option</text><text class="nline" x="676" y="377">apply the mitigations,</text><text class="nline" x="676" y="392">simulate again with the</text><text class="nline" x="676" y="407">SAME random numbers so</text><text class="nline" x="676" y="422">a difference between</text><text class="nline" x="676" y="437">options is the change</text><text class="nline" x="676" y="452">itself, not sampling</text><text class="nline" x="676" y="467">noise</text><text class="nline" x="676" y="482"></text><text class="nline" x="676" y="497">ACCEPT = do nothing</text><path class="edge" d="M 626 119 L 646 119 L 646 150 L 666 150" marker-end="url(#ah)"/><text class="elabel" x="636" y="112" text-anchor="middle">T0</text><path class="edge" d="M 626 377 L 646 377 L 646 250 L 666 250" marker-end="url(#ah)"/><text class="elabel" x="646" y="395" text-anchor="middle">risks</text><path class="edge" d="M 626 503 L 666 503" marker-end="url(#ah)"/><text class="elabel" x="646" y="496" text-anchor="middle">sets</text><path class="edge" d="M 752.0 320 L 752.0 340" marker-end="url(#ah)"/><text class="elabel" x="760.0" y="334" text-anchor="start">same seed</text><rect class="node" x="878" y="44" width="172" height="100" rx="3"/><text class="nhead" x="888" y="63">Schedule result</text><text class="nline" x="888" y="81">mean, P50-P95 + 95% CI</text><text class="nline" x="888" y="96">P(T &gt; deadline)</text><text class="nline" x="888" y="111">CVaR90</text><rect class="node" x="878" y="160" width="172" height="86" rx="3"/><text class="nhead" x="888" y="179">Cost</text><text class="nline" x="888" y="197">simulated expected cost</text><text class="nline" x="888" y="212">with liquidated damages;</text><text class="nline" x="888" y="227">event EMV alongside</text><rect class="node" x="878" y="262" width="172" height="100" rx="3"/><text class="nhead" x="888" y="281">Checks + matrix</text><text class="nline" x="888" y="299">which risks drive delay</text><text class="nline" x="888" y="314">convergence, analytic</text><text class="nline" x="888" y="329">cross-check, risk matrix</text><text class="nline" x="888" y="344">(ordinal only)</text><rect class="node key" x="878" y="378" width="172" height="198" rx="3"/><text class="nhead" x="888" y="397">Decision</text><text class="nline" x="888" y="415">minimise the chosen</text><text class="nline" x="888" y="430">criterion (default:</text><text class="nline" x="888" y="445">total expected cost)</text><text class="nline" x="888" y="460">subject to limits on</text><text class="nline" x="888" y="475">P(T&gt;deadline) and</text><text class="nline" x="888" y="490">mitigation budget;</text><text class="nline" x="888" y="505">breaking a limit rules</text><text class="nline" x="888" y="520">an option out</text><text class="nline" x="888" y="535">-&gt; &#x27;preferred under the</text><text class="nline" x="888" y="550">stated criterion&#x27;</text><path class="edge" d="M 838 94 L 878 94" marker-end="url(#ah)"/><path class="edge" d="M 838 203 L 878 203" marker-end="url(#ah)"/><path class="edge" d="M 838 312 L 878 312" marker-end="url(#ah)"/><path class="edge" d="M 838 476 L 878 476" marker-end="url(#ah)"/><text class="elabel" x="858" y="469" text-anchor="middle">per option</text><rect class="node" x="1090" y="44" width="172" height="532" rx="3"/><text class="nhead" x="1100" y="63">Outputs</text><text class="nline" x="1100" y="81">12 screens, in order:</text><text class="nline" x="1100" y="96">case, productivity,</text><text class="nline" x="1100" y="111">rules, risks, matrix,</text><text class="nline" x="1100" y="126">cost, simulation,</text><text class="nline" x="1100" y="141">mitigation, decision,</text><text class="nline" x="1100" y="156">explanation, evidence,</text><text class="nline" x="1100" y="171">report</text><text class="nline" x="1100" y="186"></text><text class="nline" x="1100" y="201">report.md</text><text class="nline" x="1100" y="216"></text><text class="nline" x="1100" y="231">audit.json</text><text class="nline" x="1100" y="246">  input hash, seed, n,</text><text class="nline" x="1100" y="261">  assumption register</text><text class="nline" x="1100" y="276"></text><text class="nline" x="1100" y="291">case JSON</text><text class="nline" x="1100" y="306">  re-runs from the</text><text class="nline" x="1100" y="321">  command line</text><path class="edge" d="M 1050 94 L 1090 94" marker-end="url(#ah)"/><path class="edge" d="M 1050 203 L 1090 203" marker-end="url(#ah)"/><path class="edge" d="M 1050 312 L 1090 312" marker-end="url(#ah)"/><path class="edge" d="M 1050 477 L 1090 477" marker-end="url(#ah)"/><rect class="node ai" x="30" y="606" width="1040" height="92" rx="3"/><text class="nhead" x="40" y="625">Evidence corpus + guarded AI  (Figure 2)</text><text class="nline" x="40" y="643">Retrieves cited evidence and drafts candidate risks; explains a finished run in words.</text><text class="nline" x="40" y="658">It never supplies a probability, delay, cost or the decision. You supply those, with a Source.</text><text class="nline" x="40" y="673">Off by default: with no key the tool runs fully offline.</text><path class="edge dash" d="M 30 652 L 16 652 L 16 345 L 30 345" marker-end="url(#ah)"/><text class="elabel" transform="rotate(-90 7 500)" x="7" y="500" text-anchor="middle">candidate risks</text><path class="edge dash" d="M 1070 652 L 1176.0 652 L 1176.0 576" marker-end="url(#ah)"/><text class="elabel" x="1168.0" y="646" text-anchor="end">narrative, numbers-checked</text></svg></div>
+    <figcaption>Figure 1. One analysis, left to right. Solid arrows carry validated inputs; dashed violet arrows are the optional AI layer, which can only propose candidates and wording, never figures. The GUI and the command line both call the same function, <code>app.service.run_case</code>.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><h3>Inputs</h3>Screens 1 to 8 of the interface collect them. Each number that matters carries a Source label (below).</li>
+    <li><h3>Case check</h3>Nothing runs until every number has a Source and is in range. Problems come back as plain messages that name the field, never as a silent default.</li>
+    <li><h3>Prepare</h3>Baseline duration T0 comes from published models, converted to m2/day per crew and pooled by sample size when several apply, or from your own range. The rule engine reads site facts and warns about elevated risks missing from the register. India labour norms (IS 7272, CPWD) are a citable reference and are never applied automatically.</li>
+    <li><h3>Simulate</h3>Each run starts at T0 and adds, for every risk, a delay drawn from its distribution if a Bernoulli draw with probability p says the risk occurs. Correlated risks and productivity spread are optional. The seed is fixed and shared by every option.</li>
+    <li><h3>Analyse and decide</h3>Schedule percentiles with intervals, the chance of missing the deadline, expected cost with liquidated damages, and which risks drive the delay. Each option is re-simulated with the same random numbers. Options that break a stated limit are excluded, and the admissible option that scores best on the chosen criterion (default: lowest total expected cost) is reported as preferred.</li>
+    <li><h3>Outputs</h3>Twelve screens, a written <code>report.md</code>, and an <code>audit.json</code> holding the input hash, seed, run count and assumption register, so any figure can be reproduced.</li>
+  </ol>
+  <p class="note" style="margin-top:18px">Simulated expected cost and the sum of event-level EMV can differ. Liquidated damages are non-linear in delay, so the average of the cost is not the cost of the average delay. The Cost screen shows both and says why.</p>
+</section>
+
+<section>
+  <h2>Every number has a Source</h2>
+  <p>This rule shapes the whole tool. A value cannot enter a run without one of these labels, and the report lists everything labelled Assumption so a reader can see what is not evidence.</p>
+  <div class="tw">
+  <table>
+    <tr><th>Badge</th><th>Meaning</th><th>Typical use here</th></tr>
+    <tr><td><span class="badge">LIT</span></td><td>Literature</td><td>A value stated in a cited paper or standard</td></tr>
+    <tr><td><span class="badge">HIS</span></td><td>Historical</td><td>Site or company records</td></tr>
+    <tr><td><span class="badge">USR</span></td><td>User input</td><td>Quantities, deadline, crew sizes</td></tr>
+    <tr><td><span class="badge">EXP</span></td><td>Expert judgment</td><td>Probabilities and delay ranges from an engineer</td></tr>
+    <tr><td><span class="badge">DER</span></td><td>Derived</td><td>Computed from other labelled inputs</td></tr>
+    <tr><td><span class="badge">ASM</span></td><td>Assumption</td><td>Placeholders, always called out</td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Where AI fits</h2>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 1248 530" role="img" aria-label="Evidence sources merge into one store; a question retrieves a few records; the LLM proposes candidate risks from only those; five guard rules strip numbers and unsupported citations; the result is an unverified candidate that a person must complete." xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs><text class="colhead" x="8" y="22">EVIDENCE</text><text class="colhead" x="232" y="22">STORE</text><text class="colhead" x="456" y="22">ASK</text><text class="colhead" x="680" y="22">GUARD</text><text class="colhead" x="904" y="22">YOU</text><rect class="node" x="8" y="44" width="170" height="61" rx="3"/><text class="nhead" x="18" y="63">Curated workbook</text><text class="nline" x="18" y="81">risks R##,</text><text class="nline" x="18" y="96">mitigations M##</text><path class="edge" d="M 178 74 L 232 176" marker-end="url(#ah)"/><rect class="node" x="8" y="112" width="170" height="61" rx="3"/><text class="nhead" x="18" y="131">Research notes</text><text class="nline" x="18" y="149">A-F review notes,</text><text class="nline" x="18" y="164">P1-P3 extracts</text><path class="edge" d="M 178 142 L 232 176" marker-end="url(#ah)"/><rect class="node" x="8" y="180" width="170" height="61" rx="3"/><text class="nhead" x="18" y="199">Model + norm registries</text><text class="nline" x="18" y="217">productivity models,</text><text class="nline" x="18" y="232">IS 7272 / CPWD norms</text><path class="edge" d="M 178 210 L 232 176" marker-end="url(#ah)"/><rect class="node" x="8" y="248" width="170" height="61" rx="3"/><text class="nhead" x="18" y="267">OpenAlex harvest</text><text class="nline" x="18" y="285">OA-... records,</text><text class="nline" x="18" y="300">14 topic areas</text><path class="edge" d="M 178 278 L 232 176" marker-end="url(#ah)"/><rect class="node key" x="232" y="44" width="170" height="265" rx="3"/><text class="nhead" x="242" y="63">EvidenceStore</text><text class="nline" x="242" y="81">one record per ID;</text><text class="nline" x="242" y="96">same ID from two</text><text class="nline" x="242" y="111">sources is merged,</text><text class="nline" x="242" y="126">never overwritten</text><text class="nline" x="242" y="141"></text><text class="nline" x="242" y="156">each keeps citation,</text><text class="nline" x="242" y="171">DOI, and how deep the</text><text class="nline" x="242" y="186">evidence goes:</text><text class="nline" x="242" y="201">full text / abstract /</text><text class="nline" x="242" y="216">metadata only</text><rect class="node" x="456" y="44" width="170" height="110" rx="3"/><text class="nhead" x="466" y="63">Retrieve top-k</text><text class="nline" x="466" y="81">token overlap with your</text><text class="nline" x="466" y="96">query, e.g. &#x27;labour</text><text class="nline" x="466" y="111">holiday&#x27;; no LLM</text><text class="nline" x="466" y="126">involved yet</text><path class="edge" d="M 402 99 L 456 99" marker-end="url(#ah)"/><rect class="node ai" x="456" y="178" width="170" height="110" rx="3"/><text class="nhead" x="466" y="197">LLM (optional)</text><text class="nline" x="466" y="215">Claude or Gemini,</text><text class="nline" x="466" y="230">chosen in Settings.</text><text class="nline" x="466" y="245">Prompt: use ONLY these</text><text class="nline" x="466" y="260">records, no numbers</text><path class="edge" d="M 541.0 154 L 541.0 178" marker-end="url(#ah)"/><text class="elabel" x="549.0" y="171" text-anchor="start">records</text><rect class="node key" x="680" y="44" width="170" height="244" rx="3"/><text class="nhead" x="690" y="63">Guard rules</text><text class="nline" x="690" y="81">G1 cite only retrieved</text><text class="nline" x="690" y="96">    records in the store</text><text class="nline" x="690" y="111">G2 strip any number the</text><text class="nline" x="690" y="126">    LLM returns</text><text class="nline" x="690" y="141">G3 quotes must appear in</text><text class="nline" x="690" y="156">    the cited record</text><text class="nline" x="690" y="171">G4 status stays</text><text class="nline" x="690" y="186">    AI-unverified</text><text class="nline" x="690" y="201">G5 keep prompt, model,</text><text class="nline" x="690" y="216">    ids, raw output</text><path class="edge" d="M 626 233 L 680 233" marker-end="url(#ah)"/><text class="elabel" x="646" y="226" text-anchor="middle">raw JSON</text><rect class="node" x="904" y="44" width="170" height="110" rx="3"/><text class="nhead" x="914" y="63">Candidate risk</text><text class="nline" x="914" y="81">name, category,</text><text class="nline" x="914" y="96">mechanism, valid</text><text class="nline" x="914" y="111">evidence IDs, no numbers,</text><text class="nline" x="914" y="126">flagged AI-suggested</text><path class="edge" d="M 850 99 L 904 99" marker-end="url(#ah)"/><rect class="node" x="904" y="178" width="170" height="110" rx="3"/><text class="nhead" x="914" y="197">You complete it</text><text class="nline" x="914" y="215">enter p, delay, cost</text><text class="nline" x="914" y="230">with an honest Source,</text><text class="nline" x="914" y="245">confirm -&gt; Risk register;</text><text class="nline" x="914" y="260">unconfirmed stays flagged</text><path class="edge" d="M 989.0 154 L 989.0 178" marker-end="url(#ah)"/><text class="colhead" x="8" y="336">EXPLANATION OF A FINISHED RUN</text><rect class="node key" x="8" y="356" width="170" height="150" rx="3"/><text class="nhead" x="18" y="375">Engine results</text><text class="nline" x="18" y="393">the only source of</text><text class="nline" x="18" y="408">figures on screen</text><rect class="node" x="256" y="356" width="190" height="64" rx="3"/><text class="nhead" x="266" y="375">Deterministic text</text><text class="nline" x="266" y="393">the engine&#x27;s own numbers</text><text class="nline" x="266" y="408">in templated wording</text><rect class="node ai" x="256" y="442" width="190" height="64" rx="3"/><text class="nhead" x="266" y="461">LLM narrative</text><text class="nline" x="266" y="479">plain-language write-up</text><rect class="node key" x="500" y="442" width="190" height="64" rx="3"/><text class="nhead" x="510" y="461">Numbers check</text><text class="nline" x="510" y="479">every figure must match</text><text class="nline" x="510" y="494">the engine, else flagged</text><rect class="node" x="744" y="356" width="190" height="150" rx="3"/><text class="nhead" x="754" y="375">Explanation screen</text><text class="nline" x="754" y="393">deterministic text always;</text><text class="nline" x="754" y="408">narrative only if a key</text><text class="nline" x="754" y="423">exists, with its verified /</text><text class="nline" x="754" y="438">unverified status</text><path class="edge" d="M 178 388 L 256 388" marker-end="url(#ah)"/><path class="edge dash" d="M 178 474 L 256 474" marker-end="url(#ah)"/><text class="elabel" x="217" y="466" text-anchor="middle">with a key</text><path class="edge" d="M 446 474 L 500 474" marker-end="url(#ah)"/><path class="edge" d="M 690 474 L 744 474" marker-end="url(#ah)"/><path class="edge" d="M 446 388 L 744 388" marker-end="url(#ah)"/><text class="elabel" x="595" y="380" text-anchor="middle">always shown</text></svg></div>
+    <figcaption>Figure 2. Top: how a suggestion is produced and stopped from carrying numbers. Bottom: how a finished run is explained. The model is Claude or Gemini, chosen in Settings.</figcaption>
+  </figure>
+  <p style="margin-top:16px">With no key configured the tool runs fully offline: suggestions become a plain search of the evidence store and the explanation is the deterministic text. The key is saved in the per-user application-data folder, outside the project, so zipping the project for submission does not carry it.</p>
+</section>
+
+<section>
+  <h2>Where the literature comes from</h2>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 1248 300" role="img" aria-label="Fourteen topic query sets go to OpenAlex, results are de-duplicated and checkpointed to one file, open-access PDFs are downloaded and verified, and the same file feeds a ranking workbook and the AI evidence store." xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs><rect class="node" x="8" y="40" width="176" height="152" rx="3"/><text class="nhead" x="18" y="59">14 topic buckets</text><text class="nline" x="18" y="77">delay causes, Monte Carlo,</text><text class="nline" x="18" y="92">risk matrix, EMV, AI/LLM,</text><text class="nline" x="18" y="107">expert systems,</text><text class="nline" x="18" y="122">mitigation, masonry</text><text class="nline" x="18" y="137">productivity, India,</text><text class="nline" x="18" y="152">weather, sensitivity,</text><text class="nline" x="18" y="167">decision support, cost,</text><text class="nline" x="18" y="182">reviews</text><rect class="node key" x="218" y="40" width="176" height="150" rx="3"/><text class="nhead" x="228" y="59">OpenAlex API</text><text class="nline" x="228" y="77">3 pages x 200 per query,</text><text class="nline" x="228" y="92">own free API key (env var,</text><text class="nline" x="228" y="107">not stored in the project)</text><text class="nline" x="228" y="122">waits and retries on</text><text class="nline" x="228" y="137">429 rate limits</text><rect class="node key" x="428" y="40" width="176" height="150" rx="3"/><text class="nhead" x="438" y="59">De-duplicate + save</text><text class="nline" x="438" y="77">unique by OpenAlex ID,</text><text class="nline" x="438" y="92">years 1995 onward,</text><text class="nline" x="438" y="107">written to</text><text class="nline" x="438" y="122">openalex_corpus.jsonl</text><text class="nline" x="438" y="137">after every bucket so</text><text class="nline" x="438" y="152">a crash loses nothing</text><rect class="node" x="638" y="40" width="176" height="150" rx="3"/><text class="nhead" x="648" y="59">Fetch open-access PDFs</text><text class="nline" x="648" y="77">only where OpenAlex lists</text><text class="nline" x="648" y="92">a PDF link; file is kept</text><text class="nline" x="648" y="107">only if it starts with</text><text class="nline" x="648" y="122">%PDF and is over 2 kB;</text><text class="nline" x="648" y="137">filed by topic under</text><text class="nline" x="648" y="152">6_Bulk_Harvest/</text><path class="edge" d="M 184 115 L 218 115" marker-end="url(#ah)"/><path class="edge" d="M 394 115 L 428 115" marker-end="url(#ah)"/><path class="edge" d="M 604 115 L 638 115" marker-end="url(#ah)"/><rect class="node" x="848" y="40" width="176" height="66" rx="3"/><text class="nhead" x="858" y="59">Ranking workbook</text><text class="nline" x="858" y="77">formula-based, 3 sheets</text><rect class="node" x="848" y="124" width="176" height="66" rx="3"/><text class="nhead" x="858" y="143">AI evidence store</text><text class="nline" x="858" y="161">OA-... records, cited</text><path class="edge" d="M 516.0 190 L 516.0 236 L 824 236 L 824 73 L 848 73" marker-end="url(#ah)"/><path class="edge" d="M 824 157 L 848 157" marker-end="url(#ah)"/><text class="elabel" x="524.0" y="228" text-anchor="start">same file feeds both</text><text class="elabel" x="848" y="232" text-anchor="start">score = 0.45 x citations (log) + 0.20 x recency</text><text class="elabel" x="848" y="250" text-anchor="start">+ 0.15 x open access + 0.20 x PDF held.</text><text class="elabel" x="848" y="268" text-anchor="start">A reading-order aid, not a quality grade.</text></svg></div>
+    <figcaption>Figure 3. Bulk literature harvest. Every record is a real OpenAlex entry with its ID, and a paper counts as downloaded only if a real PDF file was saved.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Where things stand</h2>
+  <div class="tw">
+  <table>
+    <tr><th>Item</th><th>State on 28 Sep 2026</th></tr>
+    <tr><td>Automated tests</td><td><span class="st ok">130 passing</span> rules, matrix, service, corpus, AI guard, GUI API, settings, plus the older engine modules</td></tr>
+    <tr><td>Curated evidence</td><td>418 records from the workbook, research notes and registries</td></tr>
+    <tr><td>Literature harvest</td><td><span class="st ok">cleaned</span> 21,902 records were harvested across 14 topics; 5,214 about construction were kept. The rest were off-topic search hits and sit in an archive outside the project, together with the 6,194 harvested PDFs (11 GB). The 45 curated papers stay in <code>Research_Papers/</code>.</td></tr>
+    <tr><td>Ranking workbook</td><td><span class="st ok">current</span> <code>Research_Papers_Ranking.xlsx</code> ranks the 5,214 kept records by a stated formula</td></tr>
+    <tr><td>AI, live check</td><td>Gemini connection tested and answered. The Anthropic path has not been tested live (no key). Guard rules are covered by tests using a stand-in model.</td></tr>
+    <tr><td>Case data</td><td>The bundled example uses ILLUSTRATIVE placeholders. Real site data has not been supplied yet.</td></tr>
+  </table>
+  </div>
+  <p style="margin-top:14px">Open decisions: real case data for the delay prediction, and your faculty's view on whether AI may pre-fill probability, delay and cost fields. That is deferred, because today the answer is no by design.</p>
+</section>
+
+<section>
+  <h2>Module map</h2>
+  <div class="tw">
+  <table>
+    <tr><th>Path</th><th>Job</th></tr>
+    <tr><td><code>app/engine/</code></td><td>Simulation, expected cost, risk matrix, decision rule, logical rule engine, audit trail. No AI in here.</td></tr>
+    <tr><td><code>app/productivity/</code></td><td>Published productivity models, baseline builder, India labour norms.</td></tr>
+    <tr><td><code>app/ai_layer/</code></td><td>Evidence store and corpus loader, guard rules, LLM clients, explanation, saved settings.</td></tr>
+    <tr><td><code>app/service.py</code></td><td>The one entry point: validate a case, run it, return everything. GUI and CLI both use it.</td></tr>
+    <tr><td><code>app/reporting/</code>, <code>app/cli.py</code></td><td>Markdown report, command-line runner.</td></tr>
+    <tr><td><code>gui/</code></td><td>Local Flask server and a single-page interface. It computes nothing itself.</td></tr>
+    <tr><td><code>data/</code></td><td>Model registry, India norms, risk library, rule base, harvested corpus.</td></tr>
+    <tr><td><code>Research_Notes/</code>, <code>Research_Papers/</code></td><td>Literature review notes, and downloaded PDFs filed by topic.</td></tr>
+    <tr><td><code>scripts/</code>, <code>tests/</code></td><td>Harvest and ranking scripts. Automated tests.</td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Run it</h2>
+<pre>python -m gui                                  # local interface at http://127.0.0.1:8765/
+python -m app.cli template &gt; my_case.json      # blank case to fill in
+python -m app.cli run my_case.json --out out/  # report.md + audit.json
+python -m pytest                               # full test suite</pre>
+</section>
+
+<footer>The input format is documented in <code>docs/case_schema.md</code>, and each screen is described in <code>gui/README_GUI.md</code>.</footer>
+
+</div>
+
+</body></html>
