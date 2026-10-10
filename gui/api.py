@@ -14,6 +14,7 @@ Routes
     GET  /api/evidence        ?ids=M01,R08  |  ?q=search words  |  (curated records; the bulk harvest is searched with q)
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
+    POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
     POST /api/suggest-risks   service.suggest_risks(...) (offline retrieval or guarded LLM)
     POST /api/report          register.md download
     POST /api/register-csv    register.csv download
@@ -409,6 +410,48 @@ def create_app() -> Flask:
     @app.get("/api/example-analysis")
     def example_analysis():
         return _json(service.example_analysis_case())
+
+    @app.post("/api/online-options")
+    def online_options():
+        """Optional literature search for candidate responses (app.online_search).  The ONLY route that can touch the
+        network, and only when the user asks.  Body: {"case": {...}} or {"risk_ids": ["R-MAT", ...]}.  No LLM."""
+        from app import online_search
+
+        d = _json_object()
+        lib = {r["id"]: r.get("name") or r["id"] for r in service.risk_library()}
+        risks: list[dict] = []
+        if isinstance(d.get("case"), dict):
+            raw = d["case"].get("risks")
+            if raw is not None and not isinstance(raw, list):
+                raise BadRequest(["case.risks must be a list"])
+            for r in raw or []:
+                if isinstance(r, dict) and isinstance(r.get("id"), str):
+                    nm = lib.get(r["id"]) or (r.get("name") if isinstance(r.get("name"), str) else None) or r["id"]
+                    risks.append({"id": r["id"], "name": nm})
+        elif "risk_ids" in d:
+            ids = d["risk_ids"]
+            if not isinstance(ids, list) or not all(isinstance(x, str) for x in ids):
+                raise BadRequest(["risk_ids must be a list of risk ids (text)"])
+            unknown = [x for x in ids if x not in lib]
+            if unknown:
+                raise BadRequest(["unknown risk id(s): " + ", ".join(unknown[:5])])
+            risks = [{"id": x, "name": lib[x]} for x in ids]
+        else:
+            raise BadRequest(["send {\"case\": {...}} or {\"risk_ids\": [...]}"])
+        seen, uniq = set(), []
+        for r in risks:
+            if r["id"] not in seen:
+                seen.add(r["id"]); uniq.append(r)
+        if not uniq:
+            return _problems(["no risks to search for: add risks to the case first"])
+        if len(uniq) > online_search.MAX_RISKS:
+            return _problems([f"search at most {online_search.MAX_RISKS} risks at a time"])
+        try:
+            res = online_search.find_options_online(uniq, service.mitigation_catalogue())
+        except Exception:
+            log.exception("online search failed")
+            return _json({"ok": False, "offline": True, "message": "The online search failed unexpectedly. The tool still works offline."}, 502)
+        return _json(res)
 
     @app.post("/api/suggest-risks")
     def suggest_risks():

@@ -34,6 +34,15 @@ function setTheme(t) {
   renderToolbar();
 }
 
+// ------------------------------------------------------------------ tags (Source pickers and ILLUSTRATIVE notes)
+// Hidden by default to keep the forms clean. The data are unchanged: every number still stores its Source and the exports still print it.
+function tagsHidden() { try { return window.localStorage.getItem("fyp-gui-tags") !== "show"; } catch (e) { return true; } }
+function applyTags() { document.body.classList.toggle("hide-tags", tagsHidden()); }
+function toggleTags() {
+  try { window.localStorage.setItem("fyp-gui-tags", tagsHidden() ? "show" : "hide"); } catch (e) { /* storage unavailable: applies for this session only */ document.body.classList.toggle("hide-tags"); renderToolbar(); return; }
+  applyTags(); renderToolbar();
+}
+
 // ------------------------------------------------------------------ chrome
 function renderToolbar() {
   const ai = S.health?.ai;
@@ -44,6 +53,7 @@ function renderToolbar() {
     <button type="button" class="btn btn-ghost" data-action="save" title="Save the case as JSON (Ctrl+S)">${icon("save")}<span class="lbl">Save</span></button>
     <button type="button" class="btn btn-ghost" data-action="example" title="Load the ILLUSTRATIVE example (placeholder numbers)">${icon("flask")}<span class="lbl">Load example</span></button>
     <span class="sep" aria-hidden="true"></span>
+    <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
 }
@@ -627,6 +637,7 @@ function openSettings() {
 }
 
 const ACTIONS = {
+  tags: () => toggleTags(),
   theme: () => setTheme(theme() === "dark" ? "light" : "dark"),
   settings: () => openSettings(),
   save: () => saveCase(),
@@ -647,6 +658,14 @@ const ACTIONS = {
     S.ui.analysisBusy = false;
     if (r.ok) { S.ui.analysis = r.data; S.ui.analysisKey = caseKey(); }
     else S.ui.analysisProblems = r.data?.problems || ["The analysis failed."];
+    renderScreen();
+  },
+  "online-find": async () => {
+    S.ui.onlineBusy = true; S.ui.onlineProblems = null; renderScreen();
+    const r = await post("/api/online-options", { case: S.case });
+    S.ui.onlineBusy = false;
+    if (r.data && r.data.ok !== undefined && (r.ok || r.data.offline)) { S.ui.online = r.data; S.ui.onlineProblems = null; }
+    else { S.ui.online = null; S.ui.onlineProblems = r.data?.problems || ["The online search failed."]; }
     renderScreen();
   },
   "analysis-dl": () => {
@@ -753,6 +772,7 @@ function hideTip() { tipTarget = null; const t = $("#tip"); t.classList.remove("
 
 // ------------------------------------------------------------------ boot
 async function boot() {
+  applyTags();
   initCursor();
   const bar = $("#topbar");
   const onScroll = () => bar.classList.toggle("is-scrolled", window.scrollY > 8);

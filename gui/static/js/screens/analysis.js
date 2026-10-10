@@ -30,7 +30,31 @@ function inputs() {
   <section class="card mb-5"><header class="card-h"><h2>Candidate responses</h2><span class="sub">${mits.length} entered</span></header><div class="card-b">
     ${mits.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Response</th><th>Targets risk</th><th>Cost</th><th>Probability after</th><th>Delay after</th></tr></thead><tbody>${rows}</tbody></table></div>`
       : alertBox("info", "No responses entered yet", "The tool does not invent a response or its effect. Use Load example in the top bar to see the layout, or add responses in the case file (see docs/case_schema.md); the catalogue below lists where to look.")}
+    <div class="mt-4"><button type="button" class="btn" data-action="online-find"${S.ui.onlineBusy ? " disabled" : ""}${(c.risks || []).length ? "" : " disabled"}>${icon("search")}<span>Find options online</span></button>
+      <p class="hint">Online search: needs internet; results are papers, not recommendations. Nothing is sent unless you press the button. No cost, effect or probability is taken from a paper: read it, then enter your own cost / effect with a Source.</p>
+      <div id="online-live">${onlineResults()}</div></div>
   </div></section>`;
+}
+
+function onlineLink(url, text) {
+  const ok = /^https?:\/\//i.test(url || "");
+  return ok ? `<a href="${h(url)}" target="_blank" rel="noopener noreferrer">${h(text)}</a>` : h(text);
+}
+
+function onlineResults() {
+  const o = S.ui.online;
+  if (S.ui.onlineBusy) return alertBox("info", "Searching OpenAlex and Crossref", "Waiting for the literature indexes (up to 10 seconds each).");
+  if (S.ui.onlineProblems) return alertBox("warn", "The online search could not run", `<ul>${S.ui.onlineProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
+  if (!o) return "";
+  if (!o.ok) return alertBox("neutral", "Offline: no online results", `${h(o.message || "The literature indexes could not be reached.")} Everything else in the tool works without internet.`);
+  const blocks = (o.risks || []).map((r) => {
+    const src = (r.sources || []).map((x) => `<li><strong>${onlineLink(x.url, x.title)}</strong><div class="muted">${h((x.authors || []).join(", "))}${x.year ? ` (${h(x.year)})` : ""}${x.venue ? `. ${h(x.venue)}` : ""}${x.doi ? `. DOI ${h(x.doi)}` : ""} <em>[${h(x.source_api)}]</em></div>${x.abstract_snippet ? `<div class="muted">${h(x.abstract_snippet)}</div>` : ""}</li>`).join("");
+    const cat = (r.catalogue_options || []).map((c) => `<li>${h(c.measure)} <span class="muted">(${h(c.catalogue_id)})</span></li>`).join("");
+    return `<div class="mb-4"><h3>${h(r.risk_id)} ${h(r.risk_name)}</h3>
+      ${cat ? `<div class="muted">Catalogue options for this risk:</div><ul>${cat}</ul>` : ""}
+      ${src ? `<div class="muted">Candidate sources (query: ${h(r.query)})</div><ol>${src}</ol>` : '<p class="muted">No papers returned for this risk.</p>'}</div>`;
+  }).join("");
+  return `${o.partial ? alertBox("warn", "Partial results", h(o.message || "")) : ""}${blocks || '<p class="muted">No risks were searched.</p>'}`;
 }
 
 function commandBanner(r) {
