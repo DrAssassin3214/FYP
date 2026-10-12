@@ -1,0 +1,25 @@
+References used in 07_discussion.md, 08_conclusions.md and the appendices (APA 7th; author-date).
+Entries marked [INCOMPLETE] lack details that are not in the repository evidence; see references_unverified.txt. Do not guess the missing details.
+
+Abeysinghe, [initials not recorded], & Jayathilaka, [initials not recorded]. (2022). Factors influencing the timely completion of construction projects in Sri Lanka. PLoS ONE, 17(12), e0278318. https://doi.org/10.1371/journal.pone.0278318 [INCOMPLETE]
+Adebowale, [initials not recorded], & Agumba, [initials not recorded]. (2023). A meta-analysis of factors affecting construction labour productivity in the Middle East. Journal of Construction in Developing Countries, 28(1), 193-220. https://doi.org/10.21315/jcdc-12-21-0192 [INCOMPLETE]
+Almeida, E. L. G. de, Feitoza, V. A. da S., Carvalho, M. T. M., Piña, A. B. S., Araújo, L. G., & Aidar, L. A. G. (2021). Study of delays in constructions: A managerial point of view of private companies in Brasilia, Brazil. Gestão & Produção, 28(3), e5194. https://doi.org/10.1590/1806-9649-2021v28e5194
+Baker, [initials not recorded], Ponniah, [initials not recorded], & Smith, [initials not recorded]. (1999). Risk response techniques employed currently for major projects. Construction Management and Economics. https://doi.org/10.1080/014461999371709 [INCOMPLETE]
+Brooke, J. (1996). SUS: A quick and dirty usability scale. [INCOMPLETE]
+Cohen, J. (1960). A coefficient of agreement for nominal scales. Educational and Psychological Measurement, 20(1), 37-46.
+Cox, L. A., Jr. (2008). What's wrong with risk matrices? Risk Analysis, 28(2), 497-512. https://doi.org/10.1111/j.1539-6924.2008.01030.x
+Cronbach, L. J. (1951). Coefficient alpha and the internal structure of tests. Psychometrika, 16(3), 297-334.
+Dey, P. K. (2011). Project risk management using multiple criteria decision-making technique and decision tree analysis: A case study of Indian oil refinery. Production Planning & Control, 23(12), 903-921. https://doi.org/10.1080/09537287.2011.586379
+Dixit, [initials not recorded], Mandal, [initials not recorded], Thanikal, [initials not recorded], & Saurabh, [initials not recorded]. (2019). Study of significant factors affecting construction productivity using relative importance index in Indian construction industry. E3S Web of Conferences, 140, 09010. https://doi.org/10.1051/e3sconf/201914009010 [INCOMPLETE]
+Duijm, N. J. (2015). Recommendations on the use and design of risk matrices. Safety Science, 76, 21-31. [INCOMPLETE]
+Gheewala, D., Chaturvedi, S., & Sarkar, D. (2025). Probabilistic risk analysis for elevated metro rail construction using Monte Carlo simulations. International Journal of Construction Management. https://doi.org/10.1080/15623599.2025.2603423 [INCOMPLETE]
+Holm, S. (1979). A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 6(2), 65-70.
+Ichsan, [initials not recorded], Isvara, [initials not recorded], & Karim, [initials not recorded]. (2025). Monte Carlo simulation for enhancing the schedule completion forecast of Jakarta Central Railway Station construction project. Applied Sciences, 15(13), 7464. https://doi.org/10.3390/app15137464 [INCOMPLETE]
+International Electrotechnical Commission. (n.d.). IEC 31010. [INCOMPLETE]
+International Organization for Standardization. (2018). ISO 31000:2018. [INCOMPLETE]
+Karthik, D., & Rao, C. B. K. (2019). The analysis of essential factors responsible for loss of labour productivity in building construction projects in India. Engineering Journal, 23(2), 55-70. https://doi.org/10.4186/ej.2019.23.2.55
+Kendall, M. G., & Babington Smith, B. (1939). The problem of m rankings. The Annals of Mathematical Statistics, 10(3), 275-287.
+Landis, J. R., & Koch, G. G. (1977). The measurement of observer agreement for categorical data. Biometrics, 33(1), 159-174.
+Loekito, [initials not recorded], Dani, [initials not recorded], Zulfikar, [initials not recorded], Triarso, [initials not recorded], & Prasetyono, [initials not recorded]. (2026). Factors influencing construction worker productivity in Indonesia and strategies for improvement. Multidisciplinary Science Journal, 8, e2026243. https://doi.org/10.31893/multiscience.2026243 [INCOMPLETE]
+Manoharan et al. (2022). Labour-related factors affecting construction productivity in Sri Lankan building projects: Perspectives of engineers and managers. Frontiers in Engineering and Built Environment. https://doi.org/10.1108/FEBE-03-2022-0009 [INCOMPLETE]
+Ponmalar, [initials not recorded], Aravindraj, [initials not recorded], & Nandhini, [initials not recorded]. (2018). Study on factors influencing labour productivity in residential buildings in Indian scenario. IJETMR, 5(2), 239-248. https://doi.org/10.29121/ijetmr.v5.i2.2018.168 [INCOMPLETE]

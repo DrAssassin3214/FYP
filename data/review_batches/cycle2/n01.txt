@@ -1,0 +1,300 @@
+W3038713563|A META ANALYSIS OF DECISION MAKING PROBLEMS IN CONSTRUCTION RISK MANAGEMENT
+W3040726354|Health and Safety Risk Assessments in Contruction Sites in Oman
+W3042329253|Determining optimal risk assessment model in construction projects (Case study: steel plant construction project
+W3042869434|T2|Multi-Year Concentrations, Health Risk, and Source Identification, of Air Toxics in the Venice Lagoo|..ntration in gas and particle phases, and the related health risk assessment, were carried out in two out of the three sites, in order t..
+W3044967298|Strategy Assessment in Risk Management Practices in Construction of Gautam Buddha International Airport
+W3048586975|T2|Causes, Impacts and Mitigations of Rework in Construction|.. It leads to declination of quality and productivity, cost- schedule overrun. Rework analysis for construction projects are done through..
+W3083243759|T2|Projects evaluation in construction Industry|..e risks that occur have a direct relationship with cost and time overruns and indirect connection with project evaluation...
+W3088530174|T2|A risk-oriented tender evaluation system for construction projects in Malaysia|..wing criteria used in practice and examining their links to risk factors...
+W3089279512|Statistical Analysis of Delay Factors in Construction Projects
+W3089322682|T2|Does government policy matter? Factors influencing contractors' risk attitudes in the Malaysian cons|..risk attitudes with particular reference to an individual's risk factors in the construction industry. Therefore, this study aims to..
+W3091996271|Hybrid fuzzy-Bayesian decision support tool for dynamic project scheduling and control under uncertainty
+W3093980383|HSE Risk Assessment of Major Sewage Transport Tunnel Projects at the Construction Stage Based on the StructuralEntr
+W3094266560|Construction Time Overrun Related Risks as a Determinant of Completion of Public Private Partnership Projects in Ke
+W3094924326|T2|Linking Challenge–Hindrance Stressors to Safety Outcomes and Performance: A Dual Mediation Model for|..ational stressors have long been recognized as an important risk factor for injury accidents. The mechanisms underlying the relatio..
+W3096852326|Moderating Influence of Risk Management Practices on the Relationship between Combined Stakeholder Participation in
+W3096933786|T2|RISK IMPACT BESIDES CAPITAL STRUCTURE AND INVESTMENT VALUATION INTO PUBLIC HOUSING PROJECT’S INVESTM|..mework also align with risk return theory that accommodates risk factors into investment rate model simultaneously with capital stru..
+W3101128159|Risk management of repetitive construction projects
+W3102389539|T2|Causative Factor of Accidents in Commercial Buildings of Bharatpur Metropolitan City|.. all the consultant and contractor team working in the Area.Relative Importance Index was used to rank the major accident causation factor.The ca..
+W3106981637|T2|An Assessment of the Performance of Framework Contract Projects|..ed spectacularly in dealing with unnecessary cost overruns, time delays, and improvement in the quality of delivery. However, it wa..
+W3109348966|T2|Responsiveness of Quantity Surveying Research to the Construction Industry Related Problems in Niger|..ry which include porosity of tendering procedures, cost and time overrun of projects. Also, QSAR is relevant to the construction ind..
+W3111078286|T2|Prevalent Health Problems among Nepalese Underground Construction Workers|..n workers. Further studies are required for the analysis of risk factors associated with these health conditions. Conclusion. Respir..
+W3114621110|Development of procedurе for risk management of hazards and opportunities for works at height in construction indus
+W3118118119|Contribution of AHP method in prioritizing risk factors regarding tunnel project phases
+W3119407374|The Effect of Construction Management on Labour Productivity
+W3126173754|Application of Risk Management and Monte Carlo simulation on a Construction Project (Case Study)
+W3127900136|T2|External Risk in Design-Build Projects with Fixed-Price System: The Case of DKI Jakarta Province, In|..However, the DB project in DKI Jakarta had experienced some completion delays that could lead to project costs overrun. This study used a..
+W3130102878|Study of the Impact of Management Skills on Labour Productivity in the Building Construction Industry in Uganda
+W3131013888|T2|Second-order confirmatory factor analysis model for estimating the overall risk of change orders in |..a need to reassess the causes of change orders based on the probability and impact. The purpose of this paper is to determine the risk score f..
+W3132867375|Research for Risk Management of Construction Projects in Taiwan
+W3132923084|Risk identification in tunnel construction project: A literature review
+W3134416634|Identifying Project Delay Factors in the Australian Construction Industry
+W3134762467|Exploring Critical Risk Factors of Office Building Projects
+W3135867982|Regression analysis of the influence of demographic characteristics using risk management practices within South Af
+W3136165435|T2|A system of key indicators enabling the forecasting of changes in the capital costs of a constructio|..enable to forecast changes in capital costs, broken down by risk factors...
+W3141378859|T2|Typology of metro structures for the tasks of geotechnical risk classification|..sks. The effectiveness of risk management requires detailed risk identification, which precedes the stage of determining the probability of..
+W3153300232|T2|Clash Detection in Appropriate Technology Building Using Building Information Modelling (BIM)|..s the completion of the project on time and avoids cost and time overruns. The future of BIM technology ensures real-time review and ..
+W3157510395|Emerging contractor's management and planning skills to overcome business risk factors
+W3157891763|T2|Application of Theory of Constraint to Construction Project-A Case Study|..availability of material etc can be a constraint and causes delay in project. On the other hand Project Manager should meet the client e..
+W3157918655|T2|Resource Management through Project Management Software Particularly for Road Infrastructure Project|..il to achieve its goals within specified time and cost, The project overrun and failing of project are inadequate project planning and ..
+W3158840783|T2|Impact of Construction Planning Techniques on Contractors' Profit in Ondo State, Nigeria|.. the progress of construction work has resulted in cost and time overrun. The study aimed at assessing the construction planning tec..
+W3158963189|Study of Risk Evaluation for Complex Projects under BIM and IPD Collaborative Pattern Based on Neighborhood Rough S
+W3159202567|T2|A Study of the Cost Control Techniques on Constructions|..n based primarily on finding the causes with cost including time overruns. There is insufficient study causes that hinder the ability..
+W3159518343|Intelligent Recognition of Safety Risk in Metro Engineering Construction Based on BP Neural Network
+W3160743529|T2|Identifikasi Risiko Menggunakan IBPRP dan JSA Berdasarkan PERMEN PUPR NO. 21 Tahun 2019 (Studi Kasus|.. study used method of Danger Identification and Opportunity Risk Assessment (IBPRP) and Job Safety Analysis (JSA) deriving from PURR Go..
+W3161298633|T2|Human Error–Induced Risk in Reinforced Concrete Bridge Engineering|..ed according to risk indicators. Furthermore, a qualitative risk assessment is performed, allowing the identification of the errors den..
+W3162338910|T2|Variation Orders and Their Effects of Erbil Governorate Projects|..2007-2014. The study seeks to identify the most significant causes of delays by assessing the common causes of delays in terms of freque..
+W3165672982|Causes of Construction Delays in Different Buildings Typology in Portugal
+W3167281535|Elements of Delays in Construction Management of DPWH Aurora District Engineering Office
+W3170803884|Harnessing Machine Learning for Classifying Economic Damage Trends in Transportation Infrastructure Projects
+W3171150266|T2|Bibliometric evaluation of research on political risks in construction projects|..hree perspectives inducing the influence of political risk, risk assessment, and risk management measures. The results show that in the..
+W3172478376|Risk Response Development in Construction Projects Delay: Multiple Case Studies from UAE
+W3173542929|Agile Risk Management as a Solution to the Failure of Kenyan Public Projects
+W3175210318|T2|The impact of facies variability within the Harwich Formation on ground engineering in the London ar|..vel and sand that, when unexpectedly encountered, can cause construction delays and increase costs. Here, we interpret borehole cores and l..
+W3180244221|Causes of Delay & Its Effect in Building Construction Project
+W3181095579|Predicament in construction – an overlook to delays, cost overruns and risks
+W3181465468|Risk analysis of belt and road infrastructure projects using integrated ISM-MICMAC approach
+W3184063539|T2|An Economic Analysis of the Shading Effects of Transmission Lines on Photovoltaic Power Plant Invest|..nsmission lines. In the context of Hungary, it examined the risk factors, technical and economic aspects, and possible solutions imp..
+W3185058201|Implementation of Risk management, Monitoring and Controlling procedures in BIM processes
+W3185698118|Risk Management of Time Overrun in Multiple Phases of Construction: Consultant Perspective
+W3187979254|A Study on the Causes, Effects and Methods to Minimize Construction Delay in Selangor and Kuala Lumpur
+W3189661028|The Time Overrun in Construction Industry in Malaysia
+W3189723539|T2|Assessment of risk associated with road infrastructure development in the developing countries.|..; the collected data is then analysed using percentages and Risk Assessment Matrix (RAM). The study identifies the significant risks as..
+W3189862646|RSIAM risk profile for managing risk factors of international construction joint ventures
+W3195209667|T2|Impacto de la cuarentena de COVID-19 en empresas constructoras de Cochabamba, Bolivia|..ublic institutions, limited credits from banks and physical delays in projects. It is necessary that the competent public entities generat..
+W3196110728|T2|Prioritizing organizational strategies|..ion-making models are used in a variety of contexts such as risk assessment, supply chain management, strategic planning, production en..
+W3196758895|Minimizing delays in the Jordanian construction industry by Adopting SCM tools
+W3197404653|T2|Identification and Prediction of Wetland Ecological Risk in Key Cities of the Yangtze River Economic|.. perspective of land development. Combined with the Habitat Risk Assessment (HRA) model and the Cellular Automata (Ca)-Markov model, th..
+W3198260139|Model for construction project delay occurrence (PDO)
+W3201682201|System Modeling and Risk Analysis of the Sichuan–Tibet Railway Project
+W3202410465|The Risk Management Mode of Construction Project Management in the Multimedia Environment of Internet of Things
+W3206852677|T2|Improving Project Performance on Construction Projects through Stakeholder Management-An Action Rese|..akeholder accountable for their tasks, the development of a risk matrix to capture unidentified risks early, the development of a c..
+W3209232194|T2|Effective Selection of Resources for Construction using Program Tool|..io construction industry facing a major problem is cost and time overrun. Effective time performance and cost performance are very i..
+W3209558414|Semantic IFC Data Model for Automatic Safety Risk Identification in Deep Excavation Projects
+W3209904554|T2|Knowledge Gaps and Emerging Issues for Fall Control in Construction|...1 Introduction 470 27.2 Gaps and Emerging Issues 47127.2.1 Risk Factors Influencing Falls 471 27.2.1.1 Environmental Factors 471 27..
+W3210678633|Delay Analysis Statements in the Presence of Debatable Concerns in Construction Projects
+W3211337681|Dynamic risk evaluation method for collapse disasters of drill-and-blast tunnels: a case study
+W3212354996|Developing a Risk Management Process for General Contractors in the Bidding Stage for Design–Build Projects in Viet
+W3212674247|T2|Significance and Analysis of Time and Cost Overrun in the Construction Industry of Mumbai|..5 projects of worth 150 Crore INR have been facing cost and time overrun and others are at the very high risk, with the total constr..
+W3213275417|Numerical Analysis of an Earthen Masonry Structure Subjected to Blast Loading
+W3215578205|T2|Method of Assessing the Risk of Implementing Railway Investments in Terms of the Cost of Their Imple|..t in Poland. The method was based on a reliable database of risk factors published in sources. In this article, the main presumption..
+W3216491442|Success criteria-based impacts of risk factors on education building projects in southwestern Nigeria
+W3217047360|T2|A study on the design changes affecting the construction project: point of view from contractor pers|..Although many project time delays, cost overruns and quality defects particularly in the cons..
+W3217792100|Construction Risks Management of Building Projects in Sultanate of Oman: Contractor and Owner Perspective
+W4200224539|Analysis of Factors Causing The Delay of the Storage Tank Project Using Fault Tree Analysis
+W4200306682|Critical Factors Causing Material Wastes in Building Construction Projects
+W4200521964|Evaluating the key risk factors in PPP-procured mass housing projects in Nigeria: a Delphi study of industry expert
+W4205331135|T2|Lifting capacity prediction model using physical performance measures among construction workers|..ndling is performed in many workplaces and is a significant risk factor for musculoskeletal injuries. The identification of lifting..
+W4205545956|The impact of major delay factors on project’s phase: A comparative study
+W4205808084|T2|A critical analysis of unethical professional practices in the construction industry in Southeast Ni|..rchitects, Quantity Surveyors, Builders and Engineers). The relative importance index tool was used to analyse the severity of the factors identi..
+W4206108933|Root Cause Analysis of Project Delay in BGC-TEG Project
+W4206248164|Matrix of risk factors for railway construction projects
+W4206448667|T2|ANALYSIS OF CAUSES OF COST OVERRUN IN COMMERCIAL PROJECTS IN EGYPT.|.. of data collection is a questionnaire survey that included risk factors collected from previous literature. The expected outcome wi..
+W4210486220|T2|Exploring the nexus between professional ethics and occupational health and safety in construction p|..nt analysis revealed five broad themes of health and safety risk factors which could be associated with unethical practices. The fin..
+W4210915397|T2|Examining corruption prominence in SIDS – the curse and the cure for construction tender practices|..wareness gap between project stakeholders, which is a major risk factor and source of mistrust. The result is a lack of traceable p..
+W4211116638|T2|A Comprehensive Risk-Assessment Method for Prefabricated Buildings Using EPC: A Case Study from Chin|..l application value for general contractors when conducting risk assessments...
+W4211133770|T2|Impact of Variation on the Cost Performance of Public Building Projects in Birnin Kebbi, Nigeria|..re administered and 52 retrieved. Correlation analysis, the Relative Importance Index (RII), the Mean Item Score (MIS), and the Relative Importan..
+W4213134025|Soil Loss Risk Analysis for Construction Activities
+W4220673717|Detecting the most appropriate delay analysis methods for mega airport projects
+W4220754219|T2|A SEM ANALYSIS OF THE IMPACT OF UNETHICAL STAKEHOLDER BEHAVIORS ON CONSTRUCTION PROJECT FAILURES: AN|..re as follows: stakeholders' dissatisfaction; cost overrun; time overrun; negative effects on health, safety and environment; qualit..
+W4220928032|Risk Analysis of Surabaya – Bojonegoro Highway Improvement Project Based on Fuzzy Logic
+W4220978990|T2|PENGARUH PANDEMI COVID-19 TERHADAP RISIKO PEKERJAAN KONSTRUKSI DI KOTA PADANG|.. housing construction. The results of the study contained 8 risk factors for delays (material factors); labor factors (labors); equi..
+W4224081488|T2|Project Planning and Welfare of Households: A Case of Biogas Project in Huye District, Rwanda|.. ensure welfare of the households in rural areas. Keywords: Construction delays, cost overrun, regional cybercrime center, Rwanda..
+W4224313783|T2|Review of Literature on Political Risks to the Operations of Large Oil & Gas Companies and Their Mit|..d assessing them is the following Risk management according probability impact matrix in analyzing risk factors. A total of 61 factors tha..
+W4226355873|T2|Investigating risks of lumpsum contracts in highrise building projects|..and capacity of project personel, (2) the group of risks of delays in project execution, (3) the group of risks of related contract issue..
+W4229058238|AN EVIDENCE-BASED RISK DECISION SUPPORT APPROACH FOR METRO TUNNEL CONSTRUCTION
+W4231050650|T2|Anatomization of Cost and Time Control Factors in Construction|..The Cost escalation and Time overrun has become the common problem in various construction proje..
+W4241009393|Identification and Assessment of Risk Factors Affecting Construction Projects in North Aceh, Indonesia
+W4242413408|Causes of Delays in any Construction Project
+W4242826788|T2|Project managers' capacity-planning practices for infrastructure projects in Qatar: a multiple-case |..Infrastructure project delays and cost overrun are often caused by ineffective use of org..
+W4243072956|Delay Analysis in Construction Project a Case Study - Alkut Olympic Stadium
+W4243535282|T2|Over the Alleghenies: Early Canals and Railroads of Pennsylvania|..ed to use wooden components in structures rather than solid masonry. By the time that the wooden elements of locks and aqueduct..
+W4246651472|Influencing Risk Factors in Construction Projects based on Time and Cost Overrun
+W4251664235|Risk management to avoid project failure: a comparison study of construction projects in the GCC
+W4252703119|Identification of Factors Causing Delays in Construction Projects in Algeria
+W4253594166|T2|Improved Subway Construction for the 21st Century|..lic perception of the mass-transit industry. Major cost and schedule overruns are not uncommon. Witness, for example, the bad press that ..
+W4254247963|T2|EVALUATING IMPACTS OF CONSTRUCTION PLANTS AND EQUIPMENT’S HIRING ON PROJECT TIME DELIVERY IN ONDO ST|..iverse measures have been proposed to arrest the problem of time overrun in large construction projects that involve the use of plan..
+W4281253479|T2|THE INFLUENCE OF HUMAN MANAGEMENT ON THE PERFORMANCE OF CONSTRUCTION PROJECTS BY KENYA NATIONAL HIGH|..al enterprises in these countries have encountered cost and time overruns, as well as failing to reach promised quality standards. Th..
+W4281776873|Of The Factors Delay The Work of The Structure Under The Building This in The Revitalization of Taman Ismail Marzuk
+W4283719418|T2|OCCURRENCE AND IMPACT ANALYSIS FOR TIME-RELATED RISKS IN MALAYSIA PUBLIC INFRASTRUCTURE PROJECTS|..is is carried out based on the total delay over the overall project delay for a project. The findings show that the most frequently o..
+W4284882415|The Risk Management of the Bogor-Sukabumi Cross-Rail Dual-Track Construction Project on Time Control
+W4285121672|T2|Performance management of contractor’s quantity surveyors through the use of proper documents and re|..ctor QSs and ensure project success by controlling cost and time overruns...
+W4285384561|T2|Formal Prevention through Design Process and Implementation for Mechanical, Electrical, and Plumbing|..ess consists of five phases: (1) hazard identification, (2) risk assessment, (3) design review, (4) implementation, and (5) learning. W..
+W4285466546|T2|Variations Order of Building Construction Project a Case from Nepal|..nkert scale have been used for ranking the perception based relative importance index of respondents about causes of variation orders. Existence ..
+W4287084637|T2|Analysis of Factors Causing Disputes Between Owners and Contractors in Apartment Construction Projec|..ch construction project are completed with cost overrun and time delay. The analysis has been done using SPSS software. This phase..
+W4288096485|How do risk management practices lead to project success in the construction industry? The mediated moderation of r
+W4289137733|Relevance of Risk Management in the Delivery of Construction Projects in Developing Countries
+W4289306384|T2|Building Information Modelling And Construction Projects Performance In Uasin Gishu County Governmen|..uction projects, there is always an element of running into delays in project completion time, costs overruns from variations and associa..
+W4289322489|T2|Developing models to predicting the effect of crises on construction projects using MLR technique|..es that affect construction project objectives and indicate time overrun, cost overrun, and poor quality for construction projects b..
+W4290708155|T2|HIRARC METHOD APPROACH AS ANALYSIS TOOLS IN FORMINGOCCUPATIONAL SAFETY HEALTH MANAGEMENT AND CULTURE|.. The method used in this research is Hazard Identification, Risk Assessment and Risk Control (HIRARC). By using this method, it is hope..
+W4290770643|T2|The Impacts of Covid-19 on the Construction Business Operation and Strategies to Overcome|..ovid-19 on construction business operations. Among them are project delay, psychologically affected among workers, financial problems..
+W4290988656|T2|Analysis of regulatory documents regarding data collection for probability calculations of reinforce|.. and analyze Russian and foreign experience in the field of risk assessment and management in terms of building structures and faciliti..
+W4292197144|Critical delay factors for construction projects in Central Aceh District, Indonesia
+W4292411673|An Evaluation of the Causes and Effects of Delayed Payments on the Productivity of Construction Companies in Guyana
+W4293261969|Applied Statistics to Identification of the Causes of Delays Construction Project (Case Study of Construction Proje
+W4294081713|T2|Success Rate and Implications of Contractual Claims Decisions on Contractors In South Africa|..ings further indicated that most projects ended in cost and time overruns due to clients’ decisions on contractual claims. It is expe..
+W4295743233|Application Issues of Impacted As-Planned Schedule for Delay Analysis
+W4296715774|T2|Percepatan Penyelesaian Proyek Menggunakan Metode Fast-Track (Studi Kasus: Proyek Gedung Serbaguna P|..n are found. It generates a budget change as a consequence. Project delays also occurred in Entikong PLBN Multi Purposes Building Proj..
+W4297920763|Assessing the Impact of Delay of Shop Drawing Process in Construction Projects
+W4298010173|Review Of Project Delay Factors On Project Cost Explanation : Lampung Sugar Factory – Mill House
+W4298142883|T2|Causes of Variation Orders in Road Construction Projects in Tanzania|..re utilized as the research approach and analyzed using the relative importance index (RII) method. Results and Discussion: The results reveal th..
+W4300022821|Investigation Of Causes Of Delay In High Rise Building, Case Study-Pune
+W4300763533|T2|Supply Chain Management in Flyover Projects in India|..tudied projects. All of the projects studied faced cost and time overruns. The seamless SCM model may be extended to developing count..
+W4307016650|T2|Identification of Major Factors Causing Cost Overrun In Indian Commercial Projects|.. overrun in commercial construction projects. In this study Relative Importance Index (RII) is used to determine importance of factors causing co..
+W4308206521|T2|Safety Risk Estimation of Construction Project Based on Energy Transfer Model and System Dynamics: A|..stics. The results indicate that the accident was caused by risk factors with complex interactions at the management level. An energ..
+W4309720742|T2|Modeling the occupational health risk of workers caused by environmental release during the producti|..fabricate concrete component plants from the perspective of risk identification, risk assessment, and risk control. Through the following 4..
+W4310422324|T2|The Padma Multipurpose Bridge: Construction Challenges and Sustainable Management|..ople experienced COVID-19 without any fatalities or causing delays in the construction schedule since the Project was kept operational during the ..
+W4310496904|Analysis and Study on the Major Reasons and Influence of Construction Project Delay
+W4311617045|T2|Optimization of Factors that Critically Impact Time and Cost Overrun in Construction Projects|.. a standardized questionnaire. This paper focuses on use of relative importance index and statistical technique of ANOVA hypothesis to get an opt..
+W4311701345|T2|Assessing effects of moral hazard -related behaviours on quality and satisfaction of public-private-|..for testing reliability, regression, mean score ranking and relative importance index. Findings Reduced mutual trust and respect, poor clarity of..
+W4311705226|Risk resources management influence on public–private partnership risk management in construction industry. Confirm
+W4311990546|T2|Based on the ISM-MICMAC model, the risk path identification and factor analysis of the capital opera|..ies on the operation of project funds and identify 16 major risk factors. Based on the calculation of the adjacency matrix and reach..
+W4312313495|T2|PERINGKAT FAKTOR-FAKTOR YANG MEMPENGARUHI TERJADINYA COST OVERRUN PADA PROYEK KONSTRUKSI PADA MASA P|..ring the Covid-19 pandemic and find their ratings using the Relative Importance Index (RII) Method. Of the 20 factors obtained, after passing the..
+W4312362317|A Conceptual Innovative Risk Management Model for Commercial Buildings Refurbishment Projects
+W4312500671|T2|ANALISIS FAKTOR PENYEBAB WASTE PADA PROYEK PEMBANGUNAN JALAN TOL BALIKPAPAN-SAMARINDA|..oad construction project, there is a problem in the form of delays in the construction process caused by several factors, one of which is related ..
+W4312581491|Leading factors and root causes of delay and cost overrun of IT and construction projects in the retail industry in
+W4312714458|T2|Safe use of road construction tools, machinery and equipment on site|.. construction equipment management in general and equipment productivity in particular...
+W4312961095|Risk Management which Affects School Building Construction
+W4312997490|Delay analysis methods and statements in construction projects
+W4313015102|T2|Analysis of The Effect of Fabrication and Installation Work on Cost Overruns in Steam Turbine Genera|..Delays (time overruns, SPI < 1) and exceeding budget costs (cost overruns, CPI < ..
+W4313037028|T2|Analisis Faktor-Faktor Yang Mempengaruhi Keterlambatan Pada Proyek Konstruksi Bangunan Gedung Pemeri|..City Government is inseparable from the problem of frequent delays in construction, there are even some construction projects that have not be..
+W4313332185|Causal Relationship amongst Risk Factors Impacting the Adoption of Building Information Modeling (BIM) in Nigeria
+W4315486451|T2|Community Educational Interventions: An Effective Means to Improve Photoprotection and Skin Cancer A|..ns at work sites and riskier behavior regarding skin cancer risk factors. In many populations, sun protection education is associate..
+W4319742845|T2|Stakeholders’ Perception of the Impacts of Supply Chain Management on Tanzania Construction Projects|..tures targeting to lower unnecessary construction costs and time overrun, improving quality, safety, and environmental sustainabilit..
+W4319925260|Construction Project Delay Factors of Public Universities in Ethiopia: A Structural Equation Modeling Approach
+W4319995908|T2|America’s First Interstate: The National Road, 1806–1853|..nd twelve inches in depth. Contracts were also procured for masonry and stone and wooden bridges to be constructed along the ro..
+W4321463248|Causes and Effects of Delays in Construction Projects: Review
+W4323045383|T2|The Effect of Project Communications Management on Project Time Performance|..ion industry plays a significant role in the country, while project delays cause various problems. Regarding that, communication is ve..
+W4323349863|T2|Electrical Burn and Associated Factors That Prolong In-patient Stay in a Level Three Burn Unit|...00); and third-degree burns (OR = 1.55, 95% CI 1.00-2.80). Risk factors for LOS secondary to electrical injury should be appropriat..
+W4362586741|T2|Structural model of cost overrun factors affecting Pakistani construction projects|..proving project cost performance and significantly reducing time overruns...
+W4362712817|Model to Reduce Delays in Natural Gas Installation Works by Applying Lean Tools
+W4367171980|Assessment of Construction Risk Management Maturity Using Hybrid Fuzzy Analytical Hierarchy Process and Fuzzy Synth
+W4376465459|T2|Analisis Risiko Rantai Pasok Material dalam Pelaksanaan Proyek Konstruksi Gedung Di Aceh|..ect site. This study aimed to analyze material supply chain risk factors that arise in the implementation of building construction p..
+W4377266796|T2|SLEEP, OCCUPATIONAL AND ENVIRONMENTAL LUNG DISEASES|..sue in Indian subcontinent. OSA is associated with multiple risk factors and cardiometabolic abnormality which could help in predict..
+W4377842244|T2|A Structural Equation Model to Analyze the Effects of COVID-19 Pandemic Risks on Project Success: Co|..d construction contractors to better understand how the key risk factors emerging from extreme conditions like the COVID-19 pandemic..
+W4378448065|Delay Analysis of Road Construction Projects using RII Method
+W4378597002|T2|ANALISIS MANAJEMEN RISIKO PADA PROYEK PEMBANGUNAN BENDUNGAN (STUDI KASUS : BENDUNGAN TITAB DI BALI, |..e it just to get a risk category. It necessary the level of risk analysis by PROMETHEE method to find out priority major rangking on ..
+W4378673303|T2|Project Management of Assembled Buildings Based on the I-M Model (Construction) Risk Path Identifica|..cated building project may be affected by various uncertain risk factors. In this paper, various uncertain risk factors in the const..
+W4379795895|T2|Occupational Safety and Health Improvements through Innovative Technologies in Underground Construct|..When accompanied by a rigorous in-depth risk assessment and management, the introduction of innovative technologies..
+W4379796039|T2|KEPENTINGAN RELATIF FAKTOR-FAKTOR INTEGRASI MANAJEMEN KOMUNIKASI PADA PROYEK KONSTRUKSI DI BANDA ACE|..t integration factors in construction projects based on the Relative Importance Index (RII) analysis. RII analysis will sort the importance of fa..
+W4379882026|Multicriteria Health and Safety Risk Assessments in Highway Construction Projects
+W4380048683|T2|Assessment of the Fatal Outcome in case of Violation of the Occupational Safety Rules in the Constru|..ng the Bayesian approach. To do this, the identification of risk factors was carried out — 10 groups of violations of the occupation..
+W4380324403|T2|Environmental Land Management and Assessment, in the Context of Resource and Climate-Related Conflic|.. help with documentation and formulation of land management risk assessment in the context of climate change threats, e.g. wildfire, ar..
+W4380366956|Identification of 4D-BIM Barriers in Offshore Construction Projects Using Fuzzy Structural Equation Modeling
+W4380791517|T2|Factors Affecting Cost and Execution Period of Trail Bridge Construction Project in Nyamagabe Distri|..onduct deep situational analysis in order to avoid cost and time overrun. Keywords: Cost, Execution Period, Trail Bridge Constructio..
+W4381328333|T2|Comparison of construction project risks before and during COVID-19 in Singapore: criticality and ma|..es significant risks due to the pandemic. The comparison of risk factors faced by construction industry before and during the pandem..
+W4381803089|Risk factors affecting blockchain-based smart contract use in architecture, engineering, and construction industry
+W4382242487|Risk perception in the construction industry: A literature review and future research directions
+W4382403132|Factors Contributing to Delay of Interim Payment in Civil Engineering Projects
+W4382464383|Project Delay Analysis Using Fault Tree Analysis (FTA) Method And Failure Mode And Effect Analysis (FMEA) Method (C
+W4382885068|The Effect of Risk Management Practices on Project Performance: A Case Study of the Libyan Construction Industry
+W4384201479|T2|Application of multiple-criteria decision making methods for construction safety research|..he key areas where MCDM methods were focused on were safety risk assessment, safety culture and safety programmes. The study findings a..
+W4384432443|T2|Causes and Impacts of Variation Order in Building Construction Projects: A Case Study of Three Proje|..n orders, the top three identified impacts were: Completion schedule delay, Increase in project cost, Affect on progress. All parties ..
+W4385321044|T2|A study on the key drivers of national construction project audit risk and evolvement mechanism|..lding upon this, a framework titled “the mechanism of audit risk factors with management capability as the core” was constructed. Or..
+W4385427663|T2|Developing a Field-oriented Analytical Safety Assessment Model for Construction Workers|..eemptive safety management system that considers the safety risk factors at the construction site is deemed a necessity. Therefore, ..
+W4385717334|T2|Environmental, Social & Occupational Health & Safety (ESOHS) Risk and Impact Assessment of 2x660 MW |..fired power plant in Jamshoro, a comprehensive Occupational Risk Assessment has been conducted to ensure the health and safety of worke..
+W4386191956|T2|Evaluation and Improvement of Employee Performance with respect to Health, Safety, and Environment (|..alysis focuses on the health, safety, and environment (HSE) risk assessment and employee performance evaluation, which neglects the imp..
+W4386268789|CRITICAL SUCCESS FACTORS FOR MODULAR CONSTRUCTION ON HIGH-RISE RESIDENTIAL BUILDINGS BASED RISK MANAGEABILITY TO IN
+W4386723351|T2|Hyperinfection syndrome in a microscopic polyangiitis patient after treatment with immunosuppressive|..h human T-lymphotropic virus type 1 (HTLV-1) are recognized risk factors for HS. However, therapies using anticancer drugs, immunosu..
+W4386899918|DELAYS IN EXECUTION OF BUILDING PROJECTS AND THEIR FINANCIAL CONSEQUENCES FOR CONTRACTORS - POLISH VIEW
+W4386975166|Exploring Critical Risk Factors in Volumetric Modular Construction: Fault Tree Analysis with Stakeholders' Perspect
+W4387107409|Occupational health risk assessment of construction workers caused by particulate matter exposure on construction s
+W4387112744|T2|A Framework to Evaluate Information and Source Credibility: International Construction Decision-Maki|..t decisions. However, the reliability and accuracy of these risk assessment models depend on the credibility of the information utilize..
+W4387247224|T2|THE SUITABILITY OF EXISTING CONSTRUCTION CONTRACTS FORMS FOR BIM CONSTRUCTION PROJECTS|..Numerous major construction projects suffer from cost and schedule overruns. In addition, the potential for conflict between project pa..
+W4387247260|T2|IDENTIFICATION OF DEFECTIVE CONSTRUCTION WORKS DURING BUILDING INSPECTIONS|..or reliable structures, but also for prevention of cost and time overruns causing financial losses. In Turkey, building inspections a..
+W4387455588|Safety Risk Evaluation of Metro Shield Construction When Undercrossing a Bridge
+W4387672160|T2|Financial Risks and Economic Viability of Water and Sanitation Businesses in Rural Cambodia: A Rapid|..isk factors for their economic viability were water losses, construction delays, and high energy costs. Sanitation services suppliers faced..
+W4387739936|Evaluating Delay Causes for Constructing Road Projects in Saudi Arabia
+W4387743799|Risk analysis of material management that causes cost and time deviations in high-story building projects
+W4387808342|T2|Assessment of Cost and Time of Errors in Construction Documents on Selected Building Projects in Nig|..nerally been tagged with poor project performance. Cost and time overruns are the leading causes of poor performance. Design and cons..
+W4387828544|T2|Assessment of Cost and Time Performance of Tertiary Educational Trust Fund (TETFund) Construction Pr|..age cost overrun for TETFund projects was 1.62% and that of time overrun was 112.23%. Regression analysis of the predicted project t..
+W4387851101|Construction safety risk assessment method of construction engineering based on improved SVM
+W4387897952|A review of research related to risk management of EPC engineering projects and future prospects
+W4387992734|Developing a Value–Risk Management Model for Construction Projects
+W4388205250|A Quantitative Analysis of Decision-Making Risk Factors for Mega Infrastructure Projects in China
+W4388269829|T2|Legal and Contractual Risks and Challenges for BIM|.. conducting a systematic literature review to identify such risk factors which can lead to claims in BIM projects. The findings reve..
+W4388342738|Effect of Implementation of Performance Risk Management on High Rise Building Structure Work (Junction City Buildin
+W4388442984|T2|Safety-Risk Transmission Assessment Based on a Factor–Event Network for Metro Construction Projects|..truction projects are accompanied by numerous unpredictable risk factors and risk events. Traditional safety risk analysis of metro ..
+W4388570131|RISK ASSESSMENT OF THE SYSTEM OF ORGANIZATION OF WELDING OPERATIONS IN THE FIELD
+W4388831783|Influence of Precompaction Delay Time on Geoengineering Properties of Expansive Soil Treated with Geopolymer and Co
+W4388912445|Factors Affecting the Well-Being at Work and Risk Perception of Construction Workers: A Validated Interpretative St
+W4389235752|An integrated risk and productivity assessment model for public–private partnership projects using fuzzy inference 
+W4389449713|BIM-Supporting System by Integrating Risk Management and Value Management
+W4389480880|The Most Influential Factor as The Cause of Delays in Aluminum Form Work in The Sakura Project, East Jakarta
+W4389563103|T2|Procuring authorities and project performance: a case study of PPP highway projects in India|.. were actually implemented at a faster rate and had a lower time overrun. Practical implications Procuring authorities under the sta..
+W4390235133|T2|Performance Analysis System Using Earned Value Method For Electrical Greenhouse Work Project In Bata|..s. This allows for the identification of potential cost and time overruns. Data on expenditures and project-related documentation are..
+W4390564076|T2|Analisa Tingkat Resiko Pada Proyek Pembangunan Pergantian Sei. Singgalang Kabupaten Kampar|..isks associated with the project. The Hazard Identification Risk Assessment Risk Control (HIRARC) methodology was chosen to be this ass..
+W4390771671|T2|Limitations of the conventional project delivery (CPD) approach in producing quality design document|..tions. While previous studies criticize the CPD for causing project delays, compromised quality, and increased costs, there is a pauci..
+W4390806014|Causes of Delay in Road Construction Projects in Afghanistan
+W4390979297|Enhancing project manager communication soft skills and risk management practices in Libyan oil and gas constructio
+W4391412319|T2|Manajemen Risiko Keselamatan Dan Kesehatan Kerja (K3) Pada Pekerja Penambang Pasir Kali Dentunura Ke|.. the risk opportunities are quite large. In this study, the risk assessment method uses arisk assessment matrix. After collecting the d..
+W4391440195|Success and Risks Related to Housing Projects in Pakistan: A Moderating Role of Project Management Risk Management
+W4391696588|Risk assessment method of construction project based on grey correlation analysis
+W4391724506|Construction Project Delay Risk Assessment Based on 4M1E Framework and Afghanistan Situation
+W4391795296|IDENTIFYING CAUSES OF DELAY IN OIL AND GAS CONSTRUCTION PROJECTS USING FUZZY DELPHI METHOD
+W4391838817|T2|Schedule risk model of water intake tunnel construction considering mood factors and its application|.. and optimism conditions are obtained by using the progress risk analysis theory of emotional models and the program evaluation and r..
+W4392199488|Losses Resulting from Exceeding the Specified Time for Completion and Its Impact on the Status of the Project and D
+W4392231599|T2|Exploring the Use of Quality Control Plans for Alternative Contracting Methods in Highway Projects|.. not found to be higher than that in design-bid-build. Nine risk factors related to the oversight of QC plans in D-B, CM/GC, and P3 ..
+W4392389977|T2|Analisis Manajemen Risiko Pada Proyek Konstruksi Jalan di Provinsi Jambi|..ork results. The purpose of this study was to determine the risk factors that affect the implementation of work in the field and to ..
+W4392801389|Measurement for Risk Perception Ability
+W4392854504|Risk analysis of project groups based on improved fuzzy comprehensive evaluation
+W4392858950|T2|Contractors' Perception of Success Factors for Implementing Public Road Construction Projects|..implementation. Project failure oscillates between cost and schedule overruns and low-quality work, with construction organizations conti..
+W4392966159|Factors Causing Time Delays Completion of Construction Projects (Case Study on Facilities Building Construction Pro
+W4393075134|ANALYSIS OF PROJECT DELAY USING THE CRITICAL PATH METHOD (CPM): A CASE STUDY ON THE CONSTRUCTION PROJECT OF THE OPD
+W4393144394|T2|Cross-Lingual Information Retrieval from Multilingual Construction Documents Using Pretrained Langua|..n overseas projects, reducing time and cost while improving risk identification and mitigation...
+W4393262134|Proposal of the risk assessment model of vehicle construction systems' safety under the conditions of Industry 4.0
+W4393344331|Risk Analysis of E-Procurement Process of EPC Construction Project Based On Risk Management
+W4393939025|An extensive examination of the barriers faced by contractors leading to project delays
+W4395466138|Examining factors influencing delay of construction projects in Tanzania: A case of Gerenzani- Mbagala BRT road
+W4396578793|Risk Management Framework for Construction of Marine Projects in Egypt Using Python Method
+W4396597372|Comprehensive investigation into contractors' challenges leading to project delays in Rabigh, Saudi Arabia
+W4396649928|Impact assessment of critical success factors (CSFs) in public construction projects of Saudi Arabia
+W4396753475|Implementation of a Combined Fuzzy Controller Model to Enhance Risk Assessment in Oil and Gas Construction Projects
+W4398234196|A pre-control method in safety risk management of metro construction
+W4399020503|T2|Management of safety and health hazards associated with construction and demolition waste in Zimbabw|..waste, waste management, safety hazards, health hazards and risk assessment were used to retrieve data from different databases. Result..
+W4399125903|T2|Development of a New Method for Assessing Project Risks in Sustainable Building Construction Project|..group discussion was conducted. According to the the risks’ probability and impacts on time and cost, the top-scoring risks include changes to..
+W4399220528|An intelligent framework for rework risk identification in prefabricated construction processes based on compliance
+W4399516436|Project Delays and Project Property Investment Decisions in Apartments: A Literature Review
+W4399914456|Research on safety accident risk of construction engineering based on natural language processing technology and ne
+W4400080424|T2|A Review of Data Mining Strategies by Data Type, with a Focus on Construction Processes and Health a|..y facilitates the storage and management of data useful for risk analysis and event prediction. Studies on data extraction related to..
+W4400083773|T2|Risk Coupling Analysis of Metro Deep Foundation Pit Construction Based on Complex Networks|..ction is attributed to the interactive coupling of numerous risk factors. To comprehensively explore the underlying mechanisms of sa..
+W4400210207|Applying Systems Thinking to Research into Risk Factors Influencing Earthmoving Equipment Operation Safety in Const
+W4400214566|Factors Analysis Affecting Low Productivity in High-Rise Building Projects in Surabaya City
+W4400431696|Analysis of Delays and Time Acceleration Strategies in the Renovation of Grha JST Building
+W4400452779|T2|Analisis Tingkat Risiko pada Proyek Pembangunan Perumahan Grand Eastern Surabaya dengan Metode Sever|..sing construction project. Using the severity index and the probability impact matrix methods, it was found that there are 2 risks with ve..
+W4400592145|T2|Ontological Modeling of Tacit Knowledge for Automating Job Hazard Analysis in Construction|..ionships that are associated with hazard identification and risk assessment, which form the basis for developing a conceptual ontologic..
+W4401056814|Automated Risk Analysis for Construction Contracts Using Neural Networks
+W4401154343|T2|Analisis Faktor Penyebab Keterlambatan Terhadap Pelaksanaan Proyek Konstruksi|..e implementation of construction project work, construction project delays are very often found. Construction project delays are a com..
+W4401178638|T2|Automatic monitoring the risk coupling of foundation pits: integrated point cloud, computer vision a|..volve risk coupling - a phenomenon in which multiple safety risk factors occur at the same time and amplify the probability of const..
+W4401295859|T2|Development of a Risk Breakdown Structure in Mega Projects based on Different Case Studies|.. a wider range of risks arise. By looking into and managing risk factors in advance of their occurrence, it is vital to reduce their..
+W4401398302|T2|Evaluasi Pelaksanaan Proyek Kapal X Di Perusahaan Galangan Kapal Menggunakan Software Microsoft Proj|..ion of project work usually encounters obstacles that cause schedule delays which result in cost overruns. Therefore, to determine the ..
+W4401430678|Risk Management in Residential Projects
+W4401520161|Legal and Financial Risk Management in Large-Scale Construction Projects
+W4401623737|Risk Analysis of Work Accidents Using The Bowtie Method in The Ciputra Hospital Construction Project
+W4401827243|T2|Optimalisasi Penyebab Keterlambatan Proyek Revitalisasi Gedung Sekolah Pascasarjana Kampus B Univers|..ational data revealed that the elements contributing to the delays in the construction of the Arilangga University postgraduate building revitaliz..
+W4401859121|T2|Enhancing Safety Management in the Ghanaian Construction Industry: Evaluating the Role of UAV Implem|..al surveillance and real-time monitoring, data analysis and risk assessment, emergency response and search-and-rescue operations, infor..
+W4401922574|ANALYSIS OF DELAY FACTORS IN THE CONSTRUCTION PROJECT OF THE PROMOTION CENTER BUILDING AND BATIK DERIVATIVE PRODUCT
+W4402005497|Integrated Risk Management in Railway Construction Projects: Evaluating Health, Safety and Environmental Risks
+W4402012491|T2|Impact of Geotechnical Engineering on Infrastructure Lifespan and Maintenance Costs|..s concluded that slope Instability was the most significant risk factor based on both cost and schedule impacts having mean values ..
+W4402242281|T2|A Safety Evaluation Method and System for a High Core Wall Dam Based on Construction Data|..tching operational conditions. Finally, on the basis of the risk analysis matrix, the risk level of each tier of evaluation factors i..
+W4402278971|T2|Barriers of Applying Building Information (BIM) According to BIM ISO|..rdance to BIM ISO standards. The issues of cost overrun and time overrun persisted in the BIM construction projects. BIM proved to h..
+W4402324890|Schematic risk management in solicited and unsolicited project
+W4402482201|T2|Sensitivity Analysis on Influential Factors of Strain Rockburst in Deep Tunnel|..nnels, causing significant economic losses, casualties, and construction delays. Understanding the factors influencing this disaster is of ..
+W4402485672|T2|Development of Construction Safety Dashboard Based on Four-Dimensional Building Information Modeling|..ease for site workers to access safety knowledge, including risk identification (including risk, fatality, location, and time), visualizati..
+W4402491628|Engineering risk assessment method for undrilled strata based on drilling construction preview
+W4402547443|Research on Contract Risk Management of Hospital Construction Project based on Fuzzy Analytic Hierarchy Process
+W4402701172|T2|An ISM-MICMAC-based study for identification and classification of preventable safety risk mitigatio|..ied-as-significant variables for mitigating the preventable risk factors in mass house construction projects by means of the inferen..
+W4402715419|Impact of project planning and project risk management on project success: moderating role of project managers’ com
+W4402716867|Assessment of Delay Factors in Construction Projects: A Chronological Analysis with Insights from Iraq
+W4402752469|T2|Faktor Utama Penyebab Keterlambatan Proyek Konstruksi Gedung di Bojonegoro|..wing rapidly due to massive building construction. However, delays in building construction projects in Bojonegoro are a significant issue..
+W4402954330|T2|CT imaging‐enhanced numerical simulation of microscopic structure and resilient safety of asphalt co|..ut also contributes to the analysis of seismic response and risk assessment in dam engineering through dynamic experimental testing and..
+W4403067266|T2|PREVENTION OF WORK ACCIDENTS IN CONSTRUCTION PROJECTS: STRATEGIES AND APPLICATIONS|..cost management. Strategies and practices such as training, risk assessment, appropriate equipment utilization, collaboration, and insp..
+W4403154979|T2|Evaluating the Impact of Artificial Intelligence in Managing Construction Engineering Projects|..isk management, AI-supported tools enhanced the accuracy of risk identification by 45%, leading to the early detection of potential issues ..
+W4403279419|T2|UAV photogrammetry and laser scanning of bridges: a new methodology and its application to a case st|..traditional laser scanning of bridges within the structural risk assessment process...
+W4403313082|Risk Analysis of Substation Electrical Project
+W4403396445|T2|Factors affecting time and cost in road construction projects at a South African municipality|..ficant obstacles, particularly concerning cost overruns and project delays within the road construction sphere. This research sought t..
+W4403545660|T2|Current Mapping on the UBS Surabaya Office Building Construction Project|..nimized or eliminated, because it can cause cost losses and time delays in the implementation of a construction project. Lean produ..
+W4403722439|T2|A Tunnel Squeezing Prediction Model Based on the Hierarchical Belief Rule Base|..h high horizontal in situ stress. This phenomenon can cause construction delays, increased budgets, tunnel collapse, and additional problem..
+W4403962876|CRITICAL FACTORS INFLUENCING EFFECTIVE COMMUNICATION AMONG STAKEHOLDERS FOR PROJECT DELIVERY IN JIGAWA STATE
+W4404290144|T2|Modelling construction performance variability for probabilistic time estimation of tunnelling proje|..Budget overrun and schedule delay of infrastructure projects result in the mismanagement of h..
+W4404486958|T2|Reducing Safety Risks in Construction Tower Crane Operations: A Dynamic Path Planning Model|..sion 8 (YOLOv8) instance segmentation to identify potential risk factors along the operational path, e.g., potential drop zones and ..

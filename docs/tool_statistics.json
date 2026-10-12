@@ -1,0 +1,949 @@
+{
+ "verified_rows": {
+  "M01": 28,
+  "M06": 40,
+  "M10": 33,
+  "M14": 23,
+  "M15": 24,
+  "A10": 6,
+  "A14": 5,
+  "A21": 2
+ },
+ "bases": {
+  "seed": {
+   "studies": [
+    "A02",
+    "A14",
+    "A15",
+    "M01",
+    "M06"
+   ],
+   "risks": {
+    "R-SAFE": {
+     "mean_rii": 0.7865,
+     "rank": 2,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 1,
+     "rank_share_lo": 0.03333333333333333,
+     "rank_share_hi": 0.2631578947368421,
+     "covered": 0.6644,
+     "class_kept": 0.9629741119807345
+    },
+    "R-PLAN": {
+     "mean_rii": 0.777092,
+     "rank": 4,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 2,
+     "rank_share_lo": 0.041666666666666664,
+     "rank_share_hi": 0.55,
+     "covered": 0.9256,
+     "class_kept": 0.7035436473638721
+    },
+    "R-INC": {
+     "mean_rii": 0.752,
+     "rank": 13,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.26666666666666666,
+     "rank_share_hi": 0.5263157894736842,
+     "covered": 0.6644,
+     "class_kept": 0.36423841059602646
+    },
+    "R-MAT": {
+     "mean_rii": 0.7889333333333334,
+     "rank": 1,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.03333333333333333,
+     "rank_share_hi": 0.21428571428571427,
+     "covered": 0.9888,
+     "class_kept": 0.9981796116504854
+    },
+    "R-PAY": {
+     "mean_rii": 0.7733146666666667,
+     "rank": 5,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.13333333333333333,
+     "rank_share_hi": 0.4,
+     "covered": 0.992,
+     "class_kept": 0.5096774193548387
+    },
+    "R-WX": {
+     "mean_rii": 0.693379,
+     "rank": 24,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 4,
+     "rank_share_lo": 0.4583333333333333,
+     "rank_share_hi": 1.0,
+     "covered": 0.9996,
+     "class_kept": 0.6220488195278111
+    },
+    "R-SKILL": {
+     "mean_rii": 0.7831111111111111,
+     "rank": 3,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.038461538461538464,
+     "rank_share_hi": 0.4444444444444444,
+     "covered": 0.9914,
+     "class_kept": 0.8634254589469437
+    },
+    "R-SUP": {
+     "mean_rii": 0.744,
+     "rank": 16,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.4166666666666667,
+     "rank_share_hi": 0.6666666666666666,
+     "covered": 0.6644,
+     "class_kept": 0.7453341360626129
+    },
+    "R-ACC": {
+     "mean_rii": 0.7045,
+     "rank": 21,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 2,
+     "rank_share_lo": 0.3333333333333333,
+     "rank_share_hi": 0.88,
+     "covered": 0.9212,
+     "class_kept": 0.5102040816326531
+    },
+    "R-TOOL": {
+     "mean_rii": 0.75275,
+     "rank": 12,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.2916666666666667,
+     "rank_share_hi": 0.6296296296296297,
+     "covered": 0.9212,
+     "class_kept": 0.667390360399479
+    },
+    "R-DIS": {
+     "mean_rii": 0.77,
+     "rank": 6,
+     "n_ranked": 30,
+     "class": 5,
+     "n_studies": 2,
+     "rank_share_lo": 0.08,
+     "rank_share_hi": 0.5185185185185185,
+     "covered": 0.9204,
+     "class_kept": 0.4245980008691873
+    },
+    "R-OVT": {
+     "mean_rii": 0.7062809999999999,
+     "rank": 20,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 2,
+     "rank_share_lo": 0.625,
+     "rank_share_hi": 0.8518518518518519,
+     "covered": 0.9256,
+     "class_kept": 0.7813310285220397
+    },
+    "R-MOT": {
+     "mean_rii": 0.736,
+     "rank": 17,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.5,
+     "rank_share_hi": 0.7407407407407407,
+     "covered": 0.6644,
+     "class_kept": 0.6327513546056592
+    },
+    "R-RWK": {
+     "mean_rii": 0.7560595,
+     "rank": 11,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.16666666666666666,
+     "rank_share_hi": 0.7368421052631579,
+     "covered": 0.9256,
+     "class_kept": 0.42502160760587726
+    },
+    "R-DES": {
+     "mean_rii": 0.7585375,
+     "rank": 10,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.12,
+     "rank_share_hi": 0.7894736842105263,
+     "covered": 0.9256,
+     "class_kept": 0.3632238547968885
+    },
+    "R-LAB": {
+     "mean_rii": 0.7661666666666667,
+     "rank": 7,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 3,
+     "rank_share_lo": 0.041666666666666664,
+     "rank_share_hi": 0.7307692307692307,
+     "covered": 0.9888,
+     "class_kept": 0.3294902912621359
+    },
+    "R-MGT": {
+     "mean_rii": 0.733107,
+     "rank": 18,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 2,
+     "rank_share_lo": 0.44,
+     "rank_share_hi": 0.9473684210526315,
+     "covered": 0.9256,
+     "class_kept": 0.5216076058772688
+    },
+    "R-MTH": {
+     "mean_rii": 0.7,
+     "rank": 22,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 1,
+     "rank_share_lo": 0.7,
+     "rank_share_hi": 1.0,
+     "covered": 0.6644,
+     "class_kept": 0.6571342564720049
+    },
+    "R-COM": {
+     "mean_rii": 0.6793035000000001,
+     "rank": 25,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 2,
+     "rank_share_lo": 0.6923076923076923,
+     "rank_share_hi": 0.9259259259259259,
+     "covered": 0.9216,
+     "class_kept": 0.6770833333333334
+    },
+    "R-FAT": {
+     "mean_rii": 0.61,
+     "rank": 29,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.92,
+     "rank_share_hi": 1.0,
+     "covered": 0.6772,
+     "class_kept": 1.0
+    },
+    "R-SITE": {
+     "mean_rii": 0.761072,
+     "rank": 9,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.2,
+     "rank_share_hi": 0.5,
+     "covered": 0.9216,
+     "class_kept": 0.7747395833333334
+    },
+    "R-STO": {
+     "mean_rii": 0.7,
+     "rank": 23,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 1,
+     "rank_share_lo": 0.5714285714285714,
+     "rank_share_hi": 0.8333333333333334,
+     "covered": 0.6772,
+     "class_kept": 0.825457767277023
+    },
+    "R-PRC": {
+     "mean_rii": 0.6695,
+     "rank": 26,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 2,
+     "rank_share_lo": 0.037037037037037035,
+     "rank_share_hi": 1.0,
+     "covered": 0.9226,
+     "class_kept": 0.5317580750054195
+    },
+    "R-WAT": {
+     "mean_rii": 0.65,
+     "rank": 28,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.8571428571428571,
+     "rank_share_hi": 0.9583333333333334,
+     "covered": 0.6772,
+     "class_kept": 0.9542232722976964
+    },
+    "R-CTR": {
+     "mean_rii": 0.746766,
+     "rank": 15,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.4666666666666667,
+     "rank_share_hi": 0.7,
+     "covered": 0.6756,
+     "class_kept": 0.9020130254588514
+    },
+    "R-SCP": {
+     "mean_rii": 0.7641789999999999,
+     "rank": 8,
+     "n_ranked": 30,
+     "class": 4,
+     "n_studies": 1,
+     "rank_share_lo": 0.2,
+     "rank_share_hi": 0.5,
+     "covered": 0.6756,
+     "class_kept": 0.7847838957963292
+    },
+    "R-STR": {
+     "mean_rii": 0.749254,
+     "rank": 14,
+     "n_ranked": 30,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.43333333333333335,
+     "rank_share_hi": 0.65,
+     "covered": 0.6756,
+     "class_kept": 0.9014209591474245
+    },
+    "R-CST": {
+     "mean_rii": 0.7184079999999999,
+     "rank": 19,
+     "n_ranked": 30,
+     "class": 2,
+     "n_studies": 1,
+     "rank_share_lo": 0.5833333333333334,
+     "rank_share_hi": 0.8076923076923077,
+     "covered": 0.6756,
+     "class_kept": 0.7181764357608053
+    },
+    "R-ECO": {
+     "mean_rii": 0.6611940000000001,
+     "rank": 27,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.7916666666666666,
+     "rank_share_hi": 0.9629629629629629,
+     "covered": 0.6756,
+     "class_kept": 0.8105387803433984
+    },
+    "R-SOC": {
+     "mean_rii": 0.59403,
+     "rank": 30,
+     "n_ranked": 30,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.96,
+     "rank_share_hi": 1.0,
+     "covered": 0.6756,
+     "class_kept": 1.0
+    }
+   },
+   "summary": {
+    "n_risks": 30,
+    "n_studies": 5,
+    "median_studies_per_risk": 2.0,
+    "risks_with_one_study": 14,
+    "mean_class_kept": 0.6987456395093379,
+    "share_class_kept_ge_50": 0.8333333333333334,
+    "median_rank_interval_width_share": 0.26428571428571435
+   }
+  },
+  "all": {
+   "studies": [
+    "A02",
+    "A10",
+    "A14",
+    "A15",
+    "A21",
+    "HAS25",
+    "M01",
+    "M06",
+    "M10",
+    "M14",
+    "M15"
+   ],
+   "risks": {
+    "R-SAFE": {
+     "mean_rii": 0.6111666666666666,
+     "rank": 33,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 2,
+     "rank_share_lo": 0.10810810810810811,
+     "rank_share_hi": 1.0,
+     "covered": 0.888,
+     "class_kept": 0.5752252252252252
+    },
+    "R-PLAN": {
+     "mean_rii": 0.7113362222222223,
+     "rank": 16,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 6,
+     "rank_share_lo": 0.030303030303030304,
+     "rank_share_hi": 0.8214285714285714,
+     "covered": 1.0,
+     "class_kept": 0.2922
+    },
+    "R-INC": {
+     "mean_rii": 0.746,
+     "rank": 8,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.16129032258064516,
+     "rank_share_hi": 0.38235294117647056,
+     "covered": 0.973,
+     "class_kept": 0.37595066803699895
+    },
+    "R-MAT": {
+     "mean_rii": 0.7023555,
+     "rank": 19,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 8,
+     "rank_share_lo": 0.11428571428571428,
+     "rank_share_hi": 0.7272727272727273,
+     "covered": 1.0,
+     "class_kept": 0.4748
+    },
+    "R-PAY": {
+     "mean_rii": 0.7573888,
+     "rank": 5,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 5,
+     "rank_share_lo": 0.05263157894736842,
+     "rank_share_hi": 0.3225806451612903,
+     "covered": 0.9984,
+     "class_kept": 0.835136217948718
+    },
+    "R-WX": {
+     "mean_rii": 0.6528145,
+     "rank": 29,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 8,
+     "rank_share_lo": 0.5588235294117647,
+     "rank_share_hi": 0.8857142857142857,
+     "covered": 1.0,
+     "class_kept": 0.7022
+    },
+    "R-SKILL": {
+     "mean_rii": 0.7310518571428571,
+     "rank": 10,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 7,
+     "rank_share_lo": 0.05714285714285714,
+     "rank_share_hi": 0.6666666666666666,
+     "covered": 1.0,
+     "class_kept": 0.4528
+    },
+    "R-SUP": {
+     "mean_rii": 0.76,
+     "rank": 3,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.02702702702702703,
+     "rank_share_hi": 0.4583333333333333,
+     "covered": 0.973,
+     "class_kept": 0.6744090441932169
+    },
+    "R-ACC": {
+     "mean_rii": 0.624,
+     "rank": 32,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 4,
+     "rank_share_lo": 0.3448275862068966,
+     "rank_share_hi": 0.9444444444444444,
+     "covered": 0.9946,
+     "class_kept": 0.5614317313492861
+    },
+    "R-COM": {
+     "mean_rii": 0.6625224000000001,
+     "rank": 27,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 5,
+     "rank_share_lo": 0.46875,
+     "rank_share_hi": 0.8387096774193549,
+     "covered": 0.9984,
+     "class_kept": 0.7271634615384616
+    },
+    "R-TOOL": {
+     "mean_rii": 0.6806346666666666,
+     "rank": 23,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 6,
+     "rank_share_lo": 0.29411764705882354,
+     "rank_share_hi": 0.8636363636363636,
+     "covered": 0.9998,
+     "class_kept": 0.3836767353470694
+    },
+    "R-DIS": {
+     "mean_rii": 0.7640796666666667,
+     "rank": 2,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 3,
+     "rank_share_lo": 0.029411764705882353,
+     "rank_share_hi": 0.34285714285714286,
+     "covered": 0.9692,
+     "class_kept": 0.8386297977713578
+    },
+    "R-OVT": {
+     "mean_rii": 0.702854,
+     "rank": 18,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 3,
+     "rank_share_lo": 0.3103448275862069,
+     "rank_share_hi": 0.7308823529411748,
+     "covered": 0.968,
+     "class_kept": 0.6214876033057851
+    },
+    "R-MOT": {
+     "mean_rii": 0.6352222222222222,
+     "rank": 31,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 3,
+     "rank_share_lo": 0.42857142857142855,
+     "rank_share_hi": 0.9418487394957977,
+     "covered": 0.973,
+     "class_kept": 0.4306269270298047
+    },
+    "R-RWK": {
+     "mean_rii": 0.75577975,
+     "rank": 6,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 4,
+     "rank_share_lo": 0.05714285714285714,
+     "rank_share_hi": 0.41379310344827586,
+     "covered": 0.9934,
+     "class_kept": 0.7018320918059191
+    },
+    "R-DES": {
+     "mean_rii": 0.74595625,
+     "rank": 9,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 4,
+     "rank_share_lo": 0.029411764705882353,
+     "rank_share_hi": 0.5555555555555556,
+     "covered": 0.9934,
+     "class_kept": 0.45178175961344874
+    },
+    "R-LAB": {
+     "mean_rii": 0.7579166666666667,
+     "rank": 4,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 6,
+     "rank_share_lo": 0.027777777777777776,
+     "rank_share_hi": 0.5277777777777778,
+     "covered": 1.0,
+     "class_kept": 0.602
+    },
+    "R-MGT": {
+     "mean_rii": 0.67735325,
+     "rank": 24,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 3,
+     "rank_share_lo": 0.2727272727272727,
+     "rank_share_hi": 0.8499158249158255,
+     "covered": 0.9648,
+     "class_kept": 0.462893864013267
+    },
+    "R-MTH": {
+     "mean_rii": 0.5982500000000001,
+     "rank": 34,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 4,
+     "rank_share_lo": 0.7666666666666667,
+     "rank_share_hi": 0.9722222222222222,
+     "covered": 0.9958,
+     "class_kept": 0.8096003213496686
+    },
+    "R-FAT": {
+     "mean_rii": 0.6848333333333333,
+     "rank": 22,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 3,
+     "rank_share_lo": 0.42424242424242425,
+     "rank_share_hi": 0.8484848484848485,
+     "covered": 0.9704,
+     "class_kept": 0.5696619950535862
+    },
+    "R-SITE": {
+     "mean_rii": 0.659286,
+     "rank": 28,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 4,
+     "rank_share_lo": 0.14285714285714285,
+     "rank_share_hi": 0.9375,
+     "covered": 0.993,
+     "class_kept": 0.3959718026183283
+    },
+    "R-STO": {
+     "mean_rii": 0.69,
+     "rank": 21,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 2,
+     "rank_share_lo": 0.36842592592592593,
+     "rank_share_hi": 0.8551470588235278,
+     "covered": 0.9,
+     "class_kept": 0.4888888888888889
+    },
+    "R-PRC": {
+     "mean_rii": 0.6695,
+     "rank": 25,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 2,
+     "rank_share_lo": 0.02702702702702703,
+     "rank_share_hi": 0.9722222222222222,
+     "covered": 0.8846,
+     "class_kept": 0.18109880171829076
+    },
+    "R-WAT": {
+     "mean_rii": 0.65,
+     "rank": 30,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 1,
+     "rank_share_lo": 0.5517241379310345,
+     "rank_share_hi": 0.9615384615384616,
+     "covered": 0.6498,
+     "class_kept": 0.5740227762388427
+    },
+    "R-CTR": {
+     "mean_rii": 0.6676865000000001,
+     "rank": 26,
+     "n_ranked": 38,
+     "class": 2,
+     "n_studies": 2,
+     "rank_share_lo": 0.3055555555555556,
+     "rank_share_hi": 0.9090909090909091,
+     "covered": 0.8892,
+     "class_kept": 0.42420152946468737
+    },
+    "R-SCP": {
+     "mean_rii": 0.723383,
+     "rank": 12,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 1,
+     "rank_share_lo": 0.2777777777777778,
+     "rank_share_hi": 0.59375,
+     "covered": 0.6412,
+     "class_kept": 0.6210230817217717
+    },
+    "R-QLT": {
+     "mean_rii": 0.7196145,
+     "rank": 13,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.1111111111111111,
+     "rank_share_hi": 0.7272727272727273,
+     "covered": 0.8902,
+     "class_kept": 0.32082678049876434
+    },
+    "R-STR": {
+     "mean_rii": 0.749254,
+     "rank": 7,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 1,
+     "rank_share_lo": 0.13513513513513514,
+     "rank_share_hi": 0.4229362591431557,
+     "covered": 0.6412,
+     "class_kept": 0.48378041172801
+    },
+    "R-CST": {
+     "mean_rii": 0.7184079999999999,
+     "rank": 15,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 1,
+     "rank_share_lo": 0.34210526315789475,
+     "rank_share_hi": 0.65625,
+     "covered": 0.6412,
+     "class_kept": 0.37149095446038677
+    },
+    "R-CLI": {
+     "mean_rii": 0.556995,
+     "rank": 36,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 2,
+     "rank_share_lo": 0.5135135135135135,
+     "rank_share_hi": 1.0,
+     "covered": 0.8842,
+     "class_kept": 0.6998416647817236
+    },
+    "R-ECO": {
+     "mean_rii": 0.719597,
+     "rank": 14,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 2,
+     "rank_share_lo": 0.030303030303030304,
+     "rank_share_hi": 0.8823529411764706,
+     "covered": 0.8902,
+     "class_kept": 0.2298359919119299
+    },
+    "R-SOC": {
+     "mean_rii": 0.59403,
+     "rank": 35,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.7894736842105263,
+     "rank_share_hi": 1.0,
+     "covered": 0.6412,
+     "class_kept": 0.9054897067997505
+    },
+    "R-SUB": {
+     "mean_rii": 0.7105,
+     "rank": 17,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 2,
+     "rank_share_lo": 0.1388888888888889,
+     "rank_share_hi": 0.8235294117647058,
+     "covered": 0.8918,
+     "class_kept": 0.2753980713164387
+    },
+    "R-GOV": {
+     "mean_rii": 0.698,
+     "rank": 20,
+     "n_ranked": 38,
+     "class": 3,
+     "n_studies": 1,
+     "rank_share_lo": 0.36363636363636365,
+     "rank_share_hi": 0.7714285714285715,
+     "covered": 0.6614,
+     "class_kept": 0.6277592984578168
+    },
+    "R-TRN": {
+     "mean_rii": 0.459,
+     "rank": 38,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.9655172413793104,
+     "rank_share_hi": 1.0,
+     "covered": 0.6614,
+     "class_kept": 1.0
+    },
+    "R-PRD": {
+     "mean_rii": 0.73,
+     "rank": 11,
+     "n_ranked": 38,
+     "class": 4,
+     "n_studies": 1,
+     "rank_share_lo": 0.20689655172413793,
+     "rank_share_hi": 0.5,
+     "covered": 0.6406,
+     "class_kept": 0.8067436778020606
+    },
+    "R-DEF": {
+     "mean_rii": 0.485,
+     "rank": 37,
+     "n_ranked": 38,
+     "class": 1,
+     "n_studies": 1,
+     "rank_share_lo": 0.90625,
+     "rank_share_hi": 1.0,
+     "covered": 0.6406,
+     "class_kept": 0.9978145488604433
+    },
+    "R-FIN": {
+     "mean_rii": 0.777,
+     "rank": 1,
+     "n_ranked": 38,
+     "class": 5,
+     "n_studies": 1,
+     "rank_share_lo": 0.02631578947368421,
+     "rank_share_hi": 0.18518518518518517,
+     "covered": 0.6442,
+     "class_kept": 0.9906861223222602
+    }
+   },
+   "summary": {
+    "n_risks": 38,
+    "n_studies": 11,
+    "median_studies_per_risk": 3.0,
+    "risks_with_one_study": 10,
+    "mean_class_kept": 0.577325830346637,
+    "share_class_kept_ge_50": 0.5526315789473685,
+    "median_rank_interval_width_share": 0.4277743652743653
+   }
+  }
+ },
+ "agreement": {
+  "n_common": 30,
+  "spearman": 0.4674082313681869,
+  "p_spearman": 0.009205786349387606,
+  "kendall_tau": 0.31494252873563217,
+  "p_tau": 0.014325669656237997,
+  "exact_class": 0.2,
+  "within_one_class": 0.7
+ },
+ "existing": {
+  "validation": [
+   {
+    "study": "M10",
+    "n": 19,
+    "tested": true,
+    "rho": 0.2817025282158755,
+    "p_t": 0.242644237815588,
+    "p_perm": 0.24035,
+    "tau": 0.1876840914874098,
+    "p_tau": 0.2626182904425206,
+    "ci95_lo": -0.1844751707758273,
+    "ci95_hi": 0.6836035481984206,
+    "critical_rho_5pct": 0.455530505763042
+   },
+   {
+    "study": "M15",
+    "n": 11,
+    "tested": true,
+    "rho": 0.6272727272727273,
+    "p_t": 0.03884525362035334,
+    "p_perm": 0.04465,
+    "tau": 0.41818181818181815,
+    "p_tau": 0.08656124739458072,
+    "ci95_lo": 0.08160605474417257,
+    "ci95_hi": 0.9070410190487324,
+    "critical_rho_5pct": 0.6020687774370083
+   },
+   {
+    "study": "M14",
+    "n": 13,
+    "tested": true,
+    "rho": -0.18131868131868134,
+    "p_t": 0.5532950092839335,
+    "p_perm": 0.55305,
+    "tau": -0.15384615384615383,
+    "p_tau": 0.5097745711721406,
+    "ci95_lo": -0.6460838215051699,
+    "ci95_hi": 0.35032430641037793,
+    "critical_rho_5pct": 0.5529426594945894
+   },
+   {
+    "study": "A10",
+    "n": 2,
+    "tested": false
+   },
+   {
+    "study": "A21",
+    "n": 1,
+    "tested": false
+   },
+   {
+    "study": "HAS25",
+    "n": 1,
+    "tested": false
+   }
+  ],
+  "kendall_w": {
+   "studies": [
+    "M01",
+    "M10",
+    "M15",
+    "M14"
+   ],
+   "risks": [
+    "R-MAT",
+    "R-TOOL",
+    "R-SKILL",
+    "R-PLAN",
+    "R-WX",
+    "R-MTH"
+   ],
+   "k": 4,
+   "n": 6,
+   "W": 0.4,
+   "chi2": 8.0,
+   "p": 0.1562356275777222
+  },
+  "leave_one_out": [
+   {
+    "dropped": "A02",
+    "n_risks": 27,
+    "rho_vs_full_seed": 0.7832722832722833,
+    "max_rank_shift": 24.0
+   },
+   {
+    "dropped": "A14",
+    "n_risks": 30,
+    "rho_vs_full_seed": 0.9697374276813533,
+    "max_rank_shift": 9.0
+   },
+   {
+    "dropped": "A15",
+    "n_risks": 30,
+    "rho_vs_full_seed": 0.9862038273253227,
+    "max_rank_shift": 7.0
+   },
+   {
+    "dropped": "M01",
+    "n_risks": 25,
+    "rho_vs_full_seed": 0.9463358513197413,
+    "max_rank_shift": 7.0
+   },
+   {
+    "dropped": "M06",
+    "n_risks": 24,
+    "rho_vs_full_seed": 0.9628018500588803,
+    "max_rank_shift": 7.0
+   }
+  ],
+  "pairwise_summary": {
+   "n_pairs": 16,
+   "mean_rho": 0.3311773141861603,
+   "median_rho": 0.3050258861423435,
+   "min": -0.4285714285714286,
+   "max": 0.8857142857142858
+  },
+  "weighted_vs_unweighted_rho": 0.8193146417445485
+ },
+ "roles": {
+  "M01": "seed",
+  "A02": "seed",
+  "M06": "seed",
+  "A14": "seed",
+  "A15": "seed",
+  "M10": "validation",
+  "M15": "validation",
+  "M14": "validation",
+  "A10": "validation",
+  "A21": "validation",
+  "HAS25": "validation"
+ }
+}

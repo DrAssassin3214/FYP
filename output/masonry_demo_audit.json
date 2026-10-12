@@ -1,0 +1,703 @@
+{
+  "timestamp_utc": "2026-09-26T15:21:28+00:00",
+  "input_hash_sha256": "ed332386681391d8e23b1b17fe040833a41865fccaf709583a66674aafb6ec26",
+  "seed": 20260926,
+  "iterations": 10000,
+  "decision_criterion": "min_expected_total_cost",
+  "assumptions_and_non_literature_inputs": [
+    {
+      "input": "[activity].deadline_days",
+      "value": 17.6,
+      "source": "Assumption",
+      "note": "placeholder deadline = 115% of baseline",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][0].p",
+      "value": 0.3,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][0].direct_cost_if_occurs",
+      "value": 0.0,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][1].p",
+      "value": 0.35,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][1].direct_cost_if_occurs",
+      "value": 0.0,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][2].p",
+      "value": 0.25,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][2].direct_cost_if_occurs",
+      "value": 8000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][3].p",
+      "value": 0.2,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[risks][3].direct_cost_if_occurs",
+      "value": 0.0,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[cost].cost_per_delay_day",
+      "value": 15000.0,
+      "source": "Assumption",
+      "note": "cost per delay day, INR: USER INPUT REQUIRED (placeholder)",
+      "evidence_ids": []
+    },
+    {
+      "input": "[cost].ld_per_day_after_deadline",
+      "value": 0.0,
+      "source": "User Input",
+      "note": "not modelled",
+      "evidence_ids": []
+    },
+    {
+      "input": "[mitigations][0].cost",
+      "value": 12000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[mitigations][0].p_after",
+      "value": 0.1,
+      "source": "Assumption",
+      "note": "effect size: EXPERT JUDGMENT REQUIRED",
+      "evidence_ids": []
+    },
+    {
+      "input": "[mitigations][1].cost",
+      "value": 25000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[mitigations][2].cost",
+      "value": 9000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence",
+      "evidence_ids": []
+    },
+    {
+      "input": "[mitigations][2].p_after",
+      "value": 0.12,
+      "source": "Assumption",
+      "note": "effect size: EXPERT JUDGMENT REQUIRED",
+      "evidence_ids": []
+    }
+  ],
+  "inputs": {
+    "activity": {
+      "activity_id": "MAS-01",
+      "name": "Brick masonry, ground-floor walls",
+      "baseline_duration_days": {
+        "value": 15.27,
+        "source": "Derived Calculation",
+        "evidence_ids": [
+          "M03"
+        ],
+        "note": "quantity/(crews*productivity); productivity is a placeholder"
+      },
+      "quantity": 1200.0,
+      "unit": "m2",
+      "deadline_days": {
+        "value": 17.6,
+        "source": "Assumption",
+        "evidence_ids": [],
+        "note": "placeholder deadline = 115% of baseline"
+      },
+      "productivity_cv": null
+    },
+    "risks": [
+      {
+        "risk_id": "R01",
+        "name": "Brick/material shortage",
+        "p": {
+          "value": 0.3,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "delay": {
+          "kind": "pert",
+          "a": 1,
+          "m": 3,
+          "b": 8,
+          "lam": 4.0,
+          "source": "Assumption",
+          "evidence_ids": []
+        },
+        "category": "Material",
+        "description": "",
+        "status": "literature-supported",
+        "direct_cost_if_occurs": {
+          "value": 0.0,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "evidence_ids": [
+          "M01",
+          "M06"
+        ]
+      },
+      {
+        "risk_id": "R02",
+        "name": "Labour absenteeism / shortage",
+        "p": {
+          "value": 0.35,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "delay": {
+          "kind": "pert",
+          "a": 1,
+          "m": 2,
+          "b": 6,
+          "lam": 4.0,
+          "source": "Assumption",
+          "evidence_ids": []
+        },
+        "category": "Labour",
+        "description": "",
+        "status": "literature-supported",
+        "direct_cost_if_occurs": {
+          "value": 0.0,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "evidence_ids": [
+          "M01",
+          "M07",
+          "M15"
+        ]
+      },
+      {
+        "risk_id": "R03",
+        "name": "Rework due to workmanship",
+        "p": {
+          "value": 0.25,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "delay": {
+          "kind": "pert",
+          "a": 1,
+          "m": 2,
+          "b": 5,
+          "lam": 4.0,
+          "source": "Assumption",
+          "evidence_ids": []
+        },
+        "category": "Quality",
+        "description": "",
+        "status": "literature-supported",
+        "direct_cost_if_occurs": {
+          "value": 8000,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "evidence_ids": [
+          "M03",
+          "M15"
+        ]
+      },
+      {
+        "risk_id": "R04",
+        "name": "Rain / monsoon stoppage",
+        "p": {
+          "value": 0.2,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "delay": {
+          "kind": "pert",
+          "a": 1,
+          "m": 2,
+          "b": 7,
+          "lam": 4.0,
+          "source": "Assumption",
+          "evidence_ids": []
+        },
+        "category": "Weather",
+        "description": "",
+        "status": "literature-supported",
+        "direct_cost_if_occurs": {
+          "value": 0.0,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "evidence_ids": [
+          "R08"
+        ]
+      }
+    ],
+    "cost": {
+      "cost_per_delay_day": {
+        "value": 15000.0,
+        "source": "Assumption",
+        "evidence_ids": [],
+        "note": "cost per delay day, INR: USER INPUT REQUIRED (placeholder)"
+      },
+      "currency": "INR",
+      "ld_per_day_after_deadline": {
+        "value": 0.0,
+        "source": "User Input",
+        "evidence_ids": [],
+        "note": "not modelled"
+      }
+    },
+    "mitigations": [
+      {
+        "mitigation_id": "M-A",
+        "risk_id": "R01",
+        "action": "Hold a buffer stock of bricks on site",
+        "strategy": "mitigate",
+        "cost": {
+          "value": 12000,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "p_after": {
+          "value": 0.1,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "effect size: EXPERT JUDGMENT REQUIRED"
+        },
+        "delay_after": null,
+        "secondary_risks": [],
+        "feasible": true,
+        "infeasible_reason": "",
+        "time_to_implement_days": 0.0,
+        "evidence_ids": [
+          "M01"
+        ],
+        "mechanism": "Reduces chance of stock-out during the activity"
+      },
+      {
+        "mitigation_id": "M-B",
+        "risk_id": "R02",
+        "action": "Add one extra crew on standby",
+        "strategy": "mitigate",
+        "cost": {
+          "value": 25000,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "p_after": null,
+        "delay_after": {
+          "kind": "pert",
+          "a": 0.5,
+          "m": 1,
+          "b": 3,
+          "lam": 4.0,
+          "source": "Assumption",
+          "evidence_ids": []
+        },
+        "secondary_risks": [],
+        "feasible": true,
+        "infeasible_reason": "",
+        "time_to_implement_days": 0.0,
+        "evidence_ids": [
+          "M02"
+        ],
+        "mechanism": "Shortens delay if labour is short by crashing/backfill"
+      },
+      {
+        "mitigation_id": "M-C",
+        "risk_id": "R03",
+        "action": "Supervisor quality checks each course",
+        "strategy": "mitigate",
+        "cost": {
+          "value": 9000,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "ILLUSTRATIVE placeholder, not evidence"
+        },
+        "p_after": {
+          "value": 0.12,
+          "source": "Assumption",
+          "evidence_ids": [],
+          "note": "effect size: EXPERT JUDGMENT REQUIRED"
+        },
+        "delay_after": null,
+        "secondary_risks": [],
+        "feasible": true,
+        "infeasible_reason": "",
+        "time_to_implement_days": 0.0,
+        "evidence_ids": [
+          "M03"
+        ],
+        "mechanism": "Fewer rejected panels"
+      }
+    ]
+  },
+  "results": {
+    "summary": {
+      "n": 10000,
+      "seed": 20260926,
+      "baseline_days": 15.27,
+      "min": 15.27,
+      "max": 33.79432087761492,
+      "mean": 18.325419892327655,
+      "median": 17.980497853954777,
+      "std": 2.67589699781062,
+      "variance": 7.16042474289189,
+      "mean_se": 0.0267589699781062,
+      "expected_delay": 3.0554198923276554,
+      "p_any_delay": 0.7285,
+      "percentiles": {
+        "P10": 15.27,
+        "P50": 17.980497853954777,
+        "P80": 20.563755242125538,
+        "P85": 21.217119143855072,
+        "P90": 21.968905594797636,
+        "P95": 23.29573583553606
+      },
+      "percentile_ci95": {
+        "P10": [
+          15.27,
+          15.27
+        ],
+        "P50": [
+          17.910108098456952,
+          18.04157023708339
+        ],
+        "P80": [
+          20.480788072410462,
+          20.679074739606968
+        ],
+        "P85": [
+          21.122041972355657,
+          21.3028579475059
+        ],
+        "P90": [
+          21.86829149945863,
+          22.086405287430118
+        ],
+        "P95": [
+          23.093852041818245,
+          23.449228491640184
+        ]
+      },
+      "delay_percentiles": {
+        "P10": 0.0,
+        "P50": 2.7104978539547773,
+        "P80": 5.293755242125538,
+        "P85": 5.9471191438550735,
+        "P90": 6.698905594797635,
+        "P95": 8.02573583553606
+      },
+      "cvar_90": 23.679996492472636,
+      "cvar_95": 24.814628262857052,
+      "p_exceed_deadline": 0.5647,
+      "p_delay_exceeds": {
+        "2.0": 0.6205,
+        "5.0": 0.2275
+      }
+    },
+    "cost": {
+      "expected_cost": 47872.898384914835,
+      "std": 41563.23943664127,
+      "P50": 42610.37296332057,
+      "P80": 83318.82018294034,
+      "P90": 104502.82234334483,
+      "P95": 123946.40475759003,
+      "currency": "INR"
+    },
+    "matrix": [
+      {
+        "risk_id": "R01",
+        "p": 0.3,
+        "p_class": 2,
+        "impact_class": 5,
+        "score": 10,
+        "level": "Moderate",
+        "note": "ordinal prioritisation only; not a monetary or time quantity"
+      },
+      {
+        "risk_id": "R02",
+        "p": 0.35,
+        "p_class": 2,
+        "impact_class": 4,
+        "score": 8,
+        "level": "Moderate",
+        "note": "ordinal prioritisation only; not a monetary or time quantity"
+      },
+      {
+        "risk_id": "R03",
+        "p": 0.25,
+        "p_class": 2,
+        "impact_class": 4,
+        "score": 8,
+        "level": "Moderate",
+        "note": "ordinal prioritisation only; not a monetary or time quantity"
+      },
+      {
+        "risk_id": "R04",
+        "p": 0.2,
+        "p_class": 2,
+        "impact_class": 4,
+        "score": 8,
+        "level": "Moderate",
+        "note": "ordinal prioritisation only; not a monetary or time quantity"
+      }
+    ],
+    "convergence": [
+      {
+        "n": 1000,
+        "mean": 18.30017443874066,
+        "P50": 18.01698684062208,
+        "P80": 20.508375772120434,
+        "P90": 21.863936723628704
+      },
+      {
+        "n": 2000,
+        "mean": 18.30172795634871,
+        "P50": 17.987951581454066,
+        "P80": 20.564929094708297,
+        "P90": 21.842434088735942
+      },
+      {
+        "n": 3000,
+        "mean": 18.274114903166392,
+        "P50": 17.94495165443937,
+        "P80": 20.55446895302198,
+        "P90": 21.859759590615237
+      },
+      {
+        "n": 4000,
+        "mean": 18.275614041372748,
+        "P50": 17.948565674799966,
+        "P80": 20.48792793241671,
+        "P90": 21.898017835673457
+      },
+      {
+        "n": 5000,
+        "mean": 18.285307878858028,
+        "P50": 17.925409534879144,
+        "P80": 20.516448644414286,
+        "P90": 21.93637131032866
+      },
+      {
+        "n": 6000,
+        "mean": 18.30805065292052,
+        "P50": 17.94013930184834,
+        "P80": 20.55365022475936,
+        "P90": 21.966082802534714
+      },
+      {
+        "n": 7000,
+        "mean": 18.312233896559462,
+        "P50": 17.961504564760737,
+        "P80": 20.55631570191887,
+        "P90": 21.971984156936944
+      },
+      {
+        "n": 8000,
+        "mean": 18.322427176799714,
+        "P50": 17.981131965599342,
+        "P80": 20.56727267448741,
+        "P90": 21.973206827047903
+      },
+      {
+        "n": 9000,
+        "mean": 18.327609274709836,
+        "P50": 17.981663461436142,
+        "P80": 20.57230593086146,
+        "P90": 21.975354408655804
+      },
+      {
+        "n": 10000,
+        "mean": 18.325419892327655,
+        "P50": 17.980497853954777,
+        "P80": 20.563755242125538,
+        "P90": 21.968905594797636
+      }
+    ],
+    "decision": {
+      "criterion": "min_expected_total_cost",
+      "rule": "Criterion: minimum total expected cost  TEC = C_mitigation + E[C_residual]. Options evaluated: 5. Constraints: deadline-probability limit = None, mitigation budget = None. Options that are infeasible or violate a constraint are removed before ranking.",
+      "options": [
+        {
+          "option_id": "ACCEPT",
+          "label": "Accept (no response)",
+          "mitigations": [],
+          "feasible": true,
+          "infeasible_reason": "",
+          "mitigation_cost": 0.0,
+          "residual_expected_cost": 47872.898384914835,
+          "total_expected_cost": 47872.898384914835,
+          "expected_duration": 18.325419892327655,
+          "expected_delay": 3.0554198923276554,
+          "P80": 20.563755242125538,
+          "P90": 21.968905594797636,
+          "P95": 23.29573583553606,
+          "p_exceed_deadline": 0.5647,
+          "cost_P90": 104502.82234334483,
+          "evidence_ids": [],
+          "expected_delay_avoided_days": 0.0,
+          "mitigation_cost_per_day_avoided": null,
+          "delay_cost_per_day": 15000.0,
+          "rejected_because": [],
+          "admissible": true
+        },
+        {
+          "option_id": "O-A",
+          "label": "Buffer stock",
+          "mitigations": [
+            "M-A"
+          ],
+          "feasible": true,
+          "infeasible_reason": "",
+          "mitigation_cost": 12000.0,
+          "residual_expected_cost": 37368.85312107531,
+          "total_expected_cost": 49368.85312107531,
+          "expected_duration": 17.625150208071688,
+          "expected_delay": 2.3551502080716875,
+          "P80": 19.513872514782282,
+          "P90": 20.925561131769246,
+          "P95": 22.065827843256713,
+          "p_exceed_deadline": 0.4557,
+          "cost_P90": 89711.14320132117,
+          "evidence_ids": [
+            "M01"
+          ],
+          "expected_delay_avoided_days": 0.7002696842559679,
+          "mitigation_cost_per_day_avoided": 17136.255173961905,
+          "delay_cost_per_day": 15000.0,
+          "rejected_because": [],
+          "admissible": true
+        },
+        {
+          "option_id": "O-B",
+          "label": "Standby crew",
+          "mitigations": [
+            "M-B"
+          ],
+          "feasible": true,
+          "infeasible_reason": "",
+          "mitigation_cost": 25000.0,
+          "residual_expected_cost": 41323.754454061076,
+          "total_expected_cost": 66323.75445406107,
+          "expected_duration": 17.888810296937404,
+          "expected_delay": 2.6188102969374047,
+          "P80": 19.944192080578116,
+          "P90": 21.32283163853467,
+          "P95": 22.48282006958477,
+          "p_exceed_deadline": 0.4812,
+          "cost_P90": 94487.67411720417,
+          "evidence_ids": [
+            "M02"
+          ],
+          "expected_delay_avoided_days": 0.4366095953902507,
+          "mitigation_cost_per_day_avoided": 57259.392060897066,
+          "delay_cost_per_day": 15000.0,
+          "rejected_because": [],
+          "admissible": true
+        },
+        {
+          "option_id": "O-C",
+          "label": "Quality checks",
+          "mitigations": [
+            "M-C"
+          ],
+          "feasible": true,
+          "infeasible_reason": "",
+          "mitigation_cost": 9000.0,
+          "residual_expected_cost": 42244.64430721742,
+          "total_expected_cost": 51244.64430721742,
+          "expected_duration": 18.019962953814495,
+          "expected_delay": 2.749962953814494,
+          "P80": 20.210009469747334,
+          "P90": 21.594477946189734,
+          "P95": 22.820974836224217,
+          "p_exceed_deadline": 0.5223,
+          "cost_P90": 97325.91434530113,
+          "evidence_ids": [
+            "M03"
+          ],
+          "expected_delay_avoided_days": 0.30545693851316136,
+          "mitigation_cost_per_day_avoided": 29464.05488056122,
+          "delay_cost_per_day": 15000.0,
+          "rejected_because": [],
+          "admissible": true
+        },
+        {
+          "option_id": "O-ABC",
+          "label": "All three",
+          "mitigations": [
+            "M-A",
+            "M-B",
+            "M-C"
+          ],
+          "feasible": true,
+          "infeasible_reason": "",
+          "mitigation_cost": 46000.0,
+          "residual_expected_cost": 25191.455112524134,
+          "total_expected_cost": 71191.45511252413,
+          "expected_duration": 16.883083674168276,
+          "expected_delay": 1.613083674168276,
+          "P80": 18.425464064215035,
+          "P90": 19.658389789059683,
+          "P95": 20.736911599880838,
+          "p_exceed_deadline": 0.2882,
+          "cost_P90": 68288.61526335434,
+          "evidence_ids": [
+            "M01",
+            "M02",
+            "M03"
+          ],
+          "expected_delay_avoided_days": 1.4423362181593795,
+          "mitigation_cost_per_day_avoided": 31892.702561891125,
+          "delay_cost_per_day": 15000.0,
+          "rejected_because": [],
+          "admissible": true
+        }
+      ],
+      "selected_option_id": "ACCEPT",
+      "statement": "Under the stated criterion and assumptions, 'Accept (no response)' is preferred among the 5 admissible options evaluated (total expected cost 47873 INR, P90 duration 22.0 days).",
+      "caveat": "Result depends on user/expert inputs marked as assumptions; it is not a claim of optimality."
+    }
+  }
+}

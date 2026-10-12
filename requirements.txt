@@ -1,0 +1,6 @@
+# Runtime: enough to run the GUI, the CLI and the demo
+flask
+numpy
+scipy
+matplotlib
+openpyxl

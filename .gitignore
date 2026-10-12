@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+~$*
+*.log
+.venv/
+# Large data and downloaded third-party papers are kept out of git
+data/*.db
+data/*.jsonl
+Research_Papers/
+examples/output/
+out/
+dist/
+build/
+.venv/
+.venv-build/
+*.zip
+
+# duplicate, diverged copies of the project (kept on disk, not versioned)
+Bricks-ly_latest_v3/
+Bricks-ly_latest/

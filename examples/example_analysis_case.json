@@ -1,0 +1,365 @@
+{
+  "project": {
+    "name": "ILLUSTRATIVE analysis example",
+    "location": "n/a",
+    "construction_type": "Residential building",
+    "notes": "Demonstration only. Every probability, delay and the planned duration is a placeholder labelled Assumption, not site data and not evidence. The evidence IDs (M01, M02, ...) point to real literature records supporting that each risk exists, not its size. Its site facts cover every input of the bundled rules, so the rule engine flags the risks that are in the register and nothing is left over. Replace all numbers with your own before drawing any conclusion."
+  },
+  "activity": {
+    "id": "MAS-01",
+    "name": "Brick masonry, ground-floor walls",
+    "planned_duration_days": {
+      "value": 16,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence"
+    },
+    "deadline_days": {
+      "value": 20,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence"
+    }
+  },
+  "facts": {
+    "required_workers": 6,
+    "available_workers": 5,
+    "material_lead_time_days": 6,
+    "material_buffer_days": 3,
+    "material_stock_days": 2,
+    "tools_shortage": false,
+    "monsoon_overlap": true,
+    "work_at_height": true,
+    "payment_delay_expected": false,
+    "design_incomplete": false,
+    "prior_rework_history": true,
+    "schedule_compressed": true,
+    "skilled_masons_short": true
+  },
+  "risks": [
+    {
+      "id": "R-MAT",
+      "name": "Brick / material shortage",
+      "category": "Material",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01",
+        "M06"
+      ],
+      "p": {
+        "value": 0.5,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 3,
+        "b": 8,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-LAB",
+      "name": "Labour absenteeism / shortage",
+      "category": "Labour",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01",
+        "M07",
+        "M15"
+      ],
+      "p": {
+        "value": 0.35,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 6,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-RWK",
+      "name": "Rework due to workmanship",
+      "category": "Quality",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M03",
+        "M15"
+      ],
+      "p": {
+        "value": 0.25,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 5,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-WX",
+      "name": "Rain / monsoon stoppage",
+      "category": "Weather",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "R08"
+      ],
+      "p": {
+        "value": 0.2,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 7,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-PLAN",
+      "name": "Poor planning or unrealistic scheduling",
+      "category": "Management",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01"
+      ],
+      "p": {
+        "value": 0.1,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 1,
+        "b": 3,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-SAFE",
+      "name": "Unsafe conditions / work at height",
+      "category": "Safety",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M01"
+      ],
+      "p": {
+        "value": 0.3,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 6,
+        "source": "Assumption"
+      }
+    },
+    {
+      "id": "R-SKILL",
+      "name": "Unskilled or unqualified labour",
+      "category": "Labour",
+      "status": "literature-supported",
+      "evidence_ids": [
+        "M15",
+        "M14"
+      ],
+      "p": {
+        "value": 0.22,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay": {
+        "kind": "pert",
+        "a": 1,
+        "m": 2,
+        "b": 5,
+        "source": "Assumption"
+      }
+    }
+  ],
+  "impact_bin_edges_fraction": [
+    0.02,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "cost": {
+    "cost_per_delay_day": {
+      "value": 8000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence"
+    },
+    "ld_per_day_after_deadline": {
+      "value": 5000,
+      "source": "Assumption",
+      "note": "ILLUSTRATIVE placeholder, not evidence"
+    },
+    "currency": "INR"
+  },
+  "mitigations": [
+    {
+      "id": "M-BUF",
+      "risk_id": "R-MAT",
+      "action": "Buffer stock of bricks and mortar materials",
+      "strategy": "mitigate",
+      "catalogue_id": "C-BUFFER",
+      "evidence_ids": [
+        "D03",
+        "D11"
+      ],
+      "cost": {
+        "value": 6000,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "p_after": {
+        "value": 0.2,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      }
+    },
+    {
+      "id": "M-SUP",
+      "risk_id": "R-MAT",
+      "action": "Second approved brick supplier",
+      "strategy": "mitigate",
+      "catalogue_id": "C-SUPPLIER",
+      "evidence_ids": [
+        "D35"
+      ],
+      "cost": {
+        "value": 3000,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "p_after": {
+        "value": 0.35,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      }
+    },
+    {
+      "id": "M-GANG",
+      "risk_id": "R-LAB",
+      "action": "Extra mason gang for the critical weeks",
+      "strategy": "mitigate",
+      "catalogue_id": "C-CREW-UP",
+      "evidence_ids": [
+        "D12"
+      ],
+      "cost": {
+        "value": 9000,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "delay_after": {
+        "kind": "pert",
+        "a": 0,
+        "m": 1,
+        "b": 3,
+        "source": "Assumption"
+      },
+      "secondary_risks": [
+        {
+          "id": "S-CONG",
+          "name": "Work-front congestion",
+          "category": "Labour",
+          "p": {
+            "value": 0.3,
+            "source": "Assumption",
+            "note": "ILLUSTRATIVE placeholder, not evidence"
+          },
+          "delay": {
+            "kind": "pert",
+            "a": 0,
+            "m": 1,
+            "b": 2,
+            "source": "Assumption"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M-COV",
+      "risk_id": "R-WX",
+      "action": "Covers and sheltered work sequence for the rain period",
+      "strategy": "mitigate",
+      "catalogue_id": "C-WEATHER",
+      "evidence_ids": [
+        "D20"
+      ],
+      "cost": {
+        "value": 2500,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "p_after": {
+        "value": 0.12,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      }
+    },
+    {
+      "id": "M-QC",
+      "risk_id": "R-RWK",
+      "action": "Inspection hold point before each course",
+      "strategy": "mitigate",
+      "catalogue_id": "C-QC",
+      "evidence_ids": [
+        "D03"
+      ],
+      "cost": {
+        "value": 1500,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "p_after": {
+        "value": 0.15,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      }
+    },
+    {
+      "id": "M-MECH",
+      "risk_id": "R-SKILL",
+      "action": "Switch to larger blocks",
+      "strategy": "avoid",
+      "catalogue_id": "C-MECHANISE",
+      "evidence_ids": [
+        "D04"
+      ],
+      "cost": {
+        "value": 4000,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "p_after": {
+        "value": 0.1,
+        "source": "Assumption",
+        "note": "ILLUSTRATIVE placeholder, not evidence"
+      },
+      "feasible": false,
+      "infeasible_reason": "no block supplier within delivery range (illustrative)"
+    }
+  ],
+  "constraints": {
+    "max_p_exceed_deadline": null,
+    "max_mitigation_budget": null
+  },
+  "simulation": {
+    "n": 10000,
+    "seed": 12345,
+    "criterion": "min_expected_total_cost"
+  }
+}

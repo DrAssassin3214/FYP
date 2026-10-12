@@ -1,0 +1,61 @@
+[
+  {
+    "model_id": "M03-brick-rework",
+    "name": "Brick works productivity vs rework cost (Palestine)",
+    "citation": "Mahamid, I. (2020). Study of relationship between rework and labor productivity in building construction projects. Pontificia Universidad Catolica de Chile, Escuela de Construccion Civil (journal name to be confirmed from the PDF masthead)",
+    "doi": "",
+    "form": "linear",
+    "intercept": 34.36,
+    "terms": [{"var": "rework_cost_pct", "coef": -1.71, "power": 1}],
+    "variables": [
+      {"name": "rework_cost_pct", "unit": "% of work cost", "min": null, "max": null,
+       "description": "Rework cost in brick works as a percentage; the sample mean reported is 4.51%. Range of the data not extracted."}
+    ],
+    "output_unit": "m2/day",
+    "output_basis": "per_crew",
+    "crew_size_in_data": 2,
+    "country": "Palestine",
+    "activity": "Brick works in building construction (2-labour crew)",
+    "n": 40,
+    "r2": 0.78,
+    "rmse": null,
+    "mape": null,
+    "evidence_depth": "full text read (targeted); PDF in Research_Papers/5_Masonry_Productivity_Delay",
+    "validity_text": "Fitted on 40 building projects in Palestine; predictor range not extracted. Equation printed as Y = 34.36 - 1.71X (Equation 5 in the text, although the text also refers to Equation (3)); R2 = 0.78, F(1,39) = 62.71. Sample mean productivity 26.2 m2/day and mean rework 4.51%.",
+    "limitations": "Single-variable model; Palestinian conditions; not Indian data; unknown range; crew of 2 labourers."
+  },
+  {
+    "model_id": "P1-01-ouga-kampala",
+    "name": "Block-laying productivity per block layer (Kampala, Uganda)",
+    "citation": "Ouga, A.D., Alinaitwe, H.M., Mwesige, G. (2020). Modelling Block Laying Productivity on Building Sites in Kampala. Journal of Construction in Developing Countries, 25(1), 109-128. DOI: 10.21315/jcdc2020.25.1.6",
+    "doi": "10.21315/jcdc2020.25.1.6",
+    "form": "linear",
+    "intercept": 0.53,
+    "terms": [
+      {"var": "work_height_m", "coef": -0.08, "power": 1},
+      {"var": "porters_per_layer", "coef": 0.40, "power": 1},
+      {"var": "exed", "coef": 0.36, "power": 1}
+    ],
+    "variables": [
+      {"name": "work_height_m", "unit": "m (mid-value of the work-height band)", "min": 0.5, "max": 5.5,
+       "description": "Height above ground at which the wall is being built."},
+      {"name": "porters_per_layer", "unit": "count", "min": 1, "max": 4,
+       "description": "Number of porters (material carriers) supporting one block layer; NOT part of the crew-size scaling (already an input to this equation)."},
+      {"name": "exed", "unit": "0 or 1", "min": 0, "max": 1,
+       "description": "1 if the block layer has >= 5 years experience AND a craft/diploma qualification, else 0."}
+    ],
+    "output_unit": "m2/hour",
+    "output_basis": "per_worker",
+    "crew_size_in_data": null,
+    "country": "Uganda (Kampala)",
+    "activity": "Solid concrete block laying, block 400 x 225 x 200 mm, individual block layer with porters",
+    "n": 70,
+    "r2": 0.65,
+    "rmse": null,
+    "mape": null,
+    "evidence_depth": "full text (P1-01 in Research_Notes/P1_masonry_models.md)",
+    "validity_text": "Kampala building sites; work height 0.5-5.5 m; porters observed 1-4 (44 of 70 observations at 2 porters).",
+    "limitations": "Concrete block, not clay brick; Uganda, not India; per-block-layer hourly rate, not a crew-day rate; R2 0.65 leaves 35% unexplained; EX and ED individually not significant; text is inconsistent on n (70/83/160) and on the block size used in model development.",
+    "usage_note": "output_basis=per_worker scales by workers_per_crew, but here 'worker' means block layers (masons) only: porters are already a model INPUT (porters_per_layer), not part of the crew multiplier. Set workers_per_crew to the number of masons/block-layers, and porters_per_layer to porters PER MASON, or this double-counts porter effort."
+  }
+]

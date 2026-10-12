@@ -1,0 +1,51 @@
+References cited in Chapters 3 and 4 (APA 7th edition). Items marked [check] have incomplete details; see report/references_unverified.txt.
+
+Abeysinghe, & Jayathilaka. (2022). Factors influencing the timely completion of construction projects in Sri Lanka. PLoS ONE, 17(12), Article e0278318. https://doi.org/10.1371/journal.pone.0278318 [check: initials]
+
+Adebowale, & Agumba. (2023). A meta-analysis of factors affecting construction labour productivity in the Middle East. Journal of Construction in Developing Countries, 28(1), 193-220. https://doi.org/10.21315/jcdc-12-21-0192 [check: initials]
+
+Almeida, E. L. G. de, Feitoza, V. A. S., Carvalho, M. T. M., Piña, A. B. S., Araújo, L. G., & Aidar, L. A. G. (2021). Study of delays in constructions: A managerial point of view of private companies in Brasilia, Brazil. Gestao & Producao, 28(3), Article e5194. https://doi.org/10.1590/1806-9649-2021v28e5194 [check: surname form, journal diacritics, DOI inconsistency inside the PDF (e5194 vs e5120)]
+
+Cohen, J. (1960). A coefficient of agreement for nominal scales. Educational and Psychological Measurement, 20(1), 37-46.
+
+Cox, L. A., Jr. (2008). What's wrong with risk matrices? Risk Analysis, 28(2), 497-512.
+
+Cronbach, L. J. (1951). Coefficient alpha and the internal structure of tests. Psychometrika, 16(3), 297-334.
+
+Dixit, Mandal, Thanikal, & Saurabh. (2019). Study of significant factors affecting construction productivity using relative importance index in Indian construction industry. E3S Web of Conferences, 140, Article 09010. https://doi.org/10.1051/e3sconf/201914009010 [check: initials]
+
+Duijm, N. J. (2015). Recommendations on the use and design of risk matrices. Safety Science, 76, 21-31.
+
+Hassoon et al. (2025). [Title not recorded in the repository]. Journal of Infrastructure Preservation and Resilience, 6, Article 3. https://doi.org/10.1186/s43065-025-00116-4 [check: title, authors]
+
+Holm, S. (1979). A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 6(2), 65-70.
+
+International Electrotechnical Commission. (n.d.). IEC 31010: Risk assessment techniques. [check: edition year]
+
+International Organization for Standardization. (n.d.). ISO 31000: Risk management. [check: edition year]
+
+Karthik, D., & Rao, C. B. K. (2019). The analysis of essential factors responsible for loss of labour productivity in building construction projects in India. Engineering Journal, 23(2), 55-70. https://doi.org/10.4186/ej.2019.23.2.55
+
+Karthik, D., & Rao, C. B. K. (2019). Identifying the significant factors affecting masonry labour productivity in India. International Journal of Construction Management, 22(3), 464-472. https://doi.org/10.1080/15623599.2019.1631978 [check: year is 2019 online and 2022 for the issue; the text cites it as "2022 or 2019"; used only as a source not entered in the seed]
+
+Kendall, M. G., & Babington Smith, B. (1939). The problem of m rankings. The Annals of Mathematical Statistics, 10(3), 275-287.
+
+Landis, J. R., & Koch, G. G. (1977). The measurement of observer agreement for categorical data. Biometrics, 33(1), 159-174.
+
+Loekito, Dani, Zulfikar, Triarso, & Prasetyono. (2026). Factors influencing construction worker productivity in Indonesia and strategies for improvement. Multidisciplinary Science Journal, 8, Article e2026243. https://doi.org/10.31893/multiscience.2026243 [check: initials]
+
+Manoharan et al. (2022). Labour-related factors affecting construction productivity in Sri Lankan building projects: Perspectives of engineers and managers. Frontiers in Engineering and Built Environment. https://doi.org/10.1108/FEBE-03-2022-0009 [check: authors, volume, pages]
+
+Ouansrimeang, & Wisaeang. (2024). Analyzing the critical delay factors for construction projects in the public sector using relative importance index and machine learning techniques. Journal of Infrastructure, Policy and Development, 8(8), Article 6208. https://doi.org/10.24294/jipd.v8i8.6208 [check: initials]
+
+Pinky Devi, & Sindhu. (2025). Delay analysis of infrastructure construction projects in India. Journal of The Institution of Engineers (India): Series A, 106(3), 763-771. https://doi.org/10.1007/s40030-025-00899-5 [check: author name form]
+
+Ponmalar, Aravindraj, & Nandhini. (2018). Study on factors influencing labour productivity in residential buildings in Indian scenario. IJETMR, 5(2), 239-248. https://doi.org/10.29121/ijetmr.v5.i2.2018.168 [check: initials, journal full name]
+
+Soundarya et al. (2025). An investigation study on residential buildings for cost overrun. Scientific Reports. https://doi.org/10.1038/s41598-025-95984-x [check: authors, volume, article number]
+
+Project documents cited (repository files, not published works):
+Project team. (2026). Audit corrections, 2026-10-08 [Unpublished project document]. FYP repository, docs/Audit_Corrections_2026-10-08.md.
+Project team. (2026). Project handoff summary, Sections 5, 8 and 9 [Unpublished project document]. FYP repository, docs/Project_Handoff_Summary.md.
+Project team. (2026). Statistical analysis of the literature database [Unpublished project document]. FYP repository, docs/Corpus_Statistical_Analysis.md.
+Project team. (2026). Literature database report [Unpublished project document]. FYP repository, docs/Literature_Database_Report.md.

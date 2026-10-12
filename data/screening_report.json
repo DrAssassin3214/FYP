@@ -1,0 +1,26 @@
+{
+  "rules_version": "2026-10-07.1",
+  "input": 11599,
+  "included": 3550,
+  "by_reason": {
+    "DUPLICATE": 191,
+    "INCLUDED_T1": 2180,
+    "NO_ABSTRACT": 478,
+    "INCLUDED_T2": 1370,
+    "NO_THEME": 2655,
+    "OFF_TOPIC_ECON": 122,
+    "STRUCTURAL": 88,
+    "OUT_OF_SCOPE": 1538,
+    "NOT_CONSTRUCTION": 2977
+  },
+  "tier": {
+    "1": 2180,
+    "2": 1370
+  },
+  "by_theme": {
+    "delay_causes": 1420,
+    "risk_assessment": 1356,
+    "productivity": 1386,
+    "expert_rule_ai": 429
+  }
+}

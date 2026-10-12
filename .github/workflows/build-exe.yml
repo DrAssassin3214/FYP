@@ -1,0 +1,88 @@
+name: Build Windows exe
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt -r requirements-desktop.txt pyinstaller
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          python -m pytest -q --tb=line -p no:cacheprovider 2>&1 | Tee-Object -FilePath pytest_out.txt
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content pytest_out.txt | Where-Object { $_ -match "^(FAILED|ERROR)|Error|assert" } | Select-Object -First 15 | ForEach-Object { Write-Host "::error::$_" }
+            exit 1
+          }
+
+      # ---------------------------------------------------------------- browser version (console)
+      - name: Build browser-version exe
+        run: pyinstaller fyp_gui.spec --noconfirm --clean
+
+      - name: Smoke test the browser-version exe
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist\FYP-Risk-Tool\FYP-Risk-Tool.exe" -ArgumentList "--no-browser","--port","8765" -PassThru
+          $health = $null
+          for ($i = 0; $i -lt 30 -and -not $health; $i++) {
+            Start-Sleep -Seconds 1
+            try { $health = Invoke-RestMethod http://127.0.0.1:8765/api/health } catch {}
+          }
+          if (-not $health) { Stop-Process -Id $p.Id -Force; throw "exe did not start" }
+          Write-Host "health:" ($health | ConvertTo-Json -Compress)
+          if ($health.evidence_records -lt 1) { Stop-Process -Id $p.Id -Force; throw "no evidence records loaded" }
+          $example = (Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/api/example).Content
+          $run = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8765/api/run -ContentType "application/json" -Body $example
+          if (-not $run.ok) { Stop-Process -Id $p.Id -Force; throw "example case did not run" }
+          Stop-Process -Id $p.Id -Force
+
+      # ---------------------------------------------------------------- PySide6 desktop version
+      - name: Smoke test the desktop app from source
+        shell: pwsh
+        run: |
+          python -m gui.qt_app --smoke smoke_source.json
+          Get-Content smoke_source.json
+          $r = Get-Content smoke_source.json -Raw | ConvertFrom-Json
+          if (-not $r.ok) { throw "desktop app (source) self-test failed" }
+
+      - name: Build desktop exe
+        run: pyinstaller fyp_desktop.spec --noconfirm --clean
+
+      - name: Smoke test the desktop exe
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist\FYP-Risk-Tool-Desktop\FYP-Risk-Tool-Desktop.exe" -ArgumentList "--smoke","smoke_exe.json" -PassThru
+          if (-not $p.WaitForExit(180000)) { Stop-Process -Id $p.Id -Force; throw "desktop exe timed out" }
+          if (-not (Test-Path smoke_exe.json)) { throw "desktop exe wrote no result (exit code $($p.ExitCode))" }
+          Get-Content smoke_exe.json
+          $r = Get-Content smoke_exe.json -Raw | ConvertFrom-Json
+          if (-not $r.ok) { throw "desktop exe self-test failed" }
+
+      - name: Zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist\FYP-Risk-Tool -DestinationPath FYP-Risk-Tool-windows.zip
+          Compress-Archive -Path dist\FYP-Risk-Tool-Desktop -DestinationPath FYP-Risk-Tool-Desktop-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FYP-Risk-Tool-windows
+          path: FYP-Risk-Tool-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FYP-Risk-Tool-Desktop-windows
+          path: FYP-Risk-Tool-Desktop-windows.zip

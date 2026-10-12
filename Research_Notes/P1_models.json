@@ -1,0 +1,342 @@
+[
+ {
+  "id": "P1-01",
+  "authors": "Allan Dickens Ouga; Henry Mwanaki Alinaitwe; Godfrey Mwesige",
+  "year": 2020,
+  "title": "Modelling Block Laying Productivity on Building Sites in Kampala",
+  "journal": "Journal of Construction in Developing Countries 25(1): 109-128",
+  "doi": "10.21315/jcdc2020.25.1.6",
+  "access": "Open access, CC BY 4.0 (licence text seen on PDF p.1; Crossref also lists CC BY 4.0)",
+  "country": "Uganda (Kampala)",
+  "activity": "Solid concrete block laying, block 400 x 225 x 200 mm (11 blocks/m2), work height 0.5-5.5 m, individual block layer with porters",
+  "n": 70,
+  "model_type": "OLS multiple linear regression (Model 3 of 4 candidate models, chosen by adjusted R2 and AIC)",
+  "equation_text": "PRD = 0.53 - 0.08H + 0.40P + 0.36 EXED   (R2 = 0.65 and AIC = 51.16)",
+  "output_name": "Block-laying productivity per block layer",
+  "output_unit": "m2 of blockwork per block layer per hour",
+  "variables": [
+   {
+    "name": "H",
+    "unit": "m (work height, mid-value of height band)",
+    "coding": "continuous",
+    "min": 0.5,
+    "max": 5.5
+   },
+   {
+    "name": "P",
+    "unit": "number of porters per block layer",
+    "coding": "integer count",
+    "min": 1,
+    "max": 4
+   },
+   {
+    "name": "EXED",
+    "unit": "dimensionless",
+    "coding": "EX x ED; 1 if experience >= 5 years AND craft/diploma qualification, else 0",
+    "min": 0,
+    "max": 1
+   }
+  ],
+  "coefficients": {
+   "intercept": 0.53,
+   "H": -0.08,
+   "P": 0.4,
+   "EXED": 0.36
+  },
+  "fit": {
+   "r2": 0.65,
+   "mape": null,
+   "rmse": null
+  },
+  "validity_range_text": "Kampala building sites; work heights not exceeding 6 m above ground (Table 2 range 0.5-5.5 m); block size 400 x 225 x 200 mm; P observed 1-4 with 44 of 70 observations at 2 porters (abstract p.109; Table 2 p.116)",
+  "evidence_depth": "full text",
+  "location_in_paper": "Eq. 3 p.119; Table 2 p.116; Table 3 p.120",
+  "limitations": "Individual mason, not crew; per-hour output, no per-day model; P has little internal variability; EX and ED individually not significant; text inconsistent on block size used for model development (p.113-114 vs p.119) and on n (70 / 83 / 160); no hold-out validation seen; concrete blocks in Uganda, not clay brick in India; no weather, mortar, bond or crew-size variables; R2 0.65 leaves 35% unexplained"
+ },
+ {
+  "id": "P1-02",
+  "authors": "M. K. Parthasarathy; R. Murugasan; Ramya Vasan",
+  "year": 2018,
+  "title": "Modelling manpower and equipment productivity in tall residential building projects in developing countries",
+  "journal": "Journal of the South African Institution of Civil Engineering 60(2): 23-33 (Paper 1547)",
+  "doi": "10.17159/2309-8775/2018/v60n2a3",
+  "access": "Free full text (SciELO South Africa PDF); no licence text seen, so not marked open access",
+  "country": "India (52 tall residential projects, various locations)",
+  "activity": "Blockwork (block type and thickness not reported) in framed RCC residential buildings >= 30 m tall, tower crane and hoist assisted; monthly project-level data over 18 months",
+  "n": 480,
+  "model_type": "Multiple linear regression of monthly blockwork quantity on man-days and equipment hours (Model 10, all months); monsoon and non-monsoon variants Models 11 and 12",
+  "equation_text": "BW = 49.662 - 0.514 H + 0.183 MD + 2.887 TCH + 1.221 HH   (R2 = 0.932; N = 480; SE = 374.08)  [Model 10]. Monsoon: BW = 15.621 - 1.263 H + 0.176 MD + 2.529 TCH + 1.404 HH (R2 = 0.936; N = 103; SE = 370.76) [Model 11]. Non-monsoon: BW = -61.466 + 0.572 H + 0.234 MD + 2.753 TCH + 1.213 HH (R2 = 0.933; N = 376; SE = 385.63) [Model 12]",
+  "output_name": "Blockwork quantity per project per month",
+  "output_unit": "m2 per month (project level, NOT per mason or crew)",
+  "variables": [
+   {
+    "name": "H",
+    "unit": "m (mean of start-of-month and end-of-month building height at which work was done)",
+    "coding": "continuous",
+    "min": 3,
+    "max": 174
+   },
+   {
+    "name": "MD",
+    "unit": "man-days per month",
+    "coding": "continuous",
+    "min": 315,
+    "max": 4880
+   },
+   {
+    "name": "TCH",
+    "unit": "tower crane hours per month allocated to blockwork (10% share)",
+    "coding": "continuous",
+    "min": 86,
+    "max": 1088
+   },
+   {
+    "name": "HH",
+    "unit": "hoist hours per month",
+    "coding": "continuous",
+    "min": 141,
+    "max": 2506
+   }
+  ],
+  "coefficients": {
+   "intercept": 49.662,
+   "H": -0.514,
+   "MD": 0.183,
+   "TCH": 2.887,
+   "HH": 1.221
+  },
+  "fit": {
+   "r2": 0.932,
+   "mape": null,
+   "rmse": null
+  },
+  "validity_range_text": "Tall (>= 30 m) framed RCC residential projects in India with tower crane and hoist, floor-to-floor height 3-4 m; predictor ranges from Table 1 p.25 (H range 3-174 m is the overall range listed in Table 1; BW 34-5141 m2/month, mean 2605); SE 374.08 m2 quoted, no RMSE",
+  "evidence_depth": "full text",
+  "location_in_paper": "Models 10-12 p.29; Table 1 p.25; Tables 3-4 pp.29-30",
+  "limitations": "Dependent variable is monthly quantity, so MD coefficient (0.183 m2 per man-day) is confounded with crane and hoist hours (VIF 14.885) and must not be read as mason productivity; tall buildings only; block type and thickness not reported; crane-hour allocation to blockwork by project judgement; validation by scatter plot only (Figure 4), no numerical hold-out metric; Table 1 labels man-days as MH for blockwork"
+ },
+ {
+  "id": "P1-05",
+  "authors": "Anu V. Thomas; J. Sudhakumar",
+  "year": 2014,
+  "title": "Modelling masonry labour productivity using multiple regression",
+  "journal": "Proceedings of the 30th Annual ARCOM Conference, 1-3 September 2014, Portsmouth, UK, pp. 1345-1354 (no DOI)",
+  "doi": null,
+  "access": "Free full text on ARCOM website; no licence text seen, not marked open access",
+  "country": "India (Kerala; two high-rise RCC projects with masonry infill)",
+  "activity": "Laterite block masonry in stretcher bond, subcontract and directly employed crews, 8 h day 6 days/week; walls below and above 2.2 m and with numerous corners",
+  "n": 152,
+  "model_type": "Stepwise multiple linear regression (SPSS) on log10-transformed productivity; 152 crew-day observations; 70/30 split-sample validation",
+  "equation_text": "Equation not printed in the paper; Table 2 (unstandardised B) gives the coefficients. Reconstructed (inference from Table 2 + text that log10 of the dependent variable was used): log10(P) = -0.348 + 0.157*ModeEmp - 0.024*OT - 0.220*WC3 - 0.178*WC2 - 0.024*DelayMat, so P = 10^(...). Back-transformation is not printed in the paper.",
+  "output_name": "Masonry labour productivity (assumed log10 of value in m2/man-hr; back-transformed output in m2 per man-hour)",
+  "output_unit": "m2 per man-hour (model is fitted on log10 of this)",
+  "variables": [
+   {
+    "name": "ModeEmp",
+    "unit": "dimensionless",
+    "coding": "0 = directly employed labour (reference), 1 = subcontract labour",
+    "min": 0,
+    "max": 1
+   },
+   {
+    "name": "OT",
+    "unit": "hours of overtime per day",
+    "coding": "continuous; subcontract crews rarely > 1 h, directly employed mean 3.7 h with two observations of 8 and 9 h; min 0 inferred from statement that overtime was on 85% / 94% of observations",
+    "min": 0,
+    "max": 9
+   },
+   {
+    "name": "WC3",
+    "unit": "dimensionless",
+    "coding": "1 = walls higher than 2.2 m (work content 3), else 0; reference is WC1",
+    "min": 0,
+    "max": 1
+   },
+   {
+    "name": "WC2",
+    "unit": "dimensionless",
+    "coding": "1 = walls with numerous corners, height < 2.2 m (work content 2), else 0; reference is WC1 straight walls < 2.2 m",
+    "min": 0,
+    "max": 1
+   },
+   {
+    "name": "DelayMat",
+    "unit": "hours per day lost to material unavailability",
+    "coding": "continuous; 0 when no delay; 30 min to 5 h on 57 of 152 observations",
+    "min": 0,
+    "max": 5
+   }
+  ],
+  "coefficients": {
+   "intercept": -0.348,
+   "ModeEmp": 0.157,
+   "OT": -0.024,
+   "WC3": -0.22,
+   "WC2": -0.178,
+   "DelayMat": -0.024
+  },
+  "fit": {
+   "r2": 0.794,
+   "mape": null,
+   "rmse": null
+  },
+  "validity_range_text": "Two Kerala high-rise sites, laterite blocks; observed productivity 0.12-1.09 m2/man-hr (mean 0.41); overtime 0-9 h/day; material delay 0-5 h/day; adjusted R2 0.787; split-sample MSE 0.0117 (model-building) vs MSPR 0.0119 (validation) in log10 units (inference); Durbin-Watson 1.855",
+  "evidence_depth": "full text",
+  "location_in_paper": "Table 1 p.1348; Table 2 p.1350; validation pp.1351-1352; observed range p.1347",
+  "limitations": "Two sites only; laterite blocks not clay brick; block size and wall thickness not reported; weather variables not significant (masonry considered interior); 152 crew-days from two sites; overtime effect driven largely by directly employed labour on one site; log10 back-transformation not stated; RMSE/MAPE not reported (MSE in log units only); work content limited to three classes"
+ },
+ {
+  "id": "P1-10",
+  "authors": "Saja H. Rasool; Faiq M. S. Al-Zwainy",
+  "year": 2016,
+  "title": "Estimating Productivity of Brickwork item using Logistic and Multiple Regression Approaches",
+  "journal": "Scholars Journal of Engineering and Technology (SJET) 4(5): 234-243",
+  "doi": null,
+  "access": "Free PDF on publisher site (saspublishers.com); no licence text seen, not marked open access; no DOI found",
+  "country": "Iraq",
+  "activity": "Brickwork productivity; brick type, wall thickness and crew not reported; 50 observations taken from a 2012 University of Baghdad thesis",
+  "n": 50,
+  "model_type": "Multiple linear regression (SPSS Enter method). A binary logistic model is also printed in the paper but predicts P(good productivity), not a rate, and is not entered here.",
+  "equation_text": "y = 4.010 + 0.025 X1 - 0.013 X2 - 0.038 X3 - 0.417 X4   (Eq. 3)",
+  "output_name": "Brickwork productivity (y)",
+  "output_unit": null,
+  "variables": [
+   {
+    "name": "X1",
+    "unit": "years (age of worker)",
+    "coding": "continuous",
+    "min": 22,
+    "max": 55
+   },
+   {
+    "name": "X2",
+    "unit": "years (experience)",
+    "coding": "continuous",
+    "min": 4,
+    "max": 32
+   },
+   {
+    "name": "X3",
+    "unit": "number of workers",
+    "coding": "count",
+    "min": 4,
+    "max": 8
+   },
+   {
+    "name": "X4",
+    "unit": "level of execution, listed as 'Meter' in Table 1 (undefined)",
+    "coding": "1 to 3 as in Table 2",
+    "min": 1,
+    "max": 3
+   }
+  ],
+  "coefficients": {
+   "intercept": 4.01,
+   "X1": 0.025,
+   "X2": -0.013,
+   "X3": -0.038,
+   "X4": -0.417
+  },
+  "fit": {
+   "r2": 0.466,
+   "mape": 7.5,
+   "rmse": null
+  },
+  "validity_range_text": "Predictor ranges from Table 2 (p.237). Calibration R 0.682, R2 0.466, adjusted R2 0.418 (Table 5). MAPE 7.5% (and R2 0.7619 / R 87.28%) is from a check on only 5 new observations (Tables 12, 14, 16). y mean 3.95, SD 0.5076 (Table 3). Site security variable constant and dropped.",
+  "evidence_depth": "full text",
+  "location_in_paper": "Eq. 3 p.238; Tables 2-3 pp.237-238; Table 5-6 p.239; Table 16 p.242",
+  "limitations": "Unit of productivity not stated anywhere; secondhand data (2011/2012 thesis); n = 50; only age and level significant; experience sign inconsistent; Table 2 and Table 3 give different means for X3 and X4; validation on 5 points; no weather, material or wall variables; equation reproduces the paper's own Table 14 values (derived check)"
+ },
+ {
+  "id": "P1-11",
+  "authors": "Paikun Paikun; Cici Fatimah; Nadhya Susilo Nugroho; Dody Kusmana",
+  "year": 2021,
+  "title": "Labor Productivity Rating Model for Light Brick Wall Installation in Residential Projects",
+  "journal": "ASTONJADRO: Jurnal Rekayasa Sipil 10(2): 260-270",
+  "doi": "10.32832/astonjadro.v10i2.4998",
+  "access": "Free PDF; licence CC BY-NC-SA 4.0 listed in Crossref metadata (licence text not seen in the PDF text)",
+  "country": "Indonesia (Sukabumi, West Java)",
+  "activity": "Lightweight (light brick, probably AAC) wall installation by a crew of 2 masons + 1 helper on one housing project; wall thickness and unit size not reported",
+  "n": 20,
+  "model_type": "OLS multiple linear regression of daily crew output on effective working minutes of each crew member (productivity-rating / labour utilisation approach)",
+  "equation_text": "Y1 = 6.302 + 0.018 X1 + 0.011 X2 + 0.008 X3   (Table 6, p.266; R2 = 0.850, F = 30.322)",
+  "output_name": "Wall area installed per day by the 3-person crew",
+  "output_unit": "m2 per day (crew of 2 masons + 1 helper)",
+  "variables": [
+   {
+    "name": "X1",
+    "unit": "minutes per day (effective working time of craftsman I)",
+    "coding": "continuous",
+    "min": 348,
+    "max": 360
+   },
+   {
+    "name": "X2",
+    "unit": "minutes per day (effective working time of craftsman II)",
+    "coding": "continuous",
+    "min": 342,
+    "max": 362
+   },
+   {
+    "name": "X3",
+    "unit": "minutes per day (effective working time of helper)",
+    "coding": "continuous",
+    "min": 357,
+    "max": 368
+   }
+  ],
+  "coefficients": {
+   "intercept": 6.302,
+   "X1": 0.018,
+   "X2": 0.011,
+   "X3": 0.008
+  },
+  "fit": {
+   "r2": 0.85,
+   "mape": 0.66,
+   "rmse": null
+  },
+  "validity_range_text": "One crew, 20 working days; Y1 observed 18.95-19.41 m2/day; predictor ranges 10-20 minutes wide (Table 5). MAPE 0.66% (accuracy 99.34%) is in-sample (Table 8), and the recap on p.268 says 99.43%.",
+  "evidence_depth": "full text",
+  "location_in_paper": "Eq. p.266; Tables 5-8 pp.266-268",
+  "limitations": "Derived check: applying the printed 3-decimal coefficients to Table 5 inputs gives 19.27-19.64 m2/day (observed 18.95-19.41), MAPE about 1.5%; an OLS refit of Table 5 reproduces intercept 6.302 and R2 0.850 with slopes 0.01775, 0.01083, 0.00762. Table 8 model values are not in day order (rows 1 and 10 have identical inputs but different values). Single crew, single site; effective time is an outcome not a planning input; X3 not significant; no weather, height or wall variables; in-sample accuracy only"
+ },
+ {
+  "id": "P1-12",
+  "authors": "Ibrahim Mahamid",
+  "year": 2020,
+  "title": "Study of relationship between rework and labor productivity in Building Construction Projects",
+  "journal": "Revista de la Construccion 19(1): 30-41",
+  "doi": "10.7764/RDLC.19.1.30-41",
+  "access": "Free PDF (held in project folder); no licence text seen, not marked open access",
+  "country": "Palestine (West Bank)",
+  "activity": "Brick works, productivity of a 2-labourer crew; project-level averages from 40 building projects 2015-2018",
+  "n": 40,
+  "model_type": "Simple linear regression (single predictor: rework cost)",
+  "equation_text": "Y = 34.36 - 1.71 X   (Equation 5, p.37; R2 = 0.78, F(1,39) = 62.71)",
+  "output_name": "Labour productivity in brick works (2-labour crew)",
+  "output_unit": "m2 per day",
+  "variables": [
+   {
+    "name": "X",
+    "unit": "% of item contract price (rework cost in brick works)",
+    "coding": "continuous",
+    "min": null,
+    "max": null
+   }
+  ],
+  "coefficients": {
+   "intercept": 34.36,
+   "X": -1.71
+  },
+  "fit": {
+   "r2": 0.78,
+   "mape": null,
+   "rmse": null
+  },
+  "validity_range_text": "Mean rework cost 4.51% and mean productivity 26.2 m2/day (p.37); Figure 2 x-axis spans 0-10% but data min/max not printed; West Bank building projects 2015-2018",
+  "evidence_depth": "full text",
+  "location_in_paper": "Eq. 5 and Table 5 p.37; Figure 2 p.38",
+  "limitations": "Single predictor; project-average productivity; crew size, wall type and unit size not controlled; rework cost is known only after the fact so it acts as a scenario input; text mislabels variables (Equation 3 defines Y as rework cost and X as productivity, and one sentence says block works instead of brick works); MAPE and RMSE not reported"
+ }
+]
