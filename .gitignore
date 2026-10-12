@@ -19,3 +19,6 @@ build/
 # duplicate, diverged copies of the project (kept on disk, not versioned)
 Bricks-ly_latest_v3/
 Bricks-ly_latest/
+
+# scheduler runtime lock
+.claude/scheduled_tasks.lock
