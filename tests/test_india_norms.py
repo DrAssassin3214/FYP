@@ -3,7 +3,7 @@ import pytest
 from app.productivity.india_norms import crew_output_per_day, load_norms
 from app.productivity.model import load_models
 from app.productivity.predictor import CrewConversion, build_baseline
-from app.service import CaseError, india_norm_output, india_norms
+from app.service import CaseError, india_norm_output
 
 
 def test_norms_load_and_are_traceable():

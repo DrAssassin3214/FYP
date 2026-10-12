@@ -3,7 +3,6 @@ import copy
 import io
 import shutil
 import subprocess
-from pathlib import Path
 
 import pytest
 from openpyxl import load_workbook

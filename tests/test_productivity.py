@@ -1,10 +1,9 @@
 import numpy as np
 import pytest
-from dataclasses import replace
 
-from app.engine.models import Activity, DelayDist, Param, Source
+from app.engine.models import Activity, Param, Source
 from app.engine.simulation import simulate
-from app.productivity.model import ProductivityModel, Term, Variable, load_models, model_from_dict
+from app.productivity.model import ProductivityModel, Term, Variable, load_models
 from app.productivity.predictor import CrewConversion, build_baseline
 
 

@@ -1,6 +1,5 @@
 """Regression tests for the validation hardening of app.service / app.engine (audit 2026-10-08)."""
 import json
-import math
 from copy import deepcopy
 
 import pytest

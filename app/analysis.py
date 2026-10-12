@@ -47,6 +47,7 @@ from app.engine.simulation import convergence, sensitivity, simulate, summarise
 
 CaseError = service.CaseError
 STRATEGIES = ("avoid", "mitigate", "transfer", "accept", "monitor")
+PLAUSIBLE_MAX = 1e9     # plausibility cap on delay days, direct cost, cost per day and LD per day (days / currency units)
 DEFAULT_N = 10_000
 MAX_N = 200_000
 DEFAULT_SEED = 12345
@@ -90,6 +91,31 @@ def _opt_number(d: Mapping, key: str, where: str, problems: list[str], lo: float
         problems.append(f"{where}.{key}: must be {'between ' + str(lo) + ' and ' + str(hi) if hi is not None else 'at least ' + str(lo)}")
         return None
     return f
+
+
+def _cap(value, where: str, problems: list[str]) -> bool:
+    """Plausibility cap: a finite value above PLAUSIBLE_MAX would overflow the simulation.  True if it was rejected."""
+    if isinstance(value, (int, float)) and not isinstance(value, bool) and abs(value) > PLAUSIBLE_MAX:
+        problems.append(f"{where}: {value:g} is above the plausibility limit of {PLAUSIBLE_MAX:g} "
+                        f"(days or currency units); check the unit and the number of zeros")
+        return True
+    return False
+
+
+def _unknown_evidence_warnings(raw_risks, mitigations, evidence_index) -> list[str]:
+    """Same wording as service.run_case: evidence ids that are not in the evidence store (a warning, not an error)."""
+    unknown: list[str] = []
+    for r in raw_risks:
+        for blk in (r, r.get("p"), r.get("delay")):
+            if isinstance(blk, Mapping):
+                for e in blk.get("evidence_ids") or ():
+                    if e not in evidence_index and e not in unknown:
+                        unknown.append(e)
+    for m in mitigations:
+        for e in m.evidence_ids:
+            if e not in evidence_index and e not in unknown:
+                unknown.append(e)
+    return [f"unknown evidence id '{e}': not found in the evidence store" for e in unknown]
 
 
 def _as_list(v, where: str, problems: list) -> list:
@@ -231,6 +257,10 @@ def parse_analysis(case: Mapping) -> dict:
                     problems.append(f"risks[{rid}].direct_cost_if_occurs: must be 0 or more")
                 else:
                     r = replace(r, direct_cost_if_occurs=dp)
+        _cap(r.delay.a, f"risks[{rid}].delay", problems)
+        _cap(r.delay.m, f"risks[{rid}].delay", problems)
+        _cap(r.delay.b, f"risks[{rid}].delay", problems)
+        _cap(r.direct_cost_if_occurs.value, f"risks[{rid}].direct_cost_if_occurs", problems)
         risks.append(r)
     if not risks:
         problems.append("no complete risk in the register: enter probability and delay for at least one risk")
@@ -258,6 +288,8 @@ def parse_analysis(case: Mapping) -> dict:
         if cdp is not None and cdp.value < 0:
             problems.append("cost.cost_per_delay_day: must be 0 or more")
             cdp = None
+        if cdp is not None and _cap(cdp.value, "cost.cost_per_delay_day", problems):
+            cdp = None
         ldp = Param(0.0, Source.USER, note="not modelled")
         ld = c.get("ld_per_day_after_deadline")
         if isinstance(ld, Mapping) and not _blank(ld.get("value")):
@@ -265,6 +297,8 @@ def parse_analysis(case: Mapping) -> dict:
             if p_ld is not None:
                 if p_ld.value < 0:
                     problems.append("cost.ld_per_day_after_deadline: must be 0 or more")
+                elif _cap(p_ld.value, "cost.ld_per_day_after_deadline", problems):
+                    pass
                 elif p_ld.value > 0 and deadline is None:
                     problems.append("cost.ld_per_day_after_deadline: liquidated damages need activity.deadline_days")
                 else:
@@ -386,6 +420,9 @@ def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = No
     activity = Activity(pa["activity_info"]["id"], pa["activity_info"]["name"], pa["planned"], deadline_days=pa["deadline"])
     deadline = pa["deadline"].value if pa["deadline"] else None
     warnings = list(pa["warnings"])
+    if evidence_index:
+        warnings += _unknown_evidence_warnings(case.get("risks") or [], mits, evidence_index) \
+            if isinstance(case.get("risks") or [], list) else []
     try:
         res = simulate(activity, risks, n, seed, corr)
         summary = summarise(res, deadline_days=deadline)

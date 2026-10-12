@@ -147,8 +147,8 @@ def generate_report(
     a("\n## 12-13. Monetary impact and EMV\n")
     a(f"Cost per delay day = {cost.cost_per_delay_day.value:,.0f} {cost.currency} ({cost.cost_per_delay_day.source.value}).\n")
     a("| Risk | p | E[delay if occurs] | Conditional cost | Event EMV |\n|---|---|---|---|---|")
-    for e in emv:
-        a(f"| {e['risk_id']} | {e['p']:.2f} | {e['expected_delay_if_occurs_days']:.2f} | {e['conditional_cost']:,.0f} | {e['emv']:,.0f} |")
+    for ev in emv:
+        a(f"| {ev['risk_id']} | {ev['p']:.2f} | {ev['expected_delay_if_occurs_days']:.2f} | {ev['conditional_cost']:,.0f} | {ev['emv']:,.0f} |")
     a(f"\nSum of event EMV = {sum(e['emv'] for e in emv):,.0f}; simulated expected cost = {cs['expected_cost']:,.0f} {cost.currency}. "
       "They agree in expectation only for independent, additive risks with a linear cost model.\n")
     a("## 14-16. Mitigation alternatives, residual risk and post-mitigation simulation\n")
@@ -159,10 +159,10 @@ def generate_report(
         a(f"| {o['label']} | {', '.join(o['mitigations']) or '-'} | {o['mitigation_cost']:,.0f} | {o['residual_expected_cost']:,.0f} | "
           f"{o['total_expected_cost']:,.0f} | {o['expected_duration']:.2f} | {o['P90']:.2f} | {pe} | {o['admissible']} | {note} |")
     a("")
-    for m in mitigations:
-        a(f"- **{m.mitigation_id}** ({m.strategy}) targets {m.risk_id}: {m.action}. Mechanism: {m.mechanism or 'NR'}. "
-          f"Effect source: p_after = {m.p_after.source.value if m.p_after else 'unchanged'}; "
-          f"delay_after = {m.delay_after.source.value if m.delay_after else 'unchanged'}. Evidence: {', '.join(m.evidence_ids) or 'none'}.")
+    for mit in mitigations:
+        a(f"- **{mit.mitigation_id}** ({mit.strategy}) targets {mit.risk_id}: {mit.action}. Mechanism: {mit.mechanism or 'NR'}. "
+          f"Effect source: p_after = {mit.p_after.source.value if mit.p_after else 'unchanged'}; "
+          f"delay_after = {mit.delay_after.source.value if mit.delay_after else 'unchanged'}. Evidence: {', '.join(mit.evidence_ids) or 'none'}.")
     a("\n## 17. Decision analysis\n")
     a(f"**Rule used.** {decision['rule']}\n")
     a(f"**Result.** {decision['statement']}\n")

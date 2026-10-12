@@ -113,6 +113,7 @@ def _param(d: Any, where: str, problems: list[str], default_source: Optional[Sou
         problems.append(f"{where}: value is missing")
         return None
     src = d.get("source")
+    source: Optional[Source]
     if src is None and default_source is not None:
         source = default_source
     else:
@@ -322,11 +323,17 @@ def _rule(d: Any, where: str, problems: list[str]) -> Optional[Rule]:
     level = d.get("level", "elevated")
     if not isinstance(conf, str) or not isinstance(level, str):
         problems.append(f"{where}: level and confidence must be text")
-    src = d.get("source", "Assumption")
-    if len(problems) > n0:
+    src = d.get("source")
+    if src is None:
+        rule_src = Source.ASSUMPTION  # a rule with no source label is an assumption
+    elif isinstance(src, str) and src in _SRC:
+        rule_src = _SRC[src]
+    else:
+        problems.append(f"{where}: unknown source '{src}' (use one of {SOURCES})")
+        rule_src = None
+    if len(problems) > n0 or rid is None or risk_id is None or pr is None or rule_src is None:
         return None
-    return Rule(rid, texts[0], risk_id, level, all_of, any_of, int(pr),
-                _SRC.get(src, Source.ASSUMPTION) if isinstance(src, str) else Source.ASSUMPTION, ev,
+    return Rule(rid, texts[0], risk_id, level, all_of, any_of, int(pr), rule_src, ev,
                 texts[1], conf, texts[2])
 
 
@@ -488,8 +495,10 @@ def parse_case(case: Mapping) -> dict:
             if len(problems) > n0:
                 edges = None
             else:
-                edges = vals
-                if any(b <= a_ for a_, b in zip(edges, edges[1:])) or any(not (0 < x < 1) for x in edges):
+                nums = [x for x in vals if x is not None]
+                assert len(nums) == len(vals)  # no _num problems (checked above)
+                edges = nums
+                if any(b <= a_ for a_, b in zip(nums, nums[1:])) or any(not (0 < x < 1) for x in nums):
                     problems.append("impact_bin_edges_fraction must be strictly ascending, unique values between 0 and 1")
                     edges = None
 
@@ -641,7 +650,7 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
                        "source": b.delay.source.value, "mean": b.delay.mean(),
                        "note": (r.get("delay") or {}).get("note") or ""} if b else None),
             "complete": b is not None,
-            "seed": seeds.get(rid),
+            "seed": seeds.get(rid) if rid is not None else None,
             **{k: (r.get(k) or "") for k in REGISTER_TEXT_FIELDS},
             "flag": {"level": fl["level"], "rules": fl["rules"]} if fl else None,
         })
@@ -715,7 +724,9 @@ def _store(workbook: Optional[Path] = None):
 def evidence_corpus_report() -> dict:
     """What the full evidence store was built from, and how large it is."""
     _store()
-    return {"total_records": len(_FULL_STORE_CACHE[0]), "sources": _FULL_STORE_CACHE[1]}
+    cache = _FULL_STORE_CACHE
+    assert cache is not None
+    return {"total_records": len(cache[0]), "sources": cache[1]}
 
 
 def evidence_lookup(ids: Optional[list] = None, query: Optional[str] = None, k: int = 20,

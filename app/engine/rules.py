@@ -103,7 +103,7 @@ def _eval_detail(c: Cond, facts: Mapping[str, Any]) -> tuple[Optional[bool], lis
     if rhs_name is None and rhs is None:
         return None, [], ["the rule has no value to compare with"]
     if c.op in _NUMERIC_OPS:
-        need = "number"
+        need: Optional[str] = "number"
     else:                                   # eq / ne: the fact must have the same type as what it is compared with
         need = rk if rk in ("bool", "number", "str") else None
     if need is None:

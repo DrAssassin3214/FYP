@@ -160,6 +160,18 @@ def _case_from_request() -> dict:
     return data
 
 
+def _simulation_checks(case: dict) -> list[str]:
+    """Same n / seed limits as /api/analyze (app.analysis), applied only when the case has a simulation block."""
+    if case.get("simulation") is None:
+        return []
+    from app import analysis
+    out: list[str] = []
+    sim = analysis._as_map(case["simulation"], "simulation", out)
+    analysis._int_setting(sim, "n", analysis.DEFAULT_N, 1, analysis.MAX_N, out)
+    analysis._int_setting(sim, "seed", analysis.DEFAULT_SEED, 0, 2**31 - 1, out)
+    return out
+
+
 def _gui_checks(case: dict) -> list[str]:
     """Input-shape checks the service does not perform itself (reported, never corrected)."""
     out: list[str] = []
@@ -357,7 +369,7 @@ def create_app() -> Flask:
         # Live validation: problems are an expected outcome, so they come back with HTTP 200 and ok=false
         # (the browser would otherwise log every keystroke's 422 as a console error). /api/run keeps 422.
         case = _case_from_request()          # a malformed body is a 400/422 JSON error (BadRequest handler)
-        extra = _gui_checks(case)
+        extra = _gui_checks(case) + _simulation_checks(case)
         try:
             res = service.run_case(case, evidence_index())
         except service.CaseError as e:

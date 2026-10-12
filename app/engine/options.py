@@ -246,7 +246,7 @@ def decision_command(decision: dict, currency: str = "INR") -> dict:
     rows = {o["option_id"]: o for o in decision["options"]}
     sel_id = decision.get("selected_option_id")
     crit = decision["criterion"]
-    accept = rows.get("ACCEPT")
+    accept = rows["ACCEPT"]       # decision.py always inserts ACCEPT
     if sel_id is None:
         return {"command": "NO ADMISSIBLE OPTION", "selected_option_id": None, "criterion": crit,
                 "reason": "Every evaluated option violates a constraint, including accepting the risk. Relax a constraint "
