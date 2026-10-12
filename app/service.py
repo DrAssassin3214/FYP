@@ -24,7 +24,7 @@ from typing import Any, Mapping, Optional
 from app.engine.audit import to_jsonable
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, classify, matrix_level
 from app.reporting.matrix_graphic import matrix_svg
-from app.literature_seed import seed_for, seed_table
+from app.literature_seed import seed_for
 from app.engine.models import DelayDist, Param, Risk, RiskStatus, Source
 from app.engine.rules import _OPS, Cond, Rule, check_rule_base, evaluate_rules
 from app.reporting.register_report import generate_register_report, register_csv
@@ -53,21 +53,38 @@ def _blank(v: Any) -> bool:
     return v is None or (isinstance(v, str) and v == "")
 
 
+MAX_ABS_INPUT = 1e12        # sanity limit for any entered number (days, money); larger values overflow the calculations
+_ASCII_DECIMAL = re.compile(r"^[+-]?((\d+\.?\d*|\.\d+)([eE][+-]?\d+)?|nan|inf|infinity)$", re.IGNORECASE | re.ASCII)   # nan/inf: rejected below as non-finite
+
+
 def _num(v: Any, where: str, problems: list[str]) -> Optional[float]:
-    """A real, finite number (numeric strings such as "0.5" are accepted, as before).  Booleans, NaN and
-    infinity are rejected with a message instead of being coerced."""
+    """A real, finite number (numeric strings such as "0.5" are accepted, as before, but only plain ASCII decimals:
+    no Arabic-Indic digits, no underscores).  Booleans, NaN, infinity and absurdly large values are rejected with a
+    message naming the field instead of being coerced."""
     if isinstance(v, bool):
         problems.append(f"{where} must be a number, not {'true' if v else 'false'}")
         return None
+    if isinstance(v, str) and not _ASCII_DECIMAL.match(v.strip()):
+        problems.append(f"{where}: value '{v}' is not a number")
+        return None
     try:
         x = float(v)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         problems.append(f"{where}: value '{v}' is not a number")
         return None
     if not math.isfinite(x):
         problems.append(f"{where} must be a finite number")
         return None
+    if abs(x) > MAX_ABS_INPUT:
+        problems.append(f"{where}: {x:g} is too large (limit {MAX_ABS_INPUT:.0e})")
+        return None
     return x
+
+
+def _oneline(v: Any) -> Any:
+    """Single-line fields (project name, activity name, notes of a source): any line break or run of white space becomes one
+    space, so a name can never inject a Markdown heading or a table row into an export."""
+    return " ".join(v.split()) if isinstance(v, str) else v
 
 
 def _text(v: Any, where: str, problems: list[str]) -> str:
@@ -231,6 +248,7 @@ def _risk(d: Mapping, where: str, problems: list[str], warnings: list[str],
         problems.append(f"{where}.p: expected an object with value and source (got {type(pd).__name__} '{pd}')")
     elif _blank(pd.get("value")):
         missing.append("probability")
+        _ids(pd.get("evidence_ids"), f"{where}.p.evidence_ids", problems)
     else:
         p = _param(pd, f"{where}.p", problems)
         if p is not None and not (0.0 <= p.value <= 1.0):
@@ -254,6 +272,7 @@ def _risk(d: Mapping, where: str, problems: list[str], warnings: list[str],
                 for k in needed:                      # what WAS entered must still be a valid number
                     if not _blank(dd.get(k)):
                         _num(dd[k], f"{where}.delay.{k}", problems)
+                _ids(dd.get("evidence_ids"), f"{where}.delay.evidence_ids", problems)
             else:
                 delay = _dist(dd, f"{where}.delay", problems)
 
@@ -474,6 +493,16 @@ def parse_case(case: Mapping) -> dict:
         if rr:
             risks.append(rr)
 
+    norm_ids: dict[str, str] = {}
+    for r in raw:
+        if _blank(r.get("id")):
+            continue
+        key = "".join(str(r["id"]).split()).upper()
+        if key in norm_ids and norm_ids[key] != str(r["id"]):
+            warnings.append(f"risk ids '{norm_ids[key]}' and '{r['id']}' differ only by case or spaces; they are treated "
+                            "as two different risks (rules and the library match the exact id)")
+        norm_ids.setdefault(key, str(r["id"]))
+
     edges = case.get("impact_bin_edges_fraction")
     if edges is not None:
         msg = "impact_bin_edges_fraction must be a list of exactly four numbers"
@@ -497,7 +526,7 @@ def parse_case(case: Mapping) -> dict:
         if not isinstance(es, Mapping):
             problems.append("impact_bin_edges_source: expected an object with source and note")
         else:
-            note_e = _text(es.get("note"), "impact_bin_edges_source.note", problems)
+            note_e = _oneline(_text(es.get("note"), "impact_bin_edges_source.note", problems))
             if not _blank(es.get("source")):                  # a blank picker in the GUI means "not given yet"
                 src_e = _source(es.get("source"), "impact_bin_edges_source", problems)
                 if src_e is not None:
@@ -536,7 +565,8 @@ def parse_case(case: Mapping) -> dict:
         rules = [x for x in (_rule(r, f"rules[{i}]", problems) for i, r in enumerate(rules_raw)) if x]
     if problems:
         raise CaseError(problems)
-    return {"project": dict(project), "activity": {"id": str(a.get("id") or "ACT"), "name": a.get("name") or ""},
+    return {"project": {k: _oneline(v) if k != "notes" else v for k, v in project.items()},
+            "activity": {"id": str(a.get("id") or "ACT"), "name": _oneline(a.get("name")) or ""},
             "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts,
             "impact_edges": edges, "edges_source": edges_source, "warnings": warnings, "partial": partial, "use_seed": use_seed,
             "seed_basis": seed_basis}
@@ -624,7 +654,6 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
             for rid, sd in seeds.items():
                 warnings.append(f"{rid}: placed on the matrix from the literature seed (survey RII rank {sd['rank']} of "
                                 f"{sd['n_seeded']}); enter probability and delay to replace it")
-    by_mx = {m["risk_id"]: m for m in matrix}
 
     rows = []
     for r in pc["raw_risks"]:

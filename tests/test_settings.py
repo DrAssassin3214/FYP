@@ -1,5 +1,4 @@
 import json
-import os
 
 import pytest
 
@@ -82,15 +81,15 @@ def test_saved_file_is_not_json_readable_as_something_else(isolated_settings_dir
 
 
 # ---------------------------------------------------------------- clients.resolve_config priority
-def test_priority_explicit_over_settings_over_environment():
-    os.environ["ANTHROPIC_API_KEY"] = "env-key"
+def test_priority_explicit_over_settings_over_environment(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "env-key")
     settings_store.save_settings({"api_key": "settings-key"})
     assert clients.resolve_config()[0:1] == ("settings-key",)
     assert clients.resolve_config()[3] == "settings"
     assert clients.resolve_config(api_key="explicit-key")[3] == "explicit"
     settings_store.save_settings({"api_key": ""})
     assert clients.resolve_config() == ("env-key", None, "anthropic", "environment")
-    del os.environ["ANTHROPIC_API_KEY"]
+    monkeypatch.delenv("ANTHROPIC_API_KEY")
     assert clients.resolve_config() == (None, None, "anthropic", "none")
 
 

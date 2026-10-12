@@ -81,7 +81,6 @@ def bootstrap(ps: dict[str, dict[str, float]], studies: list[str]) -> dict[str, 
 
 def main() -> int:
     data = load_dataset()
-    studies_all = [s["id"] for s in data["studies"]]
     roles = {s["id"]: s["role"] for s in data["studies"]}
     res: dict = {"verified_rows": VERIFIED, "bases": {}}
     for basis in ("seed", "all"):

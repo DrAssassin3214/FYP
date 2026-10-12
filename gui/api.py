@@ -28,7 +28,6 @@ import json
 import logging
 import math
 import mimetypes
-import os
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -154,7 +153,9 @@ def _opt_str(body: dict, name: str) -> Any:
 
 def _case_from_request() -> dict:
     data = _json_object()
-    if "case" in data and isinstance(data["case"], dict):
+    if "case" in data:
+        if not isinstance(data["case"], dict):
+            raise BadRequest([f"'case' must be a JSON object (the case itself), not {type(data['case']).__name__}"])
         data = data["case"]
     return data
 

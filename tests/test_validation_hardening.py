@@ -1,6 +1,5 @@
 """Regression tests for the validation hardening of app.service / app.engine (audit 2026-10-08)."""
 import json
-import math
 from copy import deepcopy
 
 import pytest
@@ -125,7 +124,11 @@ def test_m2_non_object_delay_rejected(bad):
 def test_m2_null_delay_and_unknown_status_and_entered_delay_values():
     c = example_case()
     c["risks"][0]["delay"] = None
-    assert not any("risks[0]" in p for p in run_case(c)["warnings"] if "problem" in p)
+    res = run_case(c)                       # a null delay is "not entered yet" (a note), never a problem
+    rid = c["risks"][0]["id"]
+    assert any(w.startswith(f"{rid}: placed on the matrix from the literature seed") for w in res["warnings"])
+    assert not any(w.startswith(f"{rid}:") and ("problem" in w or "must" in w) for w in res["warnings"])
+    assert res["risks"][0]["delay"] is None
     c = _incomplete()
     c["risks"][0]["status"] = "bogus"
     assert has(problems_of(c), "unknown status 'bogus'")

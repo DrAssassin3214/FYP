@@ -174,8 +174,6 @@ def _mask(key: Optional[str]) -> Optional[str]:
 def describe_config() -> dict:
     """What get_client() would use right now, WITHOUT exposing the key -- for a settings/health
     screen. 'configured' is false only when source == 'none'."""
-    from . import settings_store
-
     key, mdl, prov, source = resolve_config()
     return {"configured": source != "none", "source": source, "provider": prov,
             "masked_key": _mask(key), "model": mdl or DEFAULT_MODEL.get(prov, "claude-sonnet-5")}
