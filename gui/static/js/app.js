@@ -44,6 +44,25 @@ function toggleTags() {
 }
 
 // ------------------------------------------------------------------ chrome
+/** B-17: focus survives a re-render for controls without an id (Edit/Done, remove, Yes/No, tabs ...). */
+const FOCUS_ATTRS = ["data-action", "data-id", "data-bind", "data-ev-add", "data-i", "data-tab", "data-path"];
+function focusKey(el) {
+  return el.tagName + "|" + FOCUS_ATTRS.map((k) => k + "=" + (el.getAttribute(k) || "")).join("|");
+}
+function sameKey(root, key, tag) {
+  return [...root.querySelectorAll(tag)].filter((e) => focusKey(e) === key);
+}
+
+/** B-25, B-32: spans that only carry a tooltip get a spoken name; header cells get a scope. */
+function nameTipElements(scope) {
+  scope.querySelectorAll("[data-tip][tabindex]:not([aria-label])").forEach((e) => {
+    const t = (e.textContent || "").trim();
+    e.setAttribute("aria-label", t ? `${t}: ${e.dataset.tip}` : e.dataset.tip);
+    if (!e.getAttribute("role") && e.tagName === "SPAN") e.setAttribute("role", "group");
+  });
+  scope.querySelectorAll("thead th:not([scope])").forEach((th) => th.setAttribute("scope", "col"));
+}
+
 /** Buttons whose text is hidden on narrow screens keep it as their accessible name (B-23). */
 function nameIconButtons(scope) {
   scope.querySelectorAll(".btn:not([aria-label])").forEach((b) => {
@@ -171,7 +190,9 @@ function rollTitle(h1) {
 function renderScreen({ nav = false } = {}) {
   const root = screenEl();
   const y = window.scrollY;
-  const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
+  const activeEl = document.activeElement && root.contains(document.activeElement) ? document.activeElement : null;
+  const activeId = activeEl ? activeEl.id : null;
+  const keyed = activeEl && !activeId ? { key: focusKey(activeEl), tag: activeEl.tagName, idx: sameKey(root, focusKey(activeEl), activeEl.tagName).indexOf(activeEl) } : null;
   const mod = BY_ID[S.ui.screen].mod;
   try {
     root.innerHTML = mod.render();
@@ -186,6 +207,7 @@ function renderScreen({ nav = false } = {}) {
   }
   applyInline(root);
   nameIconButtons(root);
+  nameTipElements(root);
   rollTitle(root.querySelector(".screen-head h1"));
   if (nav) {
     root.classList.remove("is-entering"); void root.offsetHeight; root.classList.add("is-entering");   // staggered rise-in, on navigation only
@@ -196,6 +218,7 @@ function renderScreen({ nav = false } = {}) {
   } else {
     window.scrollTo(0, y);
     if (activeId) document.getElementById(activeId)?.focus({ preventScroll: true });
+    else if (keyed && keyed.idx >= 0) sameKey(root, keyed.key, keyed.tag)[keyed.idx]?.focus({ preventScroll: true });
   }
 }
 function renderAll(opts) { renderChrome(); renderScreen(opts); }
@@ -208,6 +231,7 @@ function go(id) {
   renderScreen({ nav: true });
 }
 window.addEventListener("hashchange", () => {
+  if (!S.case) return;                      // boot() has not loaded the case yet; it renders the screen itself
   const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "case";
   S.ui.screen = BY_ID[id] ? id : "case";
   renderRail();

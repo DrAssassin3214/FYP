@@ -750,3 +750,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .ev-item .ev-id { flex: 0 1 auto; max-width: 45%; min-width: 0; overflow-wrap: anywhere; }
 .ev-item .ev-cit { min-width: 0; overflow-wrap: anywhere; }
+/* B-30: small remove chips get a 24px hit area without changing how they look */
+.chip button, .chip-x { position: relative; }
+.chip button::after, .chip-x::after { content: ""; position: absolute; inset: -5px; }
+/* B-22: the impact-edge form and the 5x5 matrix scroll sideways instead of squeezing to unreadable cells on a phone */
+@media (max-width: 520px) {
+  .matrix-wrap { overflow-x: auto; }
+  .matrix { min-width: 440px; }
+}
