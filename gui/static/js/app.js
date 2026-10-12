@@ -44,6 +44,14 @@ function toggleTags() {
 }
 
 // ------------------------------------------------------------------ chrome
+/** Buttons whose text is hidden on narrow screens keep it as their accessible name (B-23). */
+function nameIconButtons(scope) {
+  scope.querySelectorAll(".btn:not([aria-label])").forEach((b) => {
+    const t = b.querySelector(".lbl, .lbl-wide");
+    if (t && t.textContent.trim()) b.setAttribute("aria-label", t.textContent.trim());
+  });
+}
+
 function renderToolbar() {
   const ai = S.health?.ai;
   const dark = theme() === "dark";
@@ -56,6 +64,7 @@ function renderToolbar() {
     <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
+  nameIconButtons($("#toolbar"));
 }
 
 function renderRail() {
@@ -164,12 +173,19 @@ function renderScreen({ nav = false } = {}) {
   const y = window.scrollY;
   const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
   const mod = BY_ID[S.ui.screen].mod;
-  root.innerHTML = mod.render();
+  try {
+    root.innerHTML = mod.render();
+  } catch (err) {       // a bug in one screen must not blank the whole app (B-28)
+    console.error(err);
+    root.innerHTML = alertBox("danger", "This screen could not be drawn", `${h(err && err.message ? err.message : String(err))}. Your case is unchanged; try another step or reload the page.`);
+  }
+  document.title = `${BY_ID[S.ui.screen].title} · Bricks-ly`;     // B-33
   if (!root.querySelector("[data-screen-problems]")) {
     const html = screenProblems(S.ui.screen);
     if (html) root.querySelector(".screen-head")?.insertAdjacentHTML("afterend", html);
   }
   applyInline(root);
+  nameIconButtons(root);
   rollTitle(root.querySelector(".screen-head h1"));
   if (nav) {
     root.classList.remove("is-entering"); void root.offsetHeight; root.classList.add("is-entering");   // staggered rise-in, on navigation only

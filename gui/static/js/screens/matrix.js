@@ -36,14 +36,14 @@ function liveBlock() {
       const lvl = levels[pc]?.[ic] || "";
       const here = rows.filter((x) => x.p_class === pc && x.impact_class === ic);
       const capped = pc === 1 && (ic === 4 || ic === 5);
-      grid += `<div class="mx-cell lvl-${h(lvl)}${capped ? " is-capped" : ""}" role="cell"${capped ? ' data-tip="Review: the level is capped by the scoring rule (probability class 1 is Low whatever the impact)"' : ""} aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${h(here.map((x) => x.risk_id).join(", "))}` : ""}">
+      grid += `<div class="mx-cell lvl-${h(lvl)}${capped ? " is-capped" : ""}" role="group"${capped ? ' data-tip="Review: the level is capped by the scoring rule (probability class 1 is Low whatever the impact)"' : ""} aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${h(here.map((x) => x.risk_id).join(", "))}` : ""}">
         ${here.map((x) => `<span class="mx-risk${isSeed(x) ? " is-seed" : ""}" tabindex="0" data-tip="${h(isSeed(x) ? `${x.risk_id} – ${names.get(x.risk_id) || ""} | literature tier ${x.tier} (Assumption): survey RII rank ${seedOf(x.risk_id)?.rank} of ${seedOf(x.risk_id)?.n_seeded}; a ranking, not a probability or a delay and not an assessed level | score ${x.score}` : `${x.risk_id} – ${names.get(x.risk_id) || ""} | p = ${x.p} | expected delay if it occurs = ${fmt(x.expected_delay_if_occurs_days, 2)} d | score ${x.score} (${x.level})`)}">${h(x.risk_id)}</span>`).join("")}
         <span class="lvl" aria-hidden="true">${h(lvl)}</span></div>`;
     }
   }
   const header = `<div class="mx-head"></div>${[1, 2, 3, 4, 5].map((k) => `<div class="mx-head col"><b>${k}</b>${h(iRange(k))}</div>`).join("")}`;
   const matrix = `<div class="matrix-wrap"><div class="matrix-ylab">Probability class (p)</div>
-    <div class="matrix" role="table" aria-label="Risk matrix, probability class by impact class">${grid}${header}</div>
+    <div class="matrix" role="group" aria-label="Risk matrix, probability class by impact class">${grid}${header}</div>
     <div></div><div class="matrix-xlab">Impact class (expected delay if it occurs ÷ planned duration)<span class="sub">${e.every(isNum) ? `Impact edges ${e.map((x) => pct(x)).join(" / ")} of planned duration` : "Impact edges not entered yet"} · Source: ${h(edgesSrc)}</span></div></div>`;
 
   const legend = `<div class="legend mt-3">${["Low", "Moderate", "High", "Extreme"].map((l) => `<span class="it"><span class="swatch lvl-${l}" style="border:1px solid var(--border)"></span>${l}</span>`).join("")}

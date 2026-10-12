@@ -115,7 +115,7 @@ export function libraryPanel() {
     return `<details class="lib-group" open><summary><b>${h(c)}</b> <span class="faint">(${items.length})</span>${todo ? `<button type="button" class="btn btn-sm" data-action="lib-add-all" data-cat="${h(c)}">${icon("plus")}Add all ${todo}</button>` : `<span class="badge b-ok">${icon("check")}all in register</span>`}</summary>
       ${items.map((L) => libItem(L, inReg)).join("")}</details>`;
   }).join("");
-  return `<div class="row mb-3"><input id="lib-q" class="input" type="search" placeholder="Filter the ${S.library.length} risks (e.g. supervision, price, safety)" value="${h(S.ui.libQuery || "")}" data-action-input="lib-search" autocomplete="off" style="flex:1">
+  return `<div class="row mb-3"><input id="lib-q" class="input" type="search" aria-label="Filter the risk library" placeholder="Filter the ${S.library.length} risks (e.g. supervision, price, safety)" value="${h(S.ui.libQuery || "")}" data-action-input="lib-search" autocomplete="off" style="flex:1">
       ${missing ? `<button type="button" class="btn btn-primary" data-action="lib-add-all" data-cat="">${icon("plus")}Add all ${missing}</button>` : ""}</div>
     <div id="lib-list">${groups || '<p class="faint">No library risk matches this filter.</p>'}</div>`;
 }
