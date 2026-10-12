@@ -13,13 +13,13 @@ Branch `session/2026-10-12-literature-refinement-c2v60n`, pull request #1 into `
 
 ## What changed, by finding (see `triage.md` for every ID)
 * **A / A2 (engine, API, CLI):** A-01, A-02, A-04, A-06, A-08, A-10, A-11, A2-01 to A2-14, A2-16 to A2-18 fixed with tests in `tests/test_round1_hardening.py`. New finding by the root: the order of "facts used" depended on Python hash randomisation (a `set`), so output differed between processes; fixed in `app/engine/rules.py` (an ordered tuple). The PR description wrongly blames a `field()` default; the cause was the set.
-* **B (GUI):** B-01, B-02, B-03, B-06, B-08, B-09, B-10, B-17, B-19 to B-21, B-22 (scroll), B-23, B-24, B-25, B-26, B-28, B-29, B-30, B-32, B-33, B-36 to B-43 (wording) done. A boot race (hash change before the case loaded) found and fixed on the way.
+* **B (GUI):** B-01, B-02, B-03, B-06, B-08, B-09, B-10, B-07, B-17, B-19 to B-21, B-22 (scroll), B-23, B-24, B-25, B-26, B-27, B-28, B-29, B-30, B-32, B-33, B-36 to B-43 (wording) done. A boot race (hash change before the case loaded) found and fixed on the way.
 * **C:** C-08 (empty / uncited quote in guard G3), C-09 (number check no longer accepts a bare number scaled by 100), C-10 and C-30 (`docs/rii_statistics.json` and `rii_standardised_statistics.json` regenerated from the seed: 46 risks instead of 38, other values unchanged), build script `sys` NameError (found by flake8). C-31 not done (file in `Research_Notes/` not edited).
 * **D:** README, Handoff (new section 10), Audit_Corrections, Agent_Workflow corrected for: test counts, "161 of 182 rows compared", PDF count, expert-survey sentence, legacy-module wording, Overview HTML now has an OUTDATED banner.
 
 ## Not done, and why
 * **Needs local data (left for the local session):** P1 (review of the 761 pending works, then regenerate every corpus figure: C-27, C-28, C-29), P6 (full-text reading), C-01/C-02/C-04/C-05/C-13 to C-19 scripts that need the database, B-16 (AI badge model name).
-* **Open GUI items:** B-18 (confirm dialog replaces the Settings dialog), B-27 (fetch-failure messages), B-31, B-34, B-35, B-37, B-44 to B-48, B-07 (inline prompt for missing duration), B-14 (toast position). Not verified in a screen reader or by a keyboard-only walk-through; I verified with Chromium only.
+* **Open GUI items:** B-18 (confirm dialog replaces the Settings dialog), B-31, B-34, B-35, B-37, B-44 to B-48, B-14 (toast position). Not verified in a screen reader or by a keyboard-only walk-through; I verified with Chromium only.
 * **Word documents** (`Review_Preparation_Pack`, `Statistical_Analysis*`, `Worked_Calculations`, `Expert_Survey_Form`, `Research_*`, both root `Literature_Database*` files) still carry withdrawn wording. Not edited blind; regenerate or banner them (`lead_D.md` D-04, D-05, D-14, D-15, D-17).
 * **A2-15, A2-19:** not fixed (exports of not-evaluable rules; escaped pipes in the Markdown preview).
 

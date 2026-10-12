@@ -63,7 +63,13 @@ function liveBlock() {
   else if (!rows.length) content = alertBox("warn", "No risks on the matrix yet", "A risk appears here once it has a literature seed (library risks with survey evidence) or its probability and delay range are entered on the Risk register step with the planned duration on step 1 and the four impact edges above.");
   else content = `<section class="card"><header class="card-h"><h2>Probability × impact</h2><span class="badge b-warn">${icon("alert")}ordinal prioritisation only – a label, not a quantity</span></header><div class="card-b">${nSeed ? `<p class="hint mb-3">${nSeed} risk${nSeed > 1 ? "s sit" : " sits"} at a <b>literature tier (Assumption)</b> (grey dashed chips): a relative importance ranking from survey indices (RII), used as a starting place until you enter probability and delay. The cell colour under such a chip is not an assessed level. An importance index is not a probability or a number of days (see the note on ranking basis above).</p>` : ""}${matrix}${legend}${table}${hcBlock}</div></section>`;
 
-  return `${staleNote()}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
+  // B-07: say where the missing prerequisites are entered instead of leaving the person to find the hidden popover
+  const needDuration = !(Number(S.case.activity?.planned_duration_days?.value) > 0);
+  const needEdges = !(Array.isArray(S.case.impact_bin_edges_fraction) && S.case.impact_bin_edges_fraction.every(isNum));
+  const prereq = needDuration || needEdges
+    ? alertBox("info", "To place risks from entered numbers",
+      `${needDuration ? 'Enter the planned duration on <a href="#/case">step 1 (Case)</a>. ' : ""}${needEdges ? "Enter the four impact class thresholds with the <strong>Impact class thresholds</strong> button at the top of this screen." : ""}`) : "";
+  return `${staleNote()}${prereq}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
 }
 
 export function render() {

@@ -256,6 +256,7 @@ const searchEvidence = debounce(async () => {
   if (S.ui.evQuery.trim() !== q) return;          // a newer query superseded this one
   S.ui.evBusy = false;
   S.ui.evHits = r.ok ? r.data.records : [];
+  if (!r.ok) toast(`Evidence search failed: ${h((r.data?.problems || ["unknown error"])[0])}. This is not the same as "no match".`, "err");   // B-27
   refreshEvList();
 }, 300);
 
@@ -686,11 +687,13 @@ const ACTIONS = {
     if (!(await guardDiscard("A new blank case"))) return;
     const r = await get("/api/template");
     if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("case"); }
+    else toast(`Could not start a new case: ${h((r.data?.problems || ["unknown error"])[0])}`, "err");   // B-27
   },
   example: async () => {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
     const r = await get("/api/example-analysis");   // the one example: register, matrix, rules and the cost / options inputs
     if (r.ok) { loadCase(r.data, { msg: "ILLUSTRATIVE example loaded: every number is a placeholder, not evidence." }); S.ui.analysis = null; S.ui.analysisProblems = null; }
+    else toast(`Could not load the example: ${h((r.data?.problems || ["unknown error"])[0])}`, "err");   // B-27
   },
   "analysis-run": async () => {
     S.ui.analysisBusy = true; S.ui.analysisProblems = null; renderScreen();
