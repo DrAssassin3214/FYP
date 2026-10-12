@@ -66,10 +66,10 @@ function renderRail() {
     const n = counts[s.id] || 0;
     const flag = n ? `<span class="nav-flag err" title="${n} input problem(s)">${icon("alert", "ic-sm")}${n}</span>`
       : s.results && S.result && isStale() ? `<span class="nav-flag stale" title="Inputs have problems; showing the last valid state">stale</span>` : "";
-    html += `<a class="navlink" href="#/${s.id}" data-tip="${h(`${s.n}. ${s.title}`)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}><span class="nav-num">${s.n}</span>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
+    html += `<a class="navlink" href="#/${s.id}" aria-label="${h(`${s.n}. ${s.title}`)}" data-tip="${h(`${s.n}. ${s.title}`)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}><span class="nav-num">${s.n}</span>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
   }
   html += `</div>
-    <button type="button" class="navlink rail-settings" data-action="settings" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
+    <button type="button" class="navlink rail-settings" data-action="settings" aria-label="Settings: API key, model" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
     <div class="rail-foot">Offline tool. The register and matrix come from the service; the GUI computes nothing.<br>v${h(S.health?.version || "")} · ${(S.health?.evidence_records ?? S.evidenceList.length).toLocaleString()} evidence records</div>`;
   $("#rail").innerHTML = html;
 }
