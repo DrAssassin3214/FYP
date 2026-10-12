@@ -21,6 +21,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
+from app import data_sync
 from app.engine.audit import to_jsonable
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, classify, matrix_level
 from app.reporting.matrix_graphic import matrix_svg
@@ -330,7 +331,8 @@ def _rule(d: Any, where: str, problems: list[str]) -> Optional[Rule]:
 
 
 def load_json(name: str):
-    return json.loads((ROOT / "data" / name).read_text(encoding="utf-8-sig"))
+    """Online data pack when one is installed and verified, otherwise the bundled file in data/ (app.data_sync)."""
+    return data_sync.load(name)
 
 
 def risk_library() -> list[dict]:
@@ -670,6 +672,7 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
         "warnings": warnings,
     }
     result = to_jsonable(result)
+    result["data_provenance"] = data_sync.provenance()
     result["report_markdown"] = generate_register_report(result, evidence_index)
     result["matrix_svg"] = matrix_svg(result)
     return result

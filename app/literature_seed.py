@@ -25,13 +25,19 @@ from pathlib import Path
 from statistics import mean
 from typing import Optional
 
+from app import data_sync
+
 ROOT = Path(__file__).resolve().parents[1]
 SEED_PATH = ROOT / "data" / "literature_seed.json"
 N_CLASSES = 5
 
 
+def _seed_path() -> Path:
+    return data_sync.resolve("literature_seed.json")
+
+
 def load_dataset() -> dict:
-    return json.loads(SEED_PATH.read_text(encoding="utf-8-sig"))
+    return json.loads(_seed_path().read_text(encoding="utf-8-sig"))
 
 
 BASES = ("seed", "all")
@@ -76,7 +82,7 @@ def _table_cached(mtime: float, basis: str) -> dict:
 
 def seed_table(basis: str = "seed") -> dict[str, dict]:
     """risk_id -> {mean_rii, rank, n_seeded, class, study_means, observations, evidence_ids, gap}."""
-    return _table_cached(SEED_PATH.stat().st_mtime, basis if basis in BASES else "seed")
+    return _table_cached(_seed_path().stat().st_mtime_ns, basis if basis in BASES else "seed")
 
 
 def seed_for(risk_id: str, elevated: bool = False, basis: str = "seed") -> Optional[dict]:

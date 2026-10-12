@@ -44,6 +44,7 @@ from werkzeug.exceptions import HTTPException  # noqa: E402
 
 from app import service  # noqa: E402
 from app.ai_layer.clients import describe_config, get_client  # noqa: E402
+from app import data_sync  # noqa: E402
 from app.ai_layer import settings_store  # noqa: E402
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, matrix_level  # noqa: E402
 from app.engine.models import RiskStatus  # noqa: E402
@@ -238,7 +239,24 @@ def create_app() -> Flask:
     def health():
         store = evidence_store()
         return _json({"ok": True, "version": __version__, "ai": ai_status(), "evidence_records": len(store),
-                      "evidence_workbook_found": WORKBOOK.exists(), "sources": service.SOURCES})
+                      "evidence_workbook_found": WORKBOOK.exists(), "sources": service.SOURCES,
+                      "data": data_sync.status()})
+
+    # ---------------------------------------------------------------- data pack (online first, local fallback)
+    @app.get("/api/data-status")
+    def data_status():
+        return _json({"ok": True, **data_sync.status()})
+
+    @app.post("/api/data-update")
+    def data_update():
+        """Check the internet for a newer data pack now.  Offline or any failure: the data in use is unchanged."""
+        res = data_sync.refresh()
+        return _json({**res, "status": data_sync.status()})
+
+    @app.post("/api/data-reset")
+    def data_reset():
+        """Go back to the data bundled on this computer (removes the downloaded pack)."""
+        return _json({"ok": True, "status": data_sync.reset()})
 
     @app.get("/api/meta")
     def meta():

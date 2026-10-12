@@ -46,15 +46,17 @@ function onlineResults() {
   if (S.ui.onlineBusy) return alertBox("info", "Searching OpenAlex and Crossref", "Waiting for the literature indexes (up to 10 seconds each).");
   if (S.ui.onlineProblems) return alertBox("warn", "The online search could not run", `<ul>${S.ui.onlineProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
   if (!o) return "";
-  if (!o.ok) return alertBox("neutral", "Offline: no online results", `${h(o.message || "The literature indexes could not be reached.")} Everything else in the tool works without internet.`);
+  const offBox = !o.ok ? alertBox("neutral", "Offline: using the data on this computer", `${h(o.message || "The literature indexes could not be reached.")} ${h(o.local_note || "")} Everything else in the tool works without internet.`) : "";
+  if (!o.ok && !(o.risks || []).length) return offBox;
   const blocks = (o.risks || []).map((r) => {
     const src = (r.sources || []).map((x) => `<li><strong>${onlineLink(x.url, x.title)}</strong><div class="muted">${h((x.authors || []).join(", "))}${x.year ? ` (${h(x.year)})` : ""}${x.venue ? `. ${h(x.venue)}` : ""}${x.doi ? `. DOI ${h(x.doi)}` : ""} <em>[${h(x.source_api)}]</em></div>${x.abstract_snippet ? `<div class="muted">${h(x.abstract_snippet)}</div>` : ""}</li>`).join("");
     const cat = (r.catalogue_options || []).map((c) => `<li>${h(c.measure)} <span class="muted">(${h(c.catalogue_id)})</span></li>`).join("");
     return `<div class="mb-4"><h3>${h(r.risk_id)} ${h(r.risk_name)}</h3>
       ${cat ? `<div class="muted">Catalogue options for this risk:</div><ul>${cat}</ul>` : ""}
-      ${src ? `<div class="muted">Candidate sources (query: ${h(r.query)})</div><ol>${src}</ol>` : '<p class="muted">No papers returned for this risk.</p>'}</div>`;
+      ${r.from_cache ? `<p class="muted">Saved from an earlier online search${r.cached_utc ? ` (${h(r.cached_utc)})` : ""}.</p>` : ""}
+      ${src ? `<div class="muted">Candidate sources (query: ${h(r.query)})</div><ol>${src}</ol>` : (o.ok ? '<p class="muted">No papers returned for this risk.</p>' : "")}</div>`;
   }).join("");
-  return `${o.partial ? alertBox("warn", "Partial results", h(o.message || "")) : ""}${blocks || '<p class="muted">No risks were searched.</p>'}`;
+  return `${offBox}${o.cache_note ? alertBox("neutral", "Offline: saved results", h(o.cache_note)) : ""}${o.partial ? alertBox("warn", "Partial results", h(o.message || "")) : ""}${blocks || '<p class="muted">No risks were searched.</p>'}`;
 }
 
 function commandBanner(r) {

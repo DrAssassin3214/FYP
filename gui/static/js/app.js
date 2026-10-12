@@ -44,6 +44,15 @@ function toggleTags() {
 }
 
 // ------------------------------------------------------------------ chrome
+function dataChip() {
+  const d = S.health?.data;
+  if (!d) return "";
+  const on = d.mode === "online pack";
+  const tip = on ? `Using the online data pack ${d.version} (downloaded ${d.installed_utc || ""}). Offline, the tool keeps using it; Settings can switch back to the data on this computer.`
+    : "Using the data stored on this computer. When you are online the tool downloads a newer data pack automatically if one is published.";
+  return `<span class="ai-badge${on ? " is-llm" : ""}" tabindex="0" data-tip="${h(tip)}" aria-label="${h(tip)}"><span>${on ? "Data: online " + h(d.version) : "Data: local"}</span></span>`;
+}
+
 function renderToolbar() {
   const ai = S.health?.ai;
   const dark = theme() === "dark";
@@ -55,6 +64,7 @@ function renderToolbar() {
     <span class="sep" aria-hidden="true"></span>
     <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
+    ${dataChip()}
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
 }
 
@@ -578,6 +588,9 @@ function openSettings() {
             <div class="hint" id="set-model-hint">Optional. Leave blank to use the default (${h(PROVIDER_INFO[provider].defaultModel)}).</div>
           </div>
         </div>
+        <div class="field span-2" id="data-box"><label>Data sources</label><div id="data-status" class="hint">Checking...</div>
+          <button type="button" class="btn" id="data-update">Check online for a newer data pack</button>
+          <button type="button" class="btn btn-ghost" id="data-reset">Use the data on this computer</button></div>
         <div id="set-test-result"></div>
         ${alertBox("warn", "What this key is used for", "One thing: proposing candidate risks for you to review, each tied to cited evidence and marked unverified. It never sets a probability, a delay or a place on the matrix. Those come from your inputs.")}`,
       footer: `
@@ -591,6 +604,20 @@ function openSettings() {
     const keyInput = dlg.querySelector("#set-key");
     const modelInput = dlg.querySelector("#set-model");
     const testResult = dlg.querySelector("#set-test-result");
+    const dataBox = dlg.querySelector("#data-status");
+    const showData = (s, msg) => {
+      dataBox.innerHTML = `${msg ? `<div>${h(msg)}</div>` : ""}<div>${s.mode === "online pack" ? `Online data pack <strong>${h(s.version)}</strong> in use (installed ${h(s.installed_utc || "")}).` : "Using the data stored on this computer."} Last check: ${h(s.last_check_utc || "never")}.</div>`;
+    };
+    get("/api/data-status").then((r) => { if (r.ok) showData(r.data); else dataBox.textContent = "Data status unavailable."; });
+    dlg.querySelector("#data-update").addEventListener("click", async () => {
+      dataBox.textContent = "Checking the internet...";
+      const r = await post("/api/data-update", {});
+      if (r.data?.status) { showData(r.data.status, r.data.message); refreshHealth(); } else dataBox.textContent = "The check could not run.";
+    });
+    dlg.querySelector("#data-reset").addEventListener("click", async () => {
+      const r = await post("/api/data-reset", {});
+      if (r.data?.status) { showData(r.data.status, "Switched to the data on this computer."); refreshHealth(); }
+    });
     providerSelect.addEventListener("change", () => {
       const info = PROVIDER_INFO[providerSelect.value];
       dlg.querySelector("#set-key-label").textContent = `${info.label} API key`;
@@ -823,6 +850,17 @@ async function boot() {
   S.ui.screen = BY_ID[id] ? id : "case";
   loadCase(tpl.data);
   window.FYP = { S, go };   // for inspection from the browser console
+  // the start-up check for a newer online data pack runs in the background; when it finishes, reload the reference data
+  const v0 = S.health?.data?.version;
+  setTimeout(async () => {
+    const r = await get("/api/data-status");
+    if (r.ok && r.data.version !== v0) {
+      const [m2, l2, r2] = await Promise.all([get("/api/meta"), get("/api/risk-library"), get("/api/rules")]);
+      if (m2.ok && l2.ok && r2.ok) { S.meta = m2.data; S.library = l2.data; S.rules = r2.data; }
+      await refreshHealth(); renderScreen();
+      toast(`Online data pack ${r.data.version} installed and in use.`, "info");
+    }
+  }, 9000);
 }
 
 boot();

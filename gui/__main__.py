@@ -68,6 +68,8 @@ def main(argv=None) -> int:
     logging.getLogger("werkzeug").setLevel(logging.INFO if a.verbose else logging.WARNING)
 
     app = create_app()
+    from app import data_sync
+    data_sync.refresh_in_background()          # online: newest data pack; offline: nothing changes
     port = choose_port(a.port)
     server = make_server(HOST, port, app, threaded=True)
     url = f"http://{HOST}:{server.server_port}/"

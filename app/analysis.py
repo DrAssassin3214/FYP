@@ -456,6 +456,8 @@ def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = No
         "warnings": warnings,
     }
     result = to_jsonable(result)
+    from app import data_sync
+    result["data_provenance"] = data_sync.provenance()
     from app.ai_layer.explain import explain_deterministic
     from app.reporting.analysis_report import analysis_markdown
 
