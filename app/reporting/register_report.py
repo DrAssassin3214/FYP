@@ -252,10 +252,14 @@ def generate_register_report(result: Mapping, evidence_index: Optional[Mapping[s
     return "\n".join(L)
 
 
+def _round2(v):
+    return round(v, 2) if isinstance(v, float) else v
+
+
 def register_csv(result: Mapping) -> str:
     """CSV text (no BOM; callers encode as utf-8-sig so Excel on Windows decodes unicode). Every text cell
     is neutralised against formula injection. 'basis' says whether p/delay are entered numbers or a
-    literature seed (RII tier, not a probability); seeded rows have an empty `level` and a `tier` text instead;
+    literature seed (RII tier, not a probability); seeded rows leave p_class, impact_class, score and `level` empty (they are not assessed values) and carry a `tier` text instead;
     'case'/'note' carry the ILLUSTRATIVE flag."""
     matrix = {m["risk_id"]: m for m in result["matrix"]}
     case_name = _t((result.get("project") or {}).get("name"))
@@ -272,8 +276,9 @@ def register_csv(result: Mapping) -> str:
         w.writerow([_csv_safe(x) for x in [
             r["id"], r["name"], r["category"], r["status"], _basis(r, m or None),
             p.get("value", ""), p.get("source", ""), d.get("kind", ""), d.get("a", ""), d.get("m", ""), d.get("b", ""),
-            d.get("source", ""), "" if seed else m.get("expected_delay_if_occurs_days", ""), m.get("p_class", ""),
-            m.get("impact_class", ""), m.get("score", ""), "" if seed else m.get("level", ""),
+            d.get("source", ""), "" if seed else _round2(m.get("expected_delay_if_occurs_days", "")),
+            "" if seed else m.get("p_class", ""), "" if seed else m.get("impact_class", ""),
+            "" if seed else m.get("score", ""), "" if seed else m.get("level", ""),
             ";".join(_t(e) for e in (r.get("evidence_ids") or [])), case_name, note, d.get("note", ""),
             "Derived Calculation" if (not seed and m.get("expected_delay_if_occurs_days") is not None) else "",
             f"{TIER_LABEL}: tier {m.get('tier', m.get('impact_class'))}" if seed else "",

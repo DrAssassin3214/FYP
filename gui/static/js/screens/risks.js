@@ -94,7 +94,7 @@ export function riskCard(r, i) {
 
 function libItem(L, inReg) {
   const scope = L.scope === "project" ? ' <span class="badge" title="Affects the whole project more than this one activity">project-level</span>' : "";
-  const noSeed = L.seed_status ? ` <span class="badge" title="${h(L.seed_status)}">no survey value</span>` : "";
+  const noSeed = L.seed_status ? ` <span class="badge" title="${h(L.seed_status)}">not in the ranking</span>` : "";
   return `<div class="lib-item"><div class="t"><span class="mono faint">${h(L.id)}</span> ${h(L.name)}${scope}${noSeed}</div>
     <div class="n">${h(L.description)}<br><span class="faint">${h(L.evidence_note)}</span></div>
     <div class="row">${evChips(L.existence_evidence)}<span class="spacer"></span>${inReg.has(L.id)
@@ -156,7 +156,7 @@ function suggestPanel() {
 export function render() {
   const risks = S.case.risks || [];
   const tab = S.ui.riskTab;
-  return `${screenHead(3, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk is placed on the matrix once both are entered (${term("occurrence model", "bernoulli")}).`,
+  return `${screenHead(3, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk gets an assessed level once both are entered; a library risk without numbers shows only its literature tier (ordinal, Assumption) (${term("occurrence model", "bernoulli")}).`,
     `<button type="button" class="btn" data-action="risk-add-custom">${icon("plus")}<span class="lbl">Custom risk</span></button>`)}
   ${screenProblems("risks")}
   <div class="grid-3-1">

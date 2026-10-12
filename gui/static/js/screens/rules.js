@@ -82,11 +82,11 @@ function liveBlock() {
       if (fired.has(rule.id)) {
         const f = fired.get(rule.id);
         st = f.level === "elevated"
-          ? `<span class="badge b-warn">${icon("alert")}Fired: elevated</span>`
+          ? `<span class="badge b-warn">${icon("alert")}Triggered: higher concern</span>`
           : `<span class="badge b-neutral">${icon("info")}Relevant (normal)</span>`;
         st += `<span class="sub">facts used: ${Object.entries(f.facts_used).map(([k, v]) => `${h(k)} = ${h(JSON.stringify(v))}`).join(", ")}</span>`;
       } else if (notEval.has(rule.id)) {
-        st = `<span class="badge b-neutral">${icon("minusCircle")}Not evaluable</span><span class="sub">missing: ${notEval.get(rule.id).missing_facts.map(h).join(", ")}</span>`;
+        st = `<span class="badge b-neutral">${icon("minusCircle")}Cannot check: facts missing</span><span class="sub">missing: ${notEval.get(rule.id).missing_facts.map(h).join(", ")}</span>`;
       } else st = `<span class="badge b-ok">${icon("check")}Not fired</span>`;
     }
     const risk = lib.get(rule.risk_id);
@@ -108,7 +108,7 @@ function liveBlock() {
   return `${flagPanel}
   ${r && (r.rule_base_issues || []).length ? alertBox("danger", "Rule-base consistency issues", ul(r.rule_base_issues.map(h))) : ""}
   <section class="card"><header class="card-h"><h2>Rule base</h2><span class="sub">data/rules_masonry.json · ${S.rules.length} rules${r ? ` · ${fired.size} fired, ${notEval.size} not evaluable` : ""}</span></header><div class="card-b">
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rule</th><th>Condition</th><th>Flags risk</th><th>Source</th><th>Confidence</th><th>Evidence</th><th>Result</th></tr></thead><tbody>${ruleRows}</tbody></table></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rule</th><th>Condition</th><th>Flags risk</th><th>Source</th><th>Strength of basis</th><th>Evidence</th><th>Result</th></tr></thead><tbody>${ruleRows}</tbody></table></div>
     <p class="card-note">${h(r?.rules?.note || "Flags identify relevant/elevated risks; probabilities are entered separately with a Source.")}</p>
   </div></section>`;
 }

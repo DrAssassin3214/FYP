@@ -64,7 +64,7 @@ function commandBanner(r) {
   const extra = cmd === "AUTHORIZE MITIGATION"
     ? `<div class="muted">Mitigation cost ${money(f.mitigation_cost)} ${h(r.cost.currency)}; expected total cost saving ${money(f.expected_cost_saving_vs_accept)} ${h(r.cost.currency)}; expected delay avoided ${money(f.expected_delay_avoided_days, 2)} days.${f.runner_up_id ? ` Closest alternative is only ${money(f.runner_up_extra_cost)} ${h(r.cost.currency)} (${pct(f.runner_up_extra_cost_share)}) more expensive.` : ""}</div>` : "";
   const st = r.decision_stability;
-  const stab = st ? `<div class="muted">Seed check (${h(st.seeds.join(", "))}): ${st.stable ? "the choice is <strong>stable</strong>." : "the choice <strong>changes with the seed</strong>, so it is not a firm result."}</div>` : "";
+  const stab = st ? `<div class="muted">Seed check (${h(st.seeds.join(", "))}): ${st.stable ? "the choice is <strong>stable</strong>." : "the choice <strong>changes with the random draw</strong>, so it is not a firm result."}</div>` : "";
   return `<section class="card mb-5"><header class="card-h"><h2>${icon("sparkle")} Decision</h2><span class="sub">criterion: ${h(r.decision.criterion)}</span></header><div class="card-b">
     <div style="font-size:1.6rem;font-weight:700;margin-bottom:8px">${h(cmd)}</div>
     ${c.selected_option_id && c.selected_option_id !== "ACCEPT" ? `<div style="margin-bottom:6px">Preferred option: <strong>${h(c.selected_option_id)}</strong></div>` : ""}
@@ -103,7 +103,7 @@ function sensitivity(r) {
 
 function results() {
   const a = S.ui.analysis;
-  if (S.ui.analysisBusy) return alertBox("info", "Running the simulation", "10,000 iterations per option; this takes a few seconds.");
+  if (S.ui.analysisBusy) return alertBox("info", "Running the simulation", "Many random draws per option; this takes a few seconds.");
   if (S.ui.analysisProblems) return alertBox("warn", "The analysis could not run", `<ul>${S.ui.analysisProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
   if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or use Load example in the top bar), then press <strong>Run analysis</strong>.");
   return `${stale() ? alertBox("info", "Inputs changed", "These results are from the previous inputs. Run the analysis again to update them.") : ""}
@@ -115,7 +115,7 @@ export function render() {
   const actions = `<button type="button" class="btn btn-primary" data-action="analysis-run"${S.ui.analysisBusy ? " disabled" : ""}>${icon("sparkle")}<span>Run analysis</span></button>
     <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
     <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>`;
-  return `${screenHead(7, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
+  return `${screenHead(5, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
   ${inputs()}<div id="analysis-live">${results()}</div>`;
 }
 

@@ -44,7 +44,7 @@ function liveBlock() {
   const header = `<div class="mx-head"></div>${[1, 2, 3, 4, 5].map((k) => `<div class="mx-head col"><b>${k}</b>${h(iRange(k))}</div>`).join("")}`;
   const matrix = `<div class="matrix-wrap"><div class="matrix-ylab">Probability class (p)</div>
     <div class="matrix" role="table" aria-label="Risk matrix, probability class by impact class">${grid}${header}</div>
-    <div></div><div class="matrix-xlab">Impact class (expected delay if it occurs ÷ planned duration)<span class="sub">Impact edges ${e.every(isNum) ? e.map((x) => pct(x)).join(" / ") : "not entered"} of planned duration · Source: ${h(edgesSrc)}</span></div></div>`;
+    <div></div><div class="matrix-xlab">Impact class (expected delay if it occurs ÷ planned duration)<span class="sub">${e.every(isNum) ? `Impact edges ${e.map((x) => pct(x)).join(" / ")} of planned duration` : "Impact edges not entered yet"} · Source: ${h(edgesSrc)}</span></div></div>`;
 
   const legend = `<div class="legend mt-3">${["Low", "Moderate", "High", "Extreme"].map((l) => `<span class="it"><span class="swatch lvl-${l}" style="border:1px solid var(--border)"></span>${l}</span>`).join("")}
     <span class="it"><span class="swatch is-seed-sw"></span>literature tier (Assumption)</span>

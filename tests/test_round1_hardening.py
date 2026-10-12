@@ -283,3 +283,17 @@ def test_a2_13_run_with_only_seeded_risks_prints_a_complete_sentence(tmp_path, c
     rc, out, _ = run_cli(["run", str(case)], capsys)
     assert rc == 0
     assert not out.splitlines()[0].rstrip().endswith(":")
+
+
+# ------------------------------------------------------------------------------------------------ B-10 CSV
+def test_b10_csv_leaves_class_and_score_blank_for_tier_rows_and_rounds_delay():
+    import csv
+    import io
+    from app.reporting.register_report import register_csv
+    res = service.run_case(service.example_case() | {"risks": service.example_case()["risks"][:1] + [{"id": "R-LAB"}]})
+    rows = {r["id"]: r for r in csv.DictReader(io.StringIO(register_csv(res)))}
+    tier = rows["R-LAB"]
+    assert tier["tier"].startswith("literature tier") and tier["level"] == ""
+    assert tier["p_class"] == tier["impact_class"] == tier["score"] == ""
+    entered = rows[service.example_case()["risks"][0]["id"]]
+    assert entered["score"] and len(entered["expected_delay_days"].split(".")[-1]) <= 2

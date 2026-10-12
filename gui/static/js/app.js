@@ -238,7 +238,7 @@ async function validateNow() {
   afterValidation();
   if (added.length) {
     changed({ rerender: true });
-    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.map(h).join(", ")}). Enter each probability and delay to place ${added.length > 1 ? "them" : "it"} on the matrix.`, "info",
+    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.map(h).join(", ")}). Enter each probability and delay to replace ${added.length > 1 ? "their" : "its"} starting placement with an assessed level.`, "info",
       { actionLabel: "Open register", timeout: 12000, onAction: () => { location.hash = "#/risks"; } });
   }
 }
