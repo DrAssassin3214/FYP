@@ -54,7 +54,7 @@ The existing literature pipeline, now one team among four:
 ### Lead D: Documents, integrity and release readiness
 * D1 numbers audit: every count, percentage and test number in `README.md`, the handoff summary and the reports is re-derived from a repo file or a command run this round (QUALITY_BAR item 4).
 * D2 wording and evidence audit: withdrawn wording, unsourced numbers, depth labels that overstate what was read.
-* D3 stale documents: `Project_Overview_Report.html` (missing in this checkout), old Word documents that describe the ten-risk core or the earlier scope; reports what to regenerate.
+* D3 stale documents: `Project_Overview_Report.html` (present in `docs/`, dated 2026-09-28, describes the older six-step app), old Word documents that describe the ten-risk core or the earlier scope; reports what to regenerate.
 * D4 supervisor list: collects every open decision (scope versus the official title, deleting legacy code, seeded-cell colours, A14 row entry, ...) into one list for the user. Agents do not decide these.
 
 ## Model policy (project owner, 2026-10-12): Sonnet and Haiku only, never Opus

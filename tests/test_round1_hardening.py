@@ -297,3 +297,24 @@ def test_b10_csv_leaves_class_and_score_blank_for_tier_rows_and_rounds_delay():
     assert tier["p_class"] == tier["impact_class"] == tier["score"] == ""
     entered = rows[service.example_case()["risks"][0]["id"]]
     assert entered["score"] and len(entered["expected_delay_days"].split(".")[-1]) <= 2
+
+
+# ------------------------------------------------------------------------------------------------ C-08 / C-09 guards
+def test_c09_check_numbers_no_longer_accepts_a_bare_number_scaled_by_100():
+    from app.ai_layer.explain import check_numbers
+    trace = {"mean": 120.4, "p_exceed": 0.123}
+    assert check_numbers("The mean is 120.4 days.", trace) == []
+    assert check_numbers("The chance is 12.3%.", trace) == []          # fraction shown as a percentage: stated by the % sign
+    assert check_numbers("The mean is 1.2 days.", trace) == ["1.2"]    # invented: 120.4 / 100
+    assert check_numbers("The mean is 12040 days.", trace) == ["12040"]
+
+
+def test_c08_g3_empty_quote_and_quote_for_an_uncited_id_are_flagged():
+    from tests.test_ai_guard import STORE, llm_out
+    from app.ai_layer.guard import parse_and_validate
+    empty = parse_and_validate(llm_out(quotes={"M01": ""}), {"M01"}, STORE)[0]
+    assert any("G3" in i and "empty" in i for i in empty.issues)
+    uncited = parse_and_validate(llm_out(evidence_ids=[], quotes={"M01": "Material shortage and tools delay"}), {"M01"}, STORE)[0]
+    assert any("G3" in i and "does not cite" in i for i in uncited.issues)
+    ok = parse_and_validate(llm_out(), {"M01"}, STORE)[0]
+    assert ok.issues == []

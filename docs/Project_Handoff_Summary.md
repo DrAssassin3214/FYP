@@ -91,12 +91,12 @@ Spread: nine of the ten risks lie within 0.036 of each other (only R-WX is clear
 
 **Built-in example case (ILLUSTRATIVE numbers, not evidence)** (this paragraph lists 5 risks; the example has 7, see section 8.8)**:** planned 16 working days; R-MAT p 0.50, R-LAB 0.35, R-RWK 0.25, R-WX 0.20, R-PLAN 0.10; impact edges 0.02/0.05/0.10/0.20. Result: R-MAT High (p3 × i5), R-LAB/R-RWK/R-WX Moderate (p2 × i4), R-PLAN Low.
 
-**Run it:** `python -m gui` (opens on port 8765) · tests: `python -m pytest` (133 passing (superseded, see section 8; 137 passed, 3 skipped on 2026-10-08) · CLI: `python -m app.cli template | example | run case.json --out folder`.
+**Run it:** `python -m gui` (opens on port 8765) · tests: `python -m pytest tests -q` (the figures "133 passing" and "137 passed, 3 skipped" are superseded: 556 collected locally on 2026-10-12; see section 9 "Round 1" for the current count) · CLI: `python -m app.cli template | example | run case.json --out folder`.
 
 ## 5. Literature and data
 
 - **Corpus (superseded, see section 8; the three corpus sizes conflict, see 8.9):** OpenAlex harvest of 21,902 records, filtered to **5,214 construction-relevant records** (`data/openalex_corpus.jsonl`). The filter is a keyword rule, so a little noise remains. The removed records and the 6,237 bulk PDFs (11 GB) were moved to a backup folder outside the project (reversible).
-- **Curated:** 45 hand-picked PDFs (`Research_Papers/1-5`), research notes (`Research_Notes/*.md`), ranking workbook `Research_Papers_Ranking.xlsx`.
+- **Curated:** 27 PDFs in `Research_Papers/` (folders 1, 2, 5 and 6; the "45 PDFs in 5 folders" figure is superseded), research notes (`Research_Notes/*.md`), ranking workbook `Research_Papers_Ranking.xlsx`.
 - **Key studies (IDs used in the tool):**
   - **M01** India building-construction labour-productivity survey (N=44; the field case study was AAC block walls; the wording 'brick-wall site survey' is superseded, see section 8): unsafe conditions 0.809, poor planning 0.791, unrealistic scheduling 0.791, material shortages 0.777, payment delay 0.773, work at height 0.764.
   - **A02** Ponmalar et al. 2018, Chennai residential (IJETMR): lack of experience 0.787, absenteeism 0.751, accidents 0.650, lack of material 0.780, lack of tools 0.760, payment delays 0.7758, weather 0.700. Also a real masonry record: 20-day masonry activity, 6–8% work-hour overrun. (Low-tier journal; use with care.)
@@ -115,7 +115,7 @@ Spread: nine of the ten risks lie within 0.036 of each other (only R-WX is clear
 3. **Quick expert survey (own primary data).** A Google Form asking engineers to rate how often (1–5) and how severe (1–5) each of the 10 risks is. Send to faculty, seniors in industry, contractors. Even 10–15 replies by Wednesday give our own ranking to compare with the literature and the tool. Keep it open to reach 30+.
 4. **Roadmap slide.** Real-site validation is phase 2. The site data collection form is ready (`docs/Site_Data_Collection_Form.docx`: activity details, delay events with days lost, Y/N check of all 10 risks, starting site conditions). Target 3–5 completed masonry activities.
 
-**What to tell the professor:** "With no site access yet, the tool is checked against published survey data and an expert survey; real-site validation is phase 2."
+**What to tell the professor:** "With no site access yet, the tool's starting ranking is compared with published survey data (an agreement check, not a validation); the expert survey is planned, not yet run; a site comparison is phase 2."
 
 **Do not:** invent site numbers, or present RII values as probabilities.
 
@@ -133,7 +133,7 @@ Spread: nine of the ten risks lie within 0.036 of each other (only R-WX is clear
 
 ## 8. Audit corrections (2026-10-08)
 
-Added after an independent research-methods audit of the repository (findings F01 to F30, row-level checks of all 182 seed rows against the PDFs, and an engine audit). History above is kept; paragraphs that no longer hold are marked "(superseded, see section 8)". Every finding with its status is in `docs/Audit_Corrections_2026-10-08.md`. The audit confirmed that all 182 RII values and ranks in `data/literature_seed.json` match the printed papers; the problems are in metadata, notes, wording and statistics, not in the transcribed values. No `rii`, `rank`, `risk` or `mapping` value was changed.
+Added after an independent research-methods audit of the repository (findings F01 to F30, row-level checks of all 182 seed rows against the PDFs, and an engine audit). History above is kept; paragraphs that no longer hold are marked "(superseded, see section 8)". Every finding with its status is in `docs/Audit_Corrections_2026-10-08.md`. The audit compared 161 of the 182 RII values and ranks in `data/literature_seed.json` (8 studies) with the printed papers and found them matching; the other 21 rows (A02 14, A15 5, HAS25 2) were NOT compared against the papers (Round-1 audit, Lead D, D-06); the problems are in metadata, notes, wording and statistics, not in the transcribed values. No `rii`, `rank`, `risk` or `mapping` value was changed.
 
 ### 8.1 Main limitation, stated first
 
@@ -276,3 +276,13 @@ What changed:
 Deferred (needs a supervisor decision, not done): event / condition tag (`type`) on library risks; merging R-TRN into R-SKILL and R-OVT with R-FAT, removing R-PRD (they change seed mappings, `n_seeded` and every band); renaming library risks into site language and re-categorising R-SUP (wording is safe for the engine but changes texts); showing seeded risks with no colour at all and dropping the +1 step (option B of the engineering review); entering the omitted A14 rows (changes the seed); the expert survey and usability session; the sensitivity table of thresholds. Not done and still open: running the research-audit generators (`scripts/corpus_statistics.py`, `scripts/stats_corpus.py`) with corrected text (F19, F20), circular figures in the statistics scripts (F01, F21), the optional guard on `response_action` text.
 
 **Online response-option search (2026-10-09).** Candidate responses can now be looked up from published papers instead of a language model: `app/online_search.py` (OpenAlex + Crossref via urllib, `POST /api/online-options`, button on the analysis screen). It returns cited sources only and extracts no numbers; the user enters cost / effect with a Source. Nothing touches the network unless the button is pressed. The mitigation / options path calls no LLM (the AI layer remains only for register evidence retrieval and risk suggestion). Live behaviour was not tested from the sandbox (no internet); tests use mocked HTTP in `tests/test_online_search.py`.
+
+
+## 10. Round 1 of the refinement loop (2026-10-12, cloud session)
+
+Evidence: every item below is in `docs/refine_round_1/` (`lead_A..D.md`, `A2_error_path.md`, `triage.md`) and in the commits of pull request #1. Counts quoted here were run in the cloud copy, which lacks the git-ignored local data (`data/literature.db`, the JSONL corpus, `Research_Papers/`); corpus figures are NOT re-derived in this section.
+
+* Tests: `python -m pytest tests -q`; the owner's local run had 556 tests (2026-10-12); the cloud copy after round 1 has 632 collected (629 passed, 3 skipped) (the 3 skips are tests that need the git-ignored data files). Older figures (133, 137, 513, 516) are stale.
+* Fixed and tested: matrix guards (bool, NaN, unsorted edges, negative delay), analysis input validation (block types, finite and 1e12-limit numbers, bare-string evidence ids, `simulation.n` from 10), CLI `analyze` error handling, register.csv blank class/score for literature-tier rows, a run-to-run ordering difference in "facts used" (a set iterated in hash order; now fixed and covered by a test that runs three hash seeds), the guard G3 empty-quote gap and the 100x number allowance in `check_numbers`, mobile layout and accessible names in the GUI, the withdrawn weather sentence in the R-WX library note.
+* Corrected wording: the "all 182 rows match the papers" claim (161 compared); test counts; PDF count; the expert-survey sentence for the professor; the Overview HTML now carries an OUTDATED banner.
+* NOT done (needs the owner or local data): the review of the 761 pending works and everything regenerated from the database (P1), full-text reading (P6), the Word documents (still carry withdrawn wording, listed in `lead_D.md`), scope decisions (`lead_D.md` section "Open decisions for the user").

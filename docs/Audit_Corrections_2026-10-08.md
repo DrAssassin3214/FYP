@@ -4,7 +4,7 @@ Source of the findings: the research-methods audit (F01 to F30, with independent
 
 Status values: **FIXED in docs**, **FIXED in data**, **needs code change** (a `.py`, GUI, example or test file must change; nothing was changed there by this work), **decision for supervisor**, **not an error**. A row can carry two statuses.
 
-Result of the row-level check: all 182 `rii` and `rank` values in `data/literature_seed.json` match the printed papers (no seed row is absent from the papers; no table row of M01, M06, A14-as-entered, M10 is missing). Only metadata and notes were wrong. After the edit the 182 rows are identical to the committed version (no `rii`, `rank`, `risk` or `mapping` value changed).
+Result of the row-level check (corrected 2026-10-12: 161 of the 182 rows, 8 studies, were compared; A02, A15 and HAS25 = 21 rows were not): the compared `rii` and `rank` values in `data/literature_seed.json` match the printed papers (no seed row is absent from the papers; no table row of M01, M06, A14-as-entered, M10 is missing). Only metadata and notes were wrong. After the edit the 182 rows are identical to the committed version (no `rii`, `rank`, `risk` or `mapping` value changed).
 
 ## 1. Files changed by this work
 
@@ -17,7 +17,7 @@ Result of the row-level check: all 182 `rii` and `rank` values in `data/literatu
 | `README.md` | current scope; legacy Monte Carlo/EMV marked out of scope; run instructions kept |
 | `docs/Audit_Corrections_2026-10-08.md` | this file |
 
-Not changed, with reason: `docs/Project_Overview_Report.html` (the file does not exist in this checkout, so no banner could be added; the banner text to insert is "OUTDATED: describes the earlier, larger scope (Monte Carlo/EMV). See README.md for the current scope."), `gui/README_GUI.md` (owned by another agent), `data/risk_library_masonry.json` (not in the list of files to edit), `data/productivity_models.json`, `data/india_labour_norms.json`, `Literature_Evidence_Package.xlsx` (not text, not in scope).
+Not changed, with reason: `docs/Project_Overview_Report.html` (correction 2026-10-12: the file exists in `docs/`; the banner has now been added to it, text: "OUTDATED: describes the earlier, larger scope (Monte Carlo/EMV). See README.md for the current scope."), `gui/README_GUI.md` (owned by another agent), `data/risk_library_masonry.json` (not in the list of files to edit), `data/productivity_models.json`, `data/india_labour_norms.json`, `Literature_Evidence_Package.xlsx` (not text, not in scope).
 
 ## 2. Research-audit findings F01 to F30
 

@@ -710,23 +710,103 @@
     "ci95": null,
     "min": null,
     "max": null
+   },
+   {
+    "risk": "R-FRONT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-VT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-MORT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-GPAY",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-OPEN",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-SCAF",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-FEST",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-HEAT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
    }
   ],
   "anova": {
    "n_cells": 66,
-   "F_risk": 3.0467299326378274,
+   "F_risk": 3.046729932637818,
    "df_risk": 33,
-   "p_risk": 0.0015591267026415219,
+   "p_risk": 0.0015591267026415583,
    "df_resid": 29,
-   "r2": 0.7777243847487288,
-   "adj_r2": 0.5017960347816337,
+   "r2": 0.7777243847487287,
+   "adj_r2": 0.5017960347816335,
    "k2plus": {
     "n_risks": 20,
     "n_cells": 52,
-    "F": 2.424084998702828,
+    "F": 2.424084998702832,
     "df": 19,
     "df_resid": 29,
-    "p": 0.015409260930053802,
+    "p": 0.015409260930053709,
     "adj_r2": 0.3522454535041244
    },
    "p_risk_permutation": 0.0023325558147284237
@@ -1517,24 +1597,104 @@
     "ci95": null,
     "min": null,
     "max": null
+   },
+   {
+    "risk": "R-FRONT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-VT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-MORT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-GPAY",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-OPEN",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-SCAF",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-FEST",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
+   },
+   {
+    "risk": "R-HEAT",
+    "k": 0,
+    "studies": [],
+    "pooled_z": null,
+    "sd_between_studies": null,
+    "ci95": null,
+    "min": null,
+    "max": null
    }
   ],
   "anova": {
    "n_cells": 84,
-   "F_risk": 2.1629551344286386,
+   "F_risk": 2.1629551344285907,
    "df_risk": 34,
-   "p_risk": 0.007890833713237165,
+   "p_risk": 0.007890833713238662,
    "df_resid": 45,
    "r2": 0.6226046560830496,
    "adj_r2": 0.30391525455318036,
    "k2plus": {
     "n_risks": 22,
     "n_cells": 71,
-    "F": 1.7159856810668435,
+    "F": 1.715985681066844,
     "df": 21,
     "df_resid": 45,
-    "p": 0.06442310672706811,
-    "adj_r2": 0.1634652400349509
+    "p": 0.06442310672706789,
+    "adj_r2": 0.163465240034951
    },
    "p_risk_permutation": 0.010663112295901367
   },
@@ -1651,7 +1811,7 @@
    "b": "M14",
    "n": 13,
    "rho": 0.4450549450549451,
-   "p": 0.12752383613843682
+   "p": 0.12752383613843685
   },
   {
    "a": "M10",
