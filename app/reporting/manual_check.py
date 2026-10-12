@@ -96,8 +96,9 @@ def manual_check_xlsx(case: Mapping, result: Optional[Mapping] = None, evidence_
 
     pa = analysis.parse_analysis(case)                       # raises CaseError listing every problem
     res = result if result is not None else service.run_analysis(case, evidence_index)
-    mx = {m["risk_id"]: m for m in service.run_case(case, evidence_index)["matrix"]}
-    ms = service.run_case(case, evidence_index)["matrix_settings"]
+    rc = service.run_case(case, evidence_index)
+    mx = {m["risk_id"]: m for m in rc["matrix"]}
+    ms = rc["matrix_settings"]
     risks, mits, cost = pa["risks"], pa["mitigations"], pa["cost"]
     emv = {r["risk_id"]: r for r in res.get("event_emv") or []}
     chk = {c["mitigation_id"]: c for c in res.get("mitigation_checks") or []}
@@ -146,7 +147,7 @@ def manual_check_xlsx(case: Mapping, result: Optional[Mapping] = None, evidence_
         _put(wi, f"A{r}", a, _BOLD)
         _put(wi, f"B{r}", v, _BLUE, "#,##0.####", _INP)
         _put(wi, f"C{r}", u)
-    T0, CD, NSIM = "Inputs!$B$4", "Inputs!$B$6", "Inputs!$B$8"
+    T0, CD = "Inputs!$B$4", "Inputs!$B$6"
     rh = 12
     _head(wi, rh, ["Risk id", "Name", "Delay kind", "a (min)", "m (mode)", "b (max)", "lambda", "p", "Direct cost if it occurs"], 30)
     for i, r in enumerate(risks):

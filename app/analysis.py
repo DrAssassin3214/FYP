@@ -34,7 +34,7 @@ options evaluated", never "optimal".
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import Any, Mapping, Optional
+from typing import Mapping, Optional
 
 from app import service
 from app.engine.audit import assumption_register, build_record, to_jsonable

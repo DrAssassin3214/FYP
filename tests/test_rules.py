@@ -59,3 +59,14 @@ def test_consistency_checker():
 def test_unknown_operator_raises_at_evaluation():
     with pytest.raises(ValueError):
         evaluate_rules([Rule("X", "d", "R", all_of=(Cond("a", "??", 1),))], {"a": 1})
+
+
+def test_facts_used_order_is_deterministic_across_hash_seeds():
+    """The 'facts used' list in the register must not depend on Python's set ordering (PYTHONHASHSEED)."""
+    import subprocess
+    import sys
+    code = ("import json;from app import service;r=service.run_case(service.example_case());"
+            "print(json.dumps(r['rules']['fired'] if 'fired' in r['rules'] else r['rules'],sort_keys=True,default=str)+r['report_markdown'])")
+    outs = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env={**__import__("os").environ, "PYTHONHASHSEED": s,
+            "PYTHONPATH": __import__("os").pathsep.join(sys.path)}).stdout for s in ("1", "2", "3")}
+    assert len(outs) == 1 and next(iter(outs))

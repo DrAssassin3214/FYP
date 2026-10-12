@@ -25,7 +25,7 @@ from app import data_sync
 from app.engine.audit import to_jsonable
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, classify, matrix_level
 from app.reporting.matrix_graphic import matrix_svg
-from app.literature_seed import seed_for, seed_table
+from app.literature_seed import seed_for
 from app.engine.models import DelayDist, Param, Risk, RiskStatus, Source
 from app.engine.rules import _OPS, Cond, Rule, check_rule_base, evaluate_rules
 from app.reporting.register_report import generate_register_report, register_csv
@@ -626,7 +626,6 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
             for rid, sd in seeds.items():
                 warnings.append(f"{rid}: placed on the matrix from the literature seed (survey RII rank {sd['rank']} of "
                                 f"{sd['n_seeded']}); enter probability and delay to replace it")
-    by_mx = {m["risk_id"]: m for m in matrix}
 
     rows = []
     for r in pc["raw_risks"]:

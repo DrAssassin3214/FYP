@@ -29,7 +29,6 @@ import json
 import logging
 import math
 import mimetypes
-import os
 import sys
 from functools import lru_cache
 from pathlib import Path

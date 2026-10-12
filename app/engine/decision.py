@@ -9,7 +9,6 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Optional, Sequence
 
-import numpy as np
 
 from .emv import cost_summary
 from .models import Activity, CostModel, Mitigation, Risk
