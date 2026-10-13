@@ -318,3 +318,13 @@ def test_c08_g3_empty_quote_and_quote_for_an_uncited_id_are_flagged():
     assert any("G3" in i and "does not cite" in i for i in uncited.issues)
     ok = parse_and_validate(llm_out(), {"M01"}, STORE)[0]
     assert ok.issues == []
+
+
+# ------------------------------------------------------------------------------------------------ outlier warning
+def test_delay_far_longer_than_the_activity_gets_a_unit_warning_not_a_rejection():
+    c = service.example_case()                                        # planned duration 16 d
+    c["risks"][0]["delay"].update(a=1, m=4, b=96)                      # 96 d = 6 x planned: looks like hours entered as days
+    res = service.run_case(c)
+    assert any(w.startswith(f"{c['risks'][0]['id']}: maximum delay 96 d") and "unit" in w for w in res["warnings"])
+    assert res["summary"]["n_on_matrix"] >= 1                          # still computed; the person decides
+    assert not any("maximum delay" in w for w in service.run_case(service.example_case())["warnings"])

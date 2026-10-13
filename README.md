@@ -19,9 +19,9 @@ expert-survey and site data. See `docs/Project_Handoff_Summary.md` sections 8 an
 
 | Folder | Contents |
 |---|---|
-| `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (simulation, EMV and decision modules are used by the optional Cost, options & decision screen and `app/analysis.py`; only `productivity/predictor.py` and `productivity/india_norms.py` have no importer outside tests; whether to keep them is the owner's scope decision) |
+| `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (simulation, EMV and decision modules are used by the optional Cost, options & decision screen and `app/analysis.py`; the unused productivity-prediction code was removed on 2026-10-13, see `docs/Project_Audit_2026-10-13.md`) |
 | `gui/` | Local offline GUI, as a web page (`python -m gui`) or a PySide6 desktop window (`python -m gui.qt_app`); see `gui/README_GUI.md` |
-| `data/` | Rules, risk library, mitigation catalogue (candidate actions, no numbers), productivity models, India labour norms, literature seed |
+| `data/` | Rules, risk library, mitigation catalogue (candidate actions, no numbers), literature seed; productivity models and India labour norms are read only as evidence records |
 | `scripts/` | Literature harvesting, screening and statistics scripts |
 | `tests/` | pytest suite |
 | `Research_Notes/`, `Literature_Evidence_Package.xlsx` | Evidence corpus the app loads (M##/R## records, research notes, full-text reviews) |

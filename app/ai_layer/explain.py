@@ -7,11 +7,9 @@ against the numbers in the trace (guard G6).  Numbers not found are flagged, nev
 """
 from __future__ import annotations
 
-import json
 import re
 from typing import Any, Mapping, Optional
 
-from .guard import LLMClient
 
 _ID_TOKEN = re.compile(r"\b[A-Za-z]{1,4}[-_]?[A-Za-z]{0,4}\d+[A-Za-z0-9\-]*\b")
 _CURRENCY_PREFIX = re.compile(r"(?<![A-Za-z])(?:INR|Rs\.?|₹)\s*(?=\d)")
@@ -100,23 +98,3 @@ def explain_deterministic(result: Mapping) -> list[str]:
     L.append(f"{n_assump} inputs are user, expert or assumed values; the result depends on them and is a simulation, "
              "not a validated prediction.")
     return L
-
-
-def build_explain_prompt(result: Mapping) -> str:
-    trace = {"summary": result["summary"], "cost": result["cost"], "baseline": result["baseline"],
-             "decision": {k: result["decision"][k] for k in ("criterion", "selected_option_id", "statement", "options")},
-             "sensitivity": result["sensitivity"][:5]}
-    return ("Explain the following risk-analysis result to a construction site manager in 6-10 plain sentences. "
-            "Use ONLY numbers present in the JSON (you may round). Do not add new numbers, probabilities, costs or "
-            "recommendations beyond the stated decision. Do not say the option is optimal. Mention that inputs marked as "
-            "assumptions drive the result.\nJSON:\n" + json.dumps(trace, default=float))
-
-
-def explain_with_llm(client: LLMClient, result: Mapping) -> dict:
-    prompt = build_explain_prompt(result)
-    text = client.complete(prompt)
-    trace = {"summary": result["summary"], "cost": result["cost"], "baseline": result["baseline"],
-             "decision": result["decision"], "sensitivity": result["sensitivity"], "n": result.get("n_used")}
-    bad = check_numbers(text, trace)
-    return {"text": text, "unmatched_numbers": bad, "verified": not bad, "model_id": client.model_id, "prompt": prompt,
-            "note": "Secondary narrative. Numbers that do not match the engine trace are flagged; rely on the deterministic explanation."}

@@ -53,6 +53,7 @@ def _blank(v: Any) -> bool:
     return v is None or (isinstance(v, str) and v == "")
 
 
+UNIT_SLIP_FACTOR = 5.0      # warn when a delay maximum exceeds this many times the planned duration
 MAX_ABS_INPUT = 1e12        # sanity limit for any entered number (days, money); larger values overflow the calculations
 _ASCII_DECIMAL = re.compile(r"^[+-]?((\d+\.?\d*|\.\d+)([eE][+-]?\d+)?|nan|inf|infinity)$", re.IGNORECASE | re.ASCII)   # nan/inf: rejected below as non-finite
 
@@ -625,6 +626,12 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
     elif planned is not None and not edges:
         warnings.append("risk matrix not computed: impact bin edges are not defined (USER INPUT REQUIRED)")
     built = {r.risk_id: r for r in risks}
+    if planned is not None:
+        # a delay far longer than the activity itself is usually a unit slip (hours entered as days), not a real risk
+        for r in risks:
+            if r.delay.b > UNIT_SLIP_FACTOR * planned.value:
+                warnings.append(f"{r.risk_id}: maximum delay {r.delay.b:g} d is more than {UNIT_SLIP_FACTOR:g}x the planned "
+                                f"duration ({planned.value:g} d); check the unit (days, not hours) before relying on its level")
 
     # literature seed: risks whose numbers are not entered get a class-only placement from survey RII rankings
     seeds: dict[str, dict] = {}
