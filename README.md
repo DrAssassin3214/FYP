@@ -19,9 +19,9 @@ expert-survey and site data. See `docs/Project_Handoff_Summary.md` sections 8 an
 
 | Folder | Contents |
 |---|---|
-| `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (also legacy, unused code: simulation, EMV, decision, productivity models) |
+| `app/` | Rules, risk matrix, literature seed, AI evidence layer, reporting, service API (simulation, EMV and decision modules are used by the optional Cost, options & decision screen and `app/analysis.py`; the unused productivity-prediction code was removed on 2026-10-13, see `docs/Project_Audit_2026-10-13.md`) |
 | `gui/` | Local offline GUI, as a web page (`python -m gui`) or a PySide6 desktop window (`python -m gui.qt_app`); see `gui/README_GUI.md` |
-| `data/` | Rules, risk library, mitigation catalogue (candidate actions, no numbers), productivity models, India labour norms, literature seed |
+| `data/` | Rules, risk library, mitigation catalogue (candidate actions, no numbers), literature seed; productivity models and India labour norms are read only as evidence records |
 | `scripts/` | Literature harvesting, screening and statistics scripts |
 | `tests/` | pytest suite |
 | `Research_Notes/`, `Literature_Evidence_Package.xlsx` | Evidence corpus the app loads (M##/R## records, research notes, full-text reviews) |
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 python -m gui                      # opens http://127.0.0.1:8765/
 python -m app.cli example > case.json
 python -m app.cli run case.json --out out    # writes register.md, register.csv, result.json
-python examples/masonry_demo.py    # legacy demo (Monte Carlo + EMV option comparison); out of the current scope
+python examples/masonry_demo.py    # demo of the optional decision layer (Monte Carlo + EMV option comparison); whether it is in scope is an open decision
 python -m app.cli example-analysis > a.json   # case with cost model, deadline and responses (ILLUSTRATIVE)
 python -m app.cli analyze a.json --out out    # writes analysis.md: EMV, options, AUTHORIZE / ACCEPT command
 ```
@@ -53,7 +53,7 @@ Browser-version program (.exe): run `build_exe.bat` to produce `dist\FYP-Risk-To
 **Build Windows exe** workflow in the GitHub Actions tab (Run workflow) and download the zip it produces.
 Copy the whole `FYP-Risk-Tool` folder to move it; no Python is needed on the target computer.
 
-Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest`.
+Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest tests -q` (556 tests collected on 2026-10-12 locally; 603 collected in the cloud copy after round 1 and the clean-up of 2026-10-13 (600 passed), of which 3 are skipped when the git-ignored data files are absent; `pytest.ini` sets `testpaths = tests`, so a bare `python -m pytest` also works).
 
 ## Not in the repository
 

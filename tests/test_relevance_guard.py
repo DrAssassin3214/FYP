@@ -153,7 +153,7 @@ def test_g5_every_exported_number_has_a_source(case_fn):
 
 
 # --------------------------------------------------------------------------- G-6
-def test_g6_legacy_modules_are_not_imported_by_the_live_app():
+def test_g6_legacy_modules_are_not_imported_by_the_live_app(tmp_path):
     code = r'''
 import json, sys
 import gui.api
@@ -167,7 +167,11 @@ import app.cli
 bad = [m for m in sys.modules if m in ("app.engine.simulation", "app.engine.emv", "app.engine.decision", "app.reporting.report", "app.ai_layer.explain") or m.startswith("app.productivity")]
 print(json.dumps(bad))
 '''
-    env = dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None, [str(ROOT), os.environ.get("PYTHONPATH", "")])))
+    # Fresh process with NO API key and an empty settings folder: the check must never reach a live AI service
+    # (it did once, and failed on a 503), and it must not depend on what earlier tests left in os.environ.
+    env = {k: v for k, v in os.environ.items() if "API_KEY" not in k.upper() and not k.upper().startswith(("APPDATA", "XDG_CONFIG"))}
+    env.update(PYTHONPATH=os.pathsep.join(filter(None, [str(ROOT), os.environ.get("PYTHONPATH", "")])),
+               APPDATA=str(tmp_path), XDG_CONFIG_HOME=str(tmp_path), HOME=str(tmp_path), USERPROFILE=str(tmp_path))
     out = subprocess.run([sys.executable, "-c", code], cwd=ROOT, env=env, capture_output=True, text=True, timeout=120)
     assert out.returncode == 0, out.stderr[-800:]
     assert json.loads(out.stdout.strip().splitlines()[-1]) == []

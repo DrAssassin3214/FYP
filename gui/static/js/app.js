@@ -44,6 +44,33 @@ function toggleTags() {
 }
 
 // ------------------------------------------------------------------ chrome
+/** B-17: focus survives a re-render for controls without an id (Edit/Done, remove, Yes/No, tabs ...). */
+const FOCUS_ATTRS = ["data-action", "data-id", "data-bind", "data-ev-add", "data-i", "data-tab", "data-path"];
+function focusKey(el) {
+  return el.tagName + "|" + FOCUS_ATTRS.map((k) => k + "=" + (el.getAttribute(k) || "")).join("|");
+}
+function sameKey(root, key, tag) {
+  return [...root.querySelectorAll(tag)].filter((e) => focusKey(e) === key);
+}
+
+/** B-25, B-32: spans that only carry a tooltip get a spoken name; header cells get a scope. */
+function nameTipElements(scope) {
+  scope.querySelectorAll("[data-tip][tabindex]:not([aria-label])").forEach((e) => {
+    const t = (e.textContent || "").trim();
+    e.setAttribute("aria-label", t ? `${t}: ${e.dataset.tip}` : e.dataset.tip);
+    if (!e.getAttribute("role") && e.tagName === "SPAN") e.setAttribute("role", "group");
+  });
+  scope.querySelectorAll("thead th:not([scope])").forEach((th) => th.setAttribute("scope", "col"));
+}
+
+/** Buttons whose text is hidden on narrow screens keep it as their accessible name (B-23). */
+function nameIconButtons(scope) {
+  scope.querySelectorAll(".btn:not([aria-label])").forEach((b) => {
+    const t = b.querySelector(".lbl, .lbl-wide");
+    if (t && t.textContent.trim()) b.setAttribute("aria-label", t.textContent.trim());
+  });
+}
+
 function renderToolbar() {
   const ai = S.health?.ai;
   const dark = theme() === "dark";
@@ -56,6 +83,7 @@ function renderToolbar() {
     <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
+  nameIconButtons($("#toolbar"));
 }
 
 function renderRail() {
@@ -66,10 +94,10 @@ function renderRail() {
     const n = counts[s.id] || 0;
     const flag = n ? `<span class="nav-flag err" title="${n} input problem(s)">${icon("alert", "ic-sm")}${n}</span>`
       : s.results && S.result && isStale() ? `<span class="nav-flag stale" title="Inputs have problems; showing the last valid state">stale</span>` : "";
-    html += `<a class="navlink" href="#/${s.id}" data-tip="${h(`${s.n}. ${s.title}`)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}><span class="nav-num">${s.n}</span>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
+    html += `<a class="navlink" href="#/${s.id}" aria-label="${h(`${s.n}. ${s.title}`)}" data-tip="${h(`${s.n}. ${s.title}`)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}><span class="nav-num">${s.n}</span>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
   }
   html += `</div>
-    <button type="button" class="navlink rail-settings" data-action="settings" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
+    <button type="button" class="navlink rail-settings" data-action="settings" aria-label="Settings: API key, model" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
     <div class="rail-foot">Offline tool. The register and matrix come from the service; the GUI computes nothing.<br>v${h(S.health?.version || "")} · ${(S.health?.evidence_records ?? S.evidenceList.length).toLocaleString()} evidence records</div>`;
   $("#rail").innerHTML = html;
 }
@@ -162,14 +190,24 @@ function rollTitle(h1) {
 function renderScreen({ nav = false } = {}) {
   const root = screenEl();
   const y = window.scrollY;
-  const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
+  const activeEl = document.activeElement && root.contains(document.activeElement) ? document.activeElement : null;
+  const activeId = activeEl ? activeEl.id : null;
+  const keyed = activeEl && !activeId ? { key: focusKey(activeEl), tag: activeEl.tagName, idx: sameKey(root, focusKey(activeEl), activeEl.tagName).indexOf(activeEl) } : null;
   const mod = BY_ID[S.ui.screen].mod;
-  root.innerHTML = mod.render();
+  try {
+    root.innerHTML = mod.render();
+  } catch (err) {       // a bug in one screen must not blank the whole app (B-28)
+    console.error(err);
+    root.innerHTML = alertBox("danger", "This screen could not be drawn", `${h(err && err.message ? err.message : String(err))}. Your case is unchanged; try another step or reload the page.`);
+  }
+  document.title = `${BY_ID[S.ui.screen].title} · Bricks-ly`;     // B-33
   if (!root.querySelector("[data-screen-problems]")) {
     const html = screenProblems(S.ui.screen);
     if (html) root.querySelector(".screen-head")?.insertAdjacentHTML("afterend", html);
   }
   applyInline(root);
+  nameIconButtons(root);
+  nameTipElements(root);
   rollTitle(root.querySelector(".screen-head h1"));
   if (nav) {
     root.classList.remove("is-entering"); void root.offsetHeight; root.classList.add("is-entering");   // staggered rise-in, on navigation only
@@ -180,6 +218,7 @@ function renderScreen({ nav = false } = {}) {
   } else {
     window.scrollTo(0, y);
     if (activeId) document.getElementById(activeId)?.focus({ preventScroll: true });
+    else if (keyed && keyed.idx >= 0) sameKey(root, keyed.key, keyed.tag)[keyed.idx]?.focus({ preventScroll: true });
   }
 }
 function renderAll(opts) { renderChrome(); renderScreen(opts); }
@@ -192,6 +231,7 @@ function go(id) {
   renderScreen({ nav: true });
 }
 window.addEventListener("hashchange", () => {
+  if (!S.case) return;                      // boot() has not loaded the case yet; it renders the screen itself
   const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "case";
   S.ui.screen = BY_ID[id] ? id : "case";
   renderRail();
@@ -216,6 +256,7 @@ const searchEvidence = debounce(async () => {
   if (S.ui.evQuery.trim() !== q) return;          // a newer query superseded this one
   S.ui.evBusy = false;
   S.ui.evHits = r.ok ? r.data.records : [];
+  if (!r.ok) toast(`Evidence search failed: ${h((r.data?.problems || ["unknown error"])[0])}. This is not the same as "no match".`, "err");   // B-27
   refreshEvList();
 }, 300);
 
@@ -238,7 +279,7 @@ async function validateNow() {
   afterValidation();
   if (added.length) {
     changed({ rerender: true });
-    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.map(h).join(", ")}). Enter each probability and delay to place ${added.length > 1 ? "them" : "it"} on the matrix.`, "info",
+    toast(`${added.length} rule-flagged risk${added.length > 1 ? "s were" : " was"} added to the register (${added.map(h).join(", ")}). Enter each probability and delay to replace ${added.length > 1 ? "their" : "its"} starting placement with an assessed level.`, "info",
       { actionLabel: "Open register", timeout: 12000, onAction: () => { location.hash = "#/risks"; } });
   }
 }
@@ -646,11 +687,13 @@ const ACTIONS = {
     if (!(await guardDiscard("A new blank case"))) return;
     const r = await get("/api/template");
     if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("case"); }
+    else toast(`Could not start a new case: ${h((r.data?.problems || ["unknown error"])[0])}`, "err");   // B-27
   },
   example: async () => {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
     const r = await get("/api/example-analysis");   // the one example: register, matrix, rules and the cost / options inputs
     if (r.ok) { loadCase(r.data, { msg: "ILLUSTRATIVE example loaded: every number is a placeholder, not evidence." }); S.ui.analysis = null; S.ui.analysisProblems = null; }
+    else toast(`Could not load the example: ${h((r.data?.problems || ["unknown error"])[0])}`, "err");   // B-27
   },
   "analysis-run": async () => {
     S.ui.analysisBusy = true; S.ui.analysisProblems = null; renderScreen();

@@ -127,7 +127,6 @@ body {
   margin: 0; background: var(--bg); color: var(--text);
   font: var(--fs-md)/var(--lh) var(--font-sans);
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-  min-width: 380px;
 }
 h1, h2, h3, h4 { margin: 0; line-height: var(--lh-tight); font-family: var(--font-display); letter-spacing: -.005em; }
 h1 { font-size: var(--fs-3xl); font-weight: 500; font-family: var(--font-serif); letter-spacing: 0; }
@@ -728,3 +727,34 @@ body.hide-tags .param-note.illus,
 body.hide-tags .ac-illus,
 body.hide-tags .tag-optional { display: none !important; }
 body.hide-tags .param { grid-template-columns: 1fr; }
+
+/* ---- round-1 fixes (B-01, B-21, B-22, B-19, B-24): phone widths, skip link, focus ring */
+.sr-only:focus, .sr-only:focus-visible { position: fixed !important; z-index: 200; top: 8px; left: 8px; width: auto; height: auto; margin: 0; padding: 8px 14px; clip: auto; overflow: visible; background: var(--surface); color: var(--text); border: 2px solid var(--focus); border-radius: var(--radius-sm); }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.form-grid { grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
+.table-scroll, .matrix-scroll { overflow-x: auto; max-width: 100%; }
+@media (max-width: 760px) {
+  .topbar { height: auto; flex-wrap: wrap; row-gap: var(--s-2); padding: var(--s-2) var(--s-3); }
+  .casebox { order: 3; flex: 1 1 100%; margin-left: 0; padding-left: 0; border-left: 0; }
+  .toolbar { flex-wrap: wrap; margin-left: auto; }
+  .screen { padding: var(--s-4) var(--s-3) 0; }
+  .kpi-strip { padding: 0 var(--s-3); flex-wrap: wrap; }
+  /* the rail becomes a scrolling strip above the content, so the screen gets the full width */
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .rail { position: static; height: auto; width: auto; flex-direction: row; overflow-x: auto; padding: var(--s-1) var(--s-2); border-right: 0; border-bottom: 1px solid var(--border); }
+  .rail-group { display: flex; margin: 0; }
+  .rail-settings { margin-top: 0; }
+  .toolbar { max-width: 100%; }
+  .ai-badge { display: none; }
+  .ev-cit, .tbl-wrap, .card-b { overflow-wrap: anywhere; }
+}
+.ev-item .ev-id { flex: 0 1 auto; max-width: 45%; min-width: 0; overflow-wrap: anywhere; }
+.ev-item .ev-cit { min-width: 0; overflow-wrap: anywhere; }
+/* B-30: small remove chips get a 24px hit area without changing how they look */
+.chip button, .chip-x { position: relative; }
+.chip button::after, .chip-x::after { content: ""; position: absolute; inset: -5px; }
+/* B-22: the impact-edge form and the 5x5 matrix scroll sideways instead of squeezing to unreadable cells on a phone */
+@media (max-width: 520px) {
+  .matrix-wrap { overflow-x: auto; }
+  .matrix { min-width: 440px; }
+}

@@ -36,15 +36,15 @@ function liveBlock() {
       const lvl = levels[pc]?.[ic] || "";
       const here = rows.filter((x) => x.p_class === pc && x.impact_class === ic);
       const capped = pc === 1 && (ic === 4 || ic === 5);
-      grid += `<div class="mx-cell lvl-${h(lvl)}${capped ? " is-capped" : ""}" role="cell"${capped ? ' data-tip="Review: the level is capped by the scoring rule (probability class 1 is Low whatever the impact)"' : ""} aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${h(here.map((x) => x.risk_id).join(", "))}` : ""}">
+      grid += `<div class="mx-cell lvl-${h(lvl)}${capped ? " is-capped" : ""}" role="group"${capped ? ' data-tip="Review: the level is capped by the scoring rule (probability class 1 is Low whatever the impact)"' : ""} aria-label="p class ${pc}, impact class ${ic}, level ${h(lvl)}${here.length ? `: ${h(here.map((x) => x.risk_id).join(", "))}` : ""}">
         ${here.map((x) => `<span class="mx-risk${isSeed(x) ? " is-seed" : ""}" tabindex="0" data-tip="${h(isSeed(x) ? `${x.risk_id} – ${names.get(x.risk_id) || ""} | literature tier ${x.tier} (Assumption): survey RII rank ${seedOf(x.risk_id)?.rank} of ${seedOf(x.risk_id)?.n_seeded}; a ranking, not a probability or a delay and not an assessed level | score ${x.score}` : `${x.risk_id} – ${names.get(x.risk_id) || ""} | p = ${x.p} | expected delay if it occurs = ${fmt(x.expected_delay_if_occurs_days, 2)} d | score ${x.score} (${x.level})`)}">${h(x.risk_id)}</span>`).join("")}
         <span class="lvl" aria-hidden="true">${h(lvl)}</span></div>`;
     }
   }
   const header = `<div class="mx-head"></div>${[1, 2, 3, 4, 5].map((k) => `<div class="mx-head col"><b>${k}</b>${h(iRange(k))}</div>`).join("")}`;
   const matrix = `<div class="matrix-wrap"><div class="matrix-ylab">Probability class (p)</div>
-    <div class="matrix" role="table" aria-label="Risk matrix, probability class by impact class">${grid}${header}</div>
-    <div></div><div class="matrix-xlab">Impact class (expected delay if it occurs ÷ planned duration)<span class="sub">Impact edges ${e.every(isNum) ? e.map((x) => pct(x)).join(" / ") : "not entered"} of planned duration · Source: ${h(edgesSrc)}</span></div></div>`;
+    <div class="matrix" role="group" aria-label="Risk matrix, probability class by impact class">${grid}${header}</div>
+    <div></div><div class="matrix-xlab">Impact class (expected delay if it occurs ÷ planned duration)<span class="sub">${e.every(isNum) ? `Impact edges ${e.map((x) => pct(x)).join(" / ")} of planned duration` : "Impact edges not entered yet"} · Source: ${h(edgesSrc)}</span></div></div>`;
 
   const legend = `<div class="legend mt-3">${["Low", "Moderate", "High", "Extreme"].map((l) => `<span class="it"><span class="swatch lvl-${l}" style="border:1px solid var(--border)"></span>${l}</span>`).join("")}
     <span class="it"><span class="swatch is-seed-sw"></span>literature tier (Assumption)</span>
@@ -63,7 +63,13 @@ function liveBlock() {
   else if (!rows.length) content = alertBox("warn", "No risks on the matrix yet", "A risk appears here once it has a literature seed (library risks with survey evidence) or its probability and delay range are entered on the Risk register step with the planned duration on step 1 and the four impact edges above.");
   else content = `<section class="card"><header class="card-h"><h2>Probability × impact</h2><span class="badge b-warn">${icon("alert")}ordinal prioritisation only – a label, not a quantity</span></header><div class="card-b">${nSeed ? `<p class="hint mb-3">${nSeed} risk${nSeed > 1 ? "s sit" : " sits"} at a <b>literature tier (Assumption)</b> (grey dashed chips): a relative importance ranking from survey indices (RII), used as a starting place until you enter probability and delay. The cell colour under such a chip is not an assessed level. An importance index is not a probability or a number of days (see the note on ranking basis above).</p>` : ""}${matrix}${legend}${table}${hcBlock}</div></section>`;
 
-  return `${staleNote()}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
+  // B-07: say where the missing prerequisites are entered instead of leaving the person to find the hidden popover
+  const needDuration = !(Number(S.case.activity?.planned_duration_days?.value) > 0);
+  const needEdges = !(Array.isArray(S.case.impact_bin_edges_fraction) && S.case.impact_bin_edges_fraction.every(isNum));
+  const prereq = needDuration || needEdges
+    ? alertBox("info", "To place risks from entered numbers",
+      `${needDuration ? 'Enter the planned duration on <a href="#/case">step 1 (Case)</a>. ' : ""}${needEdges ? "Enter the four impact class thresholds with the <strong>Impact class thresholds</strong> button at the top of this screen." : ""}`) : "";
+  return `${staleNote()}${prereq}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
 }
 
 export function render() {

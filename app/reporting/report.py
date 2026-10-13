@@ -85,7 +85,6 @@ def generate_report(
     a = L.append
     a(f"# Risk assessment report: {activity.name}\n")
     a("## 1. Executive summary\n")
-    sel = decision.get("selected_option_id")
     a(f"- Baseline duration T0 = {t0:.2f} days ({activity.baseline_duration_days.source.value}).")
     a(f"- Simulated expected duration {s['mean']:.2f} days; expected delay {s['expected_delay']:.2f} days; "
       f"P80 {s['percentiles']['P80']:.2f}, P90 {s['percentiles']['P90']:.2f}, P95 {s['percentiles']['P95']:.2f} days.")

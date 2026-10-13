@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 import numbers
 import operator
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Mapping, Optional, Sequence
 
 from .models import Source
@@ -32,8 +32,9 @@ class Cond:
     value: Any = None            # literal to compare with ...
     other_fact: Optional[str] = None   # ... or another fact
 
-    def facts(self) -> set[str]:
-        return {self.fact} | ({self.other_fact} if self.other_fact else set())
+    def facts(self) -> tuple[str, ...]:
+        """Fact names in a fixed order (a set would reorder them between runs: string hashing is randomised)."""
+        return (self.fact, self.other_fact) if self.other_fact else (self.fact,)
 
 
 @dataclass(frozen=True)

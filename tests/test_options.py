@@ -4,7 +4,6 @@ Hand-checked numbers: a risk with p = 0.5 and PERT(1, 3, 8) has mean delay (1 + 
 8,000 per day its event EMV is 0.5 * 3.5 * 8000 = 14,000.
 """
 import json
-from dataclasses import replace
 from pathlib import Path
 
 import numpy as np

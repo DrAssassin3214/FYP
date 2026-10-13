@@ -18,7 +18,6 @@ Guard rules (each is enforced in code and tested):
 """
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -156,7 +155,11 @@ def parse_and_validate(raw: str, retrieved_ids: set[str], store: EvidenceStore,
             issues.append("no valid supporting evidence: AI-suggested and unsupported")
         for eid, quote in (quotes or {}).items():
             rec = store.get(eid)
-            if rec is None or norm(quote) not in norm(rec.text + " " + rec.citation):
+            if not isinstance(quote, str) or not norm(quote):
+                issues.append(f"G3: quote for {eid} is empty; a quote must be a non-empty passage of the stored record")
+            elif eid not in good:
+                issues.append(f"G3: quote given for {eid}, which this suggestion does not cite as valid evidence")
+            elif rec is None or norm(quote) not in norm(rec.text + " " + rec.citation):
                 issues.append(f"G3: quote for {eid} not found in the stored record text")
         rejected = {k: v for k, v in it.items() if isinstance(k, str) and k.lower() in NUMERIC_KEYS}
         if rejected:

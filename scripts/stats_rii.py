@@ -17,7 +17,7 @@ from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from app.literature_seed import load_dataset, seed_table  # noqa: E402
+from app.literature_seed import load_dataset  # noqa: E402
 
 DATA = load_dataset()
 RISKS = [r["id"] for r in json.loads((ROOT / "data" / "risk_library_masonry.json").read_text(encoding="utf-8-sig"))]

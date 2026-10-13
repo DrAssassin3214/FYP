@@ -12,7 +12,6 @@ review therefore has to be drawn from works that are still pending (no row in `r
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import random
 import sqlite3

@@ -63,6 +63,31 @@ def _write_outputs(res: dict, out_dir: str) -> None:
         raise CliError(f"cannot write to --out {out_dir}: {e.strerror or e}")
 
 
+def _write_analysis_outputs(res: dict, out_dir: str) -> None:
+    out = Path(out_dir)
+    if out.exists() and not out.is_dir():
+        raise CliError(f"--out {out_dir} is a file; give a folder")
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "analysis.md").write_text(res["report_markdown"], encoding="utf-8")
+        (out / "analysis.json").write_text(json.dumps(res, indent=2, default=str, allow_nan=False), encoding="utf-8")
+    except OSError as e:
+        raise CliError(f"cannot write to --out {out_dir}: {e.strerror or e}")
+
+
+def _report_error(e: Exception) -> int:
+    """One-line error for a user-facing problem, a list for case problems; never a traceback.  Exit code 2."""
+    if isinstance(e, CliError):
+        print(f"error: {e}", file=sys.stderr)
+    elif isinstance(e, service.CaseError):
+        print("Case has problems:", file=sys.stderr)
+        for p in e.problems:
+            print(f"  - {p}", file=sys.stderr)
+    else:
+        print(f"error: the case could not be processed ({type(e).__name__}: {e})", file=sys.stderr)
+    return 2
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="fyp-risk")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -84,18 +109,12 @@ def main(argv=None) -> int:
         print(json.dumps(service.example_analysis_case(), indent=2))
     elif a.cmd == "analyze":
         try:
-            case = json.loads(Path(a.case).read_text(encoding="utf-8-sig"))
+            case = _load_case(a.case)
             res = service.run_analysis(case, service.evidence_index_from_workbook())
-        except service.CaseError as e:
-            print("Case has problems:", file=sys.stderr)
-            for p in e.problems:
-                print(f"  - {p}", file=sys.stderr)
-            return 2
-        if a.out:
-            out = Path(a.out)
-            out.mkdir(parents=True, exist_ok=True)
-            (out / "analysis.md").write_text(res["report_markdown"], encoding="utf-8")
-            (out / "analysis.json").write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+            if a.out:
+                _write_analysis_outputs(res, a.out)
+        except (CliError, service.CaseError, ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
+            return _report_error(e)
         cmd = res["command"]
         print(f"{cmd['command']}: {cmd['reason']}")
         for w in res["warnings"]:
@@ -106,21 +125,15 @@ def main(argv=None) -> int:
             res = service.run_case(case, service.evidence_index_from_workbook())
             if a.out:
                 _write_outputs(res, a.out)
-        except CliError as e:
-            print(f"error: {e}", file=sys.stderr)
-            return 2
-        except service.CaseError as e:
-            print("Case has problems:", file=sys.stderr)
-            for p in e.problems:
-                print(f"  - {p}", file=sys.stderr)
-            return 2
-        except (ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
-            print(f"error: the case could not be processed ({type(e).__name__}: {e})", file=sys.stderr)
-            return 2
+        except (CliError, service.CaseError, ValueError, TypeError, KeyError, AttributeError, RecursionError) as e:
+            return _report_error(e)
         s = res["summary"]
-        print(f"{s['n_risks']} risks in the register ({s['n_complete']} complete); {s['n_on_matrix']} on the matrix: "
-              + ", ".join(f"{s['levels'][k]} {k}" for k in service.LEVELS if s["levels"][k]) if s["n_on_matrix"]
-              else f"{s['n_risks']} risks in the register ({s['n_complete']} complete); none on the matrix")
+        head = f"{s['n_risks']} risks in the register ({s['n_complete']} complete); "
+        if s["n_on_matrix"]:
+            levels = ", ".join(f"{s['levels'][k]} {k}" for k in service.LEVELS if s["levels"][k])
+            print(head + f"{s['n_on_matrix']} on the matrix" + (f": {levels}" if levels else " (literature tier only, no entered numbers)"))
+        else:
+            print(head + "none on the matrix")
         for w in res["warnings"]:
             print("note:", w)
     return 0

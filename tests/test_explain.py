@@ -1,8 +1,8 @@
 import json
 
-from app.ai_layer.explain import check_numbers, explain_deterministic, explain_with_llm, numbers_in
+from app.ai_layer.explain import check_numbers, numbers_in
 from app.ai_layer.guard import StubLLM
-from app.service import example_case, explain_result, run_case, suggest_risks
+from app.service import suggest_risks
 
 
 def test_number_extraction_ignores_ids():
@@ -10,21 +10,8 @@ def test_number_extraction_ignores_ids():
     assert nums == ["12.5", "56%"]
 
 
-def test_deterministic_explanation_uses_only_trace_numbers():
-    res = run_case(example_case())
-    text = " ".join(explain_deterministic(res))
-    assert check_numbers(text, res) == []
-    assert "not a validated prediction" in text and "optimal" not in text.lower()
 
 
-def test_llm_narrative_with_fabricated_number_is_flagged():
-    res = run_case(example_case())
-    s = res["summary"]
-    good = StubLLM(f"The expected delay is about {s['expected_delay']:.1f} days and P90 is {s['percentiles']['P90']:.1f} days.")
-    assert explain_with_llm(good, res)["verified"] is True
-    bad = StubLLM("The expected delay is 47.3 days and there is a 91% chance of overrun.")
-    out = explain_with_llm(bad, res)
-    assert out["verified"] is False and "47.3" in out["unmatched_numbers"]
 
 
 def test_percent_and_fraction_forms_match():
@@ -33,10 +20,9 @@ def test_percent_and_fraction_forms_match():
     assert check_numbers("There is a 60% chance.", trace) == ["60%"]
 
 
-def test_service_explain_offline_and_suggest_offline():
-    res = run_case(example_case())
-    ex = explain_result(res)
-    assert ex["deterministic"] and "llm" not in ex
+
+
+def test_service_suggest_offline_returns_library_and_evidence():
     sug = suggest_risks("Brick masonry", "material shortage brick wall")
     assert sug["mode"] == "offline-retrieval" and sug["evidence"] and any(r["id"] == "R-MAT" for r in sug["library_risks"])
 

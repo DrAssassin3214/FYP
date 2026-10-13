@@ -33,8 +33,9 @@ options evaluated", never "optimal".
 """
 from __future__ import annotations
 
+import math
 from dataclasses import replace
-from typing import Any, Mapping, Optional
+from typing import Mapping, Optional
 
 from app import service
 from app.engine.audit import assumption_register, build_record, to_jsonable
@@ -48,6 +49,7 @@ from app.engine.simulation import convergence, sensitivity, simulate, summarise
 CaseError = service.CaseError
 STRATEGIES = ("avoid", "mitigate", "transfer", "accept", "monitor")
 DEFAULT_N = 10_000
+MIN_N = 10          # below this the convergence table has no points (and 10 draws say nothing anyway)
 MAX_N = 200_000
 DEFAULT_SEED = 12345
 _blank = service._blank
@@ -68,7 +70,7 @@ def _int_setting(sim: Mapping, key: str, default: int, lo: int, hi: int, problem
     except (TypeError, ValueError):
         problems.append(f"simulation.{key}: '{v}' is not a number")
         return default
-    if f != int(f) or not (lo <= f <= hi):
+    if not math.isfinite(f) or f != int(f) or not (lo <= f <= hi):
         problems.append(f"simulation.{key}: must be a whole number from {lo} to {hi}")
         return default
     return int(f)
@@ -78,18 +80,25 @@ def _opt_number(d: Mapping, key: str, where: str, problems: list[str], lo: float
     v = d.get(key)
     if _blank(v):
         return None
-    if isinstance(v, bool):
-        problems.append(f"{where}.{key}: expected a number")
-        return None
-    try:
-        f = float(v)
-    except (TypeError, ValueError):
-        problems.append(f"{where}.{key}: '{v}' is not a number")
+    n0 = len(problems)
+    f = service._num(v, f"{where}.{key}", problems)
+    if f is None or len(problems) > n0:
         return None
     if f < lo or (hi is not None and f > hi):
         problems.append(f"{where}.{key}: must be {'between ' + str(lo) + ' and ' + str(hi) if hi is not None else 'at least ' + str(lo)}")
         return None
     return f
+
+
+def _block(case: Mapping, key: str, kind: type, what: str, problems: list[str]):
+    """case[key] must be absent/null or the right JSON type; otherwise a problem that names the field."""
+    v = case.get(key)
+    if v is None:
+        return kind()
+    if not isinstance(v, kind):
+        problems.append(f"{key}: expected {what}, got {type(v).__name__}")
+        return kind()
+    return v
 
 
 def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str]) -> Optional[Mitigation]:
@@ -102,8 +111,8 @@ def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str])
     rid = d.get("risk_id")
     if _blank(rid) or str(rid) not in risk_ids:
         problems.append(f"{where} ({mid}): target risk '{rid}' is not a complete risk in the register")
-    strategy = d.get("strategy") or "mitigate"
-    if strategy not in STRATEGIES:
+    strategy = "mitigate" if _blank(d.get("strategy")) else d.get("strategy")
+    if not isinstance(strategy, str) or strategy not in STRATEGIES:
         problems.append(f"{where} ({mid}): unknown strategy '{strategy}' (use one of {list(STRATEGIES)})")
 
     cost = None
@@ -115,17 +124,25 @@ def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str])
 
     p_after = None
     pa = d.get("p_after")
-    if isinstance(pa, Mapping) and not _blank(pa.get("value")):
+    if pa is not None and not isinstance(pa, Mapping):
+        problems.append(f"{where} ({mid}).p_after: expected an object with value and source, got {type(pa).__name__}")
+    elif isinstance(pa, Mapping) and not _blank(pa.get("value")):
         p_after = _param(pa, f"{where} ({mid}).p_after", problems)
         if p_after is not None and not (0.0 <= p_after.value <= 1.0):
             problems.append(f"{where} ({mid}).p_after: probability must be between 0 and 1")
     delay_after = None
     da = d.get("delay_after")
-    if isinstance(da, Mapping) and any(not _blank(da.get(k)) for k in ("a", "m", "b")):
+    if da is not None and not isinstance(da, Mapping):
+        problems.append(f"{where} ({mid}).delay_after: expected an object with kind, a, m, b and source, got {type(da).__name__}")
+    elif isinstance(da, Mapping) and any(not _blank(da.get(k)) for k in ("a", "m", "b")):
         delay_after = _dist(da, f"{where} ({mid}).delay_after", problems)
 
     secondary: list[Risk] = []
-    for j, s in enumerate(d.get("secondary_risks") or []):
+    sec_in = d.get("secondary_risks")
+    if sec_in is not None and not isinstance(sec_in, (list, tuple)):
+        problems.append(f"{where} ({mid}).secondary_risks: expected a list, got {type(sec_in).__name__}")
+        sec_in = []
+    for j, s in enumerate(sec_in or []):
         if not isinstance(s, Mapping):
             problems.append(f"{where} ({mid}).secondary_risks[{j}]: expected an object")
             continue
@@ -151,8 +168,11 @@ def _mitigation(d: Mapping, where: str, problems: list[str], risk_ids: set[str])
     tti = _opt_number(d, "time_to_implement_days", f"{where} ({mid})", problems, 0.0) or 0.0
     if len(problems) > n0 or cost is None:
         return None
+    ev = service._ids(d.get("evidence_ids"), f"{where} ({mid}).evidence_ids", problems)
+    if len(problems) > n0:
+        return None
     m = Mitigation(mid, str(rid), str(d.get("action") or mid), strategy, cost, p_after, delay_after, tuple(secondary),
-                   feasible, str(d.get("infeasible_reason") or ""), tti, tuple(d.get("evidence_ids") or ()),
+                   feasible, str(d.get("infeasible_reason") or ""), tti, ev,
                    str(d.get("mechanism") or ""), str(d.get("catalogue_id") or ""))
     try:
         m.validate()
@@ -184,7 +204,9 @@ def parse_analysis(case: Mapping) -> dict:
                 incomplete.append(rid)
             continue
         dc = raw.get("direct_cost_if_occurs")
-        if isinstance(dc, Mapping) and not _blank(dc.get("value")):
+        if dc is not None and not isinstance(dc, Mapping):
+            problems.append(f"risks[{rid}].direct_cost_if_occurs: expected an object with value and source, got {type(dc).__name__}")
+        elif isinstance(dc, Mapping) and not _blank(dc.get("value")):
             dp = _param(dc, f"risks[{rid}].direct_cost_if_occurs", problems)
             if dp is not None:
                 if dp.value < 0:
@@ -210,6 +232,8 @@ def parse_analysis(case: Mapping) -> dict:
     # cost model
     cost = None
     c = case.get("cost")
+    if c is not None and not isinstance(c, Mapping):
+        problems.append(f"cost: expected an object (cost_per_delay_day, ...), got {type(c).__name__}")
     cd = c.get("cost_per_delay_day") if isinstance(c, Mapping) else None
     if not isinstance(cd, Mapping) or _blank(cd.get("value")):
         problems.append("cost.cost_per_delay_day: input required (cost of one extra working day, with a source); it has no default")
@@ -233,17 +257,21 @@ def parse_analysis(case: Mapping) -> dict:
             cost = CostModel(cdp, str(c.get("currency") or "INR"), ldp)
 
     # simulation settings
-    sim = case.get("simulation") or {}
-    n = _int_setting(sim, "n", DEFAULT_N, 1, MAX_N, problems)
+    sim = _block(case, "simulation", dict, "an object (n, seed, criterion, correlation)", problems)
+    n = _int_setting(sim, "n", DEFAULT_N, MIN_N, MAX_N, problems)
     seed = _int_setting(sim, "seed", DEFAULT_SEED, 0, 2**31 - 1, problems)
-    criterion = sim.get("criterion") or "min_expected_total_cost"
-    if criterion not in CRITERIA:
+    criterion = "min_expected_total_cost" if _blank(sim.get("criterion")) else sim.get("criterion")
+    if not isinstance(criterion, str) or criterion not in CRITERIA:
         problems.append(f"simulation.criterion: unknown '{criterion}' (use one of {list(CRITERIA)})")
     elif criterion == "min_deadline_exceedance" and deadline is None:
         problems.append("simulation.criterion: 'min_deadline_exceedance' needs activity.deadline_days")
     ids = {r.risk_id for r in risks}
     corr: dict[tuple[str, str], float] = {}
-    for i, row in enumerate(sim.get("correlation") or []):
+    corr_in = sim.get("correlation")
+    if corr_in is not None and not isinstance(corr_in, (list, tuple)):
+        problems.append(f"simulation.correlation: expected a list of {{a, b, rho}}, got {type(corr_in).__name__}")
+        corr_in = []
+    for i, row in enumerate(corr_in or []):
         w = f"simulation.correlation[{i}]"
         if not isinstance(row, Mapping) or _blank(row.get("a")) or _blank(row.get("b")) or _blank(row.get("rho")):
             problems.append(f"{w}: expected a, b and rho")
@@ -251,10 +279,9 @@ def parse_analysis(case: Mapping) -> dict:
         if row["a"] not in ids or row["b"] not in ids or row["a"] == row["b"]:
             problems.append(f"{w}: a and b must be two different complete risks in the register")
             continue
-        try:
-            rho = float(row["rho"])
-        except (TypeError, ValueError):
-            problems.append(f"{w}.rho: not a number")
+        n0 = len(problems)
+        rho = service._num(row["rho"], f"{w}.rho", problems)
+        if rho is None or len(problems) > n0:
             continue
         if not (-1.0 <= rho <= 1.0):
             problems.append(f"{w}.rho: must be between -1 and 1")
@@ -264,7 +291,7 @@ def parse_analysis(case: Mapping) -> dict:
     # mitigations
     mits: list[Mitigation] = []
     seen: set[str] = set()
-    for i, raw in enumerate(case.get("mitigations") or []):
+    for i, raw in enumerate(_block(case, "mitigations", list, "a list of mitigation objects", problems)):
         if not isinstance(raw, Mapping):
             problems.append(f"mitigations[{i}]: expected an object")
             continue
@@ -285,7 +312,7 @@ def parse_analysis(case: Mapping) -> dict:
     # options and constraints
     options: list[Option] = []
     oids: set[str] = set()
-    for i, raw in enumerate(case.get("options") or []):
+    for i, raw in enumerate(_block(case, "options", list, "a list of option objects", problems)):
         w = f"options[{i}]"
         if not isinstance(raw, Mapping) or _blank(raw.get("id")):
             problems.append(f"{w}: id is required")
@@ -295,7 +322,11 @@ def parse_analysis(case: Mapping) -> dict:
             problems.append(f"{w}: duplicate option id '{oid}'")
             continue
         oids.add(oid)
-        mids = [str(x) for x in (raw.get("mitigation_ids") or [])]
+        mids_in = raw.get("mitigation_ids")
+        if mids_in is not None and not (isinstance(mids_in, (list, tuple)) and all(isinstance(x, str) for x in mids_in)):
+            problems.append(f"{w} ({oid}).mitigation_ids: expected a list of mitigation id strings")
+            continue
+        mids = list(mids_in or [])
         unknown = [x for x in mids if x not in by_id]
         if unknown:
             problems.append(f"{w} ({oid}): unknown or invalid mitigation(s): {', '.join(unknown)}")
@@ -306,7 +337,7 @@ def parse_analysis(case: Mapping) -> dict:
             continue
         options.append(Option(oid, str(raw.get("label") or oid), tuple(mids)))
 
-    con = case.get("constraints") or {}
+    con = _block(case, "constraints", dict, "an object (max_p_exceed_deadline, max_mitigation_budget)", problems)
     max_p = _opt_number(con, "max_p_exceed_deadline", "constraints", problems, 0.0, 1.0)
     budget = _opt_number(con, "max_mitigation_budget", "constraints", problems, 0.0)
     if max_p is not None and deadline is None:

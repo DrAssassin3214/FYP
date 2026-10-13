@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Protocol, Sequence
+from typing import Iterable, Optional, Protocol
 
 
 @dataclass(frozen=True)
