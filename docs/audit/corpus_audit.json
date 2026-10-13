@@ -1,0 +1,97 @@
+{
+ "risks_total": 46,
+ "risks_with_no_paper": [],
+ "risks_with_one_paper_only": [
+  "R-STR",
+  "R-SCP",
+  "R-CST",
+  "R-WAT",
+  "R-GOV",
+  "R-SOC",
+  "R-FIN"
+ ],
+ "risks_with_existence_evidence": 46,
+ "distinct_papers_cited_anywhere": 54,
+ "cited_but_not_resolvable_to_a_record": [],
+ "curated_records_in_repo": 472,
+ "curated_records_uncited": 419,
+ "openalex_records_in_repo_store": 0,
+ "seed_studies": {
+  "total": 11,
+  "by_role": {
+   "validation": [
+    "A10",
+    "A21",
+    "HAS25",
+    "M10",
+    "M14",
+    "M15"
+   ],
+   "seed": [
+    "A02",
+    "A14",
+    "A15",
+    "M01",
+    "M06"
+   ]
+  }
+ },
+ "seed_rows_total": 182,
+ "seed_rows_direct": 135,
+ "seed_rows_with_no_risk": 4,
+ "db_work_rows": 4736,
+ "db_screening_rows": 21023,
+ "db_review": {
+  "D": 1006,
+  "K": 3975
+ },
+ "db_works_pdf_status": {
+  "archived": 388,
+  "none": 4348
+ },
+ "cited_papers_found_in_db_by_doi_or_title": 14,
+ "cited_papers_not_matched_in_db": [
+  "A03",
+  "A08",
+  "A09",
+  "D01",
+  "D02",
+  "D03",
+  "D04",
+  "D05",
+  "D06",
+  "D07",
+  "D08",
+  "D09",
+  "D10",
+  "D11",
+  "D12",
+  "D14",
+  "D16",
+  "D17",
+  "D18",
+  "D20",
+  "D21",
+  "D23",
+  "D25",
+  "D26",
+  "D27",
+  "D28",
+  "D29",
+  "D30",
+  "D31",
+  "D34",
+  "D35",
+  "D36",
+  "D37",
+  "M07",
+  "M14",
+  "P1-05",
+  "P2-06",
+  "P2-08",
+  "P3-01",
+  "P3-02"
+ ],
+ "db_works_cited_by_tool_by_work_id": 0,
+ "seed_candidate_screen_hits": 82
+}
