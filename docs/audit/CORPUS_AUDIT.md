@@ -14,7 +14,7 @@ Date 2026-10-13. Read-only. Nothing in `data/` was changed. Reproduce with
 | Seed studies in `literature_seed.json` | 11 (5 seed, 6 held out) | 11 | 0 |
 | **Distinct paper ids cited anywhere in the tool** | **54** | | |
 
-Read the 419 with care: they are not 419 papers. They include 27 `FT-Pnn` plus 27 `FT-Pnn-N` records (one note per PDF, two records each), 46+ P2/P3 modifier and norm rows, and 65 F-, 57 E-, 27 B-, 27 C-records from the method notes. Eight full-text notes belong to seed studies (P13=M10, P15=M14, P20=M15, P22=M06, P23=M01, P25=A10, P26=A14, P27=A21) but are cited under the M/A id, not the FT id. A paper-level count would need a de-duplication table that does not exist yet.
+Read the 419 with care: they are not 419 papers. They include 27 `FT-Pnn` plus 27 `FT-Pnn-N` records (one note per PDF, two records each), P1/P2/P3 modifier, model and norm rows (over 100), and 65 F-, 57 E-, 27 B-, 27 C-records from the method notes. Eight full-text notes belong to seed studies (P13=M10, P15=M14, P20=M15, P22=M06, P23=M01, P25=A10, P26=A14, P27=A21) but are cited under the M/A id, not the FT id. A paper-level count would need a de-duplication table that does not exist yet.
 
 Four corpus sizes now exist: 21,902/5,214, 17,788/3,975, 11,599/3,550 (documents) and 4,736 works / 3,975 kept (the laptop database). The 3,975 matches the second figure only as the "kept" count. The report must pick one; this is still a human decision.
 
@@ -28,7 +28,7 @@ Weak spots:
 - 7 risks rest on one paper: R-STR, R-SCP, R-CST, R-SOC (all M06, a general-industry survey), R-WAT (A02), R-GOV (M10), R-FIN (A21). [Certain]
 - 4 of the 182 seed rows map to no risk. [Certain]
 - Citation is shown in the register as ids only; no screen lists "paper → risks it supports". The reverse index is the CSV below.
-- 54 papers support between 1 and 21 risks; 12+ papers support exactly one. 
+- 54 papers support between 1 and 21 risks; 14 of the 54 papers support exactly one risk.
 
 Matrix: `docs/audit/citation_matrix.csv` has 386 edges (risk, paper, channel). Channels: library existence evidence 97, rules 34, mitigation catalogue 117, seed rows direct 108, seed rows related 30. Every edge was copied from a data file; none was inferred.
 
