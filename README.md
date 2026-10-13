@@ -53,7 +53,7 @@ Browser-version program (.exe): run `build_exe.bat` to produce `dist\FYP-Risk-To
 **Build Windows exe** workflow in the GitHub Actions tab (Run workflow) and download the zip it produces.
 Copy the whole `FYP-Risk-Tool` folder to move it; no Python is needed on the target computer.
 
-Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest tests -q` (556 tests collected on 2026-10-12 locally; 632 collected in the cloud copy after round 1 (629 passed), of which 3 are skipped when the git-ignored data files are absent; `pytest.ini` sets `testpaths = tests`, so a bare `python -m pytest` also works).
+Tests and research scripts: `pip install -r requirements-dev.txt`, then `python -m pytest tests -q` (556 tests collected on 2026-10-12 locally; 603 collected in the cloud copy after round 1 and the clean-up of 2026-10-13 (600 passed), of which 3 are skipped when the git-ignored data files are absent; `pytest.ini` sets `testpaths = tests`, so a bare `python -m pytest` also works).
 
 ## Not in the repository
 

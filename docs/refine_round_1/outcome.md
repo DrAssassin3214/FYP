@@ -5,7 +5,7 @@ Branch `session/2026-10-12-literature-refinement-c2v60n`, pull request #1 into `
 ## Numbers (all run in the cloud copy on the final commit)
 | Check | Result |
 |---|---|
-| `python -m pytest tests -q` | **629 passed, 3 skipped** (632 collected). Baseline before my changes: 553 passed, 3 skipped, 556 collected. The 3 skips need git-ignored local data. Your local count of 556 plus 76 new tests = 632 |
+| `python -m pytest tests -q` | **629 passed, 3 skipped** (632 collected) on the round-1 commit; after the 2026-10-13 clean-up 600 passed, 3 skipped (603 collected). Baseline before my changes: 553 passed, 3 skipped, 556 collected. The 3 skips need git-ignored local data. Your local count of 556 plus 76 new tests = 632 |
 | `flake8 --select=F,E9 app gui tests` | clean except one unused import in `tests/test_india_norms.py` (a file `conftest.py` excludes from collection) |
 | Golden hashes (`python scripts/golden_hash.py`) | identical before and after all engine changes; identical for `PYTHONHASHSEED` 1, 2, 3 |
 | GUI layout (`scripts/gui_layout_check.py`, Chromium) | 7 screens x 1280/800/375 px: no horizontal scroll, no unnamed rail links, no console errors. Before: 509 px of scroll at 375 px, 8 unnamed rail links at 800 px |
