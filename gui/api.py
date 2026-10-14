@@ -465,8 +465,22 @@ def create_app() -> Flask:
 
         raw = request.get_data(cache=False)
         try:
+            from app.schedule.masonry import masonry_only
             sch = parse_mspdi(raw)
+            info, rsrc = {"mode": "all"}, {}
+            if request.args.get("scope", "masonry") != "all":
+                sch, rsrc, info = masonry_only(sch)        # only the masonry tasks and their labour / material
             res = analyse(sch)
+            res["check"]["scope"] = info
+            if info.get("mode") == "masonry":                # labour and material of the kept tasks are used; report only what was left out
+                nm = [x for x in res["check"]["not_modelled"] if not x["what"].startswith("resource")]
+                unused = (res["check"]["read"].get("assignments") or 0) - info.get("assignments_used", 0)
+                if unused > 0:
+                    nm.append({"what": "resource assignments on tasks that were left out", "count": unused})
+                res["check"]["not_modelled"] = nm
+            for t in res["tasks"]:
+                if t["id"] in rsrc:
+                    t["msp_resources"] = rsrc[t["id"]]
             res["calendar"] = sch.calendar
             from app.schedule.build import compare_dates, fill_dates
             start = (sch.project_start or next((t.start for t in sch.tasks if t.start), ""))[:10]

@@ -93,7 +93,7 @@ def test_warns_that_calendars_are_not_modelled():
 def test_api_import_route():
     from gui.api import create_app
     c = create_app().test_client()
-    r = c.post("/api/schedule/import", data=_diamond(), content_type="application/xml")
+    r = c.post("/api/schedule/import?scope=all", data=_diamond(), content_type="application/xml")
     j = r.get_json()
     assert r.status_code == 200 and j["ok"] and j["project"]["leaf_tasks"] == 4
     bad = c.post("/api/schedule/import", data=b"junk", content_type="application/xml")

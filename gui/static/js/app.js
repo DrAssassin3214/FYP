@@ -749,10 +749,10 @@ const ACTIONS = {
         if (r.data.project.name && !(S.case.project || {}).name) { S.case.project = S.case.project || {}; S.case.project.name = r.data.project.name; }
         S.ui.schedStart = (r.data.tasks.find((t) => t.start) || {}).start?.slice(0, 10) || S.ui.schedStart || new Date().toISOString().slice(0, 10);
         S.ui.schedCal = r.data.calendar || S.ui.schedCal || sSched.defaultCalendar();
-        S.ui.schedMasOnly = r.data.tasks.some((t) => t.masonry_like) && r.data.tasks.some((t) => !t.summary && !t.masonry_like && !t.milestone);
+        S.ui.schedMasOnly = false;      // the import already kept only the masonry tasks
         const first = r.data.tasks.find((t) => !t.summary && t.masonry_like) || r.data.tasks.find((t) => !t.summary);
         S.ui.schedAssess = first ? first.id : 1;
-        if (prev && S.ui.schedRows[S.ui.schedAssess - 1]) S.ui.schedRows[S.ui.schedAssess - 1].facts = { ...(prev.facts || {}) };   // keep the site facts already entered
+        if (prev && S.ui.schedRows[S.ui.schedAssess - 1]) S.ui.schedRows[S.ui.schedAssess - 1].facts = { ...S.ui.schedRows[S.ui.schedAssess - 1].facts, ...(prev.facts || {}) };   // keep the site facts already entered
         S.ui.schedSel = S.ui.schedAssess;
         await schedRecompute(r.data.warnings || []);   // from here the grid is the single source: row number = task ID
       } else { S.ui.schedProblems = r.data.problems || ["The schedule could not be read."]; renderScreen(); }

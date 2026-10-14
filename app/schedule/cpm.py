@@ -10,7 +10,12 @@ from __future__ import annotations
 from .mspdi import Schedule, ScheduleError
 
 EPS = 1e-9
-_MASONRY = ("brick", "block", "masonry", "walling", "wall", "partition", "parapet", "lintel", "sill band")
+_MASONRY = ("brick", "block", "masonry", "walling", "wall", "partition", "parapet", "lintel", "sill band", "scaffold", "dpc", "mortar", "curing and inspection")
+
+
+def is_masonry(name: str) -> bool:
+    n = (name or "").lower()
+    return any(k in n for k in _MASONRY)
 
 
 def analyse(sch: Schedule) -> dict:
@@ -98,7 +103,7 @@ def analyse(sch: Schedule) -> dict:
                 if bool(t.msp_critical) != crit:
                     n_disagree += 1
             row["activity"] = _activity_block(sch.name, t, tf)
-            row["masonry_like"] = any(k in t.name.lower() for k in _MASONRY) and not t.milestone
+            row["masonry_like"] = is_masonry(t.name) and not t.milestone
         rows.append(row)
     if n_msp_flag and n_disagree:
         warnings.append(f"The critical flag disagrees with MSP's own for {n_disagree} of {n_msp_flag} tasks (MSP uses calendars and "

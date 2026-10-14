@@ -1,8 +1,21 @@
-# What the tool takes from an MS Project XML file
+# Data taken from an MS Project XML file
 
 Export from MS Project: **File > Save As > XML Format** (MSPDI). Native `.mpp` and Primavera `.xer` files are refused with a message.
-This list is the contract: the reader (`app/schedule/mspdi.py`) takes exactly these items and nothing else. Anything outside it is
+This list is exactly what is read: the reader (`app/schedule/mspdi.py`) takes exactly these items and nothing else. Anything outside it is
 either counted in the **Import check** panel as "in the file but not modelled", or ignored.
+
+## Scope: masonry only
+
+Only the masonry work is taken. A task counts as masonry when its name mentions brick, block, masonry, walling, wall, partition, parapet,
+lintel, sill band, scaffold, DPC, mortar or "curing and inspection". Every other task is left out of the grid. The effect of the left-out
+tasks is kept: the start a kept task gets from left-out predecessors becomes a start-to-start link from a "Programme start" milestone, and the
+room left by left-out successors and the project finish becomes a link to a "Programme finish" milestone. The kept tasks therefore keep the
+dates and total float they have in the full programme, and the Import check compares them with MS Project's own saved slack and dates.
+If no task name matches, the whole schedule is kept and the panel says so.
+
+Labour and material come only from assignments on the kept tasks: work resources give *Workers required* (sum of units), material
+resources are listed with their quantity and unit. Stock cover, lead times and the other site facts are not in MS Project and are typed in
+the Task information tabs. Resources or assignments on left-out tasks are ignored and counted.
 
 ## Taken from the file
 
@@ -19,12 +32,13 @@ either counted in the **Import check** panel as "in the file but not modelled", 
 | Saved dates | `Start`, `Finish` | Only to compare with the tool's dates (Import check) |
 | MS Project's own result | `Critical`, `TotalSlack` (tenths of a minute) | Only to compare with the tool's float and critical flag (Import check) |
 | Percent complete | `PercentComplete` | Shown only |
+| Labour | `Resources` (`Type` 1 = work) with `Assignments` (`TaskUID`, `ResourceUID`, `Units`), kept tasks only | Workers required, and the crew shown in the Labour tab |
+| Material | `Resources` (`Type` 0 = material, `MaterialLabel`) with `Assignments` (`Units` = quantity), kept tasks only | Shown in the Material tab (quantity and unit) |
 
 ## Counted but not modelled (reported in the Import check)
 
-Date constraints (`ConstraintType` other than 0), tasks on their own calendar, manually scheduled tasks, inactive tasks, baselines,
-resources and resource assignments. Resource levelling is not modelled either. Labour, material and site data are typed per task in the
-**Task information** tabs, not read from MS Project resources.
+Date constraints (`ConstraintType` other than 0), tasks on their own calendar, manually scheduled tasks, inactive tasks, baselines, and
+resource assignments on left-out tasks. Resource levelling and cost resources are not modelled either.
 
 ## Refused
 

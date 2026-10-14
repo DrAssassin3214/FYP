@@ -19,10 +19,14 @@ function predText(t, byUid) {
 
 
 // ---- editable rows (typed like MSP: the row number is the task ID; predecessors are typed as 3, 3FS, 5SS+2d) ----
+function workersFact(t) {
+  const n = ((t.msp_resources || {}).labour || []).reduce((a, x) => a + (+x.units || 0), 0);
+  return n > 0 ? { required_workers: Math.round(n) } : {};     // workers required from the MSP assignments of this task
+}
 export const blankRow = () => ({ name: "", outline_level: 1, duration_days: 0, predecessors: "", facts: {} });
 export const defaultCalendar = () => ({ name: "Standard", workdays: [0, 1, 2, 3, 4], hours_per_day: 8, exceptions: [] });
 export function rowsFromResult(res) {
-  return res.tasks.map((t) => ({ name: t.name, outline_level: t.outline_level, duration_days: t.duration_days, predecessors: predText(t), facts: {} }));
+  return res.tasks.map((t) => ({ name: t.name, outline_level: t.outline_level, duration_days: t.duration_days, predecessors: predText(t), facts: workersFact(t), msp_resources: t.msp_resources || null }));
 }
 /** Rewrite predecessor ids after rows are inserted, deleted or moved. map[oldId] = newId (missing = row deleted). */
 export function remapPreds(rows, map) {
@@ -91,6 +95,14 @@ function generalTab(i, r, t) {
   return proj + act;
 }
 
+/** Labour and material assignments read from the MS Project file for this task (read-only). */
+function mspResources(r, tab) {
+  const m = r && r.msp_resources;
+  if (!m) return "";
+  const list = tab === "res" ? (m.labour || []).map((x) => `${h(x.name)}: ${num(x.units, 2)} unit${x.units === 1 ? "" : "s"}`) : (m.material || []).map((x) => `${h(x.name)}: ${num(x.quantity, 2)} ${h(x.unit || "")}`);
+  return list.length ? `<div class="note-box"><strong>From the MS Project file, this task:</strong> ${list.join("; ")}.${tab === "res" ? " Workers required was set from the work-resource units." : " Stock cover and lead time are not in MS Project; enter them below."}</div>` : "";
+}
+
 function taskInfo() {
   const i = (S.ui.schedSel || 0) - 1, r = S.ui.schedRows[i];
   const t = S.ui.schedule && S.ui.schedule.tasks.find((x) => x.id === i + 1);
@@ -109,7 +121,7 @@ function taskInfo() {
     const known = new Set((S.meta?.facts || []).map((f) => f.name));
     const extra = tab === "site" ? Object.keys(r.facts || {}).filter((k) => !known.has(k)) : [];
     const pdNote = tab === "site" && S.ui.schedAssess === i + 1 ? `<p class="hint"><code>planned_duration_days</code> is this task's duration (${h(r.duration_days)} d) and is used by rule RL-MAT2 (relevant only, not elevated).</p>` : "";
-    body = `<div class="ti-grid">${factFields(grp, r) || '<p class="muted">Loading the fact list…</p>'}</div>${pdNote}
+    body = `${mspResources(r, tab)}<div class="ti-grid">${factFields(grp, r) || '<p class="muted">Loading the fact list…</p>'}</div>${pdNote}
       ${extra.length ? `<div class="subhead">Other facts in this case file</div><ul>${extra.map((k) => `<li><code>${h(k)}</code> = ${h(JSON.stringify(r.facts[k]))} <button type="button" class="btn btn-sm btn-danger-ghost" data-action="sched-fact-remove" data-fact="${h(k)}">${icon("trash")}Remove</button></li>`).join("")}</ul>` : ""}
       <p class="hint">Only what you fill in is used. “Unknown” stays unknown and the rules treat it as not evaluable.${S.ui.schedAssess === i + 1 ? " These facts are the case's site facts." : " They take effect when this task is the assessed one."}</p>`;
   }
@@ -130,6 +142,7 @@ function importCheck() {
   const tbl = (rows, a, b) => rows.length ? `<table class="tbl"><thead><tr><th>ID</th><th>Task</th><th>${a}</th><th>${b}</th></tr></thead><tbody>${rows.map((d) => `<tr><td>${d.id}</td><td>${h(d.name)}</td><td>${d.tool_days !== undefined ? num(d.tool_days, 2) + " d" : h(d.tool.join(" to "))}</td><td>${d.msp_days !== undefined ? num(d.msp_days, 2) + " d" : h(d.msp.join(" to "))}</td></tr>`).join("")}</tbody></table>` : "";
   return `<section class="card import-check"><h3>Import check <span class="muted">— ${h(c.file || "")}</span> ${bad || nm.length ? '<span class="badge b-warn">Review</span>' : '<span class="badge b-ok">No differences found</span>'}</h3>
     <ul>
+      ${c.scope && c.scope.mode === "masonry" ? `<li><strong>Scope:</strong> masonry tasks only — ${c.scope.kept} kept, ${c.scope.left_out} other task${c.scope.left_out === 1 ? "" : "s"} left out${(c.scope.left_out_examples || []).length ? ` (e.g. ${c.scope.left_out_examples.slice(0, 3).map(h).join("; ")})` : ""}. Their effect on the kept tasks' dates and float is kept through the “Programme start” and “Programme finish” rows. Labour and material: ${c.scope.assignments_used} assignment${c.scope.assignments_used === 1 ? "" : "s"} on the kept tasks used.</li>` : c.scope && c.scope.note ? `<li><strong>Scope:</strong> ${h(c.scope.note)}</li>` : ""}
       <li><strong>Read:</strong> ${r.tasks_read} of ${r.tasks_in_file} tasks, ${r.links_read} predecessor links${r.links_skipped ? `, ${r.links_skipped} links skipped (no predecessor id)` : ""}; project calendar and start date.</li>
       <li><strong>Float:</strong> ${c.slack_compared ? `${c.slack_compared - c.slack_difference_count} of ${c.slack_compared} tasks agree with MS Project's total slack (±0.01 d)` : "the file has no total-slack values to compare"}.</li>
       <li><strong>Dates:</strong> ${c.dates_compared ? `${c.dates_compared - c.date_difference_count} of ${c.dates_compared} start and finish dates agree with the ones MS Project saved` : "no saved dates to compare"}.</li>

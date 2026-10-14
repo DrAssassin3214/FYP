@@ -134,8 +134,20 @@ def test_import_route_returns_check_with_dates_and_counts_unmodelled():
     from gui.api import create_app
     xml = (Path(__file__).resolve().parents[1] / "examples" / "example_schedule_msp.xml").read_bytes()
     c = create_app().test_client()
-    d = c.post("/api/schedule/import", data=xml, content_type="application/xml").get_json()
+    d = c.post("/api/schedule/import?scope=all", data=xml, content_type="application/xml").get_json()
     assert d["check"]["dates_compared"] == 14 and d["check"]["date_difference_count"] == 0 and d["check"]["not_modelled"] == []
     odd = xml.replace(b"<PercentComplete>0</PercentComplete>", b"<PercentComplete>0</PercentComplete><ConstraintType>2</ConstraintType>", 1)
-    d2 = c.post("/api/schedule/import", data=odd, content_type="application/xml").get_json()
+    d2 = c.post("/api/schedule/import?scope=all", data=odd, content_type="application/xml").get_json()
     assert d2["check"]["not_modelled"] == [{"what": "tasks with a date constraint (anything but As Soon As Possible)", "count": 1}]
+
+
+def test_example_masonry_scope_reproduces_saved_dates_and_slack():
+    """Default import of the bundled example drops the structure-team task; the kept tasks must still match the slack and dates saved in the file."""
+    from pathlib import Path
+    from gui.api import create_app
+    xml = (Path(__file__).resolve().parents[1] / "examples" / "example_schedule_msp.xml").read_bytes()
+    d = create_app().test_client().post("/api/schedule/import", data=xml, content_type="application/xml").get_json()
+    c = d["check"]
+    assert c["scope"]["left_out"] == 2 and any("Slab curing" in n for n in c["scope"]["left_out_examples"])
+    assert c["slack_difference_count"] == 0 and c["date_difference_count"] == 0 and c["slack_compared"] == 12
+    assert d["project"]["finish_days"] == 59

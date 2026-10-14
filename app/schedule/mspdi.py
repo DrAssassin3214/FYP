@@ -57,6 +57,8 @@ class Schedule:
     warnings: list
     calendar: Optional[dict] = None
     project_start: str = ""
+    resources: Optional[dict] = None           # uid -> {name, type (0 material, 1 work, 2 cost), label}
+    assignments: Optional[list] = None         # [{task_uid, res_uid, units, work_hours}]
     report: Optional[dict] = None              # what was read and what was not (see parse_mspdi)
 
 
@@ -120,11 +122,25 @@ def parse_mspdi(data: bytes) -> Schedule:
     seen = set()
     rep = {"tasks_in_file": 0, "tasks_read": 0, "links_read": 0, "links_skipped": 0, "constraints": 0, "manual": 0, "inactive": 0,
            "task_calendars": 0, "baselines": 0, "assignments": 0, "resources": 0}
+    res_map, asg = {}, []
     for el in root:
         if _strip(el.tag) == "Resources":
-            rep["resources"] = sum(1 for r in el if _strip(r.tag) == "Resource" and _text(r, "UID") not in ("0", ""))
+            for r in el:
+                ru = _text(r, "UID")
+                if _strip(r.tag) == "Resource" and ru.isdigit() and ru != "0" and _text(r, "Name"):
+                    res_map[int(ru)] = {"name": _text(r, "Name")[:80], "type": int(_text(r, "Type") or 1), "label": _text(r, "MaterialLabel")[:20]}
         elif _strip(el.tag) == "Assignments":
-            rep["assignments"] = sum(1 for a in el if _strip(a.tag) == "Assignment")
+            for a in el:
+                if _strip(a.tag) != "Assignment":
+                    continue
+                tu, ru = _text(a, "TaskUID"), _text(a, "ResourceUID")
+                if tu.lstrip("-").isdigit() and ru.lstrip("-").isdigit() and int(ru) in res_map:
+                    try:
+                        units = float(_text(a, "Units") or 0)
+                    except ValueError:
+                        units = 0.0
+                    asg.append({"task_uid": int(tu), "res_uid": int(ru), "units": units})
+    rep["resources"], rep["assignments"] = len(res_map), len(asg)
     for t in tasks_el:
         if _strip(t.tag) != "Task":
             continue
@@ -191,7 +207,7 @@ def parse_mspdi(data: bytes) -> Schedule:
     warnings.append("The project calendar (working days and holidays) is read; task and resource calendars, resource levelling and date "
                     "constraints in the MSP file are not modelled. Durations are working days from the file's hours per day.")
     return Schedule(name=_text(root, "Name") or _text(root, "Title") or "Imported schedule", hours_per_day=hpd, tasks=tasks,
-                    warnings=warnings, calendar=cal, project_start=_text(root, "StartDate"), report=rep)
+                    warnings=warnings, calendar=cal, project_start=_text(root, "StartDate"), resources=res_map, assignments=asg, report=rep)
 
 
 def _cal_el(root, uid):
