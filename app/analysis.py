@@ -539,4 +539,26 @@ def example_analysis_case() -> dict:
     ]
     case["constraints"] = {"max_p_exceed_deadline": None, "max_mitigation_budget": None}
     case["simulation"] = {"n": 10000, "seed": 12345, "criterion": "min_expected_total_cost"}
+    case["schedule"] = _example_schedule(case["facts"])
     return case
+
+
+def _example_schedule(facts: dict) -> dict:
+    """ILLUSTRATIVE project schedule for the Schedule tab (same tasks as examples/example_schedule_msp.xml): task rows with
+    predecessors, a project calendar with a six-day week and one festival closure, and site facts on the two masonry tasks.
+    Placeholder durations and facts, not site data."""
+    rows = [  # (name, outline level, working days, predecessors)
+        ("Block B residential: structure and finishes", 1, 0, ""), ("Substructure", 2, 0, ""),
+        ("Excavation", 3, 6, ""), ("Footings and plinth beam", 3, 10, "3"), ("Backfill and plinth filling", 3, 4, "4"),
+        ("Superstructure", 2, 0, ""), ("Column and slab, ground floor", 3, 12, "5"), ("Brick masonry, ground-floor walls", 3, 16, "7"),
+        ("Column and slab, first floor", 3, 12, "7"), ("Brick masonry, first-floor walls", 3, 16, "9, 8SS+5d"),
+        ("Services and finishes", 2, 0, ""), ("Electrical conduit and plumbing rough-in", 3, 10, "8"),
+        ("Plastering, ground floor", 3, 12, "12"), ("Plastering, first floor", 3, 12, "10, 13SS+3d"),
+        ("Flooring and painting", 3, 18, "13, 14"), ("Handover", 3, 0, "15")]
+    out = [{"name": n, "outline_level": lv, "duration_days": d, "predecessors": p, "facts": {}} for n, lv, d, p in rows]
+    out[7]["facts"] = dict(facts)                                   # MAS-01: the case's site facts
+    out[9]["facts"] = {"required_workers": 6, "material_stock_days": 4, "masonry_floor_level": 1}
+    return {"name": "Block B residential (ILLUSTRATIVE example schedule)", "start": "2026-11-02",
+            "calendar": {"name": "Site, six-day week (ILLUSTRATIVE)", "workdays": [0, 1, 2, 3, 4, 5], "hours_per_day": 8.0,
+                         "exceptions": [{"name": "Diwali (illustrative dates)", "from": "2026-11-09", "to": "2026-11-10", "working": False}]},
+            "rows": out}

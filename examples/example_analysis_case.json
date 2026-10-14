@@ -387,5 +387,176 @@
     "n": 10000,
     "seed": 12345,
     "criterion": "min_expected_total_cost"
+  },
+  "schedule": {
+    "name": "Block B residential (ILLUSTRATIVE example schedule)",
+    "start": "2026-11-02",
+    "calendar": {
+      "name": "Site, six-day week (ILLUSTRATIVE)",
+      "workdays": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hours_per_day": 8.0,
+      "exceptions": [
+        {
+          "name": "Diwali (illustrative dates)",
+          "from": "2026-11-09",
+          "to": "2026-11-10",
+          "working": false
+        }
+      ]
+    },
+    "rows": [
+      {
+        "name": "Block B residential: structure and finishes",
+        "outline_level": 1,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Substructure",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Excavation",
+        "outline_level": 3,
+        "duration_days": 6,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Footings and plinth beam",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "3",
+        "facts": {}
+      },
+      {
+        "name": "Backfill and plinth filling",
+        "outline_level": 3,
+        "duration_days": 4,
+        "predecessors": "4",
+        "facts": {}
+      },
+      {
+        "name": "Superstructure",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Column and slab, ground floor",
+        "outline_level": 3,
+        "duration_days": 12,
+        "predecessors": "5",
+        "facts": {}
+      },
+      {
+        "name": "Brick masonry, ground-floor walls",
+        "outline_level": 3,
+        "duration_days": 16,
+        "predecessors": "7",
+        "facts": {
+          "required_workers": 6,
+          "available_workers": 5,
+          "material_lead_time_days": 6,
+          "material_stock_days": 2,
+          "tools_shortage": false,
+          "monsoon_overlap": true,
+          "external_walls_in_scope": true,
+          "work_at_height": true,
+          "scaffolding_ready": true,
+          "payment_delay_expected": false,
+          "design_incomplete": false,
+          "prior_rework_history": true,
+          "schedule_compressed": true,
+          "planned_daily_output": 10,
+          "achieved_daily_output_last_week": 8,
+          "skilled_masons_short": true,
+          "work_front_ready": true,
+          "masonry_floor_level": 0,
+          "hoist_available": true,
+          "sand_cement_stock_days": 8,
+          "sand_cement_lead_time_days": 5,
+          "gang_payment_overdue": false,
+          "frames_on_site": true,
+          "mep_sleeve_layout_marked": true,
+          "lintel_level_plan_issued": true,
+          "festival_or_harvest_in_window": false,
+          "gang_mostly_migrant": false,
+          "summer_overlap": false
+        }
+      },
+      {
+        "name": "Column and slab, first floor",
+        "outline_level": 3,
+        "duration_days": 12,
+        "predecessors": "7",
+        "facts": {}
+      },
+      {
+        "name": "Brick masonry, first-floor walls",
+        "outline_level": 3,
+        "duration_days": 16,
+        "predecessors": "9, 8SS+5d",
+        "facts": {
+          "required_workers": 6,
+          "material_stock_days": 4,
+          "masonry_floor_level": 1
+        }
+      },
+      {
+        "name": "Services and finishes",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Electrical conduit and plumbing rough-in",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "8",
+        "facts": {}
+      },
+      {
+        "name": "Plastering, ground floor",
+        "outline_level": 3,
+        "duration_days": 12,
+        "predecessors": "12",
+        "facts": {}
+      },
+      {
+        "name": "Plastering, first floor",
+        "outline_level": 3,
+        "duration_days": 12,
+        "predecessors": "10, 13SS+3d",
+        "facts": {}
+      },
+      {
+        "name": "Flooring and painting",
+        "outline_level": 3,
+        "duration_days": 18,
+        "predecessors": "13, 14",
+        "facts": {}
+      },
+      {
+        "name": "Handover",
+        "outline_level": 3,
+        "duration_days": 0,
+        "predecessors": "15",
+        "facts": {}
+      }
+    ]
   }
 }
