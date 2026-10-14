@@ -74,14 +74,56 @@ function commandBanner(r) {
     <p class="muted"><em>${h(r.decision.caveat)}</em></p></div></section>`;
 }
 
-function optionsTable(r) {
-  const cur = r.cost.currency, sel = r.decision.selected_option_id;
-  const rows = r.decision.options.map((o) => `<tr${o.option_id === sel ? ' style="font-weight:600"' : ""}>
-      <td>${h(o.label)}${o.option_id === sel ? " (preferred)" : ""}</td><td>${money(o.mitigation_cost)}</td><td>${money(o.residual_expected_cost)}</td>
+function optionRow(o, sel, cur) {
+  return `<tr${o.option_id === sel ? ' class="is-preferred" style="font-weight:600"' : ""}>
+      <td>${o.rank ? o.rank : "–"}</td>
+      <td>${h(o.label)}${o.option_id === sel ? " (preferred)" : ""}${o.option_id === "ACCEPT" && o.option_id !== sel ? ' <span class="muted">(reference)</span>' : ""}</td><td>${money(o.mitigation_cost)}</td><td>${money(o.residual_expected_cost)}</td>
       <td>${money(o.total_expected_cost)}</td><td>${Number(o.P90).toFixed(1)}</td><td>${o.p_exceed_deadline === null ? "n/a" : pct(o.p_exceed_deadline)}</td>
-      <td>${o.admissible ? "yes" : "no: " + h((o.rejected_because || []).join("; "))}</td></tr>`).join("");
-  return `<section class="card mb-5"><header class="card-h"><h2>Options compared</h2><span class="sub">same random draws for every option</span></header><div class="card-b">
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Option</th><th>Mitigation cost (${h(cur)})</th><th>Residual expected cost</th><th>Total expected cost</th><th>P90 (d)</th><th>P(T &gt; deadline)</th><th>Admissible</th></tr></thead><tbody>${rows}</tbody></table></div></div></section>`;
+      <td>${o.admissible ? "yes" : "no: " + h((o.rejected_because || []).join("; "))}</td></tr>`;
+}
+
+function optionsTable(r) {
+  const cur = r.cost.currency, sel = r.decision.selected_option_id, d = r.decision;
+  const all = !!S.ui.showAllOptions;
+  const byId = Object.fromEntries(d.options.map((o) => [o.option_id, o]));
+  let shown = all ? [...d.options].sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9)) : (d.top_option_ids || []).map((i) => byId[i]).filter(Boolean);
+  if (!all && byId.ACCEPT && !shown.includes(byId.ACCEPT)) shown = [...shown, byId.ACCEPT];
+  const hidden = d.options.length - shown.length;
+  const rows = shown.map((o) => optionRow(o, sel, cur)).join("");
+  const toggle = d.options.length > (d.top_n || 5)
+    ? `<button type="button" class="btn btn-sm" data-action="opts-toggle">${all ? `Show top ${d.top_n || 5} only` : `Show all ${d.options.length} options`}</button>` : "";
+  return `<section class="card mb-5"><header class="card-h"><h2>Top ${Math.min(d.top_n || 5, (d.top_option_ids || []).length)} options</h2><span class="sub">ranked by the chosen criterion · same random draws for every option</span></header><div class="card-b">
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rank</th><th>Option</th><th>Mitigation cost (${h(cur)})</th><th>Residual expected cost</th><th>Total expected cost</th><th>P90 (d)</th><th>P(T &gt; deadline)</th><th>Admissible</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="muted">${hidden > 0 && !all ? `${hidden} further option${hidden === 1 ? "" : "s"} evaluated but not shown (lower ranked or rejected). ` : ""}Rank 1 is the preferred option under the criterion; the Accept row is always shown as the reference. ${toggle}</p></div></section>`;
+}
+
+function preferredDetail(r) {
+  const d = r.decision, cur = r.cost.currency, sel = d.selected_option_id;
+  const o = d.options.find((x) => x.option_id === sel);
+  if (!o) return `<section class="card mb-5"><header class="card-h"><h2>Preferred option in detail</h2></header><div class="card-b">${alertBox("warn", "No admissible option", h(r.command.reason || d.statement))}</div></section>`;
+  const acc = d.options.find((x) => x.option_id === "ACCEPT");
+  const mitDefs = (S.case.mitigations || []).filter((m) => (o.mitigations || []).includes(m.id));
+  const f = r.command.figures || {};
+  const delta = (a, b, nd = 0, unit = "") => (a === null || a === undefined || b === null || b === undefined) ? "n/a" : `${(b - a) > 0 ? "+" : (b - a) < 0 ? "\u2212" : "\u00b1"}${money(Math.abs(b - a), nd)}${unit}`;
+  const measures = [
+    ["Mitigation cost", money(acc.mitigation_cost), money(o.mitigation_cost), delta(acc.mitigation_cost, o.mitigation_cost)],
+    ["Residual expected cost", money(acc.residual_expected_cost), money(o.residual_expected_cost), delta(acc.residual_expected_cost, o.residual_expected_cost)],
+    ["Total expected cost", money(acc.total_expected_cost), money(o.total_expected_cost), delta(acc.total_expected_cost, o.total_expected_cost)],
+    ["Expected delay (d)", money(acc.expected_delay, 2), money(o.expected_delay, 2), delta(acc.expected_delay, o.expected_delay, 2, " d")],
+    ["P90 duration (d)", money(acc.P90, 2), money(o.P90, 2), delta(acc.P90, o.P90, 2, " d")],
+    ["P(T > deadline)", acc.p_exceed_deadline === null ? "n/a" : pct(acc.p_exceed_deadline), o.p_exceed_deadline === null ? "n/a" : pct(o.p_exceed_deadline), "—"],
+  ].map(([k, a, b, c]) => `<tr><td>${k}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
+  const parts = mitDefs.length ? `<ul>${mitDefs.map((m) => `<li><strong>${h(m.id)}</strong>: ${h(m.action || "")} <span class="muted">(targets ${h(m.risk_id || "")}; cost ${money(m.cost && m.cost.value !== undefined ? m.cost.value : m.cost)} ${h(cur)}${(m.secondary_risks || []).length ? `; ${(m.secondary_risks || []).length} secondary risk(s) modelled` : ""})</span></li>`).join("")}</ul>`
+    : `<p class="muted">${sel === "ACCEPT" ? "No response: the risk is accepted as it stands." : "No response definitions found for this option."}</p>`;
+  const st = r.decision_stability;
+  const why = `${h(r.command.reason)}${st ? ` The choice is <strong>${st.stable ? "stable" : "not stable"}</strong> across the ${h(st.seeds.length)} seeds checked.` : ""}`;
+  return `<section class="card mb-5" style="border:2px solid var(--accent, #1f5fbf)"><header class="card-h"><h2>${icon("star")} Preferred option in detail: ${h(o.label)}</h2><span class="sub">${h(r.command.command)}</span></header><div class="card-b">
+    <p><strong>Why it is preferred.</strong> ${why}</p>
+    <div class="subhead">What the option consists of</div>${parts}
+    <div class="subhead">Before and after (Accept versus this option, ${h(cur)})</div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Measure</th><th>Accept</th><th>This option</th><th>Change</th></tr></thead><tbody>${measures}</tbody></table></div>
+    ${f.expected_cost_saving_vs_accept !== undefined && sel !== "ACCEPT" ? `<p>Expected total cost saving against Accept: <strong>${money(f.expected_cost_saving_vs_accept)} ${h(cur)}</strong>; expected delay avoided <strong>${money(f.expected_delay_avoided_days, 2)} d</strong>.</p>` : ""}
+    <p class="muted"><em>${h(d.caveat)}</em></p></div></section>`;
 }
 
 function emvTable(r) {
@@ -110,7 +152,7 @@ function results() {
   if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or use Load example in the top bar), then press <strong>Run analysis</strong>.");
   return `${stale() ? alertBox("info", "Inputs changed", "These results are from the previous inputs. Run the analysis again to update them.") : ""}
     <div${stale() ? ' class="is-stale-view"' : ""}>${commandBanner(a)}${chartsSection(a)}${optionsTable(a)}${emvTable(a)}${sensitivity(a)}
-    <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section></div>`;
+    <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section>${preferredDetail(a)}</div>`;
 }
 
 export function render() {

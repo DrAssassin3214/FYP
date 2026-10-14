@@ -732,6 +732,7 @@ const ACTIONS = {
     openNewRisk(S.case.risks.length - 1, "AI-suggested risk added as unverified. Its probability and delay are empty and must come from you or an expert.");
     ensureEvidence(c.evidence_ids).then((found) => { if (found) renderScreen(); });
   },
+  "opts-toggle": () => { S.ui.showAllOptions = !S.ui.showAllOptions; renderScreen(); },
   "risk-tab": (b) => { S.ui.riskTab = b.dataset.val; renderScreen(); },
   "fact-bool": (b) => {
     S.case.facts = S.case.facts || {};
