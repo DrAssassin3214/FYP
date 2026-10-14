@@ -156,11 +156,10 @@ function editable(sc) {
       ? `<span class="g-sum" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, (t.ef - t.es) * px).toFixed(1)}px"></span>`
       : t.milestone ? `<span class="g-ms" style="left:${(t.es * px - 6).toFixed(1)}px" title="milestone"></span>`
         : `<span class="g-bar ${t.critical ? "crit" : ""}" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, t.duration_days * px).toFixed(1)}px"></span>`;
-    const mas = t.masonry_like ? ` <span class="badge b-accent" title="The name suggests brick, block or masonry work">masonry?</span>` : "";
     const inp = (f, v, extra = "") => `<input class="msp-in" ${extra} value="${h(v)}" data-action-change="sched-edit" data-i="${i}" data-f="${f}" aria-label="${f} of task ${id}">`;
     return `<div class="msp-row${sel ? " is-sel" : ""}${sum ? " is-sum" : ""}" style="grid-template-columns:${cols}" role="row">
       <div class="faint" data-action="sched-pick" data-uid="${id}" title="${S.ui.schedAssess === id ? "Assessed task: its duration, float and facts feed the analysis. " : ""}Select this row" tabindex="0">${id}${S.ui.schedAssess === id ? ' <span class="star" aria-label="assessed task">★</span>' : ""}</div>
-      <div class="msp-name" style="padding-left:${(r.outline_level - 1) * 14}px">${inp("name", r.name, 'placeholder="Task name"')}${mas}</div>
+      <div class="msp-name" style="padding-left:${(r.outline_level - 1) * 14}px">${inp("name", r.name, 'placeholder="Task name"')}</div>
       <div>${sum ? `<span class="muted r">${num(t.ef - t.es, 2)}</span>` : inp("duration_days", r.duration_days, 'inputmode="decimal" style="text-align:right"')}</div>
       <div>${h(dt(t.start))}</div><div>${h(dt(t.finish))}</div>
       <div>${sum ? "" : inp("predecessors", r.predecessors, 'placeholder="e.g. 2, 3SS+1d"')}</div>
