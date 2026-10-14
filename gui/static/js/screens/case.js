@@ -6,7 +6,7 @@ import { screenProblems } from "../problems.js";
 export function render() {
   const c = S.case, p = c.project || {}, a = c.activity || {};
   const pd = a.planned_duration_days || {};
-  return `${screenHead(1, "Case & Activity", "Name the project and the single brick-masonry activity assessed. All durations are in <strong>working days</strong>. Nothing is pre-filled with invented numbers.")}
+  return `${screenHead(2, "Case & Activity", "Name the project and the single brick-masonry activity assessed. All durations are in <strong>working days</strong>. Nothing is pre-filled with invented numbers.")}
   ${screenProblems("case")}
   <div class="grid-2 mb-5">
     <section class="card"><header class="card-h"><h2>Project</h2></header><div class="card-b"><div class="form-grid">

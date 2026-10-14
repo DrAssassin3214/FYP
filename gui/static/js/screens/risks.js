@@ -156,7 +156,7 @@ function suggestPanel() {
 export function render() {
   const risks = S.case.risks || [];
   const tab = S.ui.riskTab;
-  return `${screenHead(3, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk is placed on the matrix once both are entered (${term("occurrence model", "bernoulli")}).`,
+  return `${screenHead(4, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk is placed on the matrix once both are entered (${term("occurrence model", "bernoulli")}).`,
     `<button type="button" class="btn" data-action="risk-add-custom">${icon("plus")}<span class="lbl">Custom risk</span></button>`)}
   ${screenProblems("risks")}
   <div class="grid-3-1">

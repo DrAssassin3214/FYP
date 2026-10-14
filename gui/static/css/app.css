@@ -721,3 +721,23 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .ac-svg .ac-pt { fill: var(--chart-1); stroke: var(--surface); stroke-width: 1.5; }
 .ac-svg .ac-pt-open { fill: var(--surface); stroke: var(--chart-1); stroke-width: 2; }
 .ac-svg text { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+
+/* Project schedule screen: task table + Gantt in one grid, scrolls together */
+.msp { overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-size: var(--fs-sm); max-height: 70vh; }
+.msp-row { display: grid; align-items: center; min-height: var(--row, 26px); border-bottom: 1px solid var(--border); cursor: pointer; width: max-content; min-width: 100%; }
+.msp-row > div { padding: 2px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msp-row > .r, .msp-head > .r { text-align: right; }
+.msp-head { position: sticky; top: 0; z-index: 2; background: var(--surface-2, #eef0f2); font-weight: 650; font-size: var(--fs-xs); cursor: default; }
+.msp-row:hover { background: var(--surface-2, #f3f4f6); }
+.msp-row.is-sel { background: color-mix(in srgb, var(--accent, #1f5fbf) 14%, transparent); outline: 1px solid var(--accent, #1f5fbf); }
+.msp-row.is-sum { font-weight: 650; }
+.msp-name { overflow: hidden; text-overflow: ellipsis; }
+.g-cell { position: relative; height: var(--row, 26px); padding: 0 !important; border-left: 1px solid var(--border); }
+.g-axis { height: 100%; min-height: var(--row, 26px); font-weight: 400; }
+.g-tick { position: absolute; top: 4px; font-size: var(--fs-2xs); color: var(--text-3); transform: translateX(-50%); }
+.g-bar { position: absolute; top: 6px; height: 14px; border-radius: 2px; background: #4f7fc7; overflow: hidden; }
+.g-bar.crit { background: #c0392b; }
+.g-pc { position: absolute; left: 0; top: 5px; height: 4px; background: rgba(0,0,0,.65); }
+.g-sum { position: absolute; top: 9px; height: 6px; background: #222; border-radius: 1px; }
+.g-ms { position: absolute; top: 7px; width: 12px; height: 12px; background: #222; transform: rotate(45deg) scale(.75); }
+.crit-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #c0392b; }

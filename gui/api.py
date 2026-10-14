@@ -14,6 +14,7 @@ Routes
     GET  /api/evidence        ?ids=M01,R08  |  ?q=search words  |  (curated records; the bulk harvest is searched with q)
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
+    POST /api/schedule/import  Microsoft Project XML in (raw body) -> tasks, critical path, per-task activity block out
     POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
     POST /api/suggest-risks   service.suggest_risks(...) (offline retrieval or guarded LLM)
     POST /api/report          register.md download
@@ -454,6 +455,19 @@ def create_app() -> Flask:
     @app.get("/api/example-analysis")
     def example_analysis():
         return _json(service.example_analysis_case())
+
+    @app.post("/api/schedule/import")
+    def schedule_import():
+        """Read a Microsoft Project XML schedule (raw bytes in the body) and return its tasks with a critical-path pass.
+        Nothing is stored on the server; the GUI keeps the result and copies one task's `activity` block into the case."""
+        from app.schedule import ScheduleError, analyse, parse_mspdi
+
+        raw = request.get_data(cache=False)
+        try:
+            res = analyse(parse_mspdi(raw))
+        except ScheduleError as e:
+            return _problems([str(e)])
+        return _json({"ok": True, **res})
 
     @app.post("/api/online-options")
     def online_options():

@@ -83,7 +83,7 @@ export function render() {
     <p class="hint mt-2">Only used for risks with their own probability and delay: the expected delay ÷ planned duration is sorted into impact classes 1 to 5 by these edges (a value exactly on an edge goes to the higher class). Example: 0.05 means 5% of the planned duration. No default is supplied. Probability classes use the engine's equal-width edges (${pe.join(" / ")}), an Assumption. Literature-tier risks ignore these edges.</p>
   </div></section>`;
 
-  return `${screenHead(4, "Risk matrix", `A 5×5 grid that orders the register for attention. ${term("Ordinal prioritisation only", "matrix")}: the continuous p and delay range stay in the register; the class is a label.`, dots)}
+  return `${screenHead(5, "Risk matrix", `A 5×5 grid that orders the register for attention. ${term("Ordinal prioritisation only", "matrix")}: the continuous p and delay range stay in the register; the class is a label.`, dots)}
   ${screenProblems("matrix")}
   ${open ? edgesCard : ""}
   <section class="card"><div class="card-b"><div class="field field-wide"><label for="seed-basis">Literature ranking basis</label>

@@ -123,7 +123,7 @@ export function render() {
   const known = new Set(facts.map((f) => f.name));
   const extra = Object.keys(S.case.facts || {}).filter((k) => !known.has(k));
   const pd = S.case.activity?.planned_duration_days?.value;
-  return `${screenHead(2, "Site facts & Rules", "Declare the site conditions the rule engine checks. Rules only <strong>flag</strong> risks as relevant or elevated; they never produce probabilities. A blank fact is <em>unknown</em>: rules that need it are reported as not evaluable instead of guessed.")}
+  return `${screenHead(3, "Site facts & Rules", "Declare the site conditions the rule engine checks. Rules only <strong>flag</strong> risks as relevant or elevated; they never produce probabilities. A blank fact is <em>unknown</em>: rules that need it are reported as not evaluable instead of guessed.")}
   ${screenProblems("rules")}
   <div class="grid-2 mb-5">
     ${Object.entries(groups).map(([g, list]) => `<section class="card"><header class="card-h"><h2>${h(g)}</h2><span class="sub">site facts (User Input)</span></header><div class="card-b"><div class="form-grid">${list.map(factControl).join("")}</div></div></section>`).join("")}

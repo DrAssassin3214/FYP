@@ -1,10 +1,11 @@
 // Application controller: boot, routing, data binding, live checking, files, theme.
 // The GUI never computes a result: it posts the case JSON to the local API (app.service) and renders what comes back.
 import { $, $$, h, fmtIn, getPath, setPath, deletePath, debounce, download, slug, uniqueId, parseNum } from "./util.js";
-import { get, post } from "./api.js";
+import { get, post, postRaw } from "./api.js";
 import { S, caseKey, isDirty, isStale, riskIds } from "./state.js";
 import { icon, toast, openModal, closeModal, confirmModal, showEvidence, refreshSourcePicker, alertBox } from "./ui.js";
 import { applyInline, countByScreen, screenProblems, classify, friendly, SCREEN_TITLES } from "./problems.js";
+import * as sSched from "./screens/schedule.js";
 import * as sCase from "./screens/case.js";
 import * as sRules from "./screens/rules.js";
 import * as sRisks from "./screens/risks.js";
@@ -15,13 +16,14 @@ import * as sAna from "./screens/analysis.js";
 import { initCursor } from "./cursor.js";
 
 const SCREENS = [
-  { id: "case", n: 1, title: "Case & Activity", ic: "building", group: "Define", mod: sCase },
-  { id: "rules", n: 2, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
-  { id: "risks", n: 3, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
-  { id: "matrix", n: 4, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
-  { id: "analysis", n: 5, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
-  { id: "evidence", n: 6, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
-  { id: "report", n: 7, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
+  { id: "schedule", n: 1, title: "Project schedule", ic: "grid", group: "Define", mod: sSched },
+  { id: "case", n: 2, title: "Case & Activity", ic: "building", group: "Define", mod: sCase },
+  { id: "rules", n: 3, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
+  { id: "risks", n: 4, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
+  { id: "matrix", n: 5, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
+  { id: "analysis", n: 6, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
+  { id: "evidence", n: 7, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
+  { id: "report", n: 8, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
 ];
 const BY_ID = Object.fromEntries(SCREENS.map((s) => [s.id, s]));
 const screenEl = () => $("#screen");
@@ -731,6 +733,32 @@ const ACTIONS = {
     S.case.risks.push(newRisk(uniqueId("R-AI-", riskIds()), { name: c.name, category: c.category, description: c.mechanism, status: "AI-suggested-unverified", evidence_ids: [...(c.evidence_ids || [])] }));
     openNewRisk(S.case.risks.length - 1, "AI-suggested risk added as unverified. Its probability and delay are empty and must come from you or an expert.");
     ensureEvidence(c.evidence_ids).then((found) => { if (found) renderScreen(); });
+  },
+  "sched-open": () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = ".xml,application/xml,text/xml";
+    inp.addEventListener("change", async () => {
+      const f = inp.files && inp.files[0];
+      if (!f) return;
+      S.ui.schedBusy = true; S.ui.schedProblems = null; renderScreen();
+      const r = await postRaw("/api/schedule/import", await f.arrayBuffer(), "application/xml");
+      S.ui.schedBusy = false;
+      if (r.ok && r.data.ok) { S.ui.schedule = r.data; S.ui.schedSel = null; S.ui.schedFile = f.name; }
+      else S.ui.schedProblems = r.data.problems || ["The schedule could not be read."];
+      renderScreen();
+    });
+    inp.click();
+  },
+  "sched-pick": (b) => { S.ui.schedSel = +b.dataset.uid; renderScreen(); },
+  "sched-use": () => {
+    const t = S.ui.schedule?.tasks.find((x) => x.uid === S.ui.schedSel);
+    if (!t || t.summary || !t.activity) return;
+    S.case.project = S.case.project || {};
+    if (!S.case.project.name) S.case.project.name = S.ui.schedule.project.name;
+    S.case.activity = { ...(S.case.activity || {}), ...t.activity };
+    changed({ rerender: false });
+    toast(`Task \u201C${h(t.name)}\u201D copied to Case & Activity: planned ${t.duration_days} d, deadline ${t.activity.deadline_days.value} d (planned + float). Check both before you rely on them.`, "ok", { actionLabel: "Open", timeout: 12000, onAction: () => { location.hash = "#/case"; } });
+    renderScreen();
   },
   "opts-toggle": () => { S.ui.showAllOptions = !S.ui.showAllOptions; renderScreen(); },
   "risk-tab": (b) => { S.ui.riskTab = b.dataset.val; renderScreen(); },
