@@ -91,6 +91,8 @@ def analyse(sch: Schedule) -> dict:
             crit = tf <= min_tf + EPS
             row.update({"es": round(es[u], 4), "ef": round(ef[u], 4), "ls": round(ls[u], 4), "lf": round(lf[u], 4),
                         "total_float_days": round(tf, 4), "critical": crit})
+            row["msp"] = {"start": t.start, "finish": t.finish, "critical": t.msp_critical,
+                          "total_slack_days": None if t.msp_slack_days is None else round(t.msp_slack_days, 4)}
             if t.msp_critical is not None:
                 n_msp_flag += 1
                 if bool(t.msp_critical) != crit:
@@ -114,7 +116,8 @@ def analyse(sch: Schedule) -> dict:
         if kids:
             rows[i]["es"] = round(min(es[k] for k in kids), 4)
             rows[i]["ef"] = round(max(ef[k] for k in kids), 4)
-    return {"project": {"name": sch.name, "hours_per_day": sch.hours_per_day, "finish_days": round(finish, 4),
+    check = _check(sch, rows)
+    return {"check": check, "project": {"name": sch.name, "hours_per_day": sch.hours_per_day, "finish_days": round(finish, 4),
                         "tasks": len(sch.tasks), "leaf_tasks": len(leaf), "critical_tasks": sum(1 for r in rows if r.get("critical"))},
             "tasks": rows, "warnings": warnings, "source_note": "Imported from a Microsoft Project XML file"}
 
@@ -127,3 +130,26 @@ def _activity_block(project: str, t, tf: float) -> dict:
                                        "note": f"From the MSP schedule '{project}', task UID {t.uid}"},
             "deadline_days": {"value": round(t.duration_days + max(0.0, tf), 4), "source": "Derived Calculation",
                               "note": "Planned duration + total float from the critical-path pass: the longest this task can run before the project finish moves. Replace with the contract deadline if you have one."}}
+
+
+SLACK_TOL = 0.01      # working days
+
+
+def _check(sch: Schedule, rows: list) -> dict:
+    """What was taken from the file, what was left out, and how the tool's float compares with MSP's own total slack.
+    Dates are compared later (they need the calendar), see build.compare_dates."""
+    rep = dict(sch.report or {})
+    cmp_rows = [r for r in rows if "msp" in r and r["msp"]["total_slack_days"] is not None]
+    diffs = []
+    for r in cmp_rows:
+        d = abs(r["total_float_days"] - r["msp"]["total_slack_days"])
+        if d > SLACK_TOL:
+            diffs.append({"id": r["id"], "name": r["name"], "tool_days": r["total_float_days"], "msp_days": r["msp"]["total_slack_days"]})
+    not_modelled = []
+    for k, label in (("constraints", "tasks with a date constraint (anything but As Soon As Possible)"), ("task_calendars", "tasks on their own calendar"),
+                     ("manual", "manually scheduled tasks"), ("inactive", "inactive tasks"), ("baselines", "tasks carrying a baseline"),
+                     ("assignments", "resource assignments"), ("resources", "resources")):
+        if rep.get(k):
+            not_modelled.append({"what": label, "count": rep[k]})
+    return {"read": rep, "not_modelled": not_modelled, "slack_compared": len(cmp_rows), "slack_differences": diffs[:15],
+            "slack_difference_count": len(diffs), "critical_compared": sum(1 for r in rows if r.get("msp", {}).get("critical") is not None)}

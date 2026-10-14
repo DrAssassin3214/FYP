@@ -468,6 +468,10 @@ def create_app() -> Flask:
             sch = parse_mspdi(raw)
             res = analyse(sch)
             res["calendar"] = sch.calendar
+            from app.schedule.build import compare_dates, fill_dates
+            start = (sch.project_start or next((t.start for t in sch.tasks if t.start), ""))[:10]
+            fill_dates(res, start, sch.calendar)
+            compare_dates(res)
         except ScheduleError as e:
             return _problems([str(e)])
         return _json({"ok": True, **res})

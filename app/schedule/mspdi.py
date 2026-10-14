@@ -45,6 +45,7 @@ class Task:
     finish: str = ""
     percent_complete: float = 0.0
     msp_critical: Optional[bool] = None
+    msp_slack_days: Optional[float] = None     # MSP's own total slack, in working days of its hours-per-day
     links: list = field(default_factory=list)
 
 
@@ -55,6 +56,8 @@ class Schedule:
     tasks: list
     warnings: list
     calendar: Optional[dict] = None
+    project_start: str = ""
+    report: Optional[dict] = None              # what was read and what was not (see parse_mspdi)
 
 
 def _strip(tag: str) -> str:
@@ -115,6 +118,13 @@ def parse_mspdi(data: bytes) -> Schedule:
         raise ScheduleError("The file has no <Tasks> section.")
     tasks = []
     seen = set()
+    rep = {"tasks_in_file": 0, "tasks_read": 0, "links_read": 0, "links_skipped": 0, "constraints": 0, "manual": 0, "inactive": 0,
+           "task_calendars": 0, "baselines": 0, "assignments": 0, "resources": 0}
+    for el in root:
+        if _strip(el.tag) == "Resources":
+            rep["resources"] = sum(1 for r in el if _strip(r.tag) == "Resource" and _text(r, "UID") not in ("0", ""))
+        elif _strip(el.tag) == "Assignments":
+            rep["assignments"] = sum(1 for a in el if _strip(a.tag) == "Assignment")
     for t in tasks_el:
         if _strip(t.tag) != "Task":
             continue
@@ -122,6 +132,7 @@ def parse_mspdi(data: bytes) -> Schedule:
         if not uid_s.lstrip("-").isdigit():
             continue
         uid = int(uid_s)
+        rep["tasks_in_file"] += 1
         if uid == 0 and not _text(t, "Name"):
             continue                       # MSP's hidden project-summary row without a name
         if uid in seen:
@@ -134,17 +145,29 @@ def parse_mspdi(data: bytes) -> Schedule:
             warnings.append(f"Task {uid}: duration '{_text(t, 'Duration')}' not understood; taken as 0.")
             hours = 0.0
         if _text(t, "Manual") in ("1", "true") or _text(t, "ManualDuration"):
+            rep["manual"] += 1
             warnings.append(f"Task {uid}: manually scheduled in MSP; its automatic duration is used.")
+        if _text(t, "ConstraintType") not in ("", "0"):
+            rep["constraints"] += 1                     # 0 = as soon as possible; anything else moves dates in MSP
+        if _text(t, "Active") in ("0", "false"):
+            rep["inactive"] += 1
+        tcal = _text(t, "CalendarUID")
+        if tcal and tcal not in ("-1", _text(root, "CalendarUID")):
+            rep["task_calendars"] += 1
+        if any(_strip(c.tag) == "Baseline" for c in t):
+            rep["baselines"] += 1
         task = Task(uid=uid, id=int(_text(t, "ID") or 0), name=_text(t, "Name") or f"(task {uid})", wbs=_text(t, "WBS"),
                     outline_level=int(_text(t, "OutlineLevel") or 1), summary=_bool(_text(t, "Summary")),
                     milestone=_bool(_text(t, "Milestone")), duration_days=hours / hpd, start=_text(t, "Start"),
                     finish=_text(t, "Finish"), percent_complete=float(_text(t, "PercentComplete") or 0),
-                    msp_critical=(_bool(_text(t, "Critical")) if _child(t, "Critical") is not None else None))
+                    msp_critical=(_bool(_text(t, "Critical")) if _child(t, "Critical") is not None else None),
+                    msp_slack_days=(float(_text(t, "TotalSlack")) / 10.0 / 60.0 / hpd if re.fullmatch(r"-?\d+(\.\d+)?", _text(t, "TotalSlack") or "x") else None))
         for pl in t:
             if _strip(pl.tag) != "PredecessorLink":
                 continue
             pu = _text(pl, "PredecessorUID")
             if not pu.lstrip("-").isdigit():
+                rep["links_skipped"] += 1
                 continue
             ty = _LINK_TYPES.get(int(_text(pl, "Type") or 1))
             if ty is None:
@@ -157,7 +180,9 @@ def parse_mspdi(data: bytes) -> Schedule:
             else:
                 lag = float(_text(pl, "LinkLag") or 0) / 10.0 / 60.0 / hpd      # tenths of a minute -> working days
             task.links.append(Link(int(pu), ty, lag))
+            rep["links_read"] += 1
         tasks.append(task)
+        rep["tasks_read"] += 1
     if not tasks:
         raise ScheduleError("The file has no tasks.")
     if not any(not t.summary for t in tasks):
@@ -166,7 +191,7 @@ def parse_mspdi(data: bytes) -> Schedule:
     warnings.append("The project calendar (working days and holidays) is read; task and resource calendars, resource levelling and date "
                     "constraints in the MSP file are not modelled. Durations are working days from the file's hours per day.")
     return Schedule(name=_text(root, "Name") or _text(root, "Title") or "Imported schedule", hours_per_day=hpd, tasks=tasks,
-                    warnings=warnings, calendar=cal)
+                    warnings=warnings, calendar=cal, project_start=_text(root, "StartDate"), report=rep)
 
 
 def _cal_el(root, uid):

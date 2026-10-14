@@ -122,6 +122,23 @@ export function refreshLive(root) {
   if (slot) slot.innerHTML = staleNote() + liveBlock();
 }
 
+/** After opening an MSP file: what was read, what was left out, and how the tool's float and dates compare with MSP's own saved values. */
+function importCheck() {
+  const c = S.ui.schedCheck;
+  if (!c) return "";
+  const r = c.read || {}, bad = (c.slack_difference_count || 0) + (c.date_difference_count || 0), nm = c.not_modelled || [];
+  const tbl = (rows, a, b) => rows.length ? `<table class="tbl"><thead><tr><th>ID</th><th>Task</th><th>${a}</th><th>${b}</th></tr></thead><tbody>${rows.map((d) => `<tr><td>${d.id}</td><td>${h(d.name)}</td><td>${d.tool_days !== undefined ? num(d.tool_days, 2) + " d" : h(d.tool.join(" to "))}</td><td>${d.msp_days !== undefined ? num(d.msp_days, 2) + " d" : h(d.msp.join(" to "))}</td></tr>`).join("")}</tbody></table>` : "";
+  return `<section class="card import-check"><h3>Import check <span class="muted">— ${h(c.file || "")}</span> ${bad || nm.length ? '<span class="badge b-warn">Review</span>' : '<span class="badge b-ok">No differences found</span>'}</h3>
+    <ul>
+      <li><strong>Read:</strong> ${r.tasks_read} of ${r.tasks_in_file} tasks, ${r.links_read} predecessor links${r.links_skipped ? `, ${r.links_skipped} links skipped (no predecessor id)` : ""}; project calendar and start date.</li>
+      <li><strong>Float:</strong> ${c.slack_compared ? `${c.slack_compared - c.slack_difference_count} of ${c.slack_compared} tasks agree with MS Project's total slack (±0.01 d)` : "the file has no total-slack values to compare"}.</li>
+      <li><strong>Dates:</strong> ${c.dates_compared ? `${c.dates_compared - c.date_difference_count} of ${c.dates_compared} start and finish dates agree with the ones MS Project saved` : "no saved dates to compare"}.</li>
+      <li><strong>Critical flag:</strong> ${c.critical_compared ? `compared on ${c.critical_compared} tasks (differences are listed in Notes above)` : "not in the file"}.</li>
+      <li><strong>In the file but not modelled:</strong> ${nm.length ? nm.map((x) => `${x.count} ${h(x.what)}`).join("; ") : "none found"}.</li></ul>
+    ${tbl(c.slack_differences || [], "Tool float", "MSP total slack")}${tbl(c.date_differences || [], "Tool start – finish", "MSP start – finish")}
+    ${bad ? '<p class="hint">A difference is not always an error: MS Project applies task calendars, constraints and manual dates that this tool ignores. Check the listed tasks in MS Project before relying on them.</p>' : ""}</section>`;
+}
+
 /** Rows to show when "Masonry only" is on: masonry tasks, the summary rows above them, and the selected row. null = show all. */
 function visibleIds(sc) {
   if (!S.ui.schedMasOnly || !sc) return null;
@@ -201,5 +218,5 @@ export function render() {
     <div class="tile"><div class="k">Critical tasks</div><div class="v">${p.critical_tasks}</div></div></div>
     ${(sc.warnings || []).length ? alertBox("neutral", "Notes", `<ul>${sc.warnings.slice(0, 8).map((w) => `<li>${h(w)}</li>`).join("")}</ul>`) : ""}` : "";
   return `${screenHead(1, "Masonry schedule", "The brick and block work of the building (external walls, internal walls, partitions, lintels, parapet) as a task table with durations, predecessors, calendar, float and a Gantt chart, like a scheduling program. Mark the task to assess with ★; its duration, float, labour, material and site data become the activity and site facts of the case. Type the tasks, or open an MS Project file saved as XML (Primavera and .mpp files are not read yet).", bar)}
-  ${screenProblems("schedule")}${info}${rows ? summary + calendarPanel() + toolbar() + editable(sc) + taskInfo() : alertBox("info", "Loading", "")}`;
+  ${screenProblems("schedule")}${info}${rows ? summary + importCheck() + calendarPanel() + toolbar() + editable(sc) + taskInfo() : alertBox("info", "Loading", "")}`;
 }

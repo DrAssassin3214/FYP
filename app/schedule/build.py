@@ -89,3 +89,19 @@ def fill_dates(res: dict, start_text, calendar=None) -> None:
             r["finish"] = cal.nth_workday(start, max(int(round(r["ef"])) - 1, k0) if r["ef"] > r["es"] else k0).isoformat()
     res["project"]["start"] = start.isoformat()
     res["calendar"] = cal.data
+
+
+def compare_dates(res: dict) -> None:
+    """After fill_dates on an imported file: compare the tool's start and finish dates with the ones MSP saved (date part only)."""
+    diffs, n = [], 0
+    for r in res["tasks"]:
+        m = r.get("msp")
+        if not m or not m.get("start") or "start" not in r or r.get("summary"):
+            continue
+        n += 1
+        a, b = str(m["start"])[:10], str(m["finish"])[:10]
+        if a != r["start"] or (b != r["finish"] and not r.get("milestone")):
+            diffs.append({"id": r["id"], "name": r["name"], "tool": [r["start"], r["finish"]], "msp": [a, b]})
+    res["check"]["dates_compared"] = n
+    res["check"]["date_difference_count"] = len(diffs)
+    res["check"]["date_differences"] = diffs[:15]

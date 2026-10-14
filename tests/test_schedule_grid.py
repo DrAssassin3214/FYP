@@ -113,3 +113,29 @@ def test_example_case_marks_the_assessed_task():
     row = sch["rows"][sch["assessed"] - 1]
     assert row["name"] == "Brick masonry, ground-floor external walls" and row["duration_days"] == case["activity"]["planned_duration_days"]["value"]
     assert row["facts"] == case["facts"]          # one source: the assessed task's facts are the case's facts
+
+
+def test_import_check_reads_slack_and_flags_differences():
+    from pathlib import Path
+    from app.schedule import parse_mspdi
+    xml = (Path(__file__).resolve().parents[1] / "examples" / "example_schedule_msp.xml").read_bytes()
+    res = analyse(parse_mspdi(xml))
+    c = res["check"]
+    assert c["read"]["tasks_read"] == c["read"]["tasks_in_file"] == 18 and c["read"]["links_skipped"] == 0
+    assert c["slack_compared"] == 14 and c["slack_difference_count"] == 0
+    # change one saved slack: exactly that task is reported
+    bad = xml.replace(b"<TotalSlack>0</TotalSlack>", b"<TotalSlack>48000</TotalSlack>", 1)
+    c2 = analyse(parse_mspdi(bad))["check"]
+    assert c2["slack_difference_count"] == 1 and c2["slack_differences"][0]["msp_days"] == pytest.approx(10.0)
+
+
+def test_import_route_returns_check_with_dates_and_counts_unmodelled():
+    from pathlib import Path
+    from gui.api import create_app
+    xml = (Path(__file__).resolve().parents[1] / "examples" / "example_schedule_msp.xml").read_bytes()
+    c = create_app().test_client()
+    d = c.post("/api/schedule/import", data=xml, content_type="application/xml").get_json()
+    assert d["check"]["dates_compared"] == 14 and d["check"]["date_difference_count"] == 0 and d["check"]["not_modelled"] == []
+    odd = xml.replace(b"<PercentComplete>0</PercentComplete>", b"<PercentComplete>0</PercentComplete><ConstraintType>2</ConstraintType>", 1)
+    d2 = c.post("/api/schedule/import", data=odd, content_type="application/xml").get_json()
+    assert d2["check"]["not_modelled"] == [{"what": "tasks with a date constraint (anything but As Soon As Possible)", "count": 1}]

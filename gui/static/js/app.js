@@ -467,7 +467,7 @@ async function guardDiscard(what) {
   return confirmModal("Discard unsaved changes?", `The current case has unsaved changes. ${h(what)} will replace it. Save first if you want to keep it.`, "Discard and continue");
 }
 function loadCase(c, { fileName = null, msg = "" } = {}) {
-  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null; S.ui.schedAssess = null;
+  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null; S.ui.schedAssess = null; S.ui.schedCheck = null;
   S.savedKey = caseKey();
   S.result = null; S.resultKey = null;
   S.validation = { status: "idle", problems: [], warnings: [], key: null };
@@ -743,6 +743,7 @@ const ACTIONS = {
       const r = await postRaw("/api/schedule/import", await f.arrayBuffer(), "application/xml");
       S.ui.schedBusy = false;
       if (r.ok && r.data.ok) {
+        S.ui.schedCheck = { file: f.name, ...(r.data.check || {}) };
         const prev = (S.ui.schedRows || [])[(S.ui.schedAssess || 1) - 1];
         S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedSel = null; S.ui.schedFile = f.name;
         if (r.data.project.name && !(S.case.project || {}).name) { S.case.project = S.case.project || {}; S.case.project.name = r.data.project.name; }
