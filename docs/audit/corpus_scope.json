@@ -1,0 +1,28 @@
+{
+ "database_works": 4496,
+ "in_scope": 4274,
+ "out_of_scope_ai_ml": 222,
+ "out_reasons": {
+  "AI / machine-learning method in the title": 222
+ },
+ "in_scope_by_type": {
+  "Questionnaire / RII survey": 1742,
+  "Literature review": 849,
+  "Model / simulation": 786,
+  "Other / not classified": 628,
+  "Case study": 152,
+  "Field / time study": 117
+ },
+ "in_scope_by_theme": {
+  "delay_causes": 2231,
+  "risk_assessment": 1725,
+  "productivity": 1094,
+  "expert_rule_ai": 384
+ },
+ "in_scope_by_year_band": {
+  "2010-2019": 1741,
+  "2020-2026": 2212,
+  "<=2009": 321
+ },
+ "method_note": "Scope and paper type are regular-expression judgements on title and abstract, not readings of the papers."
+}
