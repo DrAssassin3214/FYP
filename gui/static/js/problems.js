@@ -10,10 +10,10 @@ export function classify(p) {
   const s = String(p);
   if ((m = s.match(/^risks\[(\d+)\]/))) return { screen: "risks", key: `risks.${m[1]}` };
   if (/^(cost|mitigations|options|constraints|simulation)\b/.test(s)) return { screen: "analysis", key: null };
-  if (/^activity\.planned_duration_days/.test(s)) return { screen: "case", key: "activity.planned_duration_days" };
-  if ((m = s.match(/^activity\.(\w+)/))) return { screen: "case", key: `activity.${m[1]}` };
+  if (/^activity\.planned_duration_days/.test(s)) return { screen: "schedule", key: "activity.planned_duration_days" };
+  if ((m = s.match(/^activity\.(\w+)/))) return { screen: "schedule", key: `activity.${m[1]}` };
   if (/^impact_bin_edges/.test(s)) return { screen: "matrix", key: "impact_bin_edges_fraction" };
-  if (/^rules\[/.test(s)) return { screen: "rules", key: "rules" };
+  if (/^rules\[/.test(s)) return { screen: "schedule", key: "rules" };
   return { screen: null, key: null };
 }
 
@@ -34,16 +34,16 @@ export function checkFailure() {
 }
 
 export const SCREEN_TITLES = {
-  case: "Case & Activity", rules: "Site facts & Rules", risks: "Risk register", matrix: "Risk matrix", analysis: "Cost, options & decision",
+  schedule: "Masonry schedule", risks: "Risk register", matrix: "Risk matrix", analysis: "Cost, options & decision",
 };
 
 export function problemsFor(screen) {
-  return (S.validation.problems || []).filter((p) => (classify(p).screen || "case") === screen);
+  return (S.validation.problems || []).filter((p) => (classify(p).screen || "schedule") === screen);
 }
 export function countByScreen() {
   const out = {};
   for (const p of S.validation.problems || []) {
-    const sc = classify(p).screen || "case";
+    const sc = classify(p).screen || "schedule";
     out[sc] = (out[sc] || 0) + 1;
   }
   return out;

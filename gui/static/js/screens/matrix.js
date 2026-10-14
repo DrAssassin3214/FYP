@@ -60,7 +60,7 @@ function liveBlock() {
 
   let content;
   if (!r) content = checkFailure() || alertBox("info", "Waiting for the first check of the inputs", "");
-  else if (!rows.length) content = alertBox("warn", "No risks on the matrix yet", "A risk appears here once it has a literature seed (library risks with survey evidence) or its probability and delay range are entered on the Risk register step with the planned duration on step 1 and the four impact edges above.");
+  else if (!rows.length) content = alertBox("warn", "No risks on the matrix yet", "A risk appears here once it has a literature seed (library risks with survey evidence) or its probability and delay range are entered on the Risk register step with the assessed task's planned duration on the Masonry schedule and the four impact edges above.");
   else content = `<section class="card"><header class="card-h"><h2>Probability × impact</h2><span class="badge b-warn">${icon("alert")}ordinal prioritisation only – a label, not a quantity</span></header><div class="card-b">${nSeed ? `<p class="hint mb-3">${nSeed} risk${nSeed > 1 ? "s sit" : " sits"} at a <b>literature tier (Assumption)</b> (grey dashed chips): a relative importance ranking from survey indices (RII), used as a starting place until you enter probability and delay. The cell colour under such a chip is not an assessed level. An importance index is not a probability or a number of days (see the note on ranking basis above).</p>` : ""}${matrix}${legend}${table}${hcBlock}</div></section>`;
 
   return `${staleNote()}${content}${r ? serviceWarnings(r, "Notes") : ""}`;
@@ -83,7 +83,7 @@ export function render() {
     <p class="hint mt-2">Only used for risks with their own probability and delay: the expected delay ÷ planned duration is sorted into impact classes 1 to 5 by these edges (a value exactly on an edge goes to the higher class). Example: 0.05 means 5% of the planned duration. No default is supplied. Probability classes use the engine's equal-width edges (${pe.join(" / ")}), an Assumption. Literature-tier risks ignore these edges.</p>
   </div></section>`;
 
-  return `${screenHead(5, "Risk matrix", `A 5×5 grid that orders the register for attention. ${term("Ordinal prioritisation only", "matrix")}: the continuous p and delay range stay in the register; the class is a label.`, dots)}
+  return `${screenHead(3, "Risk matrix", `A 5×5 grid that orders the register for attention. ${term("Ordinal prioritisation only", "matrix")}: the continuous p and delay range stay in the register; the class is a label.`, dots)}
   ${screenProblems("matrix")}
   ${open ? edgesCard : ""}
   <section class="card"><div class="card-b"><div class="field field-wide"><label for="seed-basis">Literature ranking basis</label>

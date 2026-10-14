@@ -37,7 +37,7 @@ export function render() {
       hint: "Overheads, idle labour and equipment per extra working day. Contract- and site-specific." })}
     ${field({ labelHtml: term("Liquidated damages per day after deadline", "ld"), err: "cost.ld_per_day_after_deadline", cls: "span-2", forId: "f-cost-ld",
       control: paramWidget("cost.ld_per_day_after_deadline", c.ld_per_day_after_deadline, { label: "Liquidated damages per day", optional: true, min: 0, unit: `${c.currency || ""}/day`, placeholder: "blank = not modelled", id: "f-cost-ld" }),
-      hint: "Needs a deadline (step 1). 0 or blank = not modelled." })}
+      hint: "Needs a deadline (Masonry schedule). 0 or blank = not modelled." })}
     ${field({ label: "Currency", forId: "f-cost-cur", control: textInput("cost.currency", c.currency, { id: "f-cost-cur", placeholder: "INR", rerender: false }) })}
   </div></div></section>
   ${results}`;

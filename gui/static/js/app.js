@@ -6,8 +6,6 @@ import { S, caseKey, isDirty, isStale, riskIds } from "./state.js";
 import { icon, toast, openModal, closeModal, confirmModal, showEvidence, refreshSourcePicker, alertBox } from "./ui.js";
 import { applyInline, countByScreen, screenProblems, classify, friendly, SCREEN_TITLES } from "./problems.js";
 import * as sSched from "./screens/schedule.js";
-import * as sCase from "./screens/case.js";
-import * as sRules from "./screens/rules.js";
 import * as sRisks from "./screens/risks.js";
 import * as sMatrix from "./screens/matrix.js";
 import * as sEv from "./screens/evidence.js";
@@ -17,13 +15,11 @@ import { initCursor } from "./cursor.js";
 
 const SCREENS = [
   { id: "schedule", n: 1, title: "Masonry schedule", ic: "grid", group: "Define", mod: sSched },
-  { id: "case", n: 2, title: "Case & Activity", ic: "building", group: "Define", mod: sCase },
-  { id: "rules", n: 3, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
-  { id: "risks", n: 4, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
-  { id: "matrix", n: 5, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
-  { id: "analysis", n: 6, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
-  { id: "evidence", n: 7, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
-  { id: "report", n: 8, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
+  { id: "risks", n: 2, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
+  { id: "matrix", n: 3, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
+  { id: "analysis", n: 4, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
+  { id: "evidence", n: 5, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
+  { id: "report", n: 6, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
 ];
 const BY_ID = Object.fromEntries(SCREENS.map((s) => [s.id, s]));
 const screenEl = () => $("#screen");
@@ -176,12 +172,7 @@ function renderScreen({ nav = false } = {}) {
   const y = window.scrollY;
   const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
   const mod = BY_ID[S.ui.screen].mod;
-  if (S.ui.screen === "schedule" && !S.ui.schedRows && S.case.schedule && Array.isArray(S.case.schedule.rows) && S.case.schedule.rows.length) {
-    const sc = S.case.schedule;
-    S.ui.schedRows = sc.rows.map((r) => ({ ...sSched.blankRow(), ...r, facts: { ...(r.facts || {}) } }));
-    S.ui.schedName = sc.name || "Project"; S.ui.schedStart = sc.start || new Date().toISOString().slice(0, 10); S.ui.schedCal = sc.calendar || sSched.defaultCalendar();
-    S.ui.schedSel = null; setTimeout(() => schedRecompute(), 0);
-  }
+  schedHydrate();
   root.innerHTML = mod.render();
   if (!root.querySelector("[data-screen-problems]")) {
     const html = screenProblems(S.ui.screen);
@@ -203,15 +194,17 @@ function renderScreen({ nav = false } = {}) {
 function renderAll(opts) { renderChrome(); renderScreen(opts); }
 
 function go(id) {
-  if (!BY_ID[id]) id = "case";
+  if (!BY_ID[id]) id = "schedule";
   if (location.hash !== `#/${id}`) { location.hash = `#/${id}`; return; }
   S.ui.screen = id;
   renderRail();
   renderScreen({ nav: true });
 }
 window.addEventListener("hashchange", () => {
-  const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "case";
-  S.ui.screen = BY_ID[id] ? id : "case";
+  const raw = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "schedule";
+  const id = raw === "case" || raw === "rules" ? "schedule" : raw;      // the old Case and Site-facts tabs now live in the Masonry schedule
+  S.ui.screen = BY_ID[id] ? id : "schedule";
+  if (raw !== S.ui.screen) history.replaceState(null, "", `#/${S.ui.screen}`);
   renderRail();
   renderScreen({ nav: true });
 });
@@ -474,7 +467,7 @@ async function guardDiscard(what) {
   return confirmModal("Discard unsaved changes?", `The current case has unsaved changes. ${h(what)} will replace it. Save first if you want to keep it.`, "Discard and continue");
 }
 function loadCase(c, { fileName = null, msg = "" } = {}) {
-  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null;
+  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null; S.ui.schedAssess = null;
   S.savedKey = caseKey();
   S.result = null; S.resultKey = null;
   S.validation = { status: "idle", problems: [], warnings: [], key: null };
@@ -540,7 +533,7 @@ function openProblems() {
   const rect = btn.getBoundingClientRect();
   root.innerHTML = `<div class="popover" role="dialog" aria-label="Input problems" style="top:${rect.bottom + 8}px;left:${Math.max(16, Math.min(rect.left, window.innerWidth - 580))}px">
     <h3>${icon("alert")} ${probs.length} problem${probs.length === 1 ? "" : "s"} reported by the service</h3>
-    ${probs.map((p) => { const c = classify(p); const sc = c.screen || "case"; return `<div class="prob-item">${icon("alert")}<div>${friendly(p)}</div><button type="button" class="btn btn-sm where" data-action="goto" data-screen="${sc}">${h(SCREEN_TITLES[sc] || sc)} ${icon("chevRight", "ic-sm")}</button></div>`; }).join("")}
+    ${probs.map((p) => { const c = classify(p); const sc = c.screen || "schedule"; return `<div class="prob-item">${icon("alert")}<div>${friendly(p)}</div><button type="button" class="btn btn-sm where" data-action="goto" data-screen="${sc}">${h(SCREEN_TITLES[sc] || sc)} ${icon("chevRight", "ic-sm")}</button></div>`; }).join("")}
   </div>`;
   btn.setAttribute("aria-expanded", "true");
   root.querySelector("button")?.focus();
@@ -680,7 +673,7 @@ const ACTIONS = {
   new: async () => {
     if (!(await guardDiscard("A new blank case"))) return;
     const r = await get("/api/template");
-    if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("case"); }
+    if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("schedule"); }
   },
   example: async () => {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
@@ -740,13 +733,6 @@ const ACTIONS = {
     openNewRisk(S.case.risks.length - 1, "AI-suggested risk added as unverified. Its probability and delay are empty and must come from you or an expert.");
     ensureEvidence(c.evidence_ids).then((found) => { if (found) renderScreen(); });
   },
-  "sched-new": () => {
-    S.ui.schedRows = [sSched.blankRow()]; S.ui.schedule = null; S.ui.schedSel = 1; S.ui.schedProblems = null;
-    S.ui.schedName = S.ui.schedName || (S.case.project && S.case.project.name) || "Project";
-    S.ui.schedStart = S.ui.schedStart || new Date().toISOString().slice(0, 10);
-    S.ui.schedCal = S.ui.schedCal || sSched.defaultCalendar();
-    schedRecompute();
-  },
   "sched-open": () => {
     const inp = document.createElement("input");
     inp.type = "file"; inp.accept = ".xml,application/xml,text/xml";
@@ -757,10 +743,16 @@ const ACTIONS = {
       const r = await postRaw("/api/schedule/import", await f.arrayBuffer(), "application/xml");
       S.ui.schedBusy = false;
       if (r.ok && r.data.ok) {
-        S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedName = r.data.project.name; S.ui.schedSel = null; S.ui.schedFile = f.name;
+        const prev = (S.ui.schedRows || [])[(S.ui.schedAssess || 1) - 1];
+        S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedSel = null; S.ui.schedFile = f.name;
+        if (r.data.project.name && !(S.case.project || {}).name) { S.case.project = S.case.project || {}; S.case.project.name = r.data.project.name; }
         S.ui.schedStart = (r.data.tasks.find((t) => t.start) || {}).start?.slice(0, 10) || S.ui.schedStart || new Date().toISOString().slice(0, 10);
         S.ui.schedCal = r.data.calendar || S.ui.schedCal || sSched.defaultCalendar();
         S.ui.schedMasOnly = r.data.tasks.some((t) => t.masonry_like) && r.data.tasks.some((t) => !t.summary && !t.masonry_like && !t.milestone);
+        const first = r.data.tasks.find((t) => !t.summary && t.masonry_like) || r.data.tasks.find((t) => !t.summary);
+        S.ui.schedAssess = first ? first.id : 1;
+        if (prev && S.ui.schedRows[S.ui.schedAssess - 1]) S.ui.schedRows[S.ui.schedAssess - 1].facts = { ...(prev.facts || {}) };   // keep the site facts already entered
+        S.ui.schedSel = S.ui.schedAssess;
         await schedRecompute(r.data.warnings || []);   // from here the grid is the single source: row number = task ID
       } else { S.ui.schedProblems = r.data.problems || ["The schedule could not be read."]; renderScreen(); }
     });
@@ -772,14 +764,14 @@ const ACTIONS = {
     const row = sSched.blankRow(); row.outline_level = rows[at - 1] ? rows[at - 1].outline_level : 1;
     rows.splice(at, 0, row);
     const map = {}; for (let k = 1; k <= rows.length - 1; k++) map[k] = k > at ? k + 1 : k;
-    sSched.remapPreds(rows, map); S.ui.schedSel = at + 1; schedRecompute();
+    sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = at + 1; schedRecompute();
   },
   "sched-del": () => {
     const rows = S.ui.schedRows, at = S.ui.schedSel;
     if (!at || rows.length < 2) return;
     rows.splice(at - 1, 1);
     const map = {}; for (let k = 1; k <= rows.length + 1; k++) if (k !== at) map[k] = k > at ? k - 1 : k;
-    sSched.remapPreds(rows, map); S.ui.schedSel = Math.min(at, rows.length); schedRecompute();
+    sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = Math.min(at, rows.length); schedRecompute();
   },
   "sched-in": () => { const r = S.ui.schedRows[S.ui.schedSel - 1], p = S.ui.schedRows[S.ui.schedSel - 2]; if (r && p && r.outline_level <= p.outline_level) { r.outline_level += 1; schedRecompute(); } },
   "sched-out": () => { const r = S.ui.schedRows[S.ui.schedSel - 1]; if (r && r.outline_level > 1) { r.outline_level -= 1; schedRecompute(); } },
@@ -789,36 +781,25 @@ const ACTIONS = {
     const r = S.ui.schedRows[S.ui.schedSel - 1]; if (!r) return;
     r.facts = r.facts || {};
     if (b.dataset.val === "unknown") delete r.facts[b.dataset.fact]; else r.facts[b.dataset.fact] = b.dataset.val === "true";
-    S.case.schedule = { name: S.ui.schedName, start: S.ui.schedStart, calendar: S.ui.schedCal, rows: S.ui.schedRows };
-    changed({ rerender: false }); renderScreen();
+    if (S.ui.schedAssess === S.ui.schedSel) S.ui.autoAddPending = true;
+    schedRecompute();
   },
   "sched-cal-add": () => { S.ui.schedCal.exceptions.push({ name: "", from: S.ui.schedStart, to: S.ui.schedStart, working: false }); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-cal-del": (b) => { S.ui.schedCal.exceptions.splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-up": () => schedMove(-1),
   "sched-down": () => schedMove(1),
-  "sched-use": () => {
+  "sched-assess": () => {
     const t = S.ui.schedule?.tasks.find((x) => x.id === S.ui.schedSel);
-    if (!t || t.summary || !t.activity) return;
-    S.case.project = S.case.project || {};
-    if (!S.case.project.name) S.case.project.name = S.ui.schedule.project.name;
-    S.case.activity = { ...(S.case.activity || {}), ...t.activity };
-    const tf = (S.ui.schedRows[S.ui.schedSel - 1] || {}).facts || {};
-    S.case.facts = { ...(S.case.facts || {}), ...tf };     // only the facts typed for this task; unknown stays unknown
-    S.ui.autoAddPending = true;
-    changed({ rerender: false });
-    toast(`Task \u201C${h(t.name)}\u201D copied to Case & Activity with its site facts (labour, material, site): planned ${t.duration_days} d, deadline ${t.activity.deadline_days.value} d (planned + float). Check both before you rely on them.`, "ok", { actionLabel: "Open", timeout: 12000, onAction: () => { location.hash = "#/case"; } });
-    renderScreen();
+    if (!t || t.summary) return;
+    S.ui.schedAssess = t.id; S.ui.autoAddPending = true; schedRecompute();
+    toast(`\u201C${h(t.name)}\u201D is now the assessed task: its duration, float and site facts are the case's activity and facts.`, "ok");
+  },
+  "sched-fact-remove": (b) => {
+    const r = S.ui.schedRows[S.ui.schedSel - 1]; if (!r || !r.facts) return;
+    delete r.facts[b.dataset.fact]; schedRecompute();
   },
   "opts-toggle": () => { S.ui.showAllOptions = !S.ui.showAllOptions; renderScreen(); },
   "risk-tab": (b) => { S.ui.riskTab = b.dataset.val; renderScreen(); },
-  "fact-bool": (b) => {
-    S.case.facts = S.case.facts || {};
-    if (b.dataset.val === "unknown") delete S.case.facts[b.dataset.fact];
-    else S.case.facts[b.dataset.fact] = b.dataset.val === "true";
-    S.ui.autoAddPending = true;
-    changed({ rerender: true });
-  },
-  "fact-remove": (b) => { delete S.case.facts[b.dataset.fact]; changed({ rerender: true }); },
   goto: (b) => {
     closeProblems();
     go(b.dataset.screen);
@@ -826,7 +807,43 @@ const ACTIONS = {
   },
 };
 /** Send the typed rows to the critical-path service and show the result. Keeps keyboard focus on the cell the user was in. */
-async function schedRecompute(notes = []) {
+function schedHydrate() {
+  if (S.ui.screen !== "schedule" || S.ui.schedRows) return;
+  const sc = S.case.schedule, a = S.case.activity || {};
+  if (sc && Array.isArray(sc.rows) && sc.rows.length) {
+    S.ui.schedRows = sc.rows.map((r) => ({ ...sSched.blankRow(), ...r, facts: { ...(r.facts || {}) } }));
+    S.ui.schedStart = sc.start || new Date().toISOString().slice(0, 10); S.ui.schedCal = sc.calendar || sSched.defaultCalendar();
+    S.ui.schedAssess = sc.assessed || null;
+  } else {
+    // a case without a schedule (older file, blank template): its activity becomes the first and only task
+    S.ui.schedRows = [{ ...sSched.blankRow(), name: a.name || "", duration_days: Number(a.planned_duration_days && a.planned_duration_days.value) || 0, facts: { ...(S.case.facts || {}) } }];
+    S.ui.schedStart = new Date().toISOString().slice(0, 10); S.ui.schedCal = sSched.defaultCalendar(); S.ui.schedAssess = 1;
+  }
+  S.ui.schedSel = S.ui.schedAssess || 1;
+  setTimeout(() => schedRecompute([], { sync: false }), 0);
+}
+/** The assessed task is the case's activity: copy its name, duration, derived deadline and site facts into the case. */
+function schedSync() {
+  const i = (S.ui.schedAssess || 0) - 1, row = (S.ui.schedRows || [])[i];
+  const t = S.ui.schedule && S.ui.schedule.tasks.find((x) => x.id === i + 1);
+  if (!row || !t || t.summary || !t.activity) return;
+  const a = S.case.activity = S.case.activity || {};
+  a.name = t.name;
+  if (!a.id) a.id = t.activity.id;
+  const pd = a.planned_duration_days;
+  if (!pd || pd.value !== t.duration_days) a.planned_duration_days = { ...t.activity.planned_duration_days };
+  const dl = a.deadline_days;
+  if (!dl || !dl.source || dl.source === "Derived Calculation") a.deadline_days = { ...t.activity.deadline_days };
+  S.case.facts = { ...(row.facts || {}) };
+}
+function schedFixAssess() {
+  const T = (S.ui.schedule && S.ui.schedule.tasks) || [];
+  const cur = T.find((x) => x.id === S.ui.schedAssess);
+  if (cur && !cur.summary) return;
+  const first = T.find((x) => !x.summary && x.masonry_like) || T.find((x) => !x.summary);
+  S.ui.schedAssess = first ? first.id : null;
+}
+async function schedRecompute(notes = [], { sync = true } = {}) {
   const rows = S.ui.schedRows;
   if (!rows || !rows.length) return;
   const act = document.activeElement;
@@ -834,8 +851,14 @@ async function schedRecompute(notes = []) {
   const r = await post("/api/schedule/compute", sSched.rowsPayload());
   if (r.ok && r.data.ok) {
     S.ui.schedule = { ...r.data, warnings: [...notes, ...(r.data.warnings || [])] }; S.ui.schedProblems = null;
-    S.case.schedule = { name: S.ui.schedName, start: S.ui.schedStart, calendar: S.ui.schedCal, rows: S.ui.schedRows };   // saved with the case file
-    changed({ rerender: false });
+    schedFixAssess();
+    const selT = S.ui.schedule.tasks.find((x) => x.id === S.ui.schedSel);
+    if (!selT || (selT.summary && !sync)) S.ui.schedSel = S.ui.schedAssess;        // opening the tab: start on the assessed task
+    if (sync) {
+      schedSync();
+      S.case.schedule = { name: (S.case.project || {}).name || "", start: S.ui.schedStart, calendar: S.ui.schedCal, assessed: S.ui.schedAssess, rows: S.ui.schedRows };   // saved with the case file
+      changed({ rerender: false });
+    }
   }
   else S.ui.schedProblems = r.data.problems || ["The schedule could not be calculated."];
   renderScreen();
@@ -847,7 +870,7 @@ function schedMove(d) {
   [rows[at - 1], rows[to - 1]] = [rows[to - 1], rows[at - 1]];
   const map = {}; for (let k = 1; k <= rows.length; k++) map[k] = k;
   map[at] = to; map[to] = at;
-  sSched.remapPreds(rows, map); S.ui.schedSel = to; schedRecompute();
+  sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = to; schedRecompute();
 }
 
 const CHANGE_ACTIONS = {
@@ -881,7 +904,7 @@ const CHANGE_ACTIONS = {
     S.ui.schedCalOpen = true; schedRecompute();
   },
   "sched-mas-only": (el) => { S.ui.schedMasOnly = el.checked; renderScreen(); },
-  "sched-meta": (el) => { if (el.dataset.f === "name") S.ui.schedName = el.value; else S.ui.schedStart = el.value; schedRecompute(); },
+  "sched-meta": (el) => { S.ui.schedStart = el.value; schedRecompute(); },
   "ev-cited": (el) => { S.ui.evCitedOnly = el.checked; refreshEvList(); },
 };
 
@@ -981,7 +1004,8 @@ async function boot() {
   dl.innerHTML = ev.data.records.map((r) => `<option value="${h(r.id)}">${h(r.citation.slice(0, 80))}</option>`).join("");
   document.body.appendChild(dl);
   const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1];
-  S.ui.screen = BY_ID[id] ? id : "case";
+  S.ui.screen = BY_ID[id] ? id : "schedule";
+  if (id && id !== S.ui.screen) history.replaceState(null, "", `#/${S.ui.screen}`);     // old #/case and #/rules links land on the Masonry schedule
   loadCase(tpl.data);
   window.FYP = { S, go };   // for inspection from the browser console
   // the start-up check for a newer online data pack runs in the background; when it finishes, reload the reference data

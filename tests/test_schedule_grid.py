@@ -104,3 +104,12 @@ def test_bundled_example_hand_values_and_consistency():
     rows = analyse(build_schedule({"name": "x", "tasks": case["schedule"]["rows"]}))
     assert [(t["es"], t["ef"]) for t in rows["tasks"] if "es" in t] == [(t["es"], t["ef"]) for t in xml["tasks"] if "es" in t]
     assert by[5]["duration_days"] == case["activity"]["planned_duration_days"]["value"] == 16 and by[5]["masonry_like"]
+
+
+def test_example_case_marks_the_assessed_task():
+    from app import service
+    case = service.example_analysis_case()
+    sch = case["schedule"]
+    row = sch["rows"][sch["assessed"] - 1]
+    assert row["name"] == "Brick masonry, ground-floor external walls" and row["duration_days"] == case["activity"]["planned_duration_days"]["value"]
+    assert row["facts"] == case["facts"]          # one source: the assessed task's facts are the case's facts

@@ -1,8 +1,7 @@
-// Screen 3: Site facts & Rules
-import { h, isNum, fmtIn } from "../util.js";
+// Site facts catalogue and the rule base table. Shown inside the Masonry schedule tab (Task information > Rules).
+import { h } from "../util.js";
 import { S, isStale, riskIds } from "../state.js";
-import { field, numInput, screenHead, alertBox, ul, evChips, icon, staleNote, sourceBadge } from "../ui.js";
-import { screenProblems } from "../problems.js";
+import { alertBox, ul, evChips, icon, sourceBadge } from "../ui.js";
 
 export const FACT_INFO = {
   required_workers: { label: "Workers required", unit: "workers", group: "Labour" },
@@ -46,22 +45,6 @@ export function ruleCondition(r) {
   return [all, any ? `(${any})` : ""].filter(Boolean).join(" AND ");
 }
 
-function factControl(f) {
-  const info = FACT_INFO[f.name] || { label: f.name };
-  const facts = S.case.facts || {};
-  const v = facts[f.name];
-  const has = Object.prototype.hasOwnProperty.call(facts, f.name) && v !== null;
-  const rulesTxt = `used by ${f.rules.map(h).join(", ")}`;
-  if (f.type === "boolean") {
-    const cur = !has ? "unknown" : v === true ? "true" : v === false ? "false" : "other";
-    const seg = `<div class="seg sm tri" role="group" aria-label="${h(info.label)}">${[["unknown", "Unknown"], ["true", "Yes"], ["false", "No"]].map(([val, lab]) =>
-      `<button type="button" data-action="fact-bool" data-fact="${h(f.name)}" data-val="${val}" aria-pressed="${cur === val}">${lab}</button>`).join("")}</div>`;
-    return field({ labelHtml: `${h(info.label)}`, control: seg, hint: `<code>${h(f.name)}</code> · ${rulesTxt}${cur === "other" ? ` · current value ${h(JSON.stringify(v))}` : ""}` });
-  }
-  return field({ label: info.label, forId: `fact-${f.name}`, control: numInput(`facts.${f.name}`, has ? v : null, { min: 0, unit: info.unit, nullMode: "delete", id: `fact-${f.name}`, placeholder: "unknown" }),
-    hint: `<code>${h(f.name)}</code> · ${rulesTxt}` });
-}
-
 function flaggedMissing() {
   const r = S.result;
   if (!r) return [];
@@ -70,7 +53,7 @@ function flaggedMissing() {
 }
 
 /** The parts that depend on the latest result: flagged-risk panel, consistency issues, rule table. */
-function liveBlock() {
+export function liveBlock() {
   const r = S.result;
   const fired = new Map((r?.rules?.fired || []).map((x) => [x.rule_id, x]));
   const notEval = new Map((r?.rules?.not_evaluable || []).map((x) => [x.rule_id, x]));
@@ -111,31 +94,4 @@ function liveBlock() {
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rule</th><th>Condition</th><th>Flags risk</th><th>Source</th><th>Confidence</th><th>Evidence</th><th>Result</th></tr></thead><tbody>${ruleRows}</tbody></table></div>
     <p class="card-note">${h(r?.rules?.note || "Flags identify relevant/elevated risks; probabilities are entered separately with a Source.")}</p>
   </div></section>`;
-}
-
-export function render() {
-  const facts = S.meta?.facts || [];
-  const groups = {};
-  for (const f of facts) {
-    const g = (FACT_INFO[f.name] || {}).group || "Other";
-    (groups[g] = groups[g] || []).push(f);
-  }
-  const known = new Set(facts.map((f) => f.name));
-  const extra = Object.keys(S.case.facts || {}).filter((k) => !known.has(k));
-  const pd = S.case.activity?.planned_duration_days?.value;
-  return `${screenHead(3, "Site facts & Rules", "Declare the site conditions the rule engine checks. Rules only <strong>flag</strong> risks as relevant or elevated; they never produce probabilities. A blank fact is <em>unknown</em>: rules that need it are reported as not evaluable instead of guessed.")}
-  ${screenProblems("rules")}
-  <div class="grid-2 mb-5">
-    ${Object.entries(groups).map(([g, list]) => `<section class="card"><header class="card-h"><h2>${h(g)}</h2><span class="sub">site facts (User Input)</span></header><div class="card-b"><div class="form-grid">${list.map(factControl).join("")}</div></div></section>`).join("")}
-    <section class="card"><header class="card-h"><h2>Automatic fact</h2></header><div class="card-b">
-      <p class="muted"><code>planned_duration_days</code> is taken from the planned duration on step 1 (${isNum(pd) ? `${fmtIn(pd, 2)} days` : "not entered yet"}) and is used by rule RL-MAT2 (relevant only, not elevated).</p>
-      ${extra.length ? `<div class="subhead">Other facts in this case file</div><ul>${extra.map((k) => `<li><code>${h(k)}</code> = ${h(JSON.stringify(S.case.facts[k]))} <button type="button" class="btn btn-sm btn-danger-ghost" data-action="fact-remove" data-fact="${h(k)}">${icon("trash")}Remove</button></li>`).join("")}</ul>` : ""}
-    </div></section>
-  </div>
-  <div id="rules-live">${staleNote()}${liveBlock()}</div>`;
-}
-
-export function refreshLive(root) {
-  const slot = root.querySelector("#rules-live");
-  if (slot) slot.innerHTML = staleNote() + liveBlock();
 }

@@ -160,7 +160,7 @@ export function render() {
     <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
     <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>
     <button type="button" class="btn" data-action="analysis-manual-dl"${S.ui.analysis ? "" : " disabled"} title="Excel: hand formulas beside the tool's numbers">${icon("download")}<span>manual check (Excel)</span></button>`;
-  return `${screenHead(6, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
+  return `${screenHead(4, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
   ${inputs()}<div id="analysis-live">${results()}</div>`;
 }
 

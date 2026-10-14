@@ -391,6 +391,7 @@
   "schedule": {
     "name": "Block B brickwork package (ILLUSTRATIVE example schedule)",
     "start": "2026-11-02",
+    "assessed": 5,
     "calendar": {
       "name": "Site, six-day week (ILLUSTRATIVE)",
       "workdays": [
