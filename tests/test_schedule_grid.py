@@ -85,3 +85,22 @@ def test_msp_calendar_import():
          f'</Calendar></Calendars><Tasks><Task><UID>1</UID><ID>1</ID><Name>A</Name><Duration>PT8H0M0S</Duration></Task></Tasks></Project>').encode()
     cal = parse_mspdi(x).calendar
     assert cal["workdays"] == [0, 1, 2, 3, 4, 5] and cal["exceptions"][0]["from"] == "2026-03-04" and cal["name"] == "Site"
+
+
+def test_bundled_example_hand_values_and_consistency():
+    """Masonry work-package example: hand-worked early start/finish (working days), and the XML file, the case's schedule rows
+    and the case's activity (task 5, 16 d) all agree."""
+    from pathlib import Path
+    from app import service
+    from app.schedule import parse_mspdi
+    xml = analyse(parse_mspdi((Path(__file__).resolve().parents[1] / "examples" / "example_schedule_msp.xml").read_bytes()))
+    by = {t["id"]: t for t in xml["tasks"]}
+    hand = {3: (0, 2), 4: (2, 3), 5: (3, 19), 6: (7, 17), 7: (9, 13), 8: (19, 22), 10: (22, 32), 11: (32, 34), 12: (34, 50),
+            13: (38, 48), 14: (40, 44), 15: (50, 53), 17: (53, 59)}
+    for i, (a, b) in hand.items():
+        assert (by[i]["es"], by[i]["ef"]) == (a, b), i
+    assert xml["project"]["finish_days"] == 59 and xml["project"]["critical_tasks"] == 10
+    case = service.example_analysis_case()
+    rows = analyse(build_schedule({"name": "x", "tasks": case["schedule"]["rows"]}))
+    assert [(t["es"], t["ef"]) for t in rows["tasks"] if "es" in t] == [(t["es"], t["ef"]) for t in xml["tasks"] if "es" in t]
+    assert by[5]["duration_days"] == case["activity"]["planned_duration_days"]["value"] == 16 and by[5]["masonry_like"]

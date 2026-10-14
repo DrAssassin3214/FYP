@@ -16,7 +16,7 @@ import * as sAna from "./screens/analysis.js";
 import { initCursor } from "./cursor.js";
 
 const SCREENS = [
-  { id: "schedule", n: 1, title: "Project schedule", ic: "grid", group: "Define", mod: sSched },
+  { id: "schedule", n: 1, title: "Masonry schedule", ic: "grid", group: "Define", mod: sSched },
   { id: "case", n: 2, title: "Case & Activity", ic: "building", group: "Define", mod: sCase },
   { id: "rules", n: 3, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
   { id: "risks", n: 4, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
@@ -760,6 +760,7 @@ const ACTIONS = {
         S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedName = r.data.project.name; S.ui.schedSel = null; S.ui.schedFile = f.name;
         S.ui.schedStart = (r.data.tasks.find((t) => t.start) || {}).start?.slice(0, 10) || S.ui.schedStart || new Date().toISOString().slice(0, 10);
         S.ui.schedCal = r.data.calendar || S.ui.schedCal || sSched.defaultCalendar();
+        S.ui.schedMasOnly = r.data.tasks.some((t) => t.masonry_like) && r.data.tasks.some((t) => !t.summary && !t.masonry_like && !t.milestone);
         await schedRecompute(r.data.warnings || []);   // from here the grid is the single source: row number = task ID
       } else { S.ui.schedProblems = r.data.problems || ["The schedule could not be read."]; renderScreen(); }
     });
@@ -879,6 +880,7 @@ const CHANGE_ACTIONS = {
     if (e.to < e.from) e.to = e.from;
     S.ui.schedCalOpen = true; schedRecompute();
   },
+  "sched-mas-only": (el) => { S.ui.schedMasOnly = el.checked; renderScreen(); },
   "sched-meta": (el) => { if (el.dataset.f === "name") S.ui.schedName = el.value; else S.ui.schedStart = el.value; schedRecompute(); },
   "ev-cited": (el) => { S.ui.evCitedOnly = el.checked; refreshEvList(); },
 };

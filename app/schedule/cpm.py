@@ -10,7 +10,7 @@ from __future__ import annotations
 from .mspdi import Schedule, ScheduleError
 
 EPS = 1e-9
-_MASONRY = ("brick", "block", "masonry", "walling", "wall")
+_MASONRY = ("brick", "block", "masonry", "walling", "wall", "partition", "parapet", "lintel", "sill band")
 
 
 def analyse(sch: Schedule) -> dict:

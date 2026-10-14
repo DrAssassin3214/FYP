@@ -79,19 +79,34 @@ function taskInfo() {
     <p class="hint">Only what you fill in is carried over. “Unknown” stays unknown and the rules treat it as not evaluable. Press “Use selected task for analysis” to copy this task, its duration and these site facts into the case.</p></section>`;
 }
 
+/** Rows to show when "Masonry only" is on: masonry tasks, the summary rows above them, and the selected row. null = show all. */
+function visibleIds(sc) {
+  if (!S.ui.schedMasOnly || !sc) return null;
+  const keep = new Set(), T = sc.tasks;
+  T.forEach((t, i) => {
+    if (t.masonry_like || t.id === S.ui.schedSel) {
+      keep.add(t.id);
+      for (let j = i - 1, lvl = t.outline_level; j >= 0; j--) if (T[j].outline_level < lvl) { keep.add(T[j].id); lvl = T[j].outline_level; }
+    }
+  });
+  return keep.size ? keep : null;
+}
+
 function editable(sc) {
   const rows = S.ui.schedRows;
   const byId = new Map((sc ? sc.tasks : []).map((t) => [t.id, t]));
   const total = Math.max(sc ? sc.project.finish_days : 1, 1);
   const px = Math.max(4, Math.min(40, 560 / total));
   const gw = Math.ceil(total * px) + 40;
-  const cols = `46px 280px 76px 92px 92px 130px 70px 74px 62px 44px ${gw}px`;
+  const cols = `46px 400px 76px 92px 92px 130px 70px 74px 62px 44px ${gw}px`;
   const ticks = [];
   const step = total > 120 ? 20 : total > 40 ? 10 : 5;
   for (let d = 0; d <= total; d += step) ticks.push(`<span class="g-tick" style="left:${(d * px).toFixed(1)}px">${d}</span>`);
   const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>ID</div><div>Task name</div><div class="r">Dur. (d)</div><div>Start</div><div>Finish</div><div>Predecessors</div><div class="r">Workers</div><div class="r">Stock (d)</div><div class="r">Float (d)</div><div>Crit.</div><div class="g-cell g-axis">${ticks.join("")}</div></div>`;
+  const vis = visibleIds(sc);
   const body = rows.map((r, i) => {
     const id = i + 1, t = byId.get(id) || {};
+    if (vis && !vis.has(id)) return "";
     const sel = S.ui.schedSel === id;
     const sum = !!t.summary;
     const bar = t.es === undefined ? "" : sum
@@ -111,7 +126,7 @@ function editable(sc) {
       <div>${sum ? "" : t.critical ? '<span class="crit-dot" title="on the critical path"></span>' : ""}</div>
       <div class="g-cell">${bar}</div></div>`;
   }).join("");
-  return `<div class="msp" role="table" aria-label="Project schedule" style="--row:${ROW}px">${head}${body}</div>`;
+  return `<div class="msp" role="table" aria-label="Masonry schedule" style="--row:${ROW}px">${head}${body}</div>`;
 }
 
 function toolbar() {
@@ -126,12 +141,13 @@ function toolbar() {
     ${b("sched-in", "chevRight", "Indent", !has || i < 1, "Make the task part of the summary above it")}
     ${b("sched-up", "chevUp", "Move up", !has || i < 1)}
     ${b("sched-down", "chevDown", "Move down", !has || i >= n - 1)}
+    <label class="cal-day"><input type="checkbox" data-action-change="sched-mas-only"${S.ui.schedMasOnly ? " checked" : ""}> Masonry tasks only</label>
   </div>`;
 }
 
 function empty() {
-  return `${alertBox("info", "No schedule yet", "Type the tasks straight into the table, as in Microsoft Project, or open a schedule saved from MS Project (<strong>File › Save As › XML Format</strong>). Primavera and native .mpp files are not read yet.")}
-  <p class="muted">In the table: the row number is the task ID. Type a duration in working days and the predecessors as <code>3</code> (finish-to-start), <code>3SS+2d</code> (start-to-start, 2 days lag), <code>4FF-1d</code> and so on. Indent a task under the row above to make that row a summary task. The critical path, float and Gantt bars update as you edit. Then pick the masonry task to assess; its planned duration and the room it has before the project finish move are carried into the analysis.</p>`;
+  return `${alertBox("info", "No schedule yet", "This tab holds the <strong>masonry programme</strong>: the brick and block work of the building (external walls, internal walls, partitions, lintels and sill bands, parapet) floor by floor, plus the tasks it has to wait for (scaffolding, material staging, slab de-propping). Type the tasks straight into the table, as in Microsoft Project, or open a schedule saved from MS Project (<strong>File › Save As › XML Format</strong>); for a whole-project file the masonry tasks are picked out for you. Primavera and native .mpp files are not read yet.")}
+  <p class="muted">In the table: the row number is the task ID. Type a duration in working days and the predecessors as <code>3</code> (finish-to-start), <code>5SS+4d</code> (start-to-start, 4 days lag), <code>4FF-1d</code> and so on. Indent a task under the row above to make that row a summary task. The critical path, float and Gantt bars update as you edit. Then pick the masonry task to assess (for example external walls, ground floor); its planned duration, the room it has before the programme finish, and its labour, material and site data are carried into the analysis.</p>`;
 }
 
 function table(sc) {
@@ -161,7 +177,7 @@ function table(sc) {
       <div>${t.summary ? "" : t.critical ? '<span class="crit-dot" title="on the critical path"></span>' : ""}</div>
       <div class="g-cell">${bar}</div></div>`;
   }).join("");
-  return `<div class="msp" role="table" aria-label="Project schedule" style="--row:${ROW}px">${head}${body}</div>`;
+  return `<div class="msp" role="table" aria-label="Masonry schedule" style="--row:${ROW}px">${head}${body}</div>`;
 }
 
 export function render() {
@@ -181,6 +197,6 @@ export function render() {
     <div class="tile"><div class="k">Critical tasks</div><div class="v">${p.critical_tasks}</div></div></div>
     ${(sc.warnings || []).length ? alertBox("neutral", "Notes", `<ul>${sc.warnings.slice(0, 8).map((w) => `<li>${h(w)}</li>`).join("")}</ul>`) : ""}
     <p class="hint">${sel ? (sel.summary ? "That row is a summary task; pick one of the tasks inside it." : `Selected: <strong>${h(sel.name)}</strong> — ${num(sel.duration_days, 2)} d planned, ${num(sel.total_float_days, 2)} d total float.`) : "Click a row number to select a task. Tasks marked “masonry?” have brick, block or wall in the name."}</p>` : "";
-  return `${screenHead(1, "Project schedule", "Same layout as a scheduling program: task table with durations, predecessors and float, and a Gantt chart. Type your tasks or open an MS Project file, then choose the masonry task to assess.", bar)}
+  return `${screenHead(1, "Masonry schedule", "The brick and block work programme in the layout of a scheduling program: task table with durations, predecessors, calendar and float, and a Gantt chart. Type the wall tasks or open an MS Project file, then choose the wall task to assess (external walls, internal walls and so on).", bar)}
   ${info}${rows ? summary + calendarPanel() + toolbar() + editable(sc) + taskInfo() : empty()}`;
 }

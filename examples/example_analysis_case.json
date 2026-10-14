@@ -389,7 +389,7 @@
     "criterion": "min_expected_total_cost"
   },
   "schedule": {
-    "name": "Block B residential (ILLUSTRATIVE example schedule)",
+    "name": "Block B brickwork package (ILLUSTRATIVE example schedule)",
     "start": "2026-11-02",
     "calendar": {
       "name": "Site, six-day week (ILLUSTRATIVE)",
@@ -413,59 +413,38 @@
     },
     "rows": [
       {
-        "name": "Block B residential: structure and finishes",
+        "name": "Block B brickwork package",
         "outline_level": 1,
         "duration_days": 0,
         "predecessors": "",
         "facts": {}
       },
       {
-        "name": "Substructure",
+        "name": "Ground floor",
         "outline_level": 2,
         "duration_days": 0,
         "predecessors": "",
         "facts": {}
       },
       {
-        "name": "Excavation",
+        "name": "Scaffolding, lift and material staging, ground floor",
         "outline_level": 3,
-        "duration_days": 6,
+        "duration_days": 2,
         "predecessors": "",
         "facts": {}
       },
       {
-        "name": "Footings and plinth beam",
+        "name": "Wall layout marking and DPC level check, ground floor",
         "outline_level": 3,
-        "duration_days": 10,
+        "duration_days": 1,
         "predecessors": "3",
         "facts": {}
       },
       {
-        "name": "Backfill and plinth filling",
-        "outline_level": 3,
-        "duration_days": 4,
-        "predecessors": "4",
-        "facts": {}
-      },
-      {
-        "name": "Superstructure",
-        "outline_level": 2,
-        "duration_days": 0,
-        "predecessors": "",
-        "facts": {}
-      },
-      {
-        "name": "Column and slab, ground floor",
-        "outline_level": 3,
-        "duration_days": 12,
-        "predecessors": "5",
-        "facts": {}
-      },
-      {
-        "name": "Brick masonry, ground-floor walls",
+        "name": "Brick masonry, ground-floor external walls",
         "outline_level": 3,
         "duration_days": 16,
-        "predecessors": "7",
+        "predecessors": "4",
         "facts": {
           "required_workers": 6,
           "available_workers": 5,
@@ -498,17 +477,56 @@
         }
       },
       {
-        "name": "Column and slab, first floor",
+        "name": "Brick masonry, ground-floor internal walls",
         "outline_level": 3,
-        "duration_days": 12,
-        "predecessors": "7",
+        "duration_days": 10,
+        "predecessors": "4, 5SS+4d",
+        "facts": {
+          "required_workers": 4,
+          "material_stock_days": 2,
+          "masonry_floor_level": 0
+        }
+      },
+      {
+        "name": "Lintels and sill bands, ground floor",
+        "outline_level": 3,
+        "duration_days": 4,
+        "predecessors": "5SS+6d",
         "facts": {}
       },
       {
-        "name": "Brick masonry, first-floor walls",
+        "name": "Curing and inspection, ground floor",
+        "outline_level": 3,
+        "duration_days": 3,
+        "predecessors": "5, 6, 7",
+        "facts": {}
+      },
+      {
+        "name": "First floor",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Slab curing and de-propping, first floor (structure team)",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "8",
+        "facts": {}
+      },
+      {
+        "name": "Scaffolding, lift and material staging, first floor",
+        "outline_level": 3,
+        "duration_days": 2,
+        "predecessors": "10",
+        "facts": {}
+      },
+      {
+        "name": "Brick masonry, first-floor external walls",
         "outline_level": 3,
         "duration_days": 16,
-        "predecessors": "9, 8SS+5d",
+        "predecessors": "11",
         "facts": {
           "required_workers": 6,
           "material_stock_days": 4,
@@ -516,45 +534,45 @@
         }
       },
       {
-        "name": "Services and finishes",
+        "name": "Brick masonry, first-floor internal walls",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "11, 12SS+4d",
+        "facts": {}
+      },
+      {
+        "name": "Lintels and sill bands, first floor",
+        "outline_level": 3,
+        "duration_days": 4,
+        "predecessors": "12SS+6d",
+        "facts": {}
+      },
+      {
+        "name": "Curing and inspection, first floor",
+        "outline_level": 3,
+        "duration_days": 3,
+        "predecessors": "12, 13, 14",
+        "facts": {}
+      },
+      {
+        "name": "Roof level",
         "outline_level": 2,
         "duration_days": 0,
         "predecessors": "",
         "facts": {}
       },
       {
-        "name": "Electrical conduit and plumbing rough-in",
+        "name": "Parapet walls and terrace-level partitions",
         "outline_level": 3,
-        "duration_days": 10,
-        "predecessors": "8",
+        "duration_days": 6,
+        "predecessors": "15",
         "facts": {}
       },
       {
-        "name": "Plastering, ground floor",
-        "outline_level": 3,
-        "duration_days": 12,
-        "predecessors": "12",
-        "facts": {}
-      },
-      {
-        "name": "Plastering, first floor",
-        "outline_level": 3,
-        "duration_days": 12,
-        "predecessors": "10, 13SS+3d",
-        "facts": {}
-      },
-      {
-        "name": "Flooring and painting",
-        "outline_level": 3,
-        "duration_days": 18,
-        "predecessors": "13, 14",
-        "facts": {}
-      },
-      {
-        "name": "Handover",
+        "name": "Masonry work complete",
         "outline_level": 3,
         "duration_days": 0,
-        "predecessors": "15",
+        "predecessors": "17",
         "facts": {}
       }
     ]
