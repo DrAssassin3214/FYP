@@ -14,6 +14,7 @@ Routes
     GET  /api/evidence        ?ids=M01,R08  |  ?q=search words  |  (curated records; the bulk harvest is searched with q)
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
+    POST /api/schedule/compute  rows typed into the schedule grid -> same output as import
     POST /api/schedule/import  Microsoft Project XML in (raw body) -> tasks, critical path, per-task activity block out
     POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
     POST /api/suggest-risks   service.suggest_risks(...) (offline retrieval or guarded LLM)
@@ -464,7 +465,24 @@ def create_app() -> Flask:
 
         raw = request.get_data(cache=False)
         try:
-            res = analyse(parse_mspdi(raw))
+            sch = parse_mspdi(raw)
+            res = analyse(sch)
+            res["calendar"] = sch.calendar
+        except ScheduleError as e:
+            return _problems([str(e)])
+        return _json({"ok": True, **res})
+
+    @app.post("/api/schedule/compute")
+    def schedule_compute():
+        """Critical-path pass on rows typed into the schedule grid.  Body: {name, start, tasks:[{name, outline_level,
+        duration_days, predecessors:"3FS+2d"}]}; row number = task ID.  Nothing is stored."""
+        from app.schedule import ScheduleError, analyse
+        from app.schedule.build import build_schedule, fill_dates
+
+        d = _json_object()
+        try:
+            res = analyse(build_schedule(d))
+            fill_dates(res, d.get("start"), d.get("calendar"))
         except ScheduleError as e:
             return _problems([str(e)])
         return _json({"ok": True, **res})

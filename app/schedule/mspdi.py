@@ -54,6 +54,7 @@ class Schedule:
     hours_per_day: float
     tasks: list
     warnings: list
+    calendar: Optional[dict] = None
 
 
 def _strip(tag: str) -> str:
@@ -161,6 +162,56 @@ def parse_mspdi(data: bytes) -> Schedule:
         raise ScheduleError("The file has no tasks.")
     if not any(not t.summary for t in tasks):
         raise ScheduleError("The file has only summary tasks.")
-    warnings.append("Calendars, holidays, resource levelling and date constraints in the MSP file are not modelled: durations are "
-                    "working days from the file's hours-per-day, and dates are shown as saved by MSP.")
-    return Schedule(name=_text(root, "Name") or _text(root, "Title") or "Imported schedule", hours_per_day=hpd, tasks=tasks, warnings=warnings)
+    cal = _project_calendar(root, hpd, warnings)
+    warnings.append("The project calendar (working days and holidays) is read; task and resource calendars, resource levelling and date "
+                    "constraints in the MSP file are not modelled. Durations are working days from the file's hours per day.")
+    return Schedule(name=_text(root, "Name") or _text(root, "Title") or "Imported schedule", hours_per_day=hpd, tasks=tasks,
+                    warnings=warnings, calendar=cal)
+
+
+def _cal_el(root, uid):
+    cals = _child(root, "Calendars")
+    if cals is None:
+        return None
+    for c in cals:
+        if _strip(c.tag) == "Calendar" and _text(c, "UID") == str(uid):
+            return c
+    return None
+
+
+def _project_calendar(root, hpd, warnings):
+    """Working weekdays and dated exceptions of the project's calendar (base calendars followed), or None."""
+    uid = _text(root, "CalendarUID")
+    el = _cal_el(root, uid) if uid else None
+    if el is None:
+        return None
+    chain, seen = [], set()
+    while el is not None and _text(el, "UID") not in seen:
+        seen.add(_text(el, "UID"))
+        chain.append(el)
+        base = _text(el, "BaseCalendarUID")
+        el = _cal_el(root, base) if base and base != "-1" else None
+    days, exc = {}, []
+    for c in reversed(chain):                       # base first, the project calendar overrides
+        wds = _child(c, "WeekDays")
+        for wd in (wds if wds is not None else []):
+            dt = _text(wd, "DayType")
+            if dt.isdigit() and 1 <= int(dt) <= 7:
+                days[(int(dt) - 2) % 7] = _bool(_text(wd, "DayWorking"))
+            elif dt == "0":
+                tp = _child(wd, "TimePeriod")
+                if tp is not None:
+                    exc.append((_text(tp, "FromDate"), _text(tp, "ToDate"), _text(wd, "DayWorking"), _text(wd, "Name") or _text(c, "Name")))
+        exs = _child(c, "Exceptions")
+        for e in (exs if exs is not None else []):
+            tp = _child(e, "TimePeriod")
+            if tp is not None:
+                exc.append((_text(tp, "FromDate"), _text(tp, "ToDate"), _text(e, "DayWorking"), _text(e, "Name")))
+    if not days:
+        return None
+    out = []
+    for a, b, w, nm in exc[:500]:
+        if len(a) >= 10 and len(b) >= 10:
+            out.append({"name": nm, "from": a[:10], "to": b[:10], "working": _bool(w)})
+    wd = sorted(k for k, v in days.items() if v) or [0, 1, 2, 3, 4]
+    return {"name": _text(_cal_el(root, uid), "Name") or "Project calendar", "workdays": wd, "hours_per_day": hpd, "exceptions": out}

@@ -176,6 +176,12 @@ function renderScreen({ nav = false } = {}) {
   const y = window.scrollY;
   const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
   const mod = BY_ID[S.ui.screen].mod;
+  if (S.ui.screen === "schedule" && !S.ui.schedRows && S.case.schedule && Array.isArray(S.case.schedule.rows) && S.case.schedule.rows.length) {
+    const sc = S.case.schedule;
+    S.ui.schedRows = sc.rows.map((r) => ({ ...sSched.blankRow(), ...r, facts: { ...(r.facts || {}) } }));
+    S.ui.schedName = sc.name || "Project"; S.ui.schedStart = sc.start || new Date().toISOString().slice(0, 10); S.ui.schedCal = sc.calendar || sSched.defaultCalendar();
+    S.ui.schedSel = null; setTimeout(() => schedRecompute(), 0);
+  }
   root.innerHTML = mod.render();
   if (!root.querySelector("[data-screen-problems]")) {
     const html = screenProblems(S.ui.screen);
@@ -468,7 +474,7 @@ async function guardDiscard(what) {
   return confirmModal("Discard unsaved changes?", `The current case has unsaved changes. ${h(what)} will replace it. Save first if you want to keep it.`, "Discard and continue");
 }
 function loadCase(c, { fileName = null, msg = "" } = {}) {
-  S.case = c;
+  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null;
   S.savedKey = caseKey();
   S.result = null; S.resultKey = null;
   S.validation = { status: "idle", problems: [], warnings: [], key: null };
@@ -734,6 +740,13 @@ const ACTIONS = {
     openNewRisk(S.case.risks.length - 1, "AI-suggested risk added as unverified. Its probability and delay are empty and must come from you or an expert.");
     ensureEvidence(c.evidence_ids).then((found) => { if (found) renderScreen(); });
   },
+  "sched-new": () => {
+    S.ui.schedRows = [sSched.blankRow()]; S.ui.schedule = null; S.ui.schedSel = 1; S.ui.schedProblems = null;
+    S.ui.schedName = S.ui.schedName || (S.case.project && S.case.project.name) || "Project";
+    S.ui.schedStart = S.ui.schedStart || new Date().toISOString().slice(0, 10);
+    S.ui.schedCal = S.ui.schedCal || sSched.defaultCalendar();
+    schedRecompute();
+  },
   "sched-open": () => {
     const inp = document.createElement("input");
     inp.type = "file"; inp.accept = ".xml,application/xml,text/xml";
@@ -743,21 +756,56 @@ const ACTIONS = {
       S.ui.schedBusy = true; S.ui.schedProblems = null; renderScreen();
       const r = await postRaw("/api/schedule/import", await f.arrayBuffer(), "application/xml");
       S.ui.schedBusy = false;
-      if (r.ok && r.data.ok) { S.ui.schedule = r.data; S.ui.schedSel = null; S.ui.schedFile = f.name; }
-      else S.ui.schedProblems = r.data.problems || ["The schedule could not be read."];
-      renderScreen();
+      if (r.ok && r.data.ok) {
+        S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedName = r.data.project.name; S.ui.schedSel = null; S.ui.schedFile = f.name;
+        S.ui.schedStart = (r.data.tasks.find((t) => t.start) || {}).start?.slice(0, 10) || S.ui.schedStart || new Date().toISOString().slice(0, 10);
+        S.ui.schedCal = r.data.calendar || S.ui.schedCal || sSched.defaultCalendar();
+        await schedRecompute(r.data.warnings || []);   // from here the grid is the single source: row number = task ID
+      } else { S.ui.schedProblems = r.data.problems || ["The schedule could not be read."]; renderScreen(); }
     });
     inp.click();
   },
   "sched-pick": (b) => { S.ui.schedSel = +b.dataset.uid; renderScreen(); },
+  "sched-add": () => {
+    const rows = S.ui.schedRows, at = S.ui.schedSel || rows.length;
+    const row = sSched.blankRow(); row.outline_level = rows[at - 1] ? rows[at - 1].outline_level : 1;
+    rows.splice(at, 0, row);
+    const map = {}; for (let k = 1; k <= rows.length - 1; k++) map[k] = k > at ? k + 1 : k;
+    sSched.remapPreds(rows, map); S.ui.schedSel = at + 1; schedRecompute();
+  },
+  "sched-del": () => {
+    const rows = S.ui.schedRows, at = S.ui.schedSel;
+    if (!at || rows.length < 2) return;
+    rows.splice(at - 1, 1);
+    const map = {}; for (let k = 1; k <= rows.length + 1; k++) if (k !== at) map[k] = k > at ? k - 1 : k;
+    sSched.remapPreds(rows, map); S.ui.schedSel = Math.min(at, rows.length); schedRecompute();
+  },
+  "sched-in": () => { const r = S.ui.schedRows[S.ui.schedSel - 1], p = S.ui.schedRows[S.ui.schedSel - 2]; if (r && p && r.outline_level <= p.outline_level) { r.outline_level += 1; schedRecompute(); } },
+  "sched-out": () => { const r = S.ui.schedRows[S.ui.schedSel - 1]; if (r && r.outline_level > 1) { r.outline_level -= 1; schedRecompute(); } },
+  "sched-cal-toggle": () => { S.ui.schedCalOpen = !S.ui.schedCalOpen; renderScreen(); },
+  "sched-tab": (b) => { S.ui.schedTab = b.dataset.val; renderScreen(); },
+  "sched-fact-bool": (b) => {
+    const r = S.ui.schedRows[S.ui.schedSel - 1]; if (!r) return;
+    r.facts = r.facts || {};
+    if (b.dataset.val === "unknown") delete r.facts[b.dataset.fact]; else r.facts[b.dataset.fact] = b.dataset.val === "true";
+    S.case.schedule = { name: S.ui.schedName, start: S.ui.schedStart, calendar: S.ui.schedCal, rows: S.ui.schedRows };
+    changed({ rerender: false }); renderScreen();
+  },
+  "sched-cal-add": () => { S.ui.schedCal.exceptions.push({ name: "", from: S.ui.schedStart, to: S.ui.schedStart, working: false }); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-cal-del": (b) => { S.ui.schedCal.exceptions.splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-up": () => schedMove(-1),
+  "sched-down": () => schedMove(1),
   "sched-use": () => {
-    const t = S.ui.schedule?.tasks.find((x) => x.uid === S.ui.schedSel);
+    const t = S.ui.schedule?.tasks.find((x) => x.id === S.ui.schedSel);
     if (!t || t.summary || !t.activity) return;
     S.case.project = S.case.project || {};
     if (!S.case.project.name) S.case.project.name = S.ui.schedule.project.name;
     S.case.activity = { ...(S.case.activity || {}), ...t.activity };
+    const tf = (S.ui.schedRows[S.ui.schedSel - 1] || {}).facts || {};
+    S.case.facts = { ...(S.case.facts || {}), ...tf };     // only the facts typed for this task; unknown stays unknown
+    S.ui.autoAddPending = true;
     changed({ rerender: false });
-    toast(`Task \u201C${h(t.name)}\u201D copied to Case & Activity: planned ${t.duration_days} d, deadline ${t.activity.deadline_days.value} d (planned + float). Check both before you rely on them.`, "ok", { actionLabel: "Open", timeout: 12000, onAction: () => { location.hash = "#/case"; } });
+    toast(`Task \u201C${h(t.name)}\u201D copied to Case & Activity with its site facts (labour, material, site): planned ${t.duration_days} d, deadline ${t.activity.deadline_days.value} d (planned + float). Check both before you rely on them.`, "ok", { actionLabel: "Open", timeout: 12000, onAction: () => { location.hash = "#/case"; } });
     renderScreen();
   },
   "opts-toggle": () => { S.ui.showAllOptions = !S.ui.showAllOptions; renderScreen(); },
@@ -776,7 +824,62 @@ const ACTIONS = {
     setTimeout(() => { const e = screenEl().querySelector(".field-err.show, [data-screen-problems]"); e?.scrollIntoView({ block: "center", behavior: "smooth" }); }, 150);
   },
 };
+/** Send the typed rows to the critical-path service and show the result. Keeps keyboard focus on the cell the user was in. */
+async function schedRecompute(notes = []) {
+  const rows = S.ui.schedRows;
+  if (!rows || !rows.length) return;
+  const act = document.activeElement;
+  const keep = act && act.dataset && act.dataset.i !== undefined ? { i: act.dataset.i, f: act.dataset.f } : null;
+  const r = await post("/api/schedule/compute", sSched.rowsPayload());
+  if (r.ok && r.data.ok) {
+    S.ui.schedule = { ...r.data, warnings: [...notes, ...(r.data.warnings || [])] }; S.ui.schedProblems = null;
+    S.case.schedule = { name: S.ui.schedName, start: S.ui.schedStart, calendar: S.ui.schedCal, rows: S.ui.schedRows };   // saved with the case file
+    changed({ rerender: false });
+  }
+  else S.ui.schedProblems = r.data.problems || ["The schedule could not be calculated."];
+  renderScreen();
+  if (keep) $(`[data-i="${keep.i}"][data-f="${keep.f}"]`)?.focus();
+}
+function schedMove(d) {
+  const rows = S.ui.schedRows, at = S.ui.schedSel, to = at + d;
+  if (!at || to < 1 || to > rows.length) return;
+  [rows[at - 1], rows[to - 1]] = [rows[to - 1], rows[at - 1]];
+  const map = {}; for (let k = 1; k <= rows.length; k++) map[k] = k;
+  map[at] = to; map[to] = at;
+  sSched.remapPreds(rows, map); S.ui.schedSel = to; schedRecompute();
+}
+
 const CHANGE_ACTIONS = {
+  "sched-edit": (el) => {
+    const r = S.ui.schedRows[+el.dataset.i]; if (!r) return;
+    const f = el.dataset.f;
+    r[f] = f === "duration_days" ? Math.max(0, parseFloat(String(el.value).replace(",", ".")) || 0) : el.value;
+    S.ui.schedSel = +el.dataset.i + 1;
+    schedRecompute();
+  },
+  "sched-fact-num": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    const k = el.dataset.f.replace(/^fact:/, "");
+    r.facts = r.facts || {};
+    const v = String(el.value).replace(",", ".").trim();
+    if (v === "") delete r.facts[k]; else if (isFinite(+v) && +v >= 0) r.facts[k] = +v;
+    S.ui.schedSel = i + 1;
+    schedRecompute();
+  },
+  "sched-cal-day": (el) => {
+    const c = S.ui.schedCal, d = +el.dataset.d;
+    c.workdays = el.checked ? [...new Set([...c.workdays, d])].sort() : c.workdays.filter((x) => x !== d);
+    if (!c.workdays.length) { c.workdays = [d]; }
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "sched-cal-hpd": (el) => { S.ui.schedCal.hours_per_day = Math.min(24, Math.max(1, parseFloat(el.value) || 8)); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-cal-ex": (el) => {
+    const e = S.ui.schedCal.exceptions[+el.dataset.i]; if (!e) return;
+    e[el.dataset.f] = el.dataset.f === "working" ? el.value === "1" : el.value;
+    if (e.to < e.from) e.to = e.from;
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "sched-meta": (el) => { if (el.dataset.f === "name") S.ui.schedName = el.value; else S.ui.schedStart = el.value; schedRecompute(); },
   "ev-cited": (el) => { S.ui.evCitedOnly = el.checked; refreshEvList(); },
 };
 

@@ -20,6 +20,8 @@ export const ICONS = {
   x: '<path d="M6 6l12 12M18 6 6 18"/>',
   xCircle: '<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>',
   minusCircle: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',
+  chevUp: '<path d="M6 15l6-6 6 6"/>',
+  chevLeft: '<path d="M15 6l-6 6 6 6"/>',
   chevDown: '<path d="M6 9l6 6 6-6"/>',
   chevRight: '<path d="M9 6l6 6-6 6"/>',
   download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',

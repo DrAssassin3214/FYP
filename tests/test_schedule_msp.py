@@ -87,7 +87,7 @@ def test_msp_critical_flag_disagreement_is_reported():
 
 
 def test_warns_that_calendars_are_not_modelled():
-    assert any("Calendars" in w for w in analyse(parse_mspdi(_diamond()))["warnings"])
+    assert any("task and resource calendars" in w for w in analyse(parse_mspdi(_diamond()))["warnings"])
 
 
 def test_api_import_route():

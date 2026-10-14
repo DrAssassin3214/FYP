@@ -741,3 +741,25 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .g-sum { position: absolute; top: 9px; height: 6px; background: #222; border-radius: 1px; }
 .g-ms { position: absolute; top: 7px; width: 12px; height: 12px; background: #222; transform: rotate(45deg) scale(.75); }
 .crit-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #c0392b; }
+
+/* editable schedule grid */
+.msp-in { width: 100%; box-sizing: border-box; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; padding: 2px 4px; border-radius: 3px; }
+.msp-in:hover { border-color: var(--border); }
+.msp-in:focus { border-color: var(--accent, #1f5fbf); background: var(--surface); outline: none; }
+.msp-name { display: flex; align-items: center; gap: 6px; }
+.msp-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 10px 0; }
+.msp-start { display: grid; gap: 2px; font-size: var(--fs-xs); color: var(--muted, #667); }
+.msp-start .msp-in { border-color: var(--border); min-width: 130px; }
+.cal-panel { margin: 10px 0; padding: 8px 12px; }
+.cal-panel summary { cursor: pointer; }
+.cal-days { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 10px 0; }
+.cal-day { display: inline-flex; gap: 6px; align-items: center; font-size: var(--fs-sm); }
+.cal-ex { display: grid; grid-template-columns: 1.4fr 150px 150px 140px auto; gap: 6px; margin: 4px 0; align-items: center; }
+.cal-ex .msp-in, .num-u .msp-in.boxed { border-color: var(--border); }
+.task-info { margin: 14px 0; padding: 12px 14px; }
+.task-info h3 { margin: 0 0 8px; font-size: var(--fs-md, 1rem); }
+.ti-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 18px; margin: 12px 0; }
+.fld-l { font-size: var(--fs-sm); margin-bottom: 4px; }
+.num-u { display: flex; align-items: center; gap: 6px; }
+.num-u .unit { color: var(--muted, #667); font-size: var(--fs-xs); }
+.cal-sum { all: unset; cursor: pointer; display: flex; gap: 8px; align-items: center; width: 100%; font-size: var(--fs-sm); }
