@@ -861,7 +861,7 @@ async function workFetch(i) {
   const w = r.work;
   if (!w || !w.norm_id || !(Number(w.quantity) > 0) || !(Number(r.duration_days) > 0)) { S.ui.workPlans[i] = null; return; }
   const q = await post("/api/work-plan", { duration_days: r.duration_days, work: w });
-  S.ui.workPlans[i] = q.ok && q.data.ok ? { plan: q.data.plan } : { error: ((q.data && q.data.problems) || ["Could not work out the requirement."])[0] };
+  S.ui.workPlans[i] = q.ok && q.data.ok ? { plan: q.data.plan } : { error: ((q.data && q.data.problems) || ["Could not work out the requirement. If this keeps happening, close the app completely and start it again so the new Python files load."])[0] };
 }
 async function workChanged(i) {
   const act = document.activeElement;

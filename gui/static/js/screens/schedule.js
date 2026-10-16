@@ -75,7 +75,8 @@ function workBlock(i, r) {
   const sel = `<select class="select msp-in boxed" data-action-change="work-set" data-i="${i}" data-f="norm_id" aria-label="Labour norm"><option value="">Choose a labour norm…</option>${norms.map((n) => `<option value="${h(n.item_id)}"${n.item_id === w.norm_id ? " selected" : ""}>${h(n.title)} (per ${h(n.unit)})</option>`).join("")}</select>`;
   const inp = (f, v, ph = "") => `<input class="msp-in boxed" inputmode="decimal" placeholder="${h(ph)}" value="${wnum(v)}" data-action-change="work-set" data-i="${i}" data-f="${f}">`;
   let out = "";
-  if (!norm) out = `<p class="muted">Pick a labour norm and enter the quantity of work: the number of workers required is worked out from it, compared with the workers available, and a shortfall is flagged automatically (no yes/no question).</p>`;
+  if (!norms.length) out = `<div class="note-box"><strong>The labour norm list did not load.</strong> This page has the new screen, but the app's Python side is still the old version. Close the app completely and start it again (run_desktop.bat), then reopen this tab.</div>`;
+  else if (!norm) out = `<p class="muted">Pick a labour norm and enter the quantity of work: the number of workers required is worked out from it, compared with the workers available, and a shortfall is flagged automatically (no yes/no question).</p>`;
   else if (!(r.duration_days > 0)) out = `<p class="muted">Enter this task's duration (Dur. column): the workers required are the work content divided by the days available.</p>`;
   else if (wp && wp.error) out = `<div class="note-box">${h(wp.error)}</div>`;
   else if (plan) {
