@@ -785,6 +785,12 @@ const ACTIONS = {
     if (S.ui.schedAssess === S.ui.schedSel) S.ui.autoAddPending = true;
     schedRecompute();
   },
+  "work-use-crew": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i], pl = ((S.ui.workPlans || {})[i] || {}).plan; if (!r || !pl) return;
+    r.work.available = r.work.available || {};
+    for (const g of pl.groups) r.work.available[g.group] = g.required_workers;
+    workChanged(i);
+  },
   "work-mat-add": (b) => {
     const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
     r.work = r.work || { available: {}, materials: [] };

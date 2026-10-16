@@ -148,3 +148,22 @@ def test_api_work_plan_and_norm_list():
     assert c.post("/api/work-plan", json={"duration_days": 100, "work": {"quantity": 5}}).status_code == 422
     norms = c.get("/api/meta").get_json()["work_norms"]
     assert {n["item_id"] for n in norms} >= {"IS7272-1brick", "CPWD-FPS-superstructure-1brick"} and all(n["unit"] in ("m3", "m2") for n in norms)
+
+
+def test_output_per_worker_day_comes_from_the_norm():
+    # IS 7272: mason 0.94, mazdoor 1.8, bhisti 0.2 days per m3  ->  1/0.94, 1/1.8, 1/0.2 m3 per worker-day
+    from app.productivity.labour_plan import norm_groups
+    g = {x["group"]: x["output_per_worker_day"] for x in norm_groups(NORM)}
+    assert g["masons"] == pytest.approx(1 / 0.94) and g["helpers"] == pytest.approx(1 / 1.8) and g["bhisti"] == pytest.approx(5.0)
+    slow = {x["group"]: x["output_per_worker_day"] for x in norm_groups(NORM, 0.8)}
+    assert slow["masons"] == pytest.approx(0.8 / 0.94)
+    p = {x["group"]: x for x in plan_work(NORM, 1000, "m3", 100, AVAIL)["groups"]}
+    assert p["masons"]["output_per_worker_day"] == pytest.approx(1 / 0.94)
+
+
+def test_meta_lists_each_norm_with_its_per_group_output():
+    from gui.api import create_app
+    n = {x["item_id"]: x for x in create_app().test_client().get("/api/meta").get_json()["work_norms"]}
+    g = {x["group"]: x for x in n["CPWD-FPS-superstructure-1brick"]["groups"]}
+    assert g["masons"]["constant_per_unit"] == pytest.approx(0.94)            # 0.47 + 0.47 (two mason classes add)
+    assert g["masons"]["output_per_worker_day"] == pytest.approx(1 / 0.94)

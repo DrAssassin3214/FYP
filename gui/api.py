@@ -218,8 +218,10 @@ def ai_status() -> dict:
 def _work_norms() -> list[dict]:
     """Labour norms the user can pick for a quantity of work (title, unit, citation, constants per unit)."""
     from app.productivity.india_norms import load_norms
+    from app.productivity.labour_plan import norm_groups
     return [{"item_id": n.item_id, "title": n.title, "unit": n.unit_basis, "wall_type": n.wall_type,
-             "citation": n.citation, "roles": dict(n.roles), "conditions": n.conditions} for n in load_norms().values()]
+             "citation": n.citation, "roles": dict(n.roles), "conditions": n.conditions,
+             "groups": norm_groups(n)} for n in load_norms().values()]
 
 
 def _fact_schema() -> list[dict]:

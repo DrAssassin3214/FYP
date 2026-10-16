@@ -74,6 +74,7 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
         groups.append({
             "group": name, "label": GROUP_LABEL.get(name, name), "norm_roles": dict(g["roles"]),
             "constant_per_unit": g["constant"], "person_days": person_days,
+            "output_per_worker_day": (efficiency / g["constant"]) if g["constant"] > 0 else None,
             "required_workers": req, "required_fractional": frac,
             "available": a, "shortfall": short, "short": None if a is None else bool(short and short > _EPS),
             "days_with_available": (None if a is None else (person_days / a if a > 0 else None)),
@@ -159,3 +160,17 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
                   "be used (a surplus in one group does not cover a shortage in another). The norm is a planning constant, "
                   "not measured site output."),
     }
+
+
+def norm_groups(norm: NormItem, efficiency: float = 1.0) -> list[dict]:
+    """The norm's labour constants by group, and the output one worker of each group achieves per day
+    (output per worker-day = 1 / constant, divided further by nothing: the norm itself, scaled by `efficiency`)."""
+    out: dict[str, dict] = {}
+    for role, c in norm.roles.items():
+        g = out.setdefault(role_group(role), {"group": role_group(role), "roles": {}, "constant_per_unit": 0.0})
+        g["roles"][role] = c
+        g["constant_per_unit"] += c
+    for g in out.values():
+        g["label"] = GROUP_LABEL.get(g["group"], g["group"])
+        g["output_per_worker_day"] = (efficiency / g["constant_per_unit"]) if g["constant_per_unit"] > 0 else None
+    return list(out.values())

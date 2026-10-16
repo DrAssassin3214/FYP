@@ -74,6 +74,9 @@ function workBlock(i, r) {
   const wp = wplan(i), plan = wp && wp.plan;
   const sel = `<select class="select msp-in boxed" data-action-change="work-set" data-i="${i}" data-f="norm_id" aria-label="Labour norm"><option value="">Choose a labour norm…</option>${norms.map((n) => `<option value="${h(n.item_id)}"${n.item_id === w.norm_id ? " selected" : ""}>${h(n.title)} (per ${h(n.unit)})</option>`).join("")}</select>`;
   const inp = (f, v, ph = "") => `<input class="msp-in boxed" inputmode="decimal" placeholder="${h(ph)}" value="${wnum(v)}" data-action-change="work-set" data-i="${i}" data-f="${f}">`;
+  const eff = Number(w.efficiency) > 0 ? Number(w.efficiency) : 1, U = norm ? (norm.unit === "m3" ? "m³" : "m²") : "";
+  const normPanel = norm ? `<table class="tbl work-tbl"><thead><tr><th>Taken from the norm</th><th class="r">Labour days per ${U}</th><th class="r">Output per worker per day</th></tr></thead><tbody>${(norm.groups || []).map((g) => `<tr><td>${h(g.label)}</td><td class="r">${num(g.constant_per_unit, 2)}</td><td class="r"><strong>${num(g.output_per_worker_day * eff, 2)}</strong> ${U}${eff !== 1 ? ` <span class="muted">(norm ${num(g.output_per_worker_day, 2)} × ${num(eff, 2)})</span>` : ""}</td></tr>`).join("")}</tbody></table>` : "";
+  const need = (g) => { const x = plan && plan.groups.find((y) => y.group === g); return x ? x.required_workers : null; };
   let out = "";
   if (!norms.length) out = `<div class="note-box"><strong>The labour norm list did not load.</strong> This page has the new screen, but the app's Python side is still the old version. Close the app completely and start it again (run_desktop.bat), then reopen this tab.</div>`;
   else if (!norm) out = `<p class="muted">Pick a labour norm and enter the quantity of work: the number of workers required is worked out from it, compared with the workers available, and a shortfall is flagged automatically (no yes/no question).</p>`;
@@ -93,9 +96,10 @@ function workBlock(i, r) {
     <div class="form-grid">
       <div class="fld wide"><div class="fld-l">Labour norm (IS 7272 / CPWD Analysis of Rates)</div>${sel}</div>
       <div class="fld"><div class="fld-l">Quantity of work</div><div class="num-u">${inp("quantity", w.quantity, "e.g. 1000")}<span class="unit">${norm ? h(norm.unit === "m3" ? "m³" : "m²") : ""}</span></div></div>
-      <div class="fld"><div class="fld-l">Efficiency vs the norm</div><div class="num-u">${inp("efficiency", w.efficiency, "1 = as the norm")}<span class="unit">×</span></div></div>
-      ${WORK_GROUPS.map(([g, lab]) => `<div class="fld"><div class="fld-l">${h(lab)} available</div><div class="num-u">${inp("avail:" + g, (w.available || {})[g], "number")}<span class="unit">workers</span></div></div>`).join("")}
-    </div>${out}</div>`;
+      <div class="fld"><div class="fld-l">Adjust for your gang (1 = exactly the norm)</div><div class="num-u">${inp("efficiency", w.efficiency, "1 = as the norm")}<span class="unit">×</span></div></div>
+      ${WORK_GROUPS.map(([g, lab]) => `<div class="fld"><div class="fld-l">${h(lab)} available</div><div class="num-u">${inp("avail:" + g, (w.available || {})[g], need(g) !== null ? "needs " + need(g) : "number")}<span class="unit">workers</span></div>${need(g) !== null ? `<div class="hint">calculated from the quantity: <strong>${need(g)}</strong> needed</div>` : ""}</div>`).join("")}
+      ${plan ? `<div class="fld"><button type="button" class="btn btn-sm" data-action="work-use-crew" data-i="${i}">Use the calculated crew</button><div class="hint">Fills the available boxes with the numbers needed. Replace them with who is actually on site to see a shortfall.</div></div>` : ""}
+    </div>${normPanel}${out}</div>`;
 }
 
 /** Materials from the quantity of work: daily need, stock cover versus lead time (no default conversion factors). */
