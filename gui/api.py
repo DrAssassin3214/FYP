@@ -217,11 +217,11 @@ def ai_status() -> dict:
 
 def _work_norms() -> list[dict]:
     """Labour norms the user can pick for a quantity of work (title, unit, citation, constants per unit)."""
-    from app.productivity.india_norms import load_norms
+    from app.productivity.india_norms import selectable_norms
     from app.productivity.labour_plan import norm_groups
     return [{"item_id": n.item_id, "title": n.title, "unit": n.unit_basis, "wall_type": n.wall_type,
              "citation": n.citation, "roles": dict(n.roles), "conditions": n.conditions,
-             "groups": norm_groups(n)} for n in load_norms().values()]
+             "groups": norm_groups(n)} for n in selectable_norms().values()]
 
 
 def _fact_schema() -> list[dict]:
@@ -506,14 +506,14 @@ def create_app() -> Flask:
     def work_plan():
         """Body: {duration_days, work:{quantity, unit, norm_id, efficiency?, available?, materials?}} -> workers required
         per role, shortfall flags, implied duration and material cover.  Stateless; nothing is stored."""
-        from app.productivity.india_norms import load_norms
+        from app.productivity.india_norms import selectable_norms
         from app.productivity.work_plan import build_work_plan
 
         d = _json_object()
         w = d.get("work") if isinstance(d.get("work"), dict) else {}
         dur = d.get("duration_days")
         try:
-            res = build_work_plan(w, None if dur in (None, "") else dur, load_norms())
+            res = build_work_plan(w, None if dur in (None, "") else dur, selectable_norms())
         except (ValueError, TypeError) as e:
             return _problems([str(e)])
         if res is None:

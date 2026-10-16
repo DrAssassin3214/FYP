@@ -105,7 +105,7 @@ function workBlock(i, r) {
   }
   return `<div class="work-box"><div class="subhead">Work quantity &rarr; workers required</div>
     <div class="form-grid">
-      <div class="fld wide"><div class="fld-l">Labour norm (IS 7272 / CPWD Analysis of Rates)</div>${sel}</div>
+      <div class="fld wide"><div class="fld-l">Labour norm (IS 7272)</div>${sel}</div>
       <div class="fld"><div class="fld-l">Quantity of work</div><div class="num-u">${inp("quantity", w.quantity, "e.g. 1000")}<span class="unit">${norm ? h(norm.unit === "m3" ? "m³" : "m²") : ""}</span></div></div>
       <div class="fld"><div class="fld-l">Adjust for your gang (1 = exactly the norm)</div><div class="num-u">${inp("efficiency", w.efficiency, "1 = as the norm")}<span class="unit">×</span></div></div>
       ${WORK_GROUPS.map(([g, lab]) => `<div class="fld"><div class="fld-l">${h(lab)} available</div><div class="num-u">${inp("avail:" + g, (w.available || {})[g], need(g) !== null ? "needs " + need(g) : "number")}<span class="unit">workers</span></div>${need(g) !== null ? `<div class="hint">calculated from the quantity: <strong>${need(g)}</strong> needed</div>` : ""}</div>`).join("")}

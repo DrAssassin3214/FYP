@@ -436,7 +436,7 @@ def _work_plan(work, planned, problems: list) -> Optional[dict]:
     """The optional `work` section: quantity of masonry + norm + available workers, listed materials / equipment /
     machinery / scaffolding, and site data (dates, counts) -> workers required, shortfall flags and the derived facts
     the rules use.  Problems are appended; returns None when there is nothing to work out or the input is unusable."""
-    from app.productivity.india_norms import load_norms
+    from app.productivity.india_norms import selectable_norms
     from app.productivity.work_plan import build_work_plan
 
     if not isinstance(work, Mapping):
@@ -447,7 +447,7 @@ def _work_plan(work, planned, problems: list) -> Optional[dict]:
                         "workers the quantity requires")
         return None
     try:
-        return build_work_plan(work, None if planned is None else planned.value, load_norms())
+        return build_work_plan(work, None if planned is None else planned.value, selectable_norms())
     except ValueError as e:
         problems.append(f"work: {e}")
         return None

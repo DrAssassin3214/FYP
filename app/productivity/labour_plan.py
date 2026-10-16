@@ -2,7 +2,7 @@
 
 Replaces typing "workers required" and answering "are skilled masons short? yes/no" by hand: the site manager enters
 the QUANTITY of masonry (m3 or m2, matching the norm), the planned duration comes from the activity, and the labour
-constants of a published norm (IS 7272 / CPWD Analysis of Rates, see india_norms.py) give the work content in
+constants of a published norm (IS 7272, see india_norms.py) give the work content in
 person-days per role.  Everything here is arithmetic on those inputs:
 
     person-days (role group) = quantity x sum of the group's labour constants / efficiency

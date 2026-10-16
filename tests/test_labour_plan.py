@@ -175,7 +175,7 @@ def test_api_work_plan_and_norm_list():
     assert c.post("/api/work-plan", json={"duration_days": 100, "work": {"quantity": 0, "norm_id": "IS7272-1brick"}}).status_code == 422
     assert c.post("/api/work-plan", json={"duration_days": 100, "work": {"quantity": 5}}).status_code == 422
     norms = c.get("/api/meta").get_json()["work_norms"]
-    assert {n["item_id"] for n in norms} >= {"IS7272-1brick", "CPWD-FPS-superstructure-1brick"} and all(n["unit"] in ("m3", "m2") for n in norms)
+    assert {n["item_id"] for n in norms} >= {"IS7272-1brick"} and not any(n["item_id"].startswith("CPWD") for n in norms) and all(n["unit"] in ("m3", "m2") for n in norms)
 
 
 def test_output_per_worker_day_comes_from_the_norm():
@@ -192,6 +192,6 @@ def test_output_per_worker_day_comes_from_the_norm():
 def test_meta_lists_each_norm_with_its_per_group_output():
     from gui.api import create_app
     n = {x["item_id"]: x for x in create_app().test_client().get("/api/meta").get_json()["work_norms"]}
-    g = {x["group"]: x for x in n["CPWD-FPS-superstructure-1brick"]["groups"]}
-    assert g["masons"]["constant_per_unit"] == pytest.approx(0.94)            # 0.47 + 0.47 (two mason classes add)
+    g = {x["group"]: x for x in n["IS7272-1brick"]["groups"]}
+    assert g["masons"]["constant_per_unit"] == pytest.approx(0.94)
     assert g["masons"]["output_per_worker_day"] == pytest.approx(1 / 0.94)
