@@ -2,7 +2,7 @@
 
 The report only restates engine results and the input register; it performs no
 new modelling.  Every parameter is printed with its Source, and everything that
-is not Literature/Historical is repeated in the assumptions section.
+is not Literature/Historical stays in the audit record (the printed report has no assumptions section).
 """
 from __future__ import annotations
 
@@ -167,11 +167,7 @@ def generate_report(
     a(f"**Rule used.** {decision['rule']}\n")
     a(f"**Result.** {decision['statement']}\n")
     a(f"*{decision['caveat']}*\n")
-    a("## 18. Assumptions and non-literature inputs\n")
-    a("| Input | Value | Source | Note |\n|---|---|---|---|")
-    for x in assumptions:
-        a(f"| {x['input']} | {x['value']} | {x['source']} | {x['note']} |")
-    a("\n## 19. Limitations\n")
+    a("## 18. Limitations\n")
     base_lim = [
         "Probabilities, delay ranges and mitigation effects are subjective unless a source is shown; results inherit that uncertainty.",
         "Risks are treated as independent and delays as additive unless a correlation is specified; interacting risks can widen the tail.",
@@ -180,7 +176,7 @@ def generate_report(
     ]
     for x in list(base_lim) + list(limitations):
         a(f"- {x}")
-    a("\n## 20. Evidence references\n")
+    a("\n## 19. Evidence references\n")
     for e in used_ids:
         a(f"- {e}: {evidence_index.get(e, 'not found')}")
     return "\n".join(L) + "\n"
