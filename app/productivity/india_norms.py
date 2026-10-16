@@ -65,7 +65,21 @@ def selectable_norms(path: Path = DEFAULT_PATH) -> dict[str, NormItem]:
     """The norms the tool offers: Bureau of Indian Standards codes only (IS 7272).  Other code books in the data file
     (CPWD analysis of rates) are kept for the record but never offered or applied.  Labour RATES come from the
     Maharashtra Schedule of Rates (SSR), entered by the user; no rate is built in."""
-    return {k: v for k, v in load_norms(path).items() if v.issuer == "Bureau of Indian Standards"}
+    base = {k: v for k, v in load_norms(path).items() if v.issuer == "Bureau of Indian Standards"}
+    from dataclasses import replace
+    from .ssr import load_ssr
+    ssr = load_ssr()
+    out = {}
+    for it in ssr["brick_items"]:                    # the list shows SSR items; the crew split comes from the matching constants
+        b = base[it["crew_split"]]
+        iid = f"SSR-{it['item']}"
+        out[iid] = replace(
+            b, item_id=iid, title=f"SSR 2022-23 item {it['item']}: {it['description']} (per {it['unit']})",
+            citation=f"{ssr['source']}, Building works, item {it['item']}", doc_type="state schedule of rates",
+            issuer="Maharashtra Public Works Department", year="2022-23", url="", access="",
+            location_in_source=f"Brick Work, item {it['item']}; completed rate Rs {it['completed_rate']}, labour Rs {it['labour_rate']} per {it['unit']}",
+            conditions=ssr["crew_split_note"])
+    return out
 
 
 def load_norms(path: Path = DEFAULT_PATH) -> dict[str, NormItem]:
