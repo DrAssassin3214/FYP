@@ -8,6 +8,7 @@ import { FACT_INFO, liveBlock } from "./rules.js";
 
 const ROW = 26;
 const num = (v, nd = 1) => (v === null || v === undefined ? "" : Number(v).toLocaleString("en-IN", { maximumFractionDigits: nd, minimumFractionDigits: 0 }));
+const GL = 340;                                    // width of the task-name column in the Gantt chart
 const dt = (s) => (s ? s.slice(0, 10) : "");
 
 function predText(t, byUid) {
@@ -166,27 +167,42 @@ function visibleIds(sc) {
   return keep.size ? keep : null;
 }
 
+function ganttChart(sc) {
+  if (!sc) return "";
+  const rows = S.ui.schedRows, byId = new Map(sc.tasks.map((t) => [t.id, t]));
+  const total = Math.max(sc.project.finish_days, 1);
+  const px = Math.max(4, Math.min(40, 760 / total)), w = Math.ceil(total * px) + 40;
+  const step = total > 120 ? 20 : total > 40 ? 10 : 5;
+  const ticks = [];
+  for (let d = 0; d <= total; d += step) ticks.push(`<span class="g-tick" style="left:${(d * px).toFixed(1)}px">${d}</span>`);
+  const cols = `${GL}px ${w}px`;
+  const vis = visibleIds(sc);
+  const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>Task</div><div class="g-cell g-axis">${ticks.join("")}</div></div>`;
+  const body = rows.map((r, i) => {
+    const id = i + 1, t = byId.get(id) || {};
+    if (vis && !vis.has(id)) return "";
+    const sum = !!t.summary, sel = S.ui.schedSel === id;
+    const bar = t.es === undefined ? "" : sum
+      ? `<span class="g-sum" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, (t.ef - t.es) * px).toFixed(1)}px"></span>`
+      : t.milestone ? `<span class="g-ms" style="left:${(t.es * px - 6).toFixed(1)}px" title="milestone"></span>`
+        : `<span class="g-bar ${t.critical ? "crit" : ""}" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, t.duration_days * px).toFixed(1)}px" title="${h(dt(t.start))} to ${h(dt(t.finish))}"></span>`;
+    return `<div class="msp-row${sel ? " is-sel" : ""}${sum ? " is-sum" : ""}" style="grid-template-columns:${cols}" role="row" data-action="sched-pick" data-uid="${id}" tabindex="0">
+      <div class="msp-name" style="padding-left:${8 + (r.outline_level - 1) * 14}px" title="${h(r.name)}">${h(r.name || "(unnamed)")}</div><div class="g-cell">${bar}</div></div>`;
+  }).join("");
+  return `<section class="card"><header class="card-h"><h2>Gantt chart</h2><span class="hint">Working days from the programme start. <span class="g-key crit"></span> critical <span class="g-key"></span> not critical &#9670; milestone. Click a row to select it in the table below.</span></header><div class="card-b"><div class="msp msp-gantt" role="table" aria-label="Gantt chart" style="--row:${ROW}px">${head}${body}</div></div></section>`;
+}
+
 function editable(sc) {
   const rows = S.ui.schedRows;
   const byId = new Map((sc ? sc.tasks : []).map((t) => [t.id, t]));
-  const total = Math.max(sc ? sc.project.finish_days : 1, 1);
-  const px = Math.max(4, Math.min(40, 560 / total));
-  const gw = Math.ceil(total * px) + 40;
-  const cols = `58px 400px 76px 132px 132px 130px 70px 74px 62px 44px ${gw}px`;
-  const ticks = [];
-  const step = total > 120 ? 20 : total > 40 ? 10 : 5;
-  for (let d = 0; d <= total; d += step) ticks.push(`<span class="g-tick" style="left:${(d * px).toFixed(1)}px">${d}</span>`);
-  const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>ID</div><div>Task name</div><div class="r">Dur. (d)</div><div>Start</div><div>Finish</div><div>Predecessors</div><div class="r">Workers</div><div class="r">Stock (d)</div><div class="r">Float (d)</div><div>Crit.</div><div class="g-cell g-axis">${ticks.join("")}</div></div>`;
+  const cols = `58px 400px 76px 132px 132px 130px 70px 74px 62px 44px`;
+  const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>ID</div><div>Task name</div><div class="r">Dur. (d)</div><div>Start</div><div>Finish</div><div>Predecessors</div><div class="r">Workers</div><div class="r">Stock (d)</div><div class="r">Float (d)</div><div>Crit.</div></div>`;
   const vis = visibleIds(sc);
   const body = rows.map((r, i) => {
     const id = i + 1, t = byId.get(id) || {};
     if (vis && !vis.has(id)) return "";
     const sel = S.ui.schedSel === id;
     const sum = !!t.summary;
-    const bar = t.es === undefined ? "" : sum
-      ? `<span class="g-sum" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, (t.ef - t.es) * px).toFixed(1)}px"></span>`
-      : t.milestone ? `<span class="g-ms" style="left:${(t.es * px - 6).toFixed(1)}px" title="milestone"></span>`
-        : `<span class="g-bar ${t.critical ? "crit" : ""}" style="left:${(t.es * px).toFixed(1)}px;width:${Math.max(2, t.duration_days * px).toFixed(1)}px"></span>`;
     const inp = (f, v, extra = "") => `<input class="msp-in" ${extra} value="${h(v)}" data-action-change="sched-edit" data-i="${i}" data-f="${f}" aria-label="${f} of task ${id}">`;
     return `<div class="msp-row${sel ? " is-sel" : ""}${sum ? " is-sum" : ""}" style="grid-template-columns:${cols}" role="row">
       <div class="faint" data-action="sched-pick" data-uid="${id}" title="${S.ui.schedAssess === id ? "Assessed task: its duration, float and facts feed the analysis. " : ""}Select this row" tabindex="0">${id}${S.ui.schedAssess === id ? ' <span class="star" aria-label="assessed task">★</span>' : ""}</div>
@@ -197,7 +213,7 @@ function editable(sc) {
       <div>${sum ? "" : finp(i, "required_workers", r)}</div><div>${sum ? "" : finp(i, "material_stock_days", r)}</div>
       <div class="r">${sum || t.total_float_days === undefined ? "" : num(t.total_float_days, 2)}</div>
       <div>${sum ? "" : t.critical ? '<span class="crit-dot" title="on the critical path"></span>' : ""}</div>
-      <div class="g-cell">${bar}</div></div>`;
+</div>`;
   }).join("");
   return `<div class="msp" role="table" aria-label="Masonry schedule" style="--row:${ROW}px">${head}${body}</div><p class="hint">Pick a <b>Start</b> date to hold a task back (it cannot start before that date; clear it to release). Pick a <b>Finish</b> date to set the duration in working days from the task's start. Both follow the project calendar.</p>`;
 }
@@ -232,5 +248,5 @@ export function render() {
     <div class="tile"><div class="k">Critical tasks</div><div class="v">${p.critical_tasks}</div></div></div>
     ${(sc.warnings || []).length ? alertBox("neutral", "Notes", `<ul>${sc.warnings.slice(0, 8).map((w) => `<li>${h(w)}</li>`).join("")}</ul>`) : ""}` : "";
   return `${screenHead(1, "Masonry schedule", "The brick and block work of the building (external walls, internal walls, partitions, lintels, parapet) as a task table with durations, predecessors, calendar, float and a Gantt chart, like a scheduling program. Mark the task to assess with ★; its duration, float, labour, material and site data become the activity and site facts of the case. Type the tasks, or open an MS Project file saved as XML (Primavera and .mpp files are not read yet).", bar)}
-  ${screenProblems("schedule")}${info}${rows ? summary + importCheck() + calendarPanel() + toolbar() + editable(sc) + taskInfo() : alertBox("info", "Loading", "")}`;
+  ${screenProblems("schedule")}${info}${rows ? summary + importCheck() + ganttChart(sc) + calendarPanel() + toolbar() + editable(sc) + taskInfo() : alertBox("info", "Loading", "")}`;
 }

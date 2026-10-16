@@ -732,6 +732,9 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .msp-row.is-sel { background: color-mix(in srgb, var(--accent, #1f5fbf) 14%, transparent); outline: 1px solid var(--accent, #1f5fbf); }
 .msp-row.is-sum { font-weight: 650; }
 .msp-name { overflow: hidden; text-overflow: ellipsis; }
+.msp-gantt { max-height: 46vh; }
+.g-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #4f7fc7; vertical-align: -1px; margin: 0 2px 0 8px; }
+.g-key.crit { background: #c0392b; }
 .g-cell { position: relative; height: var(--row, 26px); padding: 0 !important; border-left: 1px solid var(--border); }
 .g-axis { height: 100%; min-height: var(--row, 26px); font-weight: 400; }
 .g-tick { position: absolute; top: 4px; font-size: var(--fs-2xs); color: var(--text-3); transform: translateX(-50%); }
