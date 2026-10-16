@@ -51,7 +51,7 @@ def analyse(sch: Schedule) -> dict:
     dur = {t.uid: max(0.0, t.duration_days) for t in leaf}
     es, ef = {}, {}
     for u in order:
-        lo = 0.0
+        lo = max(0.0, float(getattr(by_uid[u], "min_start_days", 0.0) or 0.0))   # Start No Earlier Than
         for lk in preds[u]:
             p = lk.pred_uid
             if lk.type == "FS":

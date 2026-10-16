@@ -68,6 +68,25 @@ class Calendar:
             return False
         return d in self._on or d.weekday() in self.days
 
+    def workdays_before(self, start: date, d: date) -> int:
+        """How many working days lie in [start, d): the 0-based working-day offset of the first working day on or after `d`
+        when counting from `start`.  0 if `d` is on or before `start`."""
+        n, x = 0, start
+        while x < d:
+            if self.is_working(x):
+                n += 1
+            x += timedelta(days=1)
+        return n
+
+    def workdays_inclusive(self, start: date, finish: date) -> int:
+        """Working days in [start, finish] (both ends included); 0 if finish is before start."""
+        n, x = 0, start
+        while x <= finish:
+            if self.is_working(x):
+                n += 1
+            x += timedelta(days=1)
+        return n
+
     def nth_workday(self, start: date, k: int) -> date:
         """The date of the k-th (0-based) working day on or after `start`."""
         d, n = start, -1

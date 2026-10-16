@@ -882,6 +882,22 @@ const CHANGE_ACTIONS = {
     S.ui.schedSel = +el.dataset.i + 1;
     schedRecompute();
   },
+  "sched-start": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    if (el.value) r.start_no_earlier = el.value; else delete r.start_no_earlier;      // cleared = released
+    S.ui.schedSel = i + 1;
+    schedRecompute();
+  },
+  "sched-finish": async (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r || !el.value) return;
+    const t = (S.ui.schedule?.tasks || []).find((x) => x.id === i + 1);
+    const start = t && t.start ? t.start.slice(0, 10) : null;
+    if (!start) { toast("Wait for the schedule to calculate, then pick the finish date again.", "info"); return; }
+    const q = await post("/api/schedule/duration-for-finish", { start, finish: el.value, calendar: S.ui.schedCal });
+    if (q.ok && q.data.ok) { r.duration_days = q.data.duration_days; S.ui.schedSel = i + 1; }
+    else toast(((q.data && q.data.problems) || ["That finish date cannot be used."])[0], "info");
+    schedRecompute();
+  },
   "sched-fact-num": (el) => {
     const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
     const k = el.dataset.f.replace(/^fact:/, "");

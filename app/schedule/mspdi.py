@@ -47,6 +47,7 @@ class Task:
     msp_critical: Optional[bool] = None
     msp_slack_days: Optional[float] = None     # MSP's own total slack, in working days of its hours-per-day
     links: list = field(default_factory=list)
+    min_start_days: float = 0.0                 # Start No Earlier Than, as working days from the programme start (0 = none)
 
 
 @dataclass

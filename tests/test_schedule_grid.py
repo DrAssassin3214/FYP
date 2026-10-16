@@ -151,3 +151,66 @@ def test_example_masonry_scope_reproduces_saved_dates_and_slack():
     assert c["scope"]["left_out"] == 2 and any("Slab curing" in n for n in c["scope"]["left_out_examples"])
     assert c["slack_difference_count"] == 0 and c["date_difference_count"] == 0 and c["slack_compared"] == 12
     assert d["project"]["finish_days"] == 59
+
+
+# ---------- Start / Finish date pickers ----------
+# Hand calculation, Mon-Fri calendar, programme start Fri 2026-10-16:
+#   working days in [Fri 16 Oct, Mon 26 Oct) = Fri 16, Mon 19, Tue 20, Wed 21, Thu 22, Fri 23 = 6
+#   so a 3-day task held to start no earlier than Mon 26 Oct has es = 6, ef = 9, and finishes Wed 28 Oct.
+def _held(sne):
+    r = rows(("A", 1, 3, ""))
+    r["start"] = "2026-10-16"
+    r["tasks"][0]["start_no_earlier"] = sne
+    res = analyse(build_schedule(r))
+    fill_dates(res, r["start"], None)
+    return res
+
+
+def test_start_no_earlier_hand_checked():
+    t = _held("2026-10-26")["tasks"][0]
+    assert t["es"] == pytest.approx(6) and t["ef"] == pytest.approx(9)
+    assert t["start"] == "2026-10-26" and t["finish"] == "2026-10-28"
+
+
+def test_start_on_a_weekend_moves_to_next_working_day():
+    assert _held("2026-10-24")["tasks"][0]["start"] == "2026-10-26"      # Saturday -> Monday
+
+
+def test_start_on_or_before_programme_start_has_no_effect_and_says_so():
+    res = _held("2026-10-10")
+    assert res["tasks"][0]["es"] == 0
+    assert any("no effect" in w for w in res["warnings"])
+
+
+def test_start_no_earlier_never_pulls_a_task_earlier_than_its_predecessor():
+    r = rows(("A", 1, 5, ""), ("B", 1, 2, "1"))
+    r["start"] = "2026-10-16"
+    r["tasks"][1]["start_no_earlier"] = "2026-10-19"                      # 1 working day in, but A finishes at day 5
+    assert analyse(build_schedule(r))["tasks"][1]["es"] == pytest.approx(5)
+
+
+def test_start_needs_a_valid_programme_start():
+    r = rows(("A", 1, 3, ""))
+    r["tasks"][0]["start_no_earlier"] = "2026-10-26"
+    with pytest.raises(ScheduleError):
+        build_schedule(r)
+
+
+def test_workdays_inclusive_by_hand():
+    from app.schedule.calendar import Calendar
+    c = Calendar(None)
+    assert c.workdays_inclusive(date(2026, 10, 26), date(2026, 10, 28)) == 3      # Mon-Wed
+    assert c.workdays_inclusive(date(2026, 10, 16), date(2026, 10, 19)) == 2      # Fri + Mon, weekend skipped
+    assert c.workdays_inclusive(date(2026, 10, 19), date(2026, 10, 16)) == 0      # finish before start
+
+
+def test_api_duration_for_finish():
+    from gui.api import create_app
+    c = create_app().test_client()
+    ok = c.post("/api/schedule/duration-for-finish", json={"start": "2026-10-16", "finish": "2026-10-19"}).get_json()
+    assert ok["ok"] and ok["duration_days"] == 2
+    cal = {"workdays": [0, 1, 2, 3, 4], "exceptions": [{"name": "H", "from": "2026-10-19", "to": "2026-10-19", "working": False}]}
+    h = c.post("/api/schedule/duration-for-finish", json={"start": "2026-10-16", "finish": "2026-10-20", "calendar": cal}).get_json()
+    assert h["duration_days"] == 2                                                   # Fri 16 + Tue 20; Mon 19 is a holiday
+    assert c.post("/api/schedule/duration-for-finish", json={"start": "2026-10-19", "finish": "2026-10-16"}).status_code == 422
+    assert c.post("/api/schedule/duration-for-finish", json={"start": "2026-10-17", "finish": "2026-10-18"}).status_code == 422   # weekend only

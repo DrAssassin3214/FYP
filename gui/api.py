@@ -15,6 +15,7 @@ Routes
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
     POST /api/schedule/compute  rows typed into the schedule grid -> same output as import
+    POST /api/schedule/duration-for-finish  task start + chosen finish date + calendar -> working days
     POST /api/schedule/import  Microsoft Project XML in (raw body) -> tasks, critical path, per-task activity block out
     POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
     POST /api/suggest-risks   service.suggest_risks(...) (offline retrieval or guarded LLM)
@@ -489,6 +490,27 @@ def create_app() -> Flask:
         except ScheduleError as e:
             return _problems([str(e)])
         return _json({"ok": True, **res})
+
+    @app.post("/api/schedule/duration-for-finish")
+    def schedule_duration_for_finish():
+        """Body: {start, finish, calendar}.  Duration (working days of the project calendar) that makes a task that
+        starts on `start` end on `finish`, both days included.  Nothing is stored."""
+        from datetime import date
+
+        from app.schedule import ScheduleError
+        from app.schedule.calendar import Calendar
+
+        d = _json_object()
+        try:
+            a, b = date.fromisoformat(str(d.get("start"))[:10]), date.fromisoformat(str(d.get("finish"))[:10])
+            if b < a:
+                return _problems(["The finish date is before the task's start date."])
+            n = Calendar(d.get("calendar")).workdays_inclusive(a, b)
+        except (ValueError, ScheduleError) as e:
+            return _problems([str(e) or "Start and finish must be valid dates."])
+        if n < 1:
+            return _problems(["No working day lies between the start and finish dates; pick a working day."])
+        return _json({"ok": True, "duration_days": n})
 
     @app.post("/api/schedule/compute")
     def schedule_compute():

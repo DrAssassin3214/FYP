@@ -744,6 +744,8 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 
 /* editable schedule grid */
 .msp-in { width: 100%; box-sizing: border-box; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; padding: 2px 4px; border-radius: 3px; }
+.msp-date { font-variant-numeric: tabular-nums; padding-right: 0; min-width: 0; }
+.msp-date.is-held { border-color: var(--accent, #1f5fbf); font-weight: 600; }
 .msp-in:hover { border-color: var(--border); }
 .msp-in:focus { border-color: var(--accent, #1f5fbf); background: var(--surface); outline: none; }
 .msp-name { display: flex; align-items: center; gap: 6px; }

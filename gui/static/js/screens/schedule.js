@@ -40,9 +40,10 @@ export function remapPreds(rows, map) {
   });
 }
 export function rowsPayload() {
-  return { name: (S.case.project || {}).name || "Project", start: S.ui.schedStart, calendar: S.ui.schedCal || defaultCalendar(), tasks: S.ui.schedRows.map((r) => ({ name: r.name, outline_level: r.outline_level, duration_days: r.duration_days, predecessors: String(r.predecessors || "").replace(/−/g, "-") })) };
+  return { name: (S.case.project || {}).name || "Project", start: S.ui.schedStart, calendar: S.ui.schedCal || defaultCalendar(), tasks: S.ui.schedRows.map((r) => ({ name: r.name, outline_level: r.outline_level, duration_days: r.duration_days, predecessors: String(r.predecessors || "").replace(/−/g, "-"), start_no_earlier: r.start_no_earlier || "" })) };
 }
 
+const dateCell = (i, which, v, held) => `<input class="msp-in msp-date${held ? " is-held" : ""}" type="date" value="${h(v)}" data-action-change="sched-${which}" data-i="${i}" data-f="${which}" aria-label="${which === "start" ? "Start date (start no earlier than)" : "Finish date (sets the duration)"} of task ${i + 1}"${held ? ' title="Start held: this task cannot start before this date. Clear the date to release it."' : ""}>`;
 const finp = (i, k, r) => `<input class="msp-in" inputmode="numeric" style="text-align:right" value="${h((r.facts || {})[k] ?? "")}" data-action-change="sched-fact-num" data-i="${i}" data-f="fact:${k}" aria-label="${k} of task ${i + 1}">`;
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -171,7 +172,7 @@ function editable(sc) {
   const total = Math.max(sc ? sc.project.finish_days : 1, 1);
   const px = Math.max(4, Math.min(40, 560 / total));
   const gw = Math.ceil(total * px) + 40;
-  const cols = `58px 400px 76px 92px 92px 130px 70px 74px 62px 44px ${gw}px`;
+  const cols = `58px 400px 76px 132px 132px 130px 70px 74px 62px 44px ${gw}px`;
   const ticks = [];
   const step = total > 120 ? 20 : total > 40 ? 10 : 5;
   for (let d = 0; d <= total; d += step) ticks.push(`<span class="g-tick" style="left:${(d * px).toFixed(1)}px">${d}</span>`);
@@ -191,14 +192,14 @@ function editable(sc) {
       <div class="faint" data-action="sched-pick" data-uid="${id}" title="${S.ui.schedAssess === id ? "Assessed task: its duration, float and facts feed the analysis. " : ""}Select this row" tabindex="0">${id}${S.ui.schedAssess === id ? ' <span class="star" aria-label="assessed task">★</span>' : ""}</div>
       <div class="msp-name" style="padding-left:${(r.outline_level - 1) * 14}px">${inp("name", r.name, 'placeholder="Task name"')}</div>
       <div>${sum ? `<span class="muted r">${num(t.ef - t.es, 2)}</span>` : inp("duration_days", r.duration_days, 'inputmode="decimal" style="text-align:right"')}</div>
-      <div>${h(dt(t.start))}</div><div>${h(dt(t.finish))}</div>
+      <div>${sum ? h(dt(t.start)) : dateCell(i, 'start', dt(t.start), !!r.start_no_earlier)}</div><div>${sum ? h(dt(t.finish)) : dateCell(i, 'finish', dt(t.finish), false)}</div>
       <div>${sum ? "" : inp("predecessors", r.predecessors, 'placeholder="e.g. 2, 3SS+1d"')}</div>
       <div>${sum ? "" : finp(i, "required_workers", r)}</div><div>${sum ? "" : finp(i, "material_stock_days", r)}</div>
       <div class="r">${sum || t.total_float_days === undefined ? "" : num(t.total_float_days, 2)}</div>
       <div>${sum ? "" : t.critical ? '<span class="crit-dot" title="on the critical path"></span>' : ""}</div>
       <div class="g-cell">${bar}</div></div>`;
   }).join("");
-  return `<div class="msp" role="table" aria-label="Masonry schedule" style="--row:${ROW}px">${head}${body}</div>`;
+  return `<div class="msp" role="table" aria-label="Masonry schedule" style="--row:${ROW}px">${head}${body}</div><p class="hint">Pick a <b>Start</b> date to hold a task back (it cannot start before that date; clear it to release). Pick a <b>Finish</b> date to set the duration in working days from the task's start. Both follow the project calendar.</p>`;
 }
 
 function toolbar() {

@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from datetime import date
 
+from .calendar import Calendar
 from .mspdi import Link, Schedule, ScheduleError, Task
 
 MAX_ROWS = 2000
@@ -46,7 +47,13 @@ def build_schedule(payload: dict) -> Schedule:
         raise ScheduleError("Add at least one task row.")
     if len(rows) > MAX_ROWS:
         raise ScheduleError(f"At most {MAX_ROWS} rows are accepted.")
-    tasks = []
+    tasks, notes = [], []
+    prog_start, cal = None, None
+    if any(isinstance(r, dict) and r.get("start_no_earlier") for r in rows):
+        try:
+            prog_start, cal = date.fromisoformat(str(payload.get("start"))[:10]), Calendar(payload.get("calendar"))
+        except ValueError:
+            raise ScheduleError("Set a valid programme start date before giving a task a start date.")
     for i, r in enumerate(rows, 1):
         if not isinstance(r, dict):
             raise ScheduleError(f"Row {i} is not a task.")
@@ -64,14 +71,23 @@ def build_schedule(payload: dict) -> Schedule:
             lvl = tasks[-1].outline_level + 1
         if not 0 <= dur <= 100000:
             raise ScheduleError(f"Row {i}: duration must be 0 or more days.")
-        tasks.append(Task(uid=i, id=i, name=name[:200], outline_level=lvl, duration_days=dur,
-                          links=parse_predecessors(r.get("predecessors"), len(rows), i)))
+        t = Task(uid=i, id=i, name=name[:200], outline_level=lvl, duration_days=dur,
+                 links=parse_predecessors(r.get("predecessors"), len(rows), i))
+        sne = str(r.get("start_no_earlier") or "").strip()
+        if sne:
+            try:
+                t.min_start_days = float(cal.workdays_before(prog_start, date.fromisoformat(sne[:10])))
+            except ValueError:
+                raise ScheduleError(f"Row {i}: the start date is not a valid date.")
+            if t.min_start_days == 0:
+                notes.append(f"Task {i}: the start date is on or before the programme start, so it has no effect.")
+        tasks.append(t)
     for i, t in enumerate(tasks):
         t.summary = i + 1 < len(tasks) and tasks[i + 1].outline_level > t.outline_level
         t.milestone = (not t.summary) and t.duration_days == 0
         if t.summary:
             t.links = []
-    return Schedule(name=str(payload.get("name") or "Project")[:120], hours_per_day=8.0, tasks=tasks, warnings=[])
+    return Schedule(name=str(payload.get("name") or "Project")[:120], hours_per_day=8.0, tasks=tasks, warnings=notes)
 
 
 def fill_dates(res: dict, start_text, calendar=None) -> None:
