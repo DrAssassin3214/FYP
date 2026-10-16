@@ -433,34 +433,21 @@ def _same_fact(a, b) -> bool:
 
 
 def _work_plan(work, planned, problems: list) -> Optional[dict]:
-    """The optional `work` section: quantity of masonry + norm + available workers (+ materials) -> required workers,
-    shortfall flags and the derived facts the rules use.  Problems are appended; returns None when unusable."""
+    """The optional `work` section: quantity of masonry + norm + available workers, listed materials / equipment /
+    machinery / scaffolding, and site data (dates, counts) -> workers required, shortfall flags and the derived facts
+    the rules use.  Problems are appended; returns None when there is nothing to work out or the input is unusable."""
     from app.productivity.india_norms import load_norms
-    from app.productivity.labour_plan import plan_work
+    from app.productivity.work_plan import build_work_plan
 
     if not isinstance(work, Mapping):
         problems.append(f"work: expected an object, got {type(work).__name__}")
         return None
-    if planned is None:
+    if not _blank(work.get("norm_id")) and not _blank(work.get("quantity")) and planned is None:
         problems.append("work: the planned duration (activity.planned_duration_days) is needed to work out how many "
                         "workers the quantity requires")
         return None
-    norms = load_norms()
-    nid = work.get("norm_id")
-    if nid not in norms:
-        problems.append(f"work.norm_id {nid!r} is not a known labour norm (choose one of: {', '.join(sorted(norms))})")
-        return None
-    av = work.get("available")
-    if av is not None and not isinstance(av, Mapping):
-        problems.append("work.available: expected an object such as {\"masons\": 8, \"helpers\": 18, \"bhisti\": 2}")
-        return None
-    mats = work.get("materials") or []
-    if not isinstance(mats, (list, tuple)) or not all(isinstance(m, Mapping) for m in mats):
-        problems.append("work.materials: expected a list of objects")
-        return None
     try:
-        return plan_work(norms[nid], work.get("quantity"), str(work.get("unit") or norms[nid].unit_basis), planned.value,
-                         av, 1.0 if _blank(work.get("efficiency")) else work.get("efficiency"), mats)
+        return build_work_plan(work, None if planned is None else planned.value, load_norms())
     except ValueError as e:
         problems.append(f"work: {e}")
         return None

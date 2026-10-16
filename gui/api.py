@@ -507,20 +507,17 @@ def create_app() -> Flask:
         """Body: {duration_days, work:{quantity, unit, norm_id, efficiency?, available?, materials?}} -> workers required
         per role, shortfall flags, implied duration and material cover.  Stateless; nothing is stored."""
         from app.productivity.india_norms import load_norms
-        from app.productivity.labour_plan import plan_work
+        from app.productivity.work_plan import build_work_plan
 
         d = _json_object()
         w = d.get("work") if isinstance(d.get("work"), dict) else {}
-        norms = load_norms()
-        n = norms.get(w.get("norm_id"))
-        if n is None:
-            return _problems(["Pick a labour norm."])
+        dur = d.get("duration_days")
         try:
-            res = plan_work(n, w.get("quantity"), str(w.get("unit") or n.unit_basis), d.get("duration_days"),
-                            w.get("available") or None, 1.0 if w.get("efficiency") in (None, "") else w.get("efficiency"),
-                            w.get("materials") or [])
+            res = build_work_plan(w, None if dur in (None, "") else dur, load_norms())
         except (ValueError, TypeError) as e:
             return _problems([str(e)])
+        if res is None:
+            return _problems(["Pick a labour norm, list an item, or enter site data."])
         return _json({"ok": True, "plan": res})
 
     @app.post("/api/schedule/duration-for-finish")

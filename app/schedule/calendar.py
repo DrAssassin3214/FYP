@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from .mspdi import ScheduleError
 
 MAX_EXCEPTIONS = 500
+EVENT_KINDS = ("monsoon", "summer", "festival")
 WEEK = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
 
@@ -48,7 +49,17 @@ def clean_calendar(cal) -> dict:
         if (b - a).days > 3660:
             raise ScheduleError("Calendar: an exception longer than ten years is not accepted.")
         ex.append({"name": str(e.get("name") or "")[:80], "from": a.isoformat(), "to": b.isoformat(), "working": bool(e.get("working"))})
-    return {"name": str(cal.get("name") or "Standard")[:80], "workdays": wd, "hours_per_day": hpd, "exceptions": ex}
+    events = []
+    for e in (cal.get("events") or [])[:MAX_EXCEPTIONS]:           # seasons and festivals: they do NOT change working days
+        if not isinstance(e, dict) or e.get("kind") not in EVENT_KINDS:
+            continue
+        a = _d(e.get("from"), "event start date")
+        b = _d(e.get("to") or e.get("from"), "event end date")
+        if b < a:
+            raise ScheduleError(f"Calendar: event “{e.get('name') or a}” ends before it starts.")
+        events.append({"name": str(e.get("name") or "")[:80], "kind": e["kind"], "from": a.isoformat(), "to": b.isoformat()})
+    return {"name": str(cal.get("name") or "Standard")[:80], "workdays": wd, "hours_per_day": hpd, "exceptions": ex,
+            "events": events}
 
 
 class Calendar:

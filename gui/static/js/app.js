@@ -60,7 +60,6 @@ function renderToolbar() {
     <button type="button" class="btn btn-ghost" data-action="save" title="Save the case as JSON (Ctrl+S)">${icon("save")}<span class="lbl">Save</span></button>
     <button type="button" class="btn btn-ghost" data-action="example" title="Load the ILLUSTRATIVE example (placeholder numbers)">${icon("flask")}<span class="lbl">Load example</span></button>
     <span class="sep" aria-hidden="true"></span>
-    <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
     ${dataChip()}
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
@@ -802,6 +801,18 @@ const ACTIONS = {
     r.work.materials.splice(+b.dataset.m, 1);
     workChanged(i);
   },
+  "sched-ev-add": () => { (S.ui.schedCal.events = S.ui.schedCal.events || []).push({ name: "", kind: "monsoon", from: S.ui.schedStart, to: S.ui.schedStart }); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-ev-del": (b) => { (S.ui.schedCal.events || []).splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
+  "site-ready-add": (b) => {
+    const r = S.ui.schedRows[+b.dataset.i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    ((r.work.site = r.work.site || {}).readiness = r.work.site.readiness || []).push({ kind: "work_front", ready_by: "" });
+    renderScreen();
+  },
+  "site-ready-del": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r || !r.work || !r.work.site) return;
+    r.work.site.readiness.splice(+b.dataset.k, 1); workChanged(i);
+  },
   "sched-cal-add": () => { S.ui.schedCal.exceptions.push({ name: "", from: S.ui.schedStart, to: S.ui.schedStart, working: false }); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-cal-del": (b) => { S.ui.schedCal.exceptions.splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-up": () => schedMove(-1),
@@ -856,17 +867,26 @@ function schedSync() {
   const plan = ((S.ui.workPlans || {})[i] || {}).plan;
   if (row.work && plan) {                                    // quantity-driven labour and stock: the facts it works out replace typed ones
     S.case.work = JSON.parse(JSON.stringify(row.work));
+    S.case.work.context = workContext(i);
     for (const k of Object.keys(plan.derived_facts || {})) delete S.case.facts[k];
   } else delete S.case.work;
 }
 
+/** Task dates and the calendar's seasons/festivals, which the site flags are compared against. */
+function workContext(i) {
+  const t = S.ui.schedule && S.ui.schedule.tasks.find((x) => x.id === i + 1);
+  return { start: (t && t.start) || undefined, finish: (t && t.finish) || undefined, events: ((S.ui.schedCal || {}).events || []).filter((e) => e.from && e.to) };
+}
 /** Work plan (workers required, shortfall, material cover) for one schedule row, from the server; nothing is stored there. */
 async function workFetch(i) {
   const r = (S.ui.schedRows || [])[i]; if (!r) return;
   S.ui.workPlans = S.ui.workPlans || {};
   const w = r.work;
-  if (!w || !w.norm_id || !(Number(w.quantity) > 0) || !(Number(r.duration_days) > 0)) { S.ui.workPlans[i] = null; return; }
-  const q = await post("/api/work-plan", { duration_days: r.duration_days, work: w });
+  const full = w && w.norm_id && Number(w.quantity) > 0 && Number(r.duration_days) > 0;
+  const hasRes = w && Array.isArray(w.materials) && w.materials.length > 0;          // listed items work without a labour norm
+  const hasSite = w && w.site && Object.keys(w.site).length > 0;
+  if (!full && !hasRes && !hasSite) { S.ui.workPlans[i] = null; return; }
+  const q = await post("/api/work-plan", { duration_days: r.duration_days, work: { ...w, context: workContext(i) } });
   S.ui.workPlans[i] = q.ok && q.data.ok ? { plan: q.data.plan } : { error: ((q.data && q.data.problems) || ["Could not work out the requirement. If this keeps happening, close the app completely and start it again so the new Python files load."])[0] };
 }
 async function workChanged(i) {
@@ -943,6 +963,7 @@ const CHANGE_ACTIONS = {
     const i = +el.dataset.i, r = S.ui.schedRows[i], m = r && r.work && r.work.materials[+el.dataset.m]; if (!m) return;
     const f = el.dataset.f;
     if (f === "name" || f === "unit" || f === "class") m[f] = el.value.trim();
+    else if (f === "safe_passed") { if (el.value === "yes") m[f] = true; else if (el.value === "no") m[f] = false; else delete m[f]; }
     else { const v = _wnum(el.value); if (v === undefined) delete m[f]; else m[f] = v; }
     m.source = "User Input";
     workChanged(i);
@@ -977,6 +998,25 @@ const CHANGE_ACTIONS = {
     c.workdays = el.checked ? [...new Set([...c.workdays, d])].sort() : c.workdays.filter((x) => x !== d);
     if (!c.workdays.length) { c.workdays = [d]; }
     S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "sched-ev-set": (el) => {
+    const e = (S.ui.schedCal.events || [])[+el.dataset.i]; if (!e) return;
+    e[el.dataset.f] = el.value;
+    if (e.to < e.from) e.to = e.from;
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "site-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    const s = r.work.site = r.work.site || {}, f = el.dataset.f, v = String(el.value).trim();
+    if (v === "") delete s[f];
+    else if (el.dataset.kind === "num") { const n = _wnum(v); if (n === undefined) delete s[f]; else s[f] = n; }
+    else s[f] = v;
+    workChanged(i);
+  },
+  "site-ready-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i], x = r && r.work && r.work.site && r.work.site.readiness[+el.dataset.k]; if (!x) return;
+    x[el.dataset.f] = el.value; workChanged(i);
   },
   "sched-cal-hpd": (el) => { S.ui.schedCal.hours_per_day = Math.min(24, Math.max(1, parseFloat(el.value) || 8)); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-cal-ex": (el) => {

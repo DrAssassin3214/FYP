@@ -775,3 +775,11 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .num-u .unit { color: var(--muted, #667); font-size: var(--fs-xs); }
 .cal-sum { all: unset; cursor: pointer; display: flex; gap: 8px; align-items: center; width: 100%; font-size: var(--fs-sm); }
 .note-box { margin: 8px 0; padding: 8px 10px; border: 1px solid var(--border); border-left: 3px solid var(--accent, #1f5fbf); border-radius: 4px; font-size: var(--fs-sm); }
+
+/* Facts the listed items work out; the manual Yes/No is a collapsed fallback */
+.auto-manual { margin-top: 4px; }
+.auto-manual > summary { cursor: pointer; font-size: 12px; opacity: .75; }
+.auto-manual[open] > summary { margin-bottom: 6px; }
+
+/* Source pickers, ILLUSTRATIVE notes and banners are not shown on the forms (the data keep their Sources and the exports still print them). */
+.srcpick, .param-note.illus, .illus-banner, .ac-illus { display: none !important; }

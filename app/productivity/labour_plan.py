@@ -51,6 +51,7 @@ RESOURCE_CLASSES = {
     "mortar": "Mortar material (sand, cement)",
     "equipment": "Equipment / tools (mixer, cutter, pump)",
     "machinery": "Machinery (hoist, material lift)",
+    "scaffolding": "Scaffolding",
 }
 
 
@@ -58,11 +59,15 @@ def _qty(m: Mapping, key: str, label: str) -> Optional[float]:
     return None if m.get(key) is None else _need_number(m.get(key), f"{label}.{key}")
 
 
-def _plan_resources(resources: Sequence[Mapping], quantity: float, duration_days: float, flags: list) -> list[dict]:
+def _plan_resources(resources: Sequence[Mapping], quantity: Optional[float], duration_days: Optional[float],
+                    flags: list) -> list[dict]:
     """Classify each listed resource and compare QUANTITIES.
 
     material / mortar : required = quantity of work x per-unit-of-work factor (user input); on site = a quantity.
-    equipment / machinery : required = a count (user input); on site = the count available.
+    equipment / machinery / scaffolding : required = a count (user input); on site = the count available (scaffolding:
+    the amount erected).  Scaffolding also carries the user's declared inspection result `safe_passed`, because a
+    count cannot show that it has passed a safety inspection.
+    Without a quantity of work, materials cannot be sized (no required quantity, no flag); counts do not need it.
     Stock is never expressed in days.  The only time figure is the dealer's lead time.  The stock-out test is made on
     the SHARE OF THE WORK the stock supports: work is assumed to use material evenly over the planned duration, so
     the shortfall begins after (share x planned duration); if the dealer's lead time is not shorter than that, a new
@@ -80,13 +85,20 @@ def _plan_resources(resources: Sequence[Mapping], quantity: float, duration_days
         row = {"name": name, "class": cls, "class_label": RESOURCE_CLASSES[cls], "unit": str(m.get("unit") or ""),
                "source": str(m.get("source") or "User Input"), "on_site": have, "lead_time_days": lead,
                "required": None, "per_unit_of_work": None, "shortfall": None, "short": None,
-               "work_supported_share": None, "stockout_before_delivery": None}
+               "work_supported_share": None, "stockout_before_delivery": None, "safe_passed": None}
         if cls in ("material", "mortar"):
-            per = _need_number(m.get("per_unit_of_work"), f"{label}.per_unit_of_work")
-            row["per_unit_of_work"], row["required"] = per, quantity * per
+            if m.get("per_unit_of_work") is not None:
+                per = _need_number(m.get("per_unit_of_work"), f"{label}.per_unit_of_work")
+                row["per_unit_of_work"] = per
+                if quantity is not None:
+                    row["required"] = quantity * per
         else:
             row["required"] = _qty(m, "required", label)
             row["unit"] = row["unit"] or "nos"
+            if cls == "scaffolding" and m.get("safe_passed") is not None:
+                if not isinstance(m.get("safe_passed"), bool):
+                    raise ValueError(f"{label}.safe_passed must be true or false")
+                row["safe_passed"] = m["safe_passed"]
         req = row["required"]
         if req is not None and have is not None:
             row["shortfall"] = max(0.0, req - have)
@@ -100,17 +112,28 @@ def _plan_resources(resources: Sequence[Mapping], quantity: float, duration_days
             level = "elevated"
             if row["work_supported_share"] is not None:
                 share = row["work_supported_share"]
-                supported_days = share * duration_days
-                if lead is not None:
+                supported_days = None if duration_days is None else share * duration_days
+                if lead is not None and supported_days is not None:
                     row["stockout_before_delivery"] = bool(lead >= supported_days - _EPS)
                     msg += (f" Stock supports {100 * share:.0f}% of the work; the dealer's lead time is {lead:g} days, "
                             + ("so a new delivery cannot arrive before the shortfall begins."
                                if row["stockout_before_delivery"] else "so a delivery ordered now arrives in time."))
                     level = "elevated" if row["stockout_before_delivery"] else "normal"
                 else:
-                    msg += f" Stock supports {100 * share:.0f}% of the work; enter the dealer's lead time to judge the timing."
+                    msg += (f" Stock supports {100 * share:.0f}% of the work; enter the dealer's lead time "
+                            "to judge the timing.")
                     level = "normal"
             flags.append({"level": level, "group": None, "message": msg})
+        if cls == "scaffolding" and not row["short"]:
+            if row["safe_passed"] is False:
+                flags.append({"level": "elevated", "group": None,
+                              "message": f"{name}: declared as not passed the safety inspection."})
+            elif row["safe_passed"] is None and row["short"] is not None:
+                flags.append({"level": "info", "group": None,
+                              "message": f"{name}: quantity is enough; say whether it has passed the safety inspection."})
+        if cls in ("material", "mortar") and quantity is None and row["per_unit_of_work"] is not None:
+            flags.append({"level": "info", "group": None,
+                          "message": f"{name}: enter the quantity of work to work out the quantity needed."})
         out.append(row)
     return out
 
@@ -140,6 +163,12 @@ def _resource_facts(rows: Sequence[Mapping]) -> dict:
         f["tools_shortage"] = any(r["short"] for r in eq)
     if mc:
         f["hoist_available"] = not any(r["short"] for r in mc)
+    sc = [r for r in rows if r["class"] == "scaffolding" and r["short"] is not None]
+    if sc:
+        if any(r["short"] or r["safe_passed"] is False for r in sc):
+            f["scaffolding_ready"] = False
+        elif all(r["safe_passed"] is True for r in sc):
+            f["scaffolding_ready"] = True          # enough erected AND declared safe; otherwise left unknown
     return f
 
 
@@ -231,6 +260,23 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
                   "be used (a surplus in one group does not cover a shortage in another). The norm is a planning constant, "
                   "not measured site output."),
     }
+
+
+def plan_resources(resources: Sequence[Mapping], quantity: Optional[float] = None,
+                   duration_days: Optional[float] = None) -> dict:
+    """Resources only (no labour norm): the same classification and quantity comparison as plan_work, so equipment,
+    machinery and scaffolding counts raise their flags without any quantity of work.  Materials need the quantity."""
+    if quantity is not None:
+        quantity = _need_number(quantity, "quantity", positive=True)
+    if duration_days is not None:
+        duration_days = _need_number(duration_days, "planned duration (days)", positive=True)
+    flags: list = []
+    mats = _plan_resources(resources, quantity, duration_days, flags)
+    return {"resource_only": True, "norm": None, "quantity": quantity, "duration_days": duration_days, "groups": [],
+            "required_total": None, "available_usable": None, "implied_duration_days": None, "slip_days": None,
+            "binding_group": None, "materials": mats, "resource_classes": RESOURCE_CLASSES, "flags": flags,
+            "derived_facts": _resource_facts(mats),
+            "basis": "Derived Calculation: listed quantities and counts compared; see plan_work for the labour side."}
 
 
 def norm_groups(norm: NormItem, efficiency: float = 1.0) -> list[dict]:
