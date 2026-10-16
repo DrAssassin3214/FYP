@@ -64,10 +64,68 @@ function calendarPanel() {
 
 const TABS = [["general", "General"], ["res", "Labour", "Labour"], ["mat", "Material & equipment", "Material & equipment"], ["site", "Site & schedule", "Site & schedule"], ["rules", "Rules"]];
 
+const WORK_GROUPS = [["masons", "Masons"], ["helpers", "Helpers (mazdoor / coolie)"], ["bhisti", "Bhisti"]];
+const wnum = (v) => (v === undefined || v === null ? "" : h(v));
+const wplan = (i) => (S.ui.workPlans || {})[i] || null;
+
+/** Quantity of masonry -> workers required, from a published labour norm; shortfall is flagged automatically. */
+function workBlock(i, r) {
+  const w = r.work || {}, norms = S.meta?.work_norms || [], norm = norms.find((n) => n.item_id === w.norm_id);
+  const wp = wplan(i), plan = wp && wp.plan;
+  const sel = `<select class="select msp-in boxed" data-action-change="work-set" data-i="${i}" data-f="norm_id" aria-label="Labour norm"><option value="">Choose a labour norm…</option>${norms.map((n) => `<option value="${h(n.item_id)}"${n.item_id === w.norm_id ? " selected" : ""}>${h(n.title)} (per ${h(n.unit)})</option>`).join("")}</select>`;
+  const inp = (f, v, ph = "") => `<input class="msp-in boxed" inputmode="decimal" placeholder="${h(ph)}" value="${wnum(v)}" data-action-change="work-set" data-i="${i}" data-f="${f}">`;
+  let out = "";
+  if (!norm) out = `<p class="muted">Pick a labour norm and enter the quantity of work: the number of workers required is worked out from it, compared with the workers available, and a shortfall is flagged automatically (no yes/no question).</p>`;
+  else if (!(r.duration_days > 0)) out = `<p class="muted">Enter this task's duration (Dur. column): the workers required are the work content divided by the days available.</p>`;
+  else if (wp && wp.error) out = `<div class="note-box">${h(wp.error)}</div>`;
+  else if (plan) {
+    const rows = plan.groups.map((g) => `<tr${g.short ? ' class="short"' : ""}><td>${h(g.label)}</td><td class="r">${num(g.constant_per_unit, 2)}</td><td class="r">${num(g.person_days, 0)}</td><td class="r"><strong>${g.required_workers}</strong></td><td class="r">${g.available === null ? "–" : num(g.available, 0)}</td><td class="r">${g.available === null ? "" : g.short ? `<span class="badge b-warn">${icon("alert")}short by ${num(g.shortfall, 0)}</span>` : '<span class="badge b-ok">enough</span>'}</td></tr>`).join("");
+    const slip = plan.implied_duration_days !== null && plan.implied_duration_days !== undefined
+      ? `<p>With the workers available the work takes <strong>${num(plan.implied_duration_days, 1)} days</strong> (${plan.slip_days > 0.05 ? `<strong>${num(plan.slip_days, 1)} more</strong> than` : "within"} the planned ${num(plan.duration_days, 0)}), paced by ${h(((plan.groups.find((g) => g.group === plan.binding_group) || {}).label || "").toLowerCase())}.</p>` : "";
+    const flags = plan.flags.filter((f) => f.group).map((f) => `<li class="${f.level === "elevated" ? "warn" : ""}">${h(f.message)}</li>`).join("");
+    out = `<table class="tbl work-tbl"><thead><tr><th>Group</th><th class="r">Days per ${h(plan.unit)}</th><th class="r">Person-days</th><th class="r">Required</th><th class="r">Available</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="hint">Required = person-days ÷ ${num(plan.duration_days, 0)} planned days, rounded up. ${plan.available_usable === null ? "" : `Usable workers ${num(plan.available_usable, 0)} of ${plan.required_total} needed (a surplus in one group does not cover a shortage in another).`}</p>
+      ${slip}${flags ? `<ul class="work-flags">${flags}</ul>` : ""}
+      <p class="hint">${h(plan.norm.citation)}. Planning norm, not measured site output${plan.efficiency === 1 ? "; lower the efficiency below 1 if your gang is slower than the norm" : ""}. ${plan.norm.conditions ? h(plan.norm.conditions) : ""}</p>`;
+  }
+  return `<div class="work-box"><div class="subhead">Work quantity &rarr; workers required</div>
+    <div class="form-grid">
+      <div class="fld wide"><div class="fld-l">Labour norm (IS 7272 / CPWD Analysis of Rates)</div>${sel}</div>
+      <div class="fld"><div class="fld-l">Quantity of work</div><div class="num-u">${inp("quantity", w.quantity, "e.g. 1000")}<span class="unit">${norm ? h(norm.unit === "m3" ? "m³" : "m²") : ""}</span></div></div>
+      <div class="fld"><div class="fld-l">Efficiency vs the norm</div><div class="num-u">${inp("efficiency", w.efficiency, "1 = as the norm")}<span class="unit">×</span></div></div>
+      ${WORK_GROUPS.map(([g, lab]) => `<div class="fld"><div class="fld-l">${h(lab)} available</div><div class="num-u">${inp("avail:" + g, (w.available || {})[g], "number")}<span class="unit">workers</span></div></div>`).join("")}
+    </div>${out}</div>`;
+}
+
+/** Materials from the quantity of work: daily need, stock cover versus lead time (no default conversion factors). */
+function materialBlock(i, r) {
+  const w = r.work || {}, mats = w.materials || [], wp = wplan(i), plan = wp && wp.plan;
+  const norm = (S.meta?.work_norms || []).find((n) => n.item_id === w.norm_id);
+  const U = norm ? (norm.unit === "m3" ? "m³" : "m²") : "unit of work";
+  const inp = (m, f, v, ph, w2 = "") => `<input class="msp-in boxed" ${w2} inputmode="${f === "name" || f === "unit" ? "text" : "decimal"}" placeholder="${h(ph)}" value="${wnum(v)}" data-action-change="work-mat-set" data-i="${i}" data-m="${m}" data-f="${f}">`;
+  const rows = mats.map((m, k) => {
+    const pm = plan && plan.materials[k];
+    const cover = pm && pm.stock_days !== null && pm.stock_days !== undefined
+      ? `${num(pm.stock_days, 1)} d${pm.short_vs_lead_time ? ` <span class="badge b-warn">${icon("alert")}below lead time</span>` : pm.short_vs_lead_time === false ? ' <span class="badge b-ok">covers lead time</span>' : ""}` : "";
+    return `<tr><td>${inp(k, "name", m.name, "e.g. Bricks")}</td><td>${inp(k, "unit", m.unit, "nos / bags / m³")}</td><td>${inp(k, "per_unit_of_work", m.per_unit_of_work, `per 1 ${U}`)}</td><td class="r">${pm ? num(pm.daily_need, 1) : ""}</td><td>${inp(k, "stock", m.stock, "on site")}</td><td>${inp(k, "lead_time_days", m.lead_time_days, "days")}</td><td>${cover}</td>
+      <td><button type="button" class="btn btn-sm btn-danger-ghost" data-action="work-mat-del" data-i="${i}" data-m="${k}" aria-label="Remove material">${icon("trash")}</button></td></tr>`;
+  }).join("");
+  return `<div class="work-box"><div class="subhead">Materials from the quantity of work</div>
+    ${norm && w.quantity > 0 ? "" : `<p class="muted">Enter the labour norm and quantity of work on the Labour tab first; materials are worked out from the same quantity.</p>`}
+    <table class="tbl work-tbl"><thead><tr><th>Material</th><th>Unit</th><th>Per 1 ${U} of work</th><th class="r">Needed / day</th><th>Stock on site</th><th>Lead time</th><th>Stock lasts</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="8" class="muted">No material added.</td></tr>`}</tbody></table>
+    <button type="button" class="btn btn-sm" data-action="work-mat-add" data-i="${i}">${icon("plus")}Add material</button>
+    <p class="hint">The quantity of material per ${U} of work depends on your brick size, mortar mix and wastage, so there is no default: enter your own figure (it is recorded as User Input). Stock cover and lead time set the stock facts the rules use.</p></div>`;
+}
+
 function factFields(grp, row) {
   const facts = row.facts || {};
   return (S.meta?.facts || []).filter((f) => (FACT_INFO[f.name] || {}).group === grp).map((f) => {
     const info = FACT_INFO[f.name], v = facts[f.name];
+    const dv = (((wplan((S.ui.schedSel || 1) - 1) || {}).plan || {}).derived_facts || {})[f.name];
+    if (dv !== undefined) {
+      const shown = typeof dv === "boolean" ? (dv ? "Yes" : "No") : num(dv, 1);
+      return `<div class="fld"><div class="fld-l">${h(info.label)}</div><div><strong>${h(shown)}</strong> <span class="muted">worked out from the quantity of work</span></div><div class="hint"><code>${h(f.name)}</code> · used by ${f.rules.map(h).join(", ")}</div></div>`;
+    }
     if (f.type === "boolean") {
       const cur = v === true ? "true" : v === false ? "false" : "unknown";
       return `<div class="fld"><div class="fld-l">${h(info.label)}</div><div class="seg sm tri" role="group" aria-label="${h(info.label)}">${[["unknown", "Unknown"], ["true", "Yes"], ["false", "No"]].map(([val, lab]) =>
@@ -123,7 +181,7 @@ function taskInfo() {
     const known = new Set((S.meta?.facts || []).map((f) => f.name));
     const extra = tab === "site" ? Object.keys(r.facts || {}).filter((k) => !known.has(k)) : [];
     const pdNote = tab === "site" && S.ui.schedAssess === i + 1 ? `<p class="hint"><code>planned_duration_days</code> is this task's duration (${h(r.duration_days)} d) and is used by rule RL-MAT2 (relevant only, not elevated).</p>` : "";
-    body = `${mspResources(r, tab)}<div class="ti-grid">${factFields(grp, r) || '<p class="muted">Loading the fact list…</p>'}</div>${pdNote}
+    body = `${mspResources(r, tab)}${tab === "res" ? workBlock(i, r) : tab === "mat" ? materialBlock(i, r) : ""}<div class="ti-grid">${factFields(grp, r) || '<p class="muted">Loading the fact list…</p>'}</div>${pdNote}
       ${extra.length ? `<div class="subhead">Other facts in this case file</div><ul>${extra.map((k) => `<li><code>${h(k)}</code> = ${h(JSON.stringify(r.facts[k]))} <button type="button" class="btn btn-sm btn-danger-ghost" data-action="sched-fact-remove" data-fact="${h(k)}">${icon("trash")}Remove</button></li>`).join("")}</ul>` : ""}
       <p class="hint">Only what you fill in is used. “Unknown” stays unknown and the rules treat it as not evaluable.${S.ui.schedAssess === i + 1 ? " These facts are the case's site facts." : " They take effect when this task is the assessed one."}</p>`;
   }

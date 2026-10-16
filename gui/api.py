@@ -15,6 +15,7 @@ Routes
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
     POST /api/schedule/compute  rows typed into the schedule grid -> same output as import
+    POST /api/work-plan  quantity + norm + planned duration + available workers -> workers required, shortfall flags
     POST /api/schedule/duration-for-finish  task start + chosen finish date + calendar -> working days
     POST /api/schedule/import  Microsoft Project XML in (raw body) -> tasks, critical path, per-task activity block out
     POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
@@ -214,6 +215,13 @@ def ai_status() -> dict:
     return {"mode": "llm", "label": f"AI: guarded LLM mode ({client.model_id})", "model_id": client.model_id}
 
 
+def _work_norms() -> list[dict]:
+    """Labour norms the user can pick for a quantity of work (title, unit, citation, constants per unit)."""
+    from app.productivity.india_norms import load_norms
+    return [{"item_id": n.item_id, "title": n.title, "unit": n.unit_basis, "wall_type": n.wall_type,
+             "citation": n.citation, "roles": dict(n.roles), "conditions": n.conditions} for n in load_norms().values()]
+
+
 def _fact_schema() -> list[dict]:
     """Facts referenced by the bundled rule base, with the type the rules compare them as."""
     facts: dict[str, dict] = {}
@@ -279,6 +287,7 @@ def create_app() -> Flask:
             "statuses": [s.value for s in RiskStatus],
             "dist_kinds": ["pert", "triangular", "uniform", "fixed"],
             "facts": _fact_schema(),
+            "work_norms": _work_norms(),
             "matrix": {"p_edges": list(DEFAULT_P_EDGES), "labels": list(DEFAULT_LABELS),
                        "levels": {str(p): {str(i): matrix_level(p, i) for i in range(1, 6)} for p in range(1, 6)},
                        "note": "Probability-class edges and level thresholds are the engine's equal-width ASSUMPTIONS."},
@@ -490,6 +499,27 @@ def create_app() -> Flask:
         except ScheduleError as e:
             return _problems([str(e)])
         return _json({"ok": True, **res})
+
+    @app.post("/api/work-plan")
+    def work_plan():
+        """Body: {duration_days, work:{quantity, unit, norm_id, efficiency?, available?, materials?}} -> workers required
+        per role, shortfall flags, implied duration and material cover.  Stateless; nothing is stored."""
+        from app.productivity.india_norms import load_norms
+        from app.productivity.labour_plan import plan_work
+
+        d = _json_object()
+        w = d.get("work") if isinstance(d.get("work"), dict) else {}
+        norms = load_norms()
+        n = norms.get(w.get("norm_id"))
+        if n is None:
+            return _problems(["Pick a labour norm."])
+        try:
+            res = plan_work(n, w.get("quantity"), str(w.get("unit") or n.unit_basis), d.get("duration_days"),
+                            w.get("available") or None, 1.0 if w.get("efficiency") in (None, "") else w.get("efficiency"),
+                            w.get("materials") or [])
+        except (ValueError, TypeError) as e:
+            return _problems([str(e)])
+        return _json({"ok": True, "plan": res})
 
     @app.post("/api/schedule/duration-for-finish")
     def schedule_duration_for_finish():

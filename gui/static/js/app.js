@@ -785,6 +785,17 @@ const ACTIONS = {
     if (S.ui.schedAssess === S.ui.schedSel) S.ui.autoAddPending = true;
     schedRecompute();
   },
+  "work-mat-add": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    (r.work.materials = r.work.materials || []).push({ name: "", unit: "", source: "User Input" });
+    renderScreen();
+  },
+  "work-mat-del": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r || !r.work) return;
+    r.work.materials.splice(+b.dataset.m, 1);
+    workChanged(i);
+  },
   "sched-cal-add": () => { S.ui.schedCal.exceptions.push({ name: "", from: S.ui.schedStart, to: S.ui.schedStart, working: false }); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-cal-del": (b) => { S.ui.schedCal.exceptions.splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
   "sched-up": () => schedMove(-1),
@@ -836,7 +847,32 @@ function schedSync() {
   const dl = a.deadline_days;
   if (!dl || !dl.source || dl.source === "Derived Calculation") a.deadline_days = { ...t.activity.deadline_days };
   S.case.facts = { ...(row.facts || {}) };
+  const plan = ((S.ui.workPlans || {})[i] || {}).plan;
+  if (row.work && plan) {                                    // quantity-driven labour and stock: the facts it works out replace typed ones
+    S.case.work = JSON.parse(JSON.stringify(row.work));
+    for (const k of Object.keys(plan.derived_facts || {})) delete S.case.facts[k];
+  } else delete S.case.work;
 }
+
+/** Work plan (workers required, shortfall, material cover) for one schedule row, from the server; nothing is stored there. */
+async function workFetch(i) {
+  const r = (S.ui.schedRows || [])[i]; if (!r) return;
+  S.ui.workPlans = S.ui.workPlans || {};
+  const w = r.work;
+  if (!w || !w.norm_id || !(Number(w.quantity) > 0) || !(Number(r.duration_days) > 0)) { S.ui.workPlans[i] = null; return; }
+  const q = await post("/api/work-plan", { duration_days: r.duration_days, work: w });
+  S.ui.workPlans[i] = q.ok && q.data.ok ? { plan: q.data.plan } : { error: ((q.data && q.data.problems) || ["Could not work out the requirement."])[0] };
+}
+async function workChanged(i) {
+  const act = document.activeElement;
+  const keep = act && act.dataset && act.dataset.i !== undefined && act.dataset.f ? { i: act.dataset.i, f: act.dataset.f, m: act.dataset.m } : null;
+  await workFetch(i);
+  if (S.ui.schedAssess === i + 1) { schedSync(); changed({ rerender: false }); }
+  S.ui.schedSel = i + 1;
+  renderScreen();
+  if (keep) $(`[data-i="${keep.i}"][data-f="${keep.f}"]${keep.m !== undefined ? `[data-m="${keep.m}"]` : ""}`)?.focus();
+}
+const _wnum = (v) => { const n = parseFloat(String(v).replace(",", ".")); return String(v).trim() !== "" && isFinite(n) && n >= 0 ? n : undefined; };
 function schedFixAssess() {
   const T = (S.ui.schedule && S.ui.schedule.tasks) || [];
   const cur = T.find((x) => x.id === S.ui.schedAssess);
@@ -853,6 +889,7 @@ async function schedRecompute(notes = [], { sync = true } = {}) {
   if (r.ok && r.data.ok) {
     S.ui.schedule = { ...r.data, warnings: [...notes, ...(r.data.warnings || [])] }; S.ui.schedProblems = null;
     schedFixAssess();
+    await Promise.all(rows.map((rw, k) => (rw.work ? workFetch(k) : null)));
     const selT = S.ui.schedule.tasks.find((x) => x.id === S.ui.schedSel);
     if (!selT || (selT.summary && !sync)) S.ui.schedSel = S.ui.schedAssess;        // opening the tab: start on the assessed task
     if (sync) {
@@ -881,6 +918,28 @@ const CHANGE_ACTIONS = {
     r[f] = f === "duration_days" ? Math.max(0, parseFloat(String(el.value).replace(",", ".")) || 0) : el.value;
     S.ui.schedSel = +el.dataset.i + 1;
     schedRecompute();
+  },
+  "work-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    const w = r.work = r.work || { available: {}, materials: [] }, f = el.dataset.f;
+    w.available = w.available || {}; w.materials = w.materials || [];
+    if (f === "norm_id") {
+      w.norm_id = el.value || undefined;
+      const n = (S.meta?.work_norms || []).find((x) => x.item_id === el.value);
+      w.unit = n ? n.unit : undefined;
+    } else if (f.startsWith("avail:")) {
+      const g = f.slice(6), v = _wnum(el.value);
+      if (v === undefined) delete w.available[g]; else w.available[g] = v;
+    } else { const v = _wnum(el.value); if (v === undefined) delete w[f]; else w[f] = v; }
+    workChanged(i);
+  },
+  "work-mat-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i], m = r && r.work && r.work.materials[+el.dataset.m]; if (!m) return;
+    const f = el.dataset.f;
+    if (f === "name" || f === "unit") m[f] = el.value.trim();
+    else { const v = _wnum(el.value); if (v === undefined) delete m[f]; else m[f] = v; }
+    m.source = "User Input";
+    workChanged(i);
   },
   "sched-start": (el) => {
     const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;

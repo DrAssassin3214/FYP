@@ -732,6 +732,12 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .msp-row.is-sel { background: color-mix(in srgb, var(--accent, #1f5fbf) 14%, transparent); outline: 1px solid var(--accent, #1f5fbf); }
 .msp-row.is-sum { font-weight: 650; }
 .msp-name { overflow: hidden; text-overflow: ellipsis; }
+.work-box { margin: 4px 0 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.work-tbl td, .work-tbl th { padding: 4px 8px; }
+.work-tbl td.r, .work-tbl th.r { text-align: right; }
+.work-tbl tr.short td { background: color-mix(in srgb, var(--warn, #c0392b) 9%, transparent); }
+.work-flags { margin: 6px 0; padding-left: 18px; }
+.work-flags li.warn { color: var(--warn, #b03a2e); }
 .msp-gantt { max-height: 46vh; }
 .g-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #4f7fc7; vertical-align: -1px; margin: 0 2px 0 8px; }
 .g-key.crit { background: #c0392b; }

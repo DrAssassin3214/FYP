@@ -423,6 +423,49 @@ def _known_fact_names() -> set:
     return names
 
 
+def _same_fact(a, b) -> bool:
+    if isinstance(a, bool) or isinstance(b, bool):
+        return a is b or a == b
+    try:
+        return math.isclose(float(a), float(b), rel_tol=1e-9)
+    except (TypeError, ValueError):
+        return a == b
+
+
+def _work_plan(work, planned, problems: list) -> Optional[dict]:
+    """The optional `work` section: quantity of masonry + norm + available workers (+ materials) -> required workers,
+    shortfall flags and the derived facts the rules use.  Problems are appended; returns None when unusable."""
+    from app.productivity.india_norms import load_norms
+    from app.productivity.labour_plan import plan_work
+
+    if not isinstance(work, Mapping):
+        problems.append(f"work: expected an object, got {type(work).__name__}")
+        return None
+    if planned is None:
+        problems.append("work: the planned duration (activity.planned_duration_days) is needed to work out how many "
+                        "workers the quantity requires")
+        return None
+    norms = load_norms()
+    nid = work.get("norm_id")
+    if nid not in norms:
+        problems.append(f"work.norm_id {nid!r} is not a known labour norm (choose one of: {', '.join(sorted(norms))})")
+        return None
+    av = work.get("available")
+    if av is not None and not isinstance(av, Mapping):
+        problems.append("work.available: expected an object such as {\"masons\": 8, \"helpers\": 18, \"bhisti\": 2}")
+        return None
+    mats = work.get("materials") or []
+    if not isinstance(mats, (list, tuple)) or not all(isinstance(m, Mapping) for m in mats):
+        problems.append("work.materials: expected a list of objects")
+        return None
+    try:
+        return plan_work(norms[nid], work.get("quantity"), str(work.get("unit") or norms[nid].unit_basis), planned.value,
+                         av, 1.0 if _blank(work.get("efficiency")) else work.get("efficiency"), mats)
+    except ValueError as e:
+        problems.append(f"work: {e}")
+        return None
+
+
 def parse_case(case: Mapping) -> dict:
     problems: list[str] = []
     warnings: list[str] = []
@@ -538,6 +581,17 @@ def parse_case(case: Mapping) -> dict:
     if planned is not None:
         facts["planned_duration_days"] = planned.value        # the activity's value always wins
 
+    work_plan = None
+    work_in = case.get("work")
+    if not _blank(work_in):
+        work_plan = _work_plan(work_in, planned, problems)
+        if work_plan:
+            for k, v in work_plan["derived_facts"].items():
+                if k in facts_in and not _same_fact(facts_in[k], v):
+                    problems.append(f"facts.{k} ({facts_in[k]!r}) conflicts with the value worked out from work.quantity "
+                                    f"({v!r}); remove it from facts, the work plan's value is used")
+                facts[k] = v                                  # derived from quantity and the norm: always wins
+
     rules_raw = case.get("rules")
     rules_raw = rule_library() if rules_raw is None else rules_raw
     rules: list[Rule] = []
@@ -548,7 +602,7 @@ def parse_case(case: Mapping) -> dict:
     if problems:
         raise CaseError(problems)
     return {"project": dict(project), "activity": {"id": str(a.get("id") or "ACT"), "name": a.get("name") or ""},
-            "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts,
+            "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts, "work_plan": work_plan,
             "impact_edges": edges, "edges_source": edges_source, "warnings": warnings, "partial": partial, "use_seed": use_seed,
             "seed_basis": seed_basis}
 
@@ -676,6 +730,7 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
         "matrix_settings": matrix_settings(edges, pc["edges_source"]),
         "high_consequence": high_consequence,
         "rules": rule_out,
+        "work_plan": pc["work_plan"],
         "rule_base_issues": problems,
         "warnings": warnings,
     }
