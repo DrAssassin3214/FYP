@@ -20,7 +20,9 @@ const TEXT_FIELD = 'input:not([type="checkbox"]):not([type="radio"]):not([type="
 const PLAIN = ".ev-cit, .ev-item summary, .lib-group > summary";   // library category headers: a whole-row toggle, same dead-space problem
 // The logo runs its own hover animation; the cursor itself just gets out of the way over it, rather than showing
 // a dot/ring on top of it.
-const HIDE_OVER = ".topbar .brand";
+// The Gantt chart is a native-cursor zone: it has a real scrollbar, and the browser always draws the system arrow over a
+// scrollbar, so the follow cursor stays out of the whole chart rather than trailing a second pointer next to it.
+const HIDE_OVER = ".topbar .brand, .msp-gantt";
 
 export function initCursor() {
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;

@@ -318,3 +318,18 @@ html.has-cursor::-webkit-scrollbar, html.has-cursor *::-webkit-scrollbar { displ
 .seed-explain ul { margin: 6px 0 0 18px; padding: 0; }
 .seed-explain li { margin: 3px 0; }
 .seed-explain .src { vertical-align: baseline; margin-right: 4px; }
+
+/* Gantt chart: native pointer and a visible scrollbar (the custom cursor is switched off over it in cursor.js).
+   Scrolling ends hard at the top and bottom (overscroll-behavior) instead of passing on to the page, the scrollbar
+   space is reserved so nothing shifts when it appears, and the header row and the task-name column stay pinned. */
+html.has-cursor .msp-gantt { scrollbar-width: auto; scrollbar-color: var(--border-strong) var(--surface-2, transparent); }
+html.has-cursor .msp-gantt::-webkit-scrollbar { display: block; width: 14px; height: 14px; }
+html.has-cursor .msp-gantt::-webkit-scrollbar-track { background: var(--surface-2, transparent); }
+html.has-cursor .msp-gantt::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 7px; border: 3px solid var(--surface-2, transparent); }
+html.has-cursor .msp-gantt, html.has-cursor .msp-gantt * { cursor: default !important; }
+html.has-cursor .msp-gantt .msp-row:not(.msp-head) { cursor: pointer !important; }
+.msp-gantt { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.msp-gantt .msp-row > div:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); }
+.msp-gantt .msp-head > div:first-child { z-index: 3; background: var(--surface-2, #eef0f2); }
+.msp-gantt .msp-row.is-sel > div:first-child { background: color-mix(in srgb, var(--accent, #1f5fbf) 14%, var(--surface)); }
+.msp-gantt .msp-row:not(.msp-head):hover > div:first-child { background: var(--surface-2, #f3f4f6); }
