@@ -90,7 +90,7 @@ export const SOURCE_META = {
 export function srcMeta(s) { return SOURCE_META[s] || { cls: "s-none", g: "?", short: s ? `Unknown: ${s}` : "No source" }; }
 /** Read-only source badge. Hidden by default; pass force=true where the Source itself is the content. */
 export function sourceBadge(s, force = false) {
-  if (!force) return "";
+  if (!force || s === "Assumption") return "";   // the Assumption tag is not shown; Literature and other sources still are
   const m = srcMeta(s);
   return `<span class="src ${m.cls}" title="Source: ${h(s || "not given")}"><span class="src-g" aria-hidden="true">${m.g}</span>${h(m.short)}</span>`;
 }
