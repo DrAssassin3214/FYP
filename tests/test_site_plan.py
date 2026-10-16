@@ -56,3 +56,12 @@ def test_build_work_plan_site_only_and_empty():
     assert build_work_plan({}, None, {}) is None
     p = build_work_plan({"site": {"rework_items": 2}}, None, {})
     assert p["derived_facts"]["prior_rework_history"] is True
+
+
+def test_labour_cost_uses_ssr_maharashtra_wages():
+    # hand check: 10 masons x 677 + 18 helpers x 615 + 2 bhisti x 648 = 6770 + 11070 + 1296 = 19136 per day; x 100 days
+    from app.productivity.india_norms import selectable_norms
+    from app.productivity.labour_plan import plan_work
+    p = plan_work(selectable_norms()["IS7272-1brick"], 1000, "m3", 100, {"masons": 8, "helpers": 18, "bhisti": 2})
+    assert {g["group"]: g["labour_cost_per_day"] for g in p["groups"]} == {"masons": 6770, "helpers": 11070, "bhisti": 1296}
+    assert p["ssr"]["labour_cost_per_day"] == 19136 and p["ssr"]["labour_cost_for_task"] == 1913600

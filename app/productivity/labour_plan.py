@@ -23,6 +23,7 @@ import math
 from typing import Mapping, Optional, Sequence
 
 from .india_norms import NormItem
+from .ssr import load_ssr
 
 GROUP_LABEL = {"masons": "Masons", "helpers": "Helpers (mazdoor / coolie)", "bhisti": "Bhisti (water carriers)"}
 _EPS = 1e-9
@@ -190,6 +191,7 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
         g["constant"] += c
 
     groups = []
+    ssr_wages = load_ssr()["wages"]
     for name, g in by_group.items():
         person_days = quantity * g["constant"] / efficiency
         frac = person_days / duration_days
@@ -201,11 +203,15 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
             "constant_per_unit": g["constant"], "person_days": person_days,
             "output_per_worker_day": (efficiency / g["constant"]) if g["constant"] > 0 else None,
             "required_workers": req, "required_fractional": frac,
+            "ssr_wage_per_day": (ssr_wages.get(name) or {}).get("rate"),
+            "labour_cost_per_day": (req * ssr_wages[name]["rate"]) if name in ssr_wages else None,
             "available": a, "shortfall": short, "short": None if a is None else bool(short and short > _EPS),
             "days_with_available": (None if a is None else (person_days / a if a > 0 else None)),
         })
 
     entered = [g for g in groups if g["available"] is not None]
+    ssr = load_ssr()
+    cost_day = sum(g["labour_cost_per_day"] for g in groups if g["labour_cost_per_day"] is not None)
     req_total = sum(g["required_workers"] for g in groups)
     complete = len(entered) == len(groups)
     usable = sum(min(g["available"], g["required_workers"]) for g in entered) if complete else None
@@ -252,6 +258,8 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
                  "conditions": norm.conditions, "wall_type": norm.wall_type},
         "quantity": quantity, "unit": unit, "duration_days": duration_days, "efficiency": efficiency,
         "groups": groups, "required_total": req_total,
+        "ssr": {"source": ssr["source"], "citation": ssr["citation"], "currency": ssr["currency"],
+                "labour_cost_per_day": cost_day, "labour_cost_for_task": cost_day * duration_days},
         "available_usable": usable, "available_entered_total": sum(g["available"] for g in entered) if entered else None,
         "implied_duration_days": implied, "slip_days": slip, "binding_group": binding,
         "materials": mats, "resource_classes": RESOURCE_CLASSES, "flags": flags, "derived_facts": facts,

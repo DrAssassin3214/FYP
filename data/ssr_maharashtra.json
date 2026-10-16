@@ -1,0 +1,18 @@
+{
+  "source": "Maharashtra Public Works Department, State Schedule of Rates (SSR) 2022-23, effective 25 July 2022",
+  "citation": "Government of Maharashtra, PWD, SSR 2022-23, Chapter 14 'Labour Rates for SSR for year 2022-23' (labour rates certified by the Labour Commissioner, Nagpur)",
+  "currency": "INR",
+  "unit": "per day",
+  "wages": {
+    "masons": {"ssr_description": "Mason I Class Skilled (Mason II Class Skilled is the same rate)", "sr_no": "3 and 4", "rate": 677},
+    "helpers": {"ssr_description": "Helper Un Skilled", "sr_no": "33", "rate": 615},
+    "bhisti": {"ssr_description": "Bhisti (Mixing / Curing) - Semi Skilled", "sr_no": "30", "rate": 648}
+  },
+  "brick_items": [
+    {"item": "27.01", "unit": "m3", "completed_rate": 7755, "labour_rate": 1588, "description": "Second class burnt brick masonry, CM 1:6, foundations and plinth"},
+    {"item": "27.02", "unit": "m3", "completed_rate": 7928, "labour_rate": 1739, "description": "First class burnt brick masonry, CM 1:6, plinth"},
+    {"item": "27.05", "unit": "m3", "completed_rate": 7994, "labour_rate": 1705, "description": "Second class burnt brick masonry, CM 1:6, superstructure"},
+    {"item": "27.12", "unit": "m3", "completed_rate": 6884, "labour_rate": 1588, "description": "Fly ash brick masonry, CM 1:6, foundation and plinth"},
+    {"item": "27.13", "unit": "m3", "completed_rate": 7106, "labour_rate": 1705, "description": "Fly ash brick masonry, CM 1:6, superstructure"}
+  ]
+}
