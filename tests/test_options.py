@@ -203,3 +203,39 @@ def test_cached_pert_quantile_is_identical_to_scipy():
     assert np.array_equal(simulation.delay_ppf(d, u), ref)
     assert np.array_equal(simulation.delay_ppf(d, u), ref)            # second call served from the cache
     assert not simulation._beta_ppf(u, alpha, beta).flags.writeable    # cached arrays are read-only
+
+
+# ---------- Pareto ranking ----------
+from app.engine.options import pareto_rank  # noqa: E402
+
+
+def _rows(*vals):
+    return [{"risk_id": f"R{i}", "name": f"r{i}", "value_at_stake": v, "share_of_expected_cost": None} for i, v in enumerate(vals)]
+
+
+def test_pareto_hand_checked_cut_at_80_percent():
+    # 50 / 30 / 12 / 8 of 100: cumulative 0.5, 0.8, 0.92, 1.0 -> 80% is reached after two risks
+    out = pareto_rank(_rows(8, 50, 12, 30))
+    assert [r["risk_id"] for r in out["rows"]] == ["R1", "R3", "R2", "R0"]
+    assert out["vital_few"] == ["R1", "R3"] and out["n_vital"] == 2 and out["n_total"] == 4
+    assert [round(r["cumulative_share"], 4) for r in out["rows"]] == [0.5, 0.8, 0.92, 1.0]
+
+
+def test_pareto_includes_risk_that_crosses_threshold():
+    out = pareto_rank(_rows(70, 20, 10))      # 0.7 < 0.8, so the second risk is still needed
+    assert out["vital_few"] == ["R0", "R1"]
+
+
+def test_pareto_all_zero_has_no_vital_few():
+    out = pareto_rank(_rows(0, 0))
+    assert out["vital_few"] == [] and out["total_value_at_stake"] == 0
+
+
+def test_pareto_rejects_bad_threshold():
+    with pytest.raises(ValueError):
+        pareto_rank(_rows(1, 2), threshold=0)
+
+
+def test_pareto_on_simulated_value_at_stake():
+    out = pareto_rank(value_at_stake(act(), [MAT, LAB, WX], COST, n=20_000, seed=5))
+    assert out["rows"][0]["risk_id"] == "R-MAT" and out["rows"][-1]["cumulative_share"] == pytest.approx(1.0)

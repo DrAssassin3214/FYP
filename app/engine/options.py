@@ -78,6 +78,42 @@ def value_at_stake(activity: Activity, risks: Sequence[Risk], cost: CostModel, n
     return sorted(rows, key=lambda x: (-x["value_at_stake"], x["risk_id"]))
 
 
+# ------------------------------------------------------------------------------------------ Pareto ranking
+def pareto_rank(stake_rows: Sequence[dict], threshold: float = 0.8) -> dict:
+    """Vital-few cut over value_at_stake() rows: the smallest set of risks, taken largest first, whose value at
+    stake reaches `threshold` of the total value at stake.
+
+    Shares here are of the SUM of value at stake (so the cumulative column always ends at 1.0).  That is not the same
+    as share_of_expected_cost: with liquidated damages or correlated risks the per-risk values do not add up to the
+    expected cost, so both are reported.  The 80% line is a screening convention, not a finding; `vital_few` is where to
+    spend elicitation effort first, not a list of risks that may be ignored.  With only a handful of risks the cut is
+    coarse, and `n_vital`/`n_total` says so.
+    """
+    if not (0.0 < threshold <= 1.0):
+        raise ValueError("threshold must be in (0, 1]")
+    rows = sorted(stake_rows, key=lambda r: (-r["value_at_stake"], r["risk_id"]))
+    total = sum(r["value_at_stake"] for r in rows)
+    out, cum, reached = [], 0.0, False
+    for r in rows:
+        share = (r["value_at_stake"] / total) if total > 0 else 0.0
+        before = cum
+        cum += share
+        in_few = total > 0 and before < threshold - 1e-12 and r["value_at_stake"] > 0
+        out.append({"risk_id": r["risk_id"], "name": r.get("name", ""), "value_at_stake": r["value_at_stake"],
+                    "share_of_stake": share, "cumulative_share": min(cum, 1.0), "vital_few": in_few,
+                    "share_of_expected_cost": r.get("share_of_expected_cost")})
+        reached = reached or cum >= threshold - 1e-12
+    vital = [x["risk_id"] for x in out if x["vital_few"]]
+    return {"threshold": threshold, "rows": out, "vital_few": vital, "n_vital": len(vital), "n_total": len(out),
+            "total_value_at_stake": total,
+            "basis": (_BASIS_DERIVED + "; Pareto cut on value at stake (largest first, cumulative share of the summed "
+                      "value at stake)"),
+            "note": ("Screening cut only: risks outside the vital few still carry "
+                     f"{max(0.0, 1.0 - sum(x['share_of_stake'] for x in out if x['vital_few'])) * 100:.1f}% of the value at stake. "
+                     "Value at stake of different risks need not add to the expected cost when liquidated damages or "
+                     "correlation apply.")}
+
+
 # ------------------------------------------------------------------------------------------ break-even targets
 def break_even_targets(risk: Risk, cost: CostModel, mitigation_cost: float) -> dict:
     """What a response costing `mitigation_cost` must achieve on `risk` before it can pay for itself.

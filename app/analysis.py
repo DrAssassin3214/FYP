@@ -42,7 +42,7 @@ from app.engine.decision import CRITERIA, Constraints, Option, compare_options
 from app.engine.emv import cost_summary, event_emv
 from app.engine.models import Activity, CostModel, Mitigation, Param, Risk, Source
 from app.engine.options import (build_options, break_even_targets, decision_command, decision_sensitivity,
-                                 mitigation_net_benefit, selection_stability, suggest_options, value_at_stake)
+                                 mitigation_net_benefit, pareto_rank, selection_stability, suggest_options, value_at_stake)
 from app.engine.simulation import convergence, sensitivity, simulate, summarise
 
 CaseError = service.CaseError
@@ -445,6 +445,7 @@ def run_analysis(case: Mapping, evidence_index: Optional[Mapping[str, str]] = No
         "summary": summary, "cost": cost_sum, "histogram": duration_histogram(res.duration),
         "event_emv": event_emv(risks, cost), "sensitivity": sensitivity(res), "convergence": convergence(res),
         "value_at_stake": stake,
+        "pareto": pareto_rank(stake),
         "option_suggestions": suggestions,
         "mitigation_checks": checks,
         "options_source": options_source, "option_build_notes": build_notes,
