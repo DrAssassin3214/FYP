@@ -5,7 +5,7 @@ Hand calculation, IS 7272 brick masonry, 1,000 m3 over 100 days.  Constants per 
     workers required  ceil(9.4) = 10, 18, 2  -> 30 in total
   with 8 masons, 18 helpers, 2 bhisti:
     masons short by 2 (20%); 940 / 8 = 117.5 days, 17.5 more than planned; usable workers 8 + 18 + 2 = 28
-  bricks, 500 per m3 (user input): 1,000 m3 / 100 d = 10 m3/day -> 5,000 per day; 20,000 in stock lasts 4 days
+  bricks, 500 per m3 (user input): 1,000 m3 x 500 = 500,000 nos needed; 20,000 on site supports 4% of the work (4 of 100 days)
 """
 import copy
 
@@ -36,7 +36,7 @@ def test_requirements_and_shortfall_by_hand():
 def test_derived_facts_replace_the_yes_no_question():
     f = plan_work(NORM, 1000, "m3", 100, AVAIL, materials=BRICKS)["derived_facts"]
     assert f == {"required_workers": 30, "available_workers": 28, "skilled_masons_short": True,
-                 "material_stock_days": pytest.approx(4.0), "material_lead_time_days": 6.0}
+                 "material_short": True, "material_stockout_before_delivery": True}
 
 
 def test_no_shortfall_means_no_flag():
@@ -92,17 +92,45 @@ def test_cpwd_norm_with_two_mason_classes_adds_them():
     assert role_group("mason_2nd_class") == "masons" and role_group("coolie") == "helpers"
 
 
-def test_stock_shorter_than_lead_time_is_flagged_and_longer_is_not():
-    short = plan_work(NORM, 1000, "m3", 100, materials=BRICKS)["materials"][0]
-    assert short["daily_need"] == pytest.approx(5000) and short["stock_days"] == pytest.approx(4) and short["short_vs_lead_time"]
-    ok = plan_work(NORM, 1000, "m3", 100, materials=[{**BRICKS[0], "stock": 40000}])["materials"][0]
-    assert ok["stock_days"] == pytest.approx(8) and ok["short_vs_lead_time"] is False
+def test_material_is_compared_as_a_quantity_and_lead_time_decides_the_timing():
+    # 1000 m3 x 500 nos per m3 = 500,000 nos needed; 20,000 on site supports 4% of the work = 4 of the 100 planned days
+    m = plan_work(NORM, 1000, "m3", 100, materials=BRICKS)["materials"][0]
+    assert m["required"] == pytest.approx(500_000) and m["shortfall"] == pytest.approx(480_000) and m["short"]
+    assert m["work_supported_share"] == pytest.approx(0.04) and m["stockout_before_delivery"] is True   # lead time 6 >= 4
+    assert "stock_days" not in m
+    # 40,000 supports 8% = 8 days, longer than the 6-day lead time: still short, but a delivery arrives in time
+    ok = plan_work(NORM, 1000, "m3", 100, materials=[{**BRICKS[0], "stock": 40000}])
+    assert ok["materials"][0]["short"] and ok["materials"][0]["stockout_before_delivery"] is False
+    assert ok["derived_facts"]["material_short"] is True and ok["derived_facts"]["material_stockout_before_delivery"] is False
+    full = plan_work(NORM, 1000, "m3", 100, materials=[{**BRICKS[0], "stock": 500_000}])
+    assert full["derived_facts"]["material_short"] is False and full["derived_facts"]["material_stockout_before_delivery"] is False
+    assert not [f for f in full["flags"] if f["level"] == "elevated"]
+    tie = plan_work(NORM, 1000, "m3", 100, materials=[{**BRICKS[0], "stock": 30000, "lead_time_days": 6}])   # 6% = 6 days
+    assert tie["materials"][0]["stockout_before_delivery"] is True            # a tie counts as a stock-out
+    nolead = plan_work(NORM, 1000, "m3", 100, materials=[{k: v for k, v in BRICKS[0].items() if k != "lead_time_days"}])
+    assert "material_stockout_before_delivery" not in nolead["derived_facts"] and nolead["derived_facts"]["material_short"]
+
+
+def test_resources_are_classified_and_set_their_own_facts():
+    res = [{"name": "Sand", "class": "mortar", "unit": "m3", "per_unit_of_work": 0.3, "stock": 300, "lead_time_days": 2},
+           {"name": "Mixer", "class": "equipment", "required": 3, "stock": 2},
+           {"name": "Hoist", "class": "machinery", "required": 1, "stock": 1}]
+    f = plan_work(NORM, 1000, "m3", 100, materials=res)["derived_facts"]
+    assert f["mortar_short"] is False and f["mortar_stockout_before_delivery"] is False       # 300 needed, 300 on site
+    assert f["tools_shortage"] is True and f["hoist_available"] is True
+    assert "material_short" not in f
+    res[2]["stock"] = 0
+    p = plan_work(NORM, 1000, "m3", 100, materials=res)
+    assert p["derived_facts"]["hoist_available"] is False
+    assert any("Hoist" in x["message"] and x["level"] == "elevated" for x in p["flags"])
+    with pytest.raises(ValueError):
+        plan_work(NORM, 1000, "m3", 100, materials=[{"name": "x", "class": "bogus"}])
 
 
 # ---------- through the case service: the rules fire on the derived facts ----------
 def _case(**work):
     c = copy.deepcopy(service.example_case())
-    for k in ("required_workers", "available_workers", "skilled_masons_short", "material_stock_days", "material_lead_time_days"):
+    for k in ("required_workers", "available_workers", "skilled_masons_short", "material_short", "material_stockout_before_delivery"):
         c["facts"].pop(k, None)
     c["activity"]["planned_duration_days"] = {"value": 100, "source": "User Input"}
     c["work"] = {"quantity": 1000, "unit": "m3", "norm_id": "IS7272-1brick", "available": AVAIL, "materials": BRICKS, **work}

@@ -46,6 +46,102 @@ def _need_number(v, label: str, *, positive: bool = False) -> float:
         raise ValueError(f"{label} must be {'greater than' if positive else 'at least'} 0")
     return float(v)
 
+RESOURCE_CLASSES = {
+    "material": "Material (bricks, blocks)",
+    "mortar": "Mortar material (sand, cement)",
+    "equipment": "Equipment / tools (mixer, cutter, pump)",
+    "machinery": "Machinery (hoist, material lift)",
+}
+
+
+def _qty(m: Mapping, key: str, label: str) -> Optional[float]:
+    return None if m.get(key) is None else _need_number(m.get(key), f"{label}.{key}")
+
+
+def _plan_resources(resources: Sequence[Mapping], quantity: float, duration_days: float, flags: list) -> list[dict]:
+    """Classify each listed resource and compare QUANTITIES.
+
+    material / mortar : required = quantity of work x per-unit-of-work factor (user input); on site = a quantity.
+    equipment / machinery : required = a count (user input); on site = the count available.
+    Stock is never expressed in days.  The only time figure is the dealer's lead time.  The stock-out test is made on
+    the SHARE OF THE WORK the stock supports: work is assumed to use material evenly over the planned duration, so
+    the shortfall begins after (share x planned duration); if the dealer's lead time is not shorter than that, a new
+    delivery cannot arrive before the shortfall begins (a tie counts as a stock-out, as before).
+    """
+    out = []
+    for i, m in enumerate(resources):
+        label = f"materials[{i}]"
+        cls = str(m.get("class") or "material")
+        if cls not in RESOURCE_CLASSES:
+            raise ValueError(f"{label}.class must be one of {', '.join(RESOURCE_CLASSES)}")
+        name = str(m.get("name") or "").strip() or f"Resource {i + 1}"
+        have = _qty(m, "stock", label)
+        lead = _qty(m, "lead_time_days", label)
+        row = {"name": name, "class": cls, "class_label": RESOURCE_CLASSES[cls], "unit": str(m.get("unit") or ""),
+               "source": str(m.get("source") or "User Input"), "on_site": have, "lead_time_days": lead,
+               "required": None, "per_unit_of_work": None, "shortfall": None, "short": None,
+               "work_supported_share": None, "stockout_before_delivery": None}
+        if cls in ("material", "mortar"):
+            per = _need_number(m.get("per_unit_of_work"), f"{label}.per_unit_of_work")
+            row["per_unit_of_work"], row["required"] = per, quantity * per
+        else:
+            row["required"] = _qty(m, "required", label)
+            row["unit"] = row["unit"] or "nos"
+        req = row["required"]
+        if req is not None and have is not None:
+            row["shortfall"] = max(0.0, req - have)
+            row["short"] = bool(row["shortfall"] > _EPS)
+            if cls in ("material", "mortar"):
+                row["work_supported_share"] = 1.0 if req <= _EPS else min(1.0, have / req)
+        if row["short"]:
+            pct = 100.0 * row["shortfall"] / req
+            msg = (f"{name}: {req:,.0f} {row['unit']} needed, {have:,.0f} on site, short by {row['shortfall']:,.0f} "
+                   f"{row['unit']} ({pct:.0f}%).")
+            level = "elevated"
+            if row["work_supported_share"] is not None:
+                share = row["work_supported_share"]
+                supported_days = share * duration_days
+                if lead is not None:
+                    row["stockout_before_delivery"] = bool(lead >= supported_days - _EPS)
+                    msg += (f" Stock supports {100 * share:.0f}% of the work; the dealer's lead time is {lead:g} days, "
+                            + ("so a new delivery cannot arrive before the shortfall begins."
+                               if row["stockout_before_delivery"] else "so a delivery ordered now arrives in time."))
+                    level = "elevated" if row["stockout_before_delivery"] else "normal"
+                else:
+                    msg += f" Stock supports {100 * share:.0f}% of the work; enter the dealer's lead time to judge the timing."
+                    level = "normal"
+            flags.append({"level": level, "group": None, "message": msg})
+        out.append(row)
+    return out
+
+
+def _resource_facts(rows: Sequence[Mapping]) -> dict:
+    """Facts the rules read, derived only from rows that had both a required and an on-site quantity."""
+    f: dict = {}
+    mat = [r for r in rows if r["class"] == "material" and r["short"] is not None]
+    mor = [r for r in rows if r["class"] == "mortar" and r["short"] is not None]
+    eq = [r for r in rows if r["class"] == "equipment" and r["short"] is not None]
+    mc = [r for r in rows if r["class"] == "machinery" and r["short"] is not None]
+    if mat:
+        f["material_short"] = any(r["short"] for r in mat)
+        known = [r for r in mat if r["short"] and r["stockout_before_delivery"] is not None]
+        f["material_stockout_before_delivery"] = (any(r["stockout_before_delivery"] for r in known)
+                                                   if known else (False if not f["material_short"] else None))
+        if f["material_stockout_before_delivery"] is None:
+            del f["material_stockout_before_delivery"]
+    if mor:
+        f["mortar_short"] = any(r["short"] for r in mor)
+        known = [r for r in mor if r["short"] and r["stockout_before_delivery"] is not None]
+        if known:
+            f["mortar_stockout_before_delivery"] = any(r["stockout_before_delivery"] for r in known)
+        elif not f["mortar_short"]:
+            f["mortar_stockout_before_delivery"] = False
+    if eq:
+        f["tools_shortage"] = any(r["short"] for r in eq)
+    if mc:
+        f["hoist_available"] = not any(r["short"] for r in mc)
+    return f
+
 
 def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
               available: Optional[Mapping[str, float]] = None, efficiency: float = 1.0,
@@ -113,39 +209,14 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
         flags.append({"level": "info", "group": None,
                       "message": "Available workers not entered for every group: only the entered groups are compared."})
 
-    mats = []
-    daily_work = quantity / duration_days
-    for i, m in enumerate(materials):
-        label = f"materials[{i}]"
-        name = str(m.get("name") or "").strip() or f"Material {i + 1}"
-        per = _need_number(m.get("per_unit_of_work"), f"{label}.per_unit_of_work")
-        stock = None if m.get("stock") is None else _need_number(m.get("stock"), f"{label}.stock")
-        lead = None if m.get("lead_time_days") is None else _need_number(m.get("lead_time_days"), f"{label}.lead_time_days")
-        daily = daily_work * per
-        row = {"name": name, "unit": str(m.get("unit") or ""), "per_unit_of_work": per,
-               "source": str(m.get("source") or "User Input"),
-               "total_needed": quantity * per, "daily_need": daily, "stock": stock, "lead_time_days": lead,
-               "stock_days": (stock / daily) if (stock is not None and daily > 0) else None}
-        row["short_vs_lead_time"] = (None if row["stock_days"] is None or lead is None
-                                     else bool(row["stock_days"] < lead - _EPS))
-        if row["short_vs_lead_time"]:
-            flags.append({"level": "elevated", "group": None,
-                          "message": (f"{name}: stock lasts {row['stock_days']:.1f} days at {daily:,.0f} {row['unit']}/day, "
-                                      f"less than the {lead:g}-day lead time to get more.")})
-        mats.append(row)
-
-    facts: dict = {"required_workers": req_total}
+    mats, facts = _plan_resources(materials, quantity, duration_days, flags), {}
+    facts["required_workers"] = req_total
     if complete:
         facts["available_workers"] = usable
     masons = next((g for g in groups if g["group"] == "masons"), None)
     if masons is not None and masons["short"] is not None:
         facts["skilled_masons_short"] = masons["short"]
-    stock_days = [m["stock_days"] for m in mats if m["stock_days"] is not None]
-    leads = [m["lead_time_days"] for m in mats if m["stock_days"] is not None and m["lead_time_days"] is not None]
-    if stock_days:
-        facts["material_stock_days"] = min(stock_days)
-    if leads:
-        facts["material_lead_time_days"] = max(leads)
+    facts.update(_resource_facts(mats))
 
     return {
         "norm": {"item_id": norm.item_id, "title": norm.title, "citation": norm.citation, "unit_basis": norm.unit_basis,
@@ -154,7 +225,7 @@ def plan_work(norm: NormItem, quantity: float, unit: str, duration_days: float,
         "groups": groups, "required_total": req_total,
         "available_usable": usable, "available_entered_total": sum(g["available"] for g in entered) if entered else None,
         "implied_duration_days": implied, "slip_days": slip, "binding_group": binding,
-        "materials": mats, "flags": flags, "derived_facts": facts,
+        "materials": mats, "resource_classes": RESOURCE_CLASSES, "flags": flags, "derived_facts": facts,
         "basis": ("Derived Calculation: person-days = quantity x labour constants of the cited norm / efficiency; workers "
                   "required = person-days / planned duration, rounded up. `available_workers` counts only workers who can "
                   "be used (a surplus in one group does not cover a shortage in another). The norm is a planning constant, "

@@ -794,7 +794,7 @@ const ACTIONS = {
   "work-mat-add": (b) => {
     const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
     r.work = r.work || { available: {}, materials: [] };
-    (r.work.materials = r.work.materials || []).push({ name: "", unit: "", source: "User Input" });
+    (r.work.materials = r.work.materials || []).push({ class: "material", name: "", unit: "", source: "User Input" });
     renderScreen();
   },
   "work-mat-del": (b) => {
@@ -942,7 +942,7 @@ const CHANGE_ACTIONS = {
   "work-mat-set": (el) => {
     const i = +el.dataset.i, r = S.ui.schedRows[i], m = r && r.work && r.work.materials[+el.dataset.m]; if (!m) return;
     const f = el.dataset.f;
-    if (f === "name" || f === "unit") m[f] = el.value.trim();
+    if (f === "name" || f === "unit" || f === "class") m[f] = el.value.trim();
     else { const v = _wnum(el.value); if (v === undefined) delete m[f]; else m[f] = v; }
     m.source = "User Input";
     workChanged(i);

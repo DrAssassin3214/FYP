@@ -568,8 +568,8 @@ def _example_schedule(facts: dict) -> dict:
         ("Masonry work complete", 3, 0, "17")]
     out = [{"name": n, "outline_level": lv, "duration_days": d, "predecessors": p, "facts": {}} for n, lv, d, p in rows]
     out[4]["facts"] = dict(facts)                                   # MAS-01: the case's site facts (task 5, ground-floor external walls)
-    out[5]["facts"] = {"required_workers": 4, "material_stock_days": 2, "masonry_floor_level": 0}
-    out[11]["facts"] = {"required_workers": 6, "material_stock_days": 4, "masonry_floor_level": 1}
+    out[5]["facts"] = {"required_workers": 4, "material_short": True, "material_stockout_before_delivery": True, "masonry_floor_level": 0}
+    out[11]["facts"] = {"required_workers": 6, "material_short": True, "material_stockout_before_delivery": True, "masonry_floor_level": 1}
     return {"name": "Block B brickwork package (ILLUSTRATIVE example schedule)", "start": "2026-11-02", "assessed": 5,
             "calendar": {"name": "Site, six-day week (ILLUSTRATIVE)", "workdays": [0, 1, 2, 3, 4, 5], "hours_per_day": 8.0,
                          "exceptions": [{"name": "Diwali (illustrative dates)", "from": "2026-11-09", "to": "2026-11-10", "working": False}]},

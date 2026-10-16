@@ -46,6 +46,10 @@ export function rowsPayload() {
 
 const dateCell = (i, which, v, held) => `<input class="msp-in msp-date${held ? " is-held" : ""}" type="date" value="${h(v)}" data-action-change="sched-${which}" data-i="${i}" data-f="${which}" aria-label="${which === "start" ? "Start date (start no earlier than)" : "Finish date (sets the duration)"} of task ${i + 1}"${held ? ' title="Start held: this task cannot start before this date. Clear the date to release it."' : ""}>`;
 const finp = (i, k, r) => `<input class="msp-in" inputmode="numeric" style="text-align:right" value="${h((r.facts || {})[k] ?? "")}" data-action-change="sched-fact-num" data-i="${i}" data-f="fact:${k}" aria-label="${k} of task ${i + 1}">`;
+const matCell = (i, r) => {
+  const dv = ((wplan(i) || {}).plan || {}).derived_facts || {}, v = dv.material_short !== undefined ? dv.material_short : (r.facts || {}).material_short;
+  return v === true ? '<span class="badge b-warn">Short</span>' : v === false ? '<span class="badge b-ok">OK</span>' : "";
+};
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function calendarPanel() {
@@ -103,23 +107,29 @@ function workBlock(i, r) {
 }
 
 /** Materials from the quantity of work: daily need, stock cover versus lead time (no default conversion factors). */
+const RES_CLASSES = [["material", "Material (bricks, blocks)"], ["mortar", "Mortar material (sand, cement)"], ["equipment", "Equipment / tools"], ["machinery", "Machinery (hoist / lift)"]];
+
 function materialBlock(i, r) {
   const w = r.work || {}, mats = w.materials || [], wp = wplan(i), plan = wp && wp.plan;
   const norm = (S.meta?.work_norms || []).find((n) => n.item_id === w.norm_id);
   const U = norm ? (norm.unit === "m3" ? "m³" : "m²") : "unit of work";
   const inp = (m, f, v, ph, w2 = "") => `<input class="msp-in boxed" ${w2} inputmode="${f === "name" || f === "unit" ? "text" : "decimal"}" placeholder="${h(ph)}" value="${wnum(v)}" data-action-change="work-mat-set" data-i="${i}" data-m="${m}" data-f="${f}">`;
   const rows = mats.map((m, k) => {
-    const pm = plan && plan.materials[k];
-    const cover = pm && pm.stock_days !== null && pm.stock_days !== undefined
-      ? `${num(pm.stock_days, 1)} d${pm.short_vs_lead_time ? ` <span class="badge b-warn">${icon("alert")}below lead time</span>` : pm.short_vs_lead_time === false ? ' <span class="badge b-ok">covers lead time</span>' : ""}` : "";
-    return `<tr><td>${inp(k, "name", m.name, "e.g. Bricks")}</td><td>${inp(k, "unit", m.unit, "nos / bags / m³")}</td><td>${inp(k, "per_unit_of_work", m.per_unit_of_work, `per 1 ${U}`)}</td><td class="r">${pm ? num(pm.daily_need, 1) : ""}</td><td>${inp(k, "stock", m.stock, "on site")}</td><td>${inp(k, "lead_time_days", m.lead_time_days, "days")}</td><td>${cover}</td>
-      <td><button type="button" class="btn btn-sm btn-danger-ghost" data-action="work-mat-del" data-i="${i}" data-m="${k}" aria-label="Remove material">${icon("trash")}</button></td></tr>`;
+    const pm = plan && plan.materials[k], cls = m.class || "material", isMat = cls === "material" || cls === "mortar";
+    const sel = `<select class="msp-in boxed" data-action-change="work-mat-set" data-i="${i}" data-m="${k}" data-f="class" aria-label="Type of resource">${RES_CLASSES.map(([v, l]) => `<option value="${v}"${cls === v ? " selected" : ""}>${h(l)}</option>`).join("")}</select>`;
+    const need = isMat ? inp(k, "per_unit_of_work", m.per_unit_of_work, `per 1 ${U}`) : inp(k, "required", m.required, "count needed");
+    const req = pm && pm.required !== null && pm.required !== undefined ? num(pm.required, isMat ? 0 : 0) : "";
+    let status = "";
+    if (pm && pm.short === true) status = `<span class="badge b-warn">${icon("alert")}short by ${num(pm.shortfall, 0)}</span>${pm.stockout_before_delivery === true ? ' <span class="badge b-warn">before delivery</span>' : pm.stockout_before_delivery === false ? ' <span class="badge b-ok">delivery in time</span>' : ""}`;
+    else if (pm && pm.short === false) status = '<span class="badge b-ok">enough</span>';
+    return `<tr><td>${sel}</td><td>${inp(k, "name", m.name, "e.g. Bricks")}</td><td>${inp(k, "unit", m.unit, isMat ? "nos / bags / m³" : "nos")}</td><td>${need}</td><td class="r">${req}</td><td>${inp(k, "stock", m.stock, isMat ? "quantity on site" : "count available")}</td><td>${inp(k, "lead_time_days", m.lead_time_days, "dealer, days")}</td><td>${status}</td>
+      <td><button type="button" class="btn btn-sm btn-danger-ghost" data-action="work-mat-del" data-i="${i}" data-m="${k}" aria-label="Remove resource">${icon("trash")}</button></td></tr>`;
   }).join("");
-  return `<div class="work-box"><div class="subhead">Materials from the quantity of work</div>
-    ${norm && w.quantity > 0 ? "" : `<p class="muted">Enter the labour norm and quantity of work on the Labour tab first; materials are worked out from the same quantity.</p>`}
-    <table class="tbl work-tbl"><thead><tr><th>Material</th><th>Unit</th><th>Per 1 ${U} of work</th><th class="r">Needed / day</th><th>Stock on site</th><th>Lead time</th><th>Stock lasts</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="8" class="muted">No material added.</td></tr>`}</tbody></table>
-    <button type="button" class="btn btn-sm" data-action="work-mat-add" data-i="${i}">${icon("plus")}Add material</button>
-    <p class="hint">The quantity of material per ${U} of work depends on your brick size, mortar mix and wastage, so there is no default: enter your own figure (it is recorded as User Input). Stock cover and lead time set the stock facts the rules use.</p></div>`;
+  return `<div class="work-box"><div class="subhead">Materials, equipment and machinery</div>
+    ${norm && w.quantity > 0 ? "" : `<p class="muted">Enter the labour norm and quantity of work on the Labour tab first; the material quantities are worked out from the same quantity.</p>`}
+    <table class="tbl work-tbl"><thead><tr><th>Type</th><th>Name</th><th>Unit</th><th>Per 1 ${U} / count needed</th><th class="r">Required</th><th>On site</th><th>Dealer lead time</th><th>Status</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="9" class="muted">Nothing added.</td></tr>`}</tbody></table>
+    <button type="button" class="btn btn-sm" data-action="work-mat-add" data-i="${i}">${icon("plus")}Add resource</button>
+    <p class="hint">Stock is a <b>quantity</b>, never a number of days. Materials and mortar: required = quantity of work × your per-unit factor (brick size, mix and wastage vary, so there is no default; recorded as User Input). Equipment and machinery: enter the count needed and the count available. Only the dealer's lead time is in days: if the on-site quantity supports less of the work than the lead time allows, the stock-out rule is raised. Machinery means the hoist or material lift. Scaffolding stays a declared inspection status below.</p></div>`;
 }
 
 function factFields(grp, row) {
@@ -259,7 +269,7 @@ function editable(sc) {
   const rows = S.ui.schedRows;
   const byId = new Map((sc ? sc.tasks : []).map((t) => [t.id, t]));
   const cols = `58px 400px 76px 132px 132px 130px 70px 74px 62px 44px`;
-  const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>ID</div><div>Task name</div><div class="r">Dur. (d)</div><div>Start</div><div>Finish</div><div>Predecessors</div><div class="r">Workers</div><div class="r">Stock (d)</div><div class="r">Float (d)</div><div>Crit.</div></div>`;
+  const head = `<div class="msp-row msp-head" style="grid-template-columns:${cols}"><div>ID</div><div>Task name</div><div class="r">Dur. (d)</div><div>Start</div><div>Finish</div><div>Predecessors</div><div class="r">Workers</div><div>Material</div><div class="r">Float (d)</div><div>Crit.</div></div>`;
   const vis = visibleIds(sc);
   const body = rows.map((r, i) => {
     const id = i + 1, t = byId.get(id) || {};
@@ -273,7 +283,7 @@ function editable(sc) {
       <div>${sum ? `<span class="muted r">${num(t.ef - t.es, 2)}</span>` : inp("duration_days", r.duration_days, 'inputmode="decimal" style="text-align:right"')}</div>
       <div>${sum ? h(dt(t.start)) : dateCell(i, 'start', dt(t.start), !!r.start_no_earlier)}</div><div>${sum ? h(dt(t.finish)) : dateCell(i, 'finish', dt(t.finish), false)}</div>
       <div>${sum ? "" : inp("predecessors", r.predecessors, 'placeholder="e.g. 2, 3SS+1d"')}</div>
-      <div>${sum ? "" : finp(i, "required_workers", r)}</div><div>${sum ? "" : finp(i, "material_stock_days", r)}</div>
+      <div>${sum ? "" : finp(i, "required_workers", r)}</div><div>${sum ? "" : matCell(i, r)}</div>
       <div class="r">${sum || t.total_float_days === undefined ? "" : num(t.total_float_days, 2)}</div>
       <div>${sum ? "" : t.critical ? '<span class="crit-dot" title="on the critical path"></span>' : ""}</div>
 </div>`;

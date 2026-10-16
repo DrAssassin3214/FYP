@@ -22,8 +22,8 @@
   "facts": {
     "required_workers": 6,
     "available_workers": 5,
-    "material_lead_time_days": 6,
-    "material_stock_days": 2,
+    "material_short": true,
+    "material_stockout_before_delivery": true,
     "tools_shortage": false,
     "monsoon_overlap": true,
     "external_walls_in_scope": true,
@@ -39,8 +39,7 @@
     "work_front_ready": true,
     "masonry_floor_level": 0,
     "hoist_available": true,
-    "sand_cement_stock_days": 8,
-    "sand_cement_lead_time_days": 5,
+    "mortar_stockout_before_delivery": false,
     "gang_payment_overdue": false,
     "frames_on_site": true,
     "mep_sleeve_layout_marked": true,
@@ -449,8 +448,8 @@
         "facts": {
           "required_workers": 6,
           "available_workers": 5,
-          "material_lead_time_days": 6,
-          "material_stock_days": 2,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
           "tools_shortage": false,
           "monsoon_overlap": true,
           "external_walls_in_scope": true,
@@ -466,8 +465,7 @@
           "work_front_ready": true,
           "masonry_floor_level": 0,
           "hoist_available": true,
-          "sand_cement_stock_days": 8,
-          "sand_cement_lead_time_days": 5,
+          "mortar_stockout_before_delivery": false,
           "gang_payment_overdue": false,
           "frames_on_site": true,
           "mep_sleeve_layout_marked": true,
@@ -484,7 +482,8 @@
         "predecessors": "4, 5SS+4d",
         "facts": {
           "required_workers": 4,
-          "material_stock_days": 2,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
           "masonry_floor_level": 0
         }
       },
@@ -530,7 +529,8 @@
         "predecessors": "11",
         "facts": {
           "required_workers": 6,
-          "material_stock_days": 4,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
           "masonry_floor_level": 1
         }
       },
