@@ -19,7 +19,15 @@ os.environ.setdefault("HOME", "/tmp")
 
 from flask import Response, request  # noqa: E402
 
+from gui import api as _gui_api  # noqa: E402
 from gui.api import create_app  # noqa: E402
+
+# The desktop app only answers loopback host names (DNS-rebinding guard). On Vercel the request host is the
+# deployment's own domain, so allow exactly the host names Vercel reports for this project.
+for _var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
+    _host = os.environ.get(_var, "").strip().lower()
+    if _host:
+        _gui_api._ALLOWED_HOSTS.add(_host)
 
 app = create_app()
 
