@@ -10,7 +10,7 @@ export const S = {
   evidence: new Map(),   // id -> record (curated records at start; others are added when a case cites them)
   evidenceList: [],
   ui: {
-    screen: "case",
+    screen: "schedule",
     fileName: null,
     open: new Set(),               // expanded risk cards, keys like "risk:3"
     autoAdded: new Set(),          // rule-flagged risk ids already auto-added to this case (never re-added after a delete)

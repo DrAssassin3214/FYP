@@ -61,6 +61,13 @@ class NormItem:
         return sum(self.roles[r] for r in self.mason_roles())
 
 
+def selectable_norms(path: Path = DEFAULT_PATH) -> dict[str, NormItem]:
+    """The norms the tool offers: Bureau of Indian Standards codes only (IS 7272).  Other code books in the data file
+    (CPWD analysis of rates) are kept for the record but never offered or applied.  Labour RATES come from the
+    Maharashtra Schedule of Rates (SSR), entered by the user; no rate is built in."""
+    return {k: v for k, v in load_norms(path).items() if v.issuer == "Bureau of Indian Standards"}
+
+
 def load_norms(path: Path = DEFAULT_PATH) -> dict[str, NormItem]:
     rows = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     out = {}

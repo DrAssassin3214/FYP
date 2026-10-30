@@ -721,3 +721,83 @@ mark { background: color-mix(in srgb, var(--chart-4) 35%, transparent); color: i
 .ac-svg .ac-pt { fill: var(--chart-1); stroke: var(--surface); stroke-width: 1.5; }
 .ac-svg .ac-pt-open { fill: var(--surface); stroke: var(--chart-1); stroke-width: 2; }
 .ac-svg text { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+
+/* Project schedule screen: task table + Gantt in one grid, scrolls together */
+.msp { overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-size: var(--fs-sm); max-height: 70vh; }
+.msp-row { display: grid; align-items: center; min-height: var(--row, 26px); border-bottom: 1px solid var(--border); cursor: pointer; width: max-content; min-width: 100%; }
+.msp-row > div { padding: 2px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msp-row > .r, .msp-head > .r { text-align: right; }
+.msp-head { position: sticky; top: 0; z-index: 2; background: var(--surface-2, #eef0f2); font-weight: 650; font-size: var(--fs-xs); cursor: default; }
+.msp-row:hover { background: var(--surface-2, #f3f4f6); }
+.msp-row.is-sel { background: color-mix(in srgb, var(--accent, #1f5fbf) 14%, transparent); outline: 1px solid var(--accent, #1f5fbf); }
+.msp-row.is-sum { font-weight: 650; }
+.msp-name { overflow: hidden; text-overflow: ellipsis; }
+.work-box { margin: 4px 0 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.work-tbl td, .work-tbl th { padding: 4px 8px; }
+.work-tbl td.r, .work-tbl th.r { text-align: right; }
+.work-tbl tr.short td { background: color-mix(in srgb, var(--warn, #c0392b) 9%, transparent); }
+.work-flags { margin: 6px 0; padding-left: 18px; }
+.work-flags li.warn { color: var(--warn, #b03a2e); }
+.msp-gantt { max-height: 46vh; }
+.g-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #4f7fc7; vertical-align: -1px; margin: 0 2px 0 8px; }
+.g-key.crit { background: #c0392b; }
+.g-cell { position: relative; height: var(--row, 26px); padding: 0 !important; border-left: 1px solid var(--border); }
+.g-axis { height: 100%; min-height: var(--row, 26px); font-weight: 400; }
+.g-tick { position: absolute; top: 4px; font-size: var(--fs-2xs); color: var(--text-3); transform: translateX(-50%); }
+.g-bar { position: absolute; top: 6px; height: 14px; border-radius: 2px; background: #4f7fc7; overflow: hidden; }
+.g-bar.crit { background: #c0392b; }
+.g-pc { position: absolute; left: 0; top: 5px; height: 4px; background: rgba(0,0,0,.65); }
+.g-sum { position: absolute; top: 9px; height: 6px; background: #222; border-radius: 1px; }
+.g-ms { position: absolute; top: 7px; width: 12px; height: 12px; background: #222; transform: rotate(45deg) scale(.75); }
+.crit-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #c0392b; }
+
+/* editable schedule grid */
+.msp-in { width: 100%; box-sizing: border-box; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; padding: 2px 4px; border-radius: 3px; }
+.msp-date { font-variant-numeric: tabular-nums; padding-right: 0; min-width: 0; }
+.msp-date.is-held { border-color: var(--accent, #1f5fbf); font-weight: 600; }
+.msp-in:hover { border-color: var(--border); }
+.msp-in:focus { border-color: var(--accent, #1f5fbf); background: var(--surface); outline: none; }
+.msp-name { display: flex; align-items: center; gap: 6px; }
+.msp-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 10px 0; }
+.msp-start { display: grid; gap: 2px; font-size: var(--fs-xs); color: var(--muted, #667); }
+.msp-start .msp-in { border-color: var(--border); min-width: 130px; }
+.cal-panel { margin: 10px 0; padding: 8px 12px; }
+.cal-panel summary { cursor: pointer; }
+.cal-days { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 10px 0; }
+.cal-day { display: inline-flex; gap: 6px; align-items: center; font-size: var(--fs-sm); }
+.cal-ex { display: grid; grid-template-columns: 1.4fr 150px 150px 140px auto; gap: 6px; margin: 4px 0; align-items: center; }
+.cal-ex .msp-in, .num-u .msp-in.boxed { border-color: var(--border); }
+.task-info { margin: 14px 0; padding: 12px 14px; }
+.task-info h3 { margin: 0 0 8px; font-size: var(--fs-md, 1rem); }
+.ti-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 18px; margin: 12px 0; }
+.fld-l { font-size: var(--fs-sm); margin-bottom: 4px; }
+.num-u { display: flex; align-items: center; gap: 6px; }
+.num-u .unit { color: var(--muted, #667); font-size: var(--fs-xs); }
+.cal-sum { all: unset; cursor: pointer; display: flex; gap: 8px; align-items: center; width: 100%; font-size: var(--fs-sm); }
+.note-box { margin: 8px 0; padding: 8px 10px; border: 1px solid var(--border); border-left: 3px solid var(--accent, #1f5fbf); border-radius: 4px; font-size: var(--fs-sm); }
+
+/* Facts the listed items work out; the manual Yes/No is a collapsed fallback */
+.auto-manual { margin-top: 4px; }
+.auto-manual > summary { cursor: pointer; font-size: 12px; opacity: .75; }
+.auto-manual[open] > summary { margin-bottom: 6px; }
+
+/* Source pickers, ILLUSTRATIVE notes and banners are not shown on the forms (the data keep their Sources and the exports still print them). */
+.srcpick, .param-note.illus, .illus-banner, .ac-illus { display: none !important; }
+
+/* ---------------------------------------------------------------- walkthrough */
+.walk-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 14px; margin-bottom: 14px; border: 1px solid var(--border); border-radius: var(--radius-md, 8px); background: var(--accent-soft); }
+.walk-card .hint { margin-top: 2px; }
+.walk-card .btn { flex: none; }
+.walk { position: fixed; right: 20px; bottom: 20px; z-index: 2000; width: min(400px, calc(100vw - 32px)); background: var(--surface); color: var(--text); border: 1px solid var(--border-strong, var(--border)); border-radius: var(--radius-md, 8px); box-shadow: var(--shadow-3); padding: 16px 18px 14px; }
+.walk[hidden] { display: none; }
+.walk-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.walk-count { font-size: var(--fs-xs); color: var(--text-3); }
+.walk h2 { margin: 0 0 6px; font-size: var(--fs-lg, 1.1rem); }
+.walk p { margin: 0 0 8px; line-height: 1.5; }
+.walk ul { margin: 0 0 8px; padding-left: 18px; line-height: 1.5; }
+.walk-dots { display: flex; gap: 6px; margin: 10px 0 12px; }
+.walk-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--border-strong, var(--border)); }
+.walk-dots i.on { background: var(--accent); }
+.walk-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.walk-foot .right { display: flex; gap: 8px; }
+.navlink.walk-focus { outline: 2px solid var(--accent); outline-offset: -2px; }

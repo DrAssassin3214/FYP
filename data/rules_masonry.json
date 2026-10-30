@@ -21,14 +21,14 @@
   },
   {
     "id": "RL-MAT",
-    "description": "Stock on site runs out before a new delivery can arrive (for the material with the longest lead time)",
+    "description": "Material on site is short of the quantity the work needs, and the dealer cannot deliver before the shortfall begins",
     "risk_id": "R-MAT",
     "level": "elevated",
     "all_of": [
       {
-        "fact": "material_stock_days",
-        "op": "le",
-        "other_fact": "material_lead_time_days"
+        "fact": "material_stockout_before_delivery",
+        "op": "eq",
+        "value": true
       }
     ],
     "source": "Assumption",
@@ -37,19 +37,19 @@
       "M06"
     ],
     "confidence": "Moderate",
-    "rationale": "Logical stock-out condition: stock days at or below the lead time leave no margin (a tie is a stock-out risk). Carries no numeric threshold. Risk existence: M01, M06.",
+    "rationale": "Logical stock-out condition on QUANTITIES: on-site quantity is below the quantity the work needs (quantity of work x user-entered per-unit factor), and the dealer's lead time is not shorter than the share of the planned duration the stock supports (a tie is a stock-out risk). Carries no numeric threshold and no stock-in-days input. Risk existence: M01, M06.",
     "priority": 1
   },
   {
     "id": "RL-MAT2",
-    "description": "Stock on site covers fewer days than the planned duration",
+    "description": "Material on site is less than the quantity the work needs, so restocking is required during the activity",
     "risk_id": "R-MAT",
     "level": "normal",
     "all_of": [
       {
-        "fact": "material_stock_days",
-        "op": "lt",
-        "other_fact": "planned_duration_days"
+        "fact": "material_short",
+        "op": "eq",
+        "value": true
       }
     ],
     "source": "Assumption",
@@ -57,7 +57,7 @@
       "M01"
     ],
     "confidence": "Low",
-    "rationale": "Restocking is required during the activity, so the risk is relevant; it is not raised to elevated by this fact alone. Whether it fails depends on lead time (see RL-MAT, which wins when both fire).",
+    "rationale": "Restocking is required during the activity, so the risk is relevant; it is not raised to elevated by this fact alone. Whether it fails depends on the dealer's lead time (see RL-MAT, which wins when both fire).",
     "priority": 0
   },
   {
@@ -333,14 +333,14 @@
   },
   {
     "id": "RL-MORT",
-    "description": "Sand or cement stock runs out before a new delivery can arrive",
+    "description": "Sand or cement on site is short of the quantity the work needs, and the dealer cannot deliver before the shortfall begins",
     "risk_id": "R-MORT",
     "level": "elevated",
     "all_of": [
       {
-        "fact": "sand_cement_stock_days",
-        "op": "le",
-        "other_fact": "sand_cement_lead_time_days"
+        "fact": "mortar_stockout_before_delivery",
+        "op": "eq",
+        "value": true
       }
     ],
     "source": "Assumption",
@@ -349,7 +349,7 @@
       "D01"
     ],
     "confidence": "Low",
-    "rationale": "Same logical stock-out condition as RL-MAT, for mortar materials. Risk existence: A02, D01."
+    "rationale": "Same quantity-based stock-out condition as RL-MAT, for mortar materials (sand, cement). Risk existence: A02, D01."
   },
   {
     "id": "RL-GPAY",

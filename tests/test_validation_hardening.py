@@ -1,6 +1,5 @@
 """Regression tests for the validation hardening of app.service / app.engine (audit 2026-10-08)."""
 import json
-import math
 from copy import deepcopy
 
 import pytest
@@ -304,11 +303,11 @@ def test_m9_service_requires_exactly_four_strictly_increasing_finite_edges(edges
 # ------------------------------------------------------------------ L1 / L2 / L4 / L5 / QA#14
 def test_l1_planned_duration_fact_cannot_override_the_activity_value():
     c = example_case()
-    c["facts"] = {"planned_duration_days": 5, "material_stock_days": 10}
+    c["facts"] = {"planned_duration_days": 5, "material_short": True}
     assert has(problems_of(c), "facts.planned_duration_days", "conflicts")
     c["facts"]["planned_duration_days"] = 16                        # same value: harmless
-    assert "RL-MAT2" in [f["rule_id"] for f in run_case(c)["rules"]["fired"]]      # 10 < 16 (activity value)
-    c["facts"] = {"material_stock_days": 20}                        # 20 < 16 is false -> does not fire
+    assert "RL-MAT2" in [f["rule_id"] for f in run_case(c)["rules"]["fired"]]
+    c["facts"] = {"material_short": False}
     assert "RL-MAT2" not in [f["rule_id"] for f in run_case(c)["rules"]["fired"]]
     assert parse_case(c)["facts"]["planned_duration_days"] == 16
 

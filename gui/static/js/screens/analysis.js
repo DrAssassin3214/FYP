@@ -46,15 +46,24 @@ function onlineResults() {
   if (S.ui.onlineBusy) return alertBox("info", "Searching OpenAlex and Crossref", "Waiting for the literature indexes (up to 10 seconds each).");
   if (S.ui.onlineProblems) return alertBox("warn", "The online search could not run", `<ul>${S.ui.onlineProblems.map((p) => `<li>${h(p)}</li>`).join("")}</ul>`);
   if (!o) return "";
-  if (!o.ok) return alertBox("neutral", "Offline: no online results", `${h(o.message || "The literature indexes could not be reached.")} Everything else in the tool works without internet.`);
+  const offBox = !o.ok ? alertBox("neutral", "Offline: using the data on this computer", `${h(o.message || "The literature indexes could not be reached.")} ${h(o.local_note || "")} Everything else in the tool works without internet.`) : "";
+  if (!o.ok && !(o.risks || []).length) return offBox;
   const blocks = (o.risks || []).map((r) => {
-    const src = (r.sources || []).map((x) => `<li><strong>${onlineLink(x.url, x.title)}</strong><div class="muted">${h((x.authors || []).join(", "))}${x.year ? ` (${h(x.year)})` : ""}${x.venue ? `. ${h(x.venue)}` : ""}${x.doi ? `. DOI ${h(x.doi)}` : ""} <em>[${h(x.source_api)}]</em></div>${x.abstract_snippet ? `<div class="muted">${h(x.abstract_snippet)}</div>` : ""}</li>`).join("");
+    // a literature-supported tag and short blue reading chips (first author, year), like the evidence chips of the risk register
+    const refs = (r.sources || []).slice(0, 4).map((x) => {
+      const au = (x.authors || [])[0] || "", fam = au.split(" ").slice(-1)[0] || "Source";
+      const lab = `${fam}${(x.authors || []).length > 1 ? " et al." : ""}${x.year ? ` ${x.year}` : ""}`;
+      const tip = `${x.title || ""}${x.venue ? `. ${x.venue}` : ""}${x.doi ? `. DOI ${x.doi}` : ""}`;
+      return /^https?:\/\//i.test(x.url || "") ? `<span class="chip"><a class="chip-open" href="${h(x.url)}" target="_blank" rel="noopener noreferrer" data-tip="${h(tip)}" title="${h(tip)}">${icon("book")}${h(lab)}</a></span>` : `<span class="chip" title="${h(tip)}">${icon("book")}${h(lab)}</span>`;
+    }).join("");
+    const src = refs ? `<span class="st st-lit">${icon("book")}Literature-supported</span> <span class="chips">${refs}</span>` : "";
     const cat = (r.catalogue_options || []).map((c) => `<li>${h(c.measure)} <span class="muted">(${h(c.catalogue_id)})</span></li>`).join("");
     return `<div class="mb-4"><h3>${h(r.risk_id)} ${h(r.risk_name)}</h3>
       ${cat ? `<div class="muted">Catalogue options for this risk:</div><ul>${cat}</ul>` : ""}
-      ${src ? `<div class="muted">Candidate sources (query: ${h(r.query)})</div><ol>${src}</ol>` : '<p class="muted">No papers returned for this risk.</p>'}</div>`;
+      ${r.from_cache ? `<p class="muted">Saved from an earlier online search${r.cached_utc ? ` (${h(r.cached_utc)})` : ""}.</p>` : ""}
+      ${src ? `<div>${src}</div>` : (o.ok ? '<p class="muted">No papers returned for this risk.</p>' : "")}</div>`;
   }).join("");
-  return `${o.partial ? alertBox("warn", "Partial results", h(o.message || "")) : ""}${blocks || '<p class="muted">No risks were searched.</p>'}`;
+  return `${offBox}${o.cache_note ? alertBox("neutral", "Offline: saved results", h(o.cache_note)) : ""}${o.partial ? alertBox("warn", "Partial results", h(o.message || "")) : ""}${blocks || '<p class="muted">No risks were searched.</p>'}`;
 }
 
 function commandBanner(r) {
@@ -72,14 +81,56 @@ function commandBanner(r) {
     <p class="muted"><em>${h(r.decision.caveat)}</em></p></div></section>`;
 }
 
-function optionsTable(r) {
-  const cur = r.cost.currency, sel = r.decision.selected_option_id;
-  const rows = r.decision.options.map((o) => `<tr${o.option_id === sel ? ' style="font-weight:600"' : ""}>
-      <td>${h(o.label)}${o.option_id === sel ? " (preferred)" : ""}</td><td>${money(o.mitigation_cost)}</td><td>${money(o.residual_expected_cost)}</td>
+function optionRow(o, sel, cur) {
+  return `<tr${o.option_id === sel ? ' class="is-preferred" style="font-weight:600"' : ""}>
+      <td>${o.rank ? o.rank : "–"}</td>
+      <td>${h(o.label)}${o.option_id === sel ? " (preferred)" : ""}${o.option_id === "ACCEPT" && o.option_id !== sel ? ' <span class="muted">(reference)</span>' : ""}</td><td>${money(o.mitigation_cost)}</td><td>${money(o.residual_expected_cost)}</td>
       <td>${money(o.total_expected_cost)}</td><td>${Number(o.P90).toFixed(1)}</td><td>${o.p_exceed_deadline === null ? "n/a" : pct(o.p_exceed_deadline)}</td>
-      <td>${o.admissible ? "yes" : "no: " + h((o.rejected_because || []).join("; "))}</td></tr>`).join("");
-  return `<section class="card mb-5"><header class="card-h"><h2>Options compared</h2><span class="sub">same random draws for every option</span></header><div class="card-b">
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Option</th><th>Mitigation cost (${h(cur)})</th><th>Residual expected cost</th><th>Total expected cost</th><th>P90 (d)</th><th>P(T &gt; deadline)</th><th>Admissible</th></tr></thead><tbody>${rows}</tbody></table></div></div></section>`;
+      <td>${o.admissible ? "yes" : "no: " + h((o.rejected_because || []).join("; "))}</td></tr>`;
+}
+
+function optionsTable(r) {
+  const cur = r.cost.currency, sel = r.decision.selected_option_id, d = r.decision;
+  const all = !!S.ui.showAllOptions;
+  const byId = Object.fromEntries(d.options.map((o) => [o.option_id, o]));
+  let shown = all ? [...d.options].sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9)) : (d.top_option_ids || []).map((i) => byId[i]).filter(Boolean);
+  if (!all && byId.ACCEPT && !shown.includes(byId.ACCEPT)) shown = [...shown, byId.ACCEPT];
+  const hidden = d.options.length - shown.length;
+  const rows = shown.map((o) => optionRow(o, sel, cur)).join("");
+  const toggle = d.options.length > (d.top_n || 5)
+    ? `<button type="button" class="btn btn-sm" data-action="opts-toggle">${all ? `Show top ${d.top_n || 5} only` : `Show all ${d.options.length} options`}</button>` : "";
+  return `<section class="card mb-5"><header class="card-h"><h2>Top ${Math.min(d.top_n || 5, (d.top_option_ids || []).length)} options</h2><span class="sub">ranked by the chosen criterion · same random draws for every option</span></header><div class="card-b">
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rank</th><th>Option</th><th>Mitigation cost (${h(cur)})</th><th>Residual expected cost</th><th>Total expected cost</th><th>P90 (d)</th><th>P(T &gt; deadline)</th><th>Admissible</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="muted">${hidden > 0 && !all ? `${hidden} further option${hidden === 1 ? "" : "s"} evaluated but not shown (lower ranked or rejected). ` : ""}Rank 1 is the preferred option under the criterion; the Accept row is always shown as the reference. ${toggle}</p></div></section>`;
+}
+
+function preferredDetail(r) {
+  const d = r.decision, cur = r.cost.currency, sel = d.selected_option_id;
+  const o = d.options.find((x) => x.option_id === sel);
+  if (!o) return `<section class="card mb-5"><header class="card-h"><h2>Preferred option in detail</h2></header><div class="card-b">${alertBox("warn", "No admissible option", h(r.command.reason || d.statement))}</div></section>`;
+  const acc = d.options.find((x) => x.option_id === "ACCEPT");
+  const mitDefs = (S.case.mitigations || []).filter((m) => (o.mitigations || []).includes(m.id));
+  const f = r.command.figures || {};
+  const delta = (a, b, nd = 0, unit = "") => (a === null || a === undefined || b === null || b === undefined) ? "n/a" : `${(b - a) > 0 ? "+" : (b - a) < 0 ? "\u2212" : "\u00b1"}${money(Math.abs(b - a), nd)}${unit}`;
+  const measures = [
+    ["Mitigation cost", money(acc.mitigation_cost), money(o.mitigation_cost), delta(acc.mitigation_cost, o.mitigation_cost)],
+    ["Residual expected cost", money(acc.residual_expected_cost), money(o.residual_expected_cost), delta(acc.residual_expected_cost, o.residual_expected_cost)],
+    ["Total expected cost", money(acc.total_expected_cost), money(o.total_expected_cost), delta(acc.total_expected_cost, o.total_expected_cost)],
+    ["Expected delay (d)", money(acc.expected_delay, 2), money(o.expected_delay, 2), delta(acc.expected_delay, o.expected_delay, 2, " d")],
+    ["P90 duration (d)", money(acc.P90, 2), money(o.P90, 2), delta(acc.P90, o.P90, 2, " d")],
+    ["P(T > deadline)", acc.p_exceed_deadline === null ? "n/a" : pct(acc.p_exceed_deadline), o.p_exceed_deadline === null ? "n/a" : pct(o.p_exceed_deadline), "—"],
+  ].map(([k, a, b, c]) => `<tr><td>${k}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
+  const parts = mitDefs.length ? `<ul>${mitDefs.map((m) => `<li><strong>${h(m.id)}</strong>: ${h(m.action || "")} <span class="muted">(targets ${h(m.risk_id || "")}; cost ${money(m.cost && m.cost.value !== undefined ? m.cost.value : m.cost)} ${h(cur)}${(m.secondary_risks || []).length ? `; ${(m.secondary_risks || []).length} secondary risk(s) modelled` : ""})</span></li>`).join("")}</ul>`
+    : `<p class="muted">${sel === "ACCEPT" ? "No response: the risk is accepted as it stands." : "No response definitions found for this option."}</p>`;
+  const st = r.decision_stability;
+  const why = `${h(r.command.reason)}${st ? ` The choice is <strong>${st.stable ? "stable" : "not stable"}</strong> across the ${h(st.seeds.length)} seeds checked.` : ""}`;
+  return `<section class="card mb-5" style="border:2px solid var(--accent, #1f5fbf)"><header class="card-h"><h2>${icon("star")} Preferred option in detail: ${h(o.label)}</h2><span class="sub">${h(r.command.command)}</span></header><div class="card-b">
+    <p><strong>Why it is preferred.</strong> ${why}</p>
+    <div class="subhead">What the option consists of</div>${parts}
+    <div class="subhead">Before and after (Accept versus this option, ${h(cur)})</div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Measure</th><th>Accept</th><th>This option</th><th>Change</th></tr></thead><tbody>${measures}</tbody></table></div>
+    ${f.expected_cost_saving_vs_accept !== undefined && sel !== "ACCEPT" ? `<p>Expected total cost saving against Accept: <strong>${money(f.expected_cost_saving_vs_accept)} ${h(cur)}</strong>; expected delay avoided <strong>${money(f.expected_delay_avoided_days, 2)} d</strong>.</p>` : ""}
+    <p class="muted"><em>${h(d.caveat)}</em></p></div></section>`;
 }
 
 function emvTable(r) {
@@ -108,7 +159,7 @@ function results() {
   if (!a) return alertBox("info", "No analysis yet", "Enter the cost model and responses above (or use Load example in the top bar), then press <strong>Run analysis</strong>.");
   return `${stale() ? alertBox("info", "Inputs changed", "These results are from the previous inputs. Run the analysis again to update them.") : ""}
     <div${stale() ? ' class="is-stale-view"' : ""}>${commandBanner(a)}${chartsSection(a)}${optionsTable(a)}${emvTable(a)}${sensitivity(a)}
-    <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section></div>`;
+    <section class="card mb-5"><header class="card-h"><h2>Full report</h2><span class="sub">analysis.md</span></header><div class="card-b"><article class="md">${renderMarkdown(a.report_markdown || "")}</article></div></section>${preferredDetail(a)}</div>`;
 }
 
 export function render() {
@@ -116,7 +167,7 @@ export function render() {
     <button type="button" class="btn" data-action="analysis-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>analysis.md</span></button>
     <button type="button" class="btn" data-action="analysis-charts-dl"${S.ui.analysis ? "" : " disabled"}>${icon("download")}<span>charts (HTML)</span></button>
     <button type="button" class="btn" data-action="analysis-manual-dl"${S.ui.analysis ? "" : " disabled"} title="Excel: hand formulas beside the tool's numbers">${icon("download")}<span>manual check (Excel)</span></button>`;
-  return `${screenHead(7, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
+  return `${screenHead(4, "Cost, options & decision", "Turns the register's delay risks into a simulated schedule and cost, compares candidate responses on the same random draws, and states which option is <strong>preferred under the chosen criterion</strong>. Every cost and effect is your input with a Source; the tool never supplies one. Not a claim of optimality.", actions)}
   ${inputs()}<div id="analysis-live">${results()}</div>`;
 }
 

@@ -84,7 +84,7 @@ def test_test_route_with_no_key_reports_not_configured(client):
 
 def test_test_route_never_leaks_the_key_on_failure(client, monkeypatch):
     def boom(self, prompt):
-        raise RuntimeError(f"HTTP 401: bad key sk-ant-shouldnotleak was rejected")
+        raise RuntimeError("HTTP 401: bad key sk-ant-shouldnotleak was rejected")
 
     monkeypatch.setattr("app.ai_layer.clients.AnthropicClient.complete", boom)
     d = client.post("/api/settings/test", json={"api_key": "sk-ant-shouldnotleak"}).get_json()

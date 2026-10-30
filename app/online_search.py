@@ -23,6 +23,8 @@ import urllib.parse
 import urllib.request
 from typing import Any, Iterable, Optional
 
+from app import data_sync
+
 OPENALEX_URL = "https://api.openalex.org/works"
 CROSSREF_URL = "https://api.crossref.org/works"
 USER_AGENT = "FYP-BrickworkRiskTool/1.0 (offline-first student research tool)"
@@ -181,10 +183,16 @@ def search_literature(query: str, limit: int = MAX_PER_SOURCE) -> dict:
         except OfflineError as e:
             errors.append(f"{name}: {e}")
     if not lists:
+        cached = data_sync.cache_get("search", query)
+        if cached and isinstance(cached.get("payload"), list):
+            return {"ok": True, "results": cached["payload"], "errors": errors, "from_cache": True,
+                    "cached_utc": cached.get("utc")}
         return {"ok": False, "offline": True,
                 "message": "No internet connection (or the literature indexes are unreachable). The tool works fully "
                            "offline; try again when you are online. " + "; ".join(errors)}
-    return {"ok": True, "results": merge_dedupe(*lists), "errors": errors}
+    merged = merge_dedupe(*lists)
+    data_sync.cache_put("search", query, merged)        # kept so the same search still works when offline
+    return {"ok": True, "results": merged, "errors": errors, "from_cache": False}
 
 
 def _catalogue_matches(risk_id: str, catalogue: list[dict]) -> list[dict]:
@@ -206,8 +214,18 @@ def find_options_online(risks: list[dict], catalogue: Optional[list[dict]] = Non
             offline_msg = res["message"]
             break                                  # one failed risk means the network is down; stop calling
         per.append({"risk_id": r["id"], "risk_name": r["name"], "query": build_query(r["name"], extra),
-                    "sources": res["results"], "index_errors": res["errors"], "catalogue_options": matches})
+                    "sources": res["results"], "index_errors": res["errors"], "catalogue_options": matches,
+                    "from_cache": bool(res.get("from_cache")), "cached_utc": res.get("cached_utc")})
     if offline_msg is not None and not per:
-        return {"ok": False, "offline": True, "message": offline_msg, "note": NOTE}
-    return {"ok": True, "offline": False, "note": NOTE, "risks": per,
-            "partial": offline_msg is not None, "message": offline_msg or ""}
+        # offline and nothing saved from an earlier search: still show the local catalogue options for each risk
+        local = [{"risk_id": r["id"], "risk_name": r["name"], "query": "", "sources": [], "index_errors": [],
+                  "catalogue_options": _catalogue_matches(r["id"], catalogue), "from_cache": False, "cached_utc": None}
+                 for r in risks]
+        return {"ok": False, "offline": True, "message": offline_msg, "note": NOTE, "risks": local,
+                "local_note": "Showing the options stored on this computer (the local catalogue)."}
+    n_cached = sum(1 for p in per if p.get("from_cache"))
+    return {"ok": True, "offline": n_cached == len(per) and n_cached > 0, "note": NOTE, "risks": per,
+            "partial": offline_msg is not None, "message": offline_msg or "",
+            "from_cache": n_cached > 0,
+            "cache_note": ("Offline: these are results saved from an earlier online search (see the saved date on each "
+                           "risk). Connect to the internet for fresh results." if n_cached else "")}

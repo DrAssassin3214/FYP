@@ -21,10 +21,11 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
+from app import data_sync
 from app.engine.audit import to_jsonable
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, classify, matrix_level
 from app.reporting.matrix_graphic import matrix_svg
-from app.literature_seed import seed_for, seed_table
+from app.literature_seed import seed_for
 from app.engine.models import DelayDist, Param, Risk, RiskStatus, Source
 from app.engine.rules import _OPS, Cond, Rule, check_rule_base, evaluate_rules
 from app.reporting.register_report import generate_register_report, register_csv
@@ -112,6 +113,7 @@ def _param(d: Any, where: str, problems: list[str], default_source: Optional[Sou
         problems.append(f"{where}: value is missing")
         return None
     src = d.get("source")
+    source: Optional[Source]
     if src is None and default_source is not None:
         source = default_source
     else:
@@ -321,16 +323,23 @@ def _rule(d: Any, where: str, problems: list[str]) -> Optional[Rule]:
     level = d.get("level", "elevated")
     if not isinstance(conf, str) or not isinstance(level, str):
         problems.append(f"{where}: level and confidence must be text")
-    src = d.get("source", "Assumption")
-    if len(problems) > n0:
+    src = d.get("source")
+    if src is None:
+        rule_src = Source.ASSUMPTION  # a rule with no source label is an assumption
+    elif isinstance(src, str) and src in _SRC:
+        rule_src = _SRC[src]
+    else:
+        problems.append(f"{where}: unknown source '{src}' (use one of {SOURCES})")
+        rule_src = None
+    if len(problems) > n0 or rid is None or risk_id is None or pr is None or rule_src is None:
         return None
-    return Rule(rid, texts[0], risk_id, level, all_of, any_of, int(pr),
-                _SRC.get(src, Source.ASSUMPTION) if isinstance(src, str) else Source.ASSUMPTION, ev,
+    return Rule(rid, texts[0], risk_id, level, all_of, any_of, int(pr), rule_src, ev,
                 texts[1], conf, texts[2])
 
 
 def load_json(name: str):
-    return json.loads((ROOT / "data" / name).read_text(encoding="utf-8-sig"))
+    """Online data pack when one is installed and verified, otherwise the bundled file in data/ (app.data_sync)."""
+    return data_sync.load(name)
 
 
 def risk_library() -> list[dict]:
@@ -378,14 +387,14 @@ def example_case() -> dict:
                              "your own before drawing any conclusion."},
         "activity": {"id": "MAS-01", "name": "Brick masonry, ground-floor walls",
                      "planned_duration_days": {"value": 16, "source": A, "note": note}},
-        "facts": {"required_workers": 6, "available_workers": 5, "material_lead_time_days": 6,
-                  "material_stock_days": 2, "tools_shortage": False,
+        "facts": {"required_workers": 6, "available_workers": 5, "material_short": True,
+                  "material_stockout_before_delivery": True, "tools_shortage": False,
                   "monsoon_overlap": True, "external_walls_in_scope": True,
                   "work_at_height": True, "scaffolding_ready": True, "payment_delay_expected": False,
                   "design_incomplete": False, "prior_rework_history": True, "schedule_compressed": True,
                   "planned_daily_output": 10, "achieved_daily_output_last_week": 8,
                   "skilled_masons_short": True, "work_front_ready": True, "masonry_floor_level": 0,
-                  "hoist_available": True, "sand_cement_stock_days": 8, "sand_cement_lead_time_days": 5,
+                  "hoist_available": True, "mortar_stockout_before_delivery": False,
                   "gang_payment_overdue": False, "frames_on_site": True, "mep_sleeve_layout_marked": True,
                   "lintel_level_plan_issued": True, "festival_or_harvest_in_window": False,
                   "gang_mostly_migrant": False, "summer_overlap": False},
@@ -412,6 +421,36 @@ def _known_fact_names() -> set:
                 if c.get("other_fact"):
                     names.add(c["other_fact"])
     return names
+
+
+def _same_fact(a, b) -> bool:
+    if isinstance(a, bool) or isinstance(b, bool):
+        return a is b or a == b
+    try:
+        return math.isclose(float(a), float(b), rel_tol=1e-9)
+    except (TypeError, ValueError):
+        return a == b
+
+
+def _work_plan(work, planned, problems: list) -> Optional[dict]:
+    """The optional `work` section: quantity of masonry + norm + available workers, listed materials / equipment /
+    machinery / scaffolding, and site data (dates, counts) -> workers required, shortfall flags and the derived facts
+    the rules use.  Problems are appended; returns None when there is nothing to work out or the input is unusable."""
+    from app.productivity.india_norms import selectable_norms
+    from app.productivity.work_plan import build_work_plan
+
+    if not isinstance(work, Mapping):
+        problems.append(f"work: expected an object, got {type(work).__name__}")
+        return None
+    if not _blank(work.get("norm_id")) and not _blank(work.get("quantity")) and planned is None:
+        problems.append("work: the planned duration (activity.planned_duration_days) is needed to work out how many "
+                        "workers the quantity requires")
+        return None
+    try:
+        return build_work_plan(work, None if planned is None else planned.value, selectable_norms())
+    except ValueError as e:
+        problems.append(f"work: {e}")
+        return None
 
 
 def parse_case(case: Mapping) -> dict:
@@ -486,8 +525,10 @@ def parse_case(case: Mapping) -> dict:
             if len(problems) > n0:
                 edges = None
             else:
-                edges = vals
-                if any(b <= a_ for a_, b in zip(edges, edges[1:])) or any(not (0 < x < 1) for x in edges):
+                nums = [x for x in vals if x is not None]
+                assert len(nums) == len(vals)  # no _num problems (checked above)
+                edges = nums
+                if any(b <= a_ for a_, b in zip(nums, nums[1:])) or any(not (0 < x < 1) for x in nums):
                     problems.append("impact_bin_edges_fraction must be strictly ascending, unique values between 0 and 1")
                     edges = None
 
@@ -527,6 +568,17 @@ def parse_case(case: Mapping) -> dict:
     if planned is not None:
         facts["planned_duration_days"] = planned.value        # the activity's value always wins
 
+    work_plan = None
+    work_in = case.get("work")
+    if not _blank(work_in):
+        work_plan = _work_plan(work_in, planned, problems)
+        if work_plan:
+            for k, v in work_plan["derived_facts"].items():
+                if k in facts_in and not _same_fact(facts_in[k], v):
+                    problems.append(f"facts.{k} ({facts_in[k]!r}) conflicts with the value worked out from work.quantity "
+                                    f"({v!r}); remove it from facts, the work plan's value is used")
+                facts[k] = v                                  # derived from quantity and the norm: always wins
+
     rules_raw = case.get("rules")
     rules_raw = rule_library() if rules_raw is None else rules_raw
     rules: list[Rule] = []
@@ -537,7 +589,7 @@ def parse_case(case: Mapping) -> dict:
     if problems:
         raise CaseError(problems)
     return {"project": dict(project), "activity": {"id": str(a.get("id") or "ACT"), "name": a.get("name") or ""},
-            "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts,
+            "planned": planned, "raw_risks": raw, "risks": risks, "rules": rules, "facts": facts, "work_plan": work_plan,
             "impact_edges": edges, "edges_source": edges_source, "warnings": warnings, "partial": partial, "use_seed": use_seed,
             "seed_basis": seed_basis}
 
@@ -624,7 +676,6 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
             for rid, sd in seeds.items():
                 warnings.append(f"{rid}: placed on the matrix from the literature seed (survey RII rank {sd['rank']} of "
                                 f"{sd['n_seeded']}); enter probability and delay to replace it")
-    by_mx = {m["risk_id"]: m for m in matrix}
 
     rows = []
     for r in pc["raw_risks"]:
@@ -640,7 +691,7 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
                        "source": b.delay.source.value, "mean": b.delay.mean(),
                        "note": (r.get("delay") or {}).get("note") or ""} if b else None),
             "complete": b is not None,
-            "seed": seeds.get(rid),
+            "seed": seeds.get(rid) if rid is not None else None,
             **{k: (r.get(k) or "") for k in REGISTER_TEXT_FIELDS},
             "flag": {"level": fl["level"], "rules": fl["rules"]} if fl else None,
         })
@@ -666,10 +717,12 @@ def run_case(case: Mapping, evidence_index: Optional[Mapping[str, str]] = None) 
         "matrix_settings": matrix_settings(edges, pc["edges_source"]),
         "high_consequence": high_consequence,
         "rules": rule_out,
+        "work_plan": pc["work_plan"],
         "rule_base_issues": problems,
         "warnings": warnings,
     }
     result = to_jsonable(result)
+    result["data_provenance"] = data_sync.provenance()
     result["report_markdown"] = generate_register_report(result, evidence_index)
     result["matrix_svg"] = matrix_svg(result)
     return result
@@ -713,7 +766,9 @@ def _store(workbook: Optional[Path] = None):
 def evidence_corpus_report() -> dict:
     """What the full evidence store was built from, and how large it is."""
     _store()
-    return {"total_records": len(_FULL_STORE_CACHE[0]), "sources": _FULL_STORE_CACHE[1]}
+    cache = _FULL_STORE_CACHE
+    assert cache is not None
+    return {"total_records": len(cache[0]), "sources": cache[1]}
 
 
 def evidence_lookup(ids: Optional[list] = None, query: Optional[str] = None, k: int = 20,

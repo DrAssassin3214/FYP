@@ -14,6 +14,10 @@ Routes
     GET  /api/evidence        ?ids=M01,R08  |  ?q=search words  |  (curated records; the bulk harvest is searched with q)
     POST /api/validate        service.run_case(case) -> {"ok": false, "problems"} or {"ok": true, "result": ...} (always HTTP 200)
     POST /api/run             service.run_case(case) -> result, or 422 {"problems": [...]}
+    POST /api/schedule/compute  rows typed into the schedule grid -> same output as import
+    POST /api/work-plan  quantity + norm + planned duration + available workers -> workers required, shortfall flags
+    POST /api/schedule/duration-for-finish  task start + chosen finish date + calendar -> working days
+    POST /api/schedule/import  Microsoft Project XML in (raw body) -> tasks, critical path, per-task activity block out
     POST /api/online-options  OPTIONAL online literature search (OpenAlex, Crossref) for candidate responses; no LLM
     POST /api/suggest-risks   service.suggest_risks(...) (offline retrieval or guarded LLM)
     POST /api/report          register.md download
@@ -29,7 +33,6 @@ import json
 import logging
 import math
 import mimetypes
-import os
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -44,6 +47,7 @@ from werkzeug.exceptions import HTTPException  # noqa: E402
 
 from app import service  # noqa: E402
 from app.ai_layer.clients import describe_config, get_client  # noqa: E402
+from app import data_sync  # noqa: E402
 from app.ai_layer import settings_store  # noqa: E402
 from app.engine.matrix import DEFAULT_LABELS, DEFAULT_P_EDGES, matrix_level  # noqa: E402
 from app.engine.models import RiskStatus  # noqa: E402
@@ -160,6 +164,18 @@ def _case_from_request() -> dict:
     return data
 
 
+def _simulation_checks(case: dict) -> list[str]:
+    """Same n / seed limits as /api/analyze (app.analysis), applied only when the case has a simulation block."""
+    if case.get("simulation") is None:
+        return []
+    from app import analysis
+    out: list[str] = []
+    sim = analysis._as_map(case["simulation"], "simulation", out)
+    analysis._int_setting(sim, "n", analysis.DEFAULT_N, 1, analysis.MAX_N, out)
+    analysis._int_setting(sim, "seed", analysis.DEFAULT_SEED, 0, 2**31 - 1, out)
+    return out
+
+
 def _gui_checks(case: dict) -> list[str]:
     """Input-shape checks the service does not perform itself (reported, never corrected)."""
     out: list[str] = []
@@ -197,6 +213,15 @@ def ai_status() -> dict:
         return {"mode": "offline", "label": "AI: offline mode (evidence retrieval only)",
                 "model_id": None}
     return {"mode": "llm", "label": f"AI: guarded LLM mode ({client.model_id})", "model_id": client.model_id}
+
+
+def _work_norms() -> list[dict]:
+    """Labour norms the user can pick for a quantity of work (title, unit, citation, constants per unit)."""
+    from app.productivity.india_norms import selectable_norms
+    from app.productivity.labour_plan import norm_groups
+    return [{"item_id": n.item_id, "title": n.title, "unit": n.unit_basis, "wall_type": n.wall_type,
+             "citation": n.citation, "roles": dict(n.roles), "conditions": n.conditions,
+             "groups": norm_groups(n)} for n in selectable_norms().values()]
 
 
 def _fact_schema() -> list[dict]:
@@ -238,7 +263,24 @@ def create_app() -> Flask:
     def health():
         store = evidence_store()
         return _json({"ok": True, "version": __version__, "ai": ai_status(), "evidence_records": len(store),
-                      "evidence_workbook_found": WORKBOOK.exists(), "sources": service.SOURCES})
+                      "evidence_workbook_found": WORKBOOK.exists(), "sources": service.SOURCES,
+                      "data": data_sync.status()})
+
+    # ---------------------------------------------------------------- data pack (online first, local fallback)
+    @app.get("/api/data-status")
+    def data_status():
+        return _json({"ok": True, **data_sync.status()})
+
+    @app.post("/api/data-update")
+    def data_update():
+        """Check the internet for a newer data pack now.  Offline or any failure: the data in use is unchanged."""
+        res = data_sync.refresh()
+        return _json({**res, "status": data_sync.status()})
+
+    @app.post("/api/data-reset")
+    def data_reset():
+        """Go back to the data bundled on this computer (removes the downloaded pack)."""
+        return _json({"ok": True, "status": data_sync.reset()})
 
     @app.get("/api/meta")
     def meta():
@@ -247,6 +289,7 @@ def create_app() -> Flask:
             "statuses": [s.value for s in RiskStatus],
             "dist_kinds": ["pert", "triangular", "uniform", "fixed"],
             "facts": _fact_schema(),
+            "work_norms": _work_norms(),
             "matrix": {"p_edges": list(DEFAULT_P_EDGES), "labels": list(DEFAULT_LABELS),
                        "levels": {str(p): {str(i): matrix_level(p, i) for i in range(1, 6)} for p in range(1, 6)},
                        "note": "Probability-class edges and level thresholds are the engine's equal-width ASSUMPTIONS."},
@@ -340,7 +383,7 @@ def create_app() -> Flask:
         # Live validation: problems are an expected outcome, so they come back with HTTP 200 and ok=false
         # (the browser would otherwise log every keystroke's 422 as a console error). /api/run keeps 422.
         case = _case_from_request()          # a malformed body is a 400/422 JSON error (BadRequest handler)
-        extra = _gui_checks(case)
+        extra = _gui_checks(case) + _simulation_checks(case)
         try:
             res = service.run_case(case, evidence_index())
         except service.CaseError as e:
@@ -425,6 +468,93 @@ def create_app() -> Flask:
     @app.get("/api/example-analysis")
     def example_analysis():
         return _json(service.example_analysis_case())
+
+    @app.post("/api/schedule/import")
+    def schedule_import():
+        """Read a Microsoft Project XML schedule (raw bytes in the body) and return its tasks with a critical-path pass.
+        Nothing is stored on the server; the GUI keeps the result and copies one task's `activity` block into the case."""
+        from app.schedule import ScheduleError, analyse, parse_mspdi
+
+        raw = request.get_data(cache=False)
+        try:
+            from app.schedule.masonry import masonry_only
+            sch = parse_mspdi(raw)
+            info, rsrc = {"mode": "all"}, {}
+            if request.args.get("scope", "masonry") != "all":
+                sch, rsrc, info = masonry_only(sch)        # only the masonry tasks and their labour / material
+            res = analyse(sch)
+            res["check"]["scope"] = info
+            if info.get("mode") == "masonry":                # labour and material of the kept tasks are used; report only what was left out
+                nm = [x for x in res["check"]["not_modelled"] if not x["what"].startswith("resource")]
+                unused = (res["check"]["read"].get("assignments") or 0) - info.get("assignments_used", 0)
+                if unused > 0:
+                    nm.append({"what": "resource assignments on tasks that were left out", "count": unused})
+                res["check"]["not_modelled"] = nm
+            for t in res["tasks"]:
+                if t["id"] in rsrc:
+                    t["msp_resources"] = rsrc[t["id"]]
+            res["calendar"] = sch.calendar
+            from app.schedule.build import compare_dates, fill_dates
+            start = (sch.project_start or next((t.start for t in sch.tasks if t.start), ""))[:10]
+            fill_dates(res, start, sch.calendar)
+            compare_dates(res)
+        except ScheduleError as e:
+            return _problems([str(e)])
+        return _json({"ok": True, **res})
+
+    @app.post("/api/work-plan")
+    def work_plan():
+        """Body: {duration_days, work:{quantity, unit, norm_id, efficiency?, available?, materials?}} -> workers required
+        per role, shortfall flags, implied duration and material cover.  Stateless; nothing is stored."""
+        from app.productivity.india_norms import selectable_norms
+        from app.productivity.work_plan import build_work_plan
+
+        d = _json_object()
+        w = d.get("work") if isinstance(d.get("work"), dict) else {}
+        dur = d.get("duration_days")
+        try:
+            res = build_work_plan(w, None if dur in (None, "") else dur, selectable_norms())
+        except (ValueError, TypeError) as e:
+            return _problems([str(e)])
+        if res is None:
+            return _problems(["Pick a labour norm, list an item, or enter site data."])
+        return _json({"ok": True, "plan": res})
+
+    @app.post("/api/schedule/duration-for-finish")
+    def schedule_duration_for_finish():
+        """Body: {start, finish, calendar}.  Duration (working days of the project calendar) that makes a task that
+        starts on `start` end on `finish`, both days included.  Nothing is stored."""
+        from datetime import date
+
+        from app.schedule import ScheduleError
+        from app.schedule.calendar import Calendar
+
+        d = _json_object()
+        try:
+            a, b = date.fromisoformat(str(d.get("start"))[:10]), date.fromisoformat(str(d.get("finish"))[:10])
+            if b < a:
+                return _problems(["The finish date is before the task's start date."])
+            n = Calendar(d.get("calendar")).workdays_inclusive(a, b)
+        except (ValueError, ScheduleError) as e:
+            return _problems([str(e) or "Start and finish must be valid dates."])
+        if n < 1:
+            return _problems(["No working day lies between the start and finish dates; pick a working day."])
+        return _json({"ok": True, "duration_days": n})
+
+    @app.post("/api/schedule/compute")
+    def schedule_compute():
+        """Critical-path pass on rows typed into the schedule grid.  Body: {name, start, tasks:[{name, outline_level,
+        duration_days, predecessors:"3FS+2d"}]}; row number = task ID.  Nothing is stored."""
+        from app.schedule import ScheduleError, analyse
+        from app.schedule.build import build_schedule, fill_dates
+
+        d = _json_object()
+        try:
+            res = analyse(build_schedule(d))
+            fill_dates(res, d.get("start"), d.get("calendar"))
+        except ScheduleError as e:
+            return _problems([str(e)])
+        return _json({"ok": True, **res})
 
     @app.post("/api/online-options")
     def online_options():

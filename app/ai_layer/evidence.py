@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Protocol, Sequence
+from typing import Iterable, Optional, Protocol
 
 
 @dataclass(frozen=True)
@@ -99,9 +99,10 @@ class EvidenceStore:
         """Records ranked by how many distinct query tokens they contain (ties broken by id)."""
         if self._index is None:
             self.build_index()
+        index = self._index or {}
         counts: dict[str, int] = {}
         for t in _tokens(query):
-            for eid in self._index.get(t, ()):
+            for eid in index.get(t, ()):
                 counts[eid] = counts.get(eid, 0) + 1
         best = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:k]
         return [self._by_id[eid] for eid, _ in best]

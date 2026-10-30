@@ -199,6 +199,9 @@ def simulate(
         latent = delay_ppf(activity.baseline_dist, u_b) - t0      # realised baseline minus planned baseline
 
     delay = risk_delay.sum(axis=1) + (latent if latent is not None else 0.0)
+    if not (np.isfinite(delay).all() and np.isfinite(direct).all()):
+        raise ValueError("the simulation produced a non-finite delay or cost (inputs too large to simulate); "
+                         "check the delay days and direct costs")
     return SimResult(t0, n, seed, ids, occurrence, risk_delay, delay, t0 + delay, direct, latent)
 
 

@@ -9,11 +9,12 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Optional, Sequence
 
-import numpy as np
 
 from .emv import cost_summary
 from .models import Activity, CostModel, Mitigation, Risk
 from .simulation import SimResult, simulate, summarise
+
+TOP_N = 5   # options presented as the shortlist (the guide asked for 4 to 6)
 
 CRITERIA = {
     "min_expected_total_cost": "minimum total expected cost  TEC = C_mitigation + E[C_residual]",
@@ -152,6 +153,14 @@ def compare_options(
     }
     admissible = [r for r in rows if r["admissible"]]
     selected = min(admissible, key=keys[criterion]) if admissible else None
+    # Rank the admissible options by the same key the selection uses (stable sort, so rank 1 is the selected one);
+    # only the first TOP_N are presented in the GUI.  Nothing here changes which option is selected.
+    ranked = sorted(admissible, key=keys[criterion])
+    for r in rows:
+        r["rank"] = None
+    for i, r in enumerate(ranked, start=1):
+        r["rank"] = i
+    top_ids = [r["option_id"] for r in ranked[:TOP_N]]
 
     rule = (
         f"Criterion: {CRITERIA[criterion]}. Options evaluated: {len(rows)}. "
@@ -172,6 +181,9 @@ def compare_options(
         "rule": rule,
         "options": rows,
         "selected_option_id": selected["option_id"] if selected else None,
+        "top_option_ids": top_ids,
+        "top_n": TOP_N,
+        "options_not_shown": len(rows) - len(top_ids),
         "statement": statement,
         "caveat": "Result depends on user/expert inputs marked as assumptions; it is not a claim of optimality.",
     }

@@ -2,7 +2,7 @@
 
 The report only restates engine results and the input register; it performs no
 new modelling.  Every parameter is printed with its Source, and everything that
-is not Literature/Historical is repeated in the assumptions section.
+is not Literature/Historical stays in the audit record (the printed report has no assumptions section).
 """
 from __future__ import annotations
 
@@ -85,7 +85,6 @@ def generate_report(
     a = L.append
     a(f"# Risk assessment report: {activity.name}\n")
     a("## 1. Executive summary\n")
-    sel = decision.get("selected_option_id")
     a(f"- Baseline duration T0 = {t0:.2f} days ({activity.baseline_duration_days.source.value}).")
     a(f"- Simulated expected duration {s['mean']:.2f} days; expected delay {s['expected_delay']:.2f} days; "
       f"P80 {s['percentiles']['P80']:.2f}, P90 {s['percentiles']['P90']:.2f}, P95 {s['percentiles']['P95']:.2f} days.")
@@ -148,8 +147,8 @@ def generate_report(
     a("\n## 12-13. Monetary impact and EMV\n")
     a(f"Cost per delay day = {cost.cost_per_delay_day.value:,.0f} {cost.currency} ({cost.cost_per_delay_day.source.value}).\n")
     a("| Risk | p | E[delay if occurs] | Conditional cost | Event EMV |\n|---|---|---|---|---|")
-    for e in emv:
-        a(f"| {e['risk_id']} | {e['p']:.2f} | {e['expected_delay_if_occurs_days']:.2f} | {e['conditional_cost']:,.0f} | {e['emv']:,.0f} |")
+    for ev in emv:
+        a(f"| {ev['risk_id']} | {ev['p']:.2f} | {ev['expected_delay_if_occurs_days']:.2f} | {ev['conditional_cost']:,.0f} | {ev['emv']:,.0f} |")
     a(f"\nSum of event EMV = {sum(e['emv'] for e in emv):,.0f}; simulated expected cost = {cs['expected_cost']:,.0f} {cost.currency}. "
       "They agree in expectation only for independent, additive risks with a linear cost model.\n")
     a("## 14-16. Mitigation alternatives, residual risk and post-mitigation simulation\n")
@@ -160,19 +159,15 @@ def generate_report(
         a(f"| {o['label']} | {', '.join(o['mitigations']) or '-'} | {o['mitigation_cost']:,.0f} | {o['residual_expected_cost']:,.0f} | "
           f"{o['total_expected_cost']:,.0f} | {o['expected_duration']:.2f} | {o['P90']:.2f} | {pe} | {o['admissible']} | {note} |")
     a("")
-    for m in mitigations:
-        a(f"- **{m.mitigation_id}** ({m.strategy}) targets {m.risk_id}: {m.action}. Mechanism: {m.mechanism or 'NR'}. "
-          f"Effect source: p_after = {m.p_after.source.value if m.p_after else 'unchanged'}; "
-          f"delay_after = {m.delay_after.source.value if m.delay_after else 'unchanged'}. Evidence: {', '.join(m.evidence_ids) or 'none'}.")
+    for mit in mitigations:
+        a(f"- **{mit.mitigation_id}** ({mit.strategy}) targets {mit.risk_id}: {mit.action}. Mechanism: {mit.mechanism or 'NR'}. "
+          f"Effect source: p_after = {mit.p_after.source.value if mit.p_after else 'unchanged'}; "
+          f"delay_after = {mit.delay_after.source.value if mit.delay_after else 'unchanged'}. Evidence: {', '.join(mit.evidence_ids) or 'none'}.")
     a("\n## 17. Decision analysis\n")
     a(f"**Rule used.** {decision['rule']}\n")
     a(f"**Result.** {decision['statement']}\n")
     a(f"*{decision['caveat']}*\n")
-    a("## 18. Assumptions and non-literature inputs\n")
-    a("| Input | Value | Source | Note |\n|---|---|---|---|")
-    for x in assumptions:
-        a(f"| {x['input']} | {x['value']} | {x['source']} | {x['note']} |")
-    a("\n## 19. Limitations\n")
+    a("## 18. Limitations\n")
     base_lim = [
         "Probabilities, delay ranges and mitigation effects are subjective unless a source is shown; results inherit that uncertainty.",
         "Risks are treated as independent and delays as additive unless a correlation is specified; interacting risks can widen the tail.",
@@ -181,7 +176,7 @@ def generate_report(
     ]
     for x in list(base_lim) + list(limitations):
         a(f"- {x}")
-    a("\n## 20. Evidence references\n")
+    a("\n## 19. Evidence references\n")
     for e in used_ids:
         a(f"- {e}: {evidence_index.get(e, 'not found')}")
     return "\n".join(L) + "\n"

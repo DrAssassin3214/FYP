@@ -18,7 +18,6 @@ Guard rules (each is enforced in code and tested):
 """
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone

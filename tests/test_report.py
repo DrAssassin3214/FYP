@@ -19,7 +19,7 @@ def test_report_contains_required_sections_and_assumptions(tmp_path: Path):
     assert fig.exists()
     md = generate_report(act, risks, cost, mits, base, dec, (0.05, 0.1, 0.2, 0.4), {"M01": "Karthik & Rao 2019"}, "f.png")
     for heading in ("## 1. Executive summary", "## 7. Risk matrix", "## 10. Simulation results", "## 17. Decision analysis",
-                    "## 18. Assumptions", "## 19. Limitations", "## 20. Evidence references"):
+                    "## 18. Limitations", "## 19. Evidence references"):
         assert heading in md
     assert "Karthik & Rao 2019" in md
     assert "Assumption" in md and "Expert Judgment" in md

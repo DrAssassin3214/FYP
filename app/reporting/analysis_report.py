@@ -117,11 +117,7 @@ def analysis_markdown(result: Mapping, evidence_index: Optional[Mapping[str, str
                   f"{a['evidence_summary']} Evidence: {ev}. Needs: " + "; ".join(a["inputs_required"]) + "."]
         L.append("")
 
-    L += ["## Inputs that are not literature or historical data", "",
-          "| Input | Value | Source |", "|---|---|---|"]
-    for a in result["assumptions"]:
-        L.append(f"| {a['input']} | {a['value']:g} | {a['source']} |")
-    L += ["", f"Input hash (SHA-256): `{result['audit']['input_hash_sha256']}`", ""]
+    L += [f"Input hash (SHA-256): `{result['audit']['input_hash_sha256']}`", ""]
     if result.get("warnings"):
         L += ["## Notes", ""] + [f"- {w}" for w in result["warnings"]] + [""]
     L += ["## Explanation", ""] + [f"- {x}" for x in result.get("explanation", [])]

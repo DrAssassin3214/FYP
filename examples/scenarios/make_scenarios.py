@@ -35,7 +35,7 @@ def scale_delay(c, rid, k):
 
 def s01(c): return c
 def s02(c):
-    setp(c, "R-MAT", 0.8); risk(c, "R-MAT")["delay"]["b"] = 12; c["facts"]["material_stock_days"] = 0; return c
+    setp(c, "R-MAT", 0.8); risk(c, "R-MAT")["delay"]["b"] = 12; c["facts"]["material_stockout_before_delivery"] = True; return c
 def s03(c):
     setp(c, "R-LAB", 0.7); setp(c, "R-SKILL", 0.5); c["facts"]["available_workers"] = 3; return c
 def s04(c):

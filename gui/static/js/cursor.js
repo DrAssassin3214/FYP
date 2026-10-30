@@ -6,7 +6,7 @@
 // element and becomes a frame 10px larger than it (the same behaviour as the reference site's header links).
 // The logo (.brand) is deliberately left out: it already has its own colour-sweep hover animation, so the cursor's
 // own rectangular snap-frame on top of it was a redundant second box.
-const SNAP = ".topbar .btn, .topbar .ai-badge, .topbar .problems-btn, .rail .navlink, .screen-head .actions .btn, .tabs button, .modal-h .btn, .modal-f .btn, .chip, .ev-id, .mx-risk, .rcard-actions .btn";
+const SNAP = ".topbar .btn, .topbar .ai-badge, .topbar .problems-btn, .rail .navlink, .screen-head .actions .btn, .tabs button, .modal-h .btn, .modal-f .btn, .walk .btn, .chip, .ev-id, .mx-risk, .rcard-actions .btn";
 // Deliberately narrow: an ordinary <button> (a Yes/No toggle, an "Add" button, a select) already has its own clear
 // hover state from its own CSS and doesn't need the ring too — every round of "remove the ring from X" so far has
 // turned out to be an ordinary button or label, not a real navigation target, so those no longer opt in by default.
@@ -20,7 +20,9 @@ const TEXT_FIELD = 'input:not([type="checkbox"]):not([type="radio"]):not([type="
 const PLAIN = ".ev-cit, .ev-item summary, .lib-group > summary";   // library category headers: a whole-row toggle, same dead-space problem
 // The logo runs its own hover animation; the cursor itself just gets out of the way over it, rather than showing
 // a dot/ring on top of it.
-const HIDE_OVER = ".topbar .brand";
+// The Gantt chart is a native-cursor zone: it has a real scrollbar, and the browser always draws the system arrow over a
+// scrollbar, so the follow cursor stays out of the whole chart rather than trailing a second pointer next to it.
+const HIDE_OVER = ".topbar .brand, .msp-gantt";
 
 export function initCursor() {
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;

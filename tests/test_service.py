@@ -142,12 +142,11 @@ def test_unknown_facts_are_not_evaluable_never_guessed():
     assert res["rules"]["fired"] == [] and res["rules"]["not_evaluable"]
 
 
-def test_the_planned_duration_feeds_the_material_stock_rule():
+def test_material_shortage_fact_fires_the_restocking_rule():
     c = example_case()
-    c["facts"] = {"material_stock_days": 2}
-    fired = [f["rule_id"] for f in run_case(c)["rules"]["fired"]]
-    assert "RL-MAT2" in fired
-    c["activity"]["planned_duration_days"]["value"] = 2
+    c["facts"] = {"material_short": True}
+    assert "RL-MAT2" in [f["rule_id"] for f in run_case(c)["rules"]["fired"]]
+    c["facts"] = {"material_short": False}
     assert "RL-MAT2" not in [f["rule_id"] for f in run_case(c)["rules"]["fired"]]
 
 
@@ -317,17 +316,17 @@ def _fired(facts, only=None):
     return {f["rule_id"]: f["level"] for f in out["fired"]}, out["flags"]
 
 
-def test_rl_mat_compares_stock_with_lead_time_and_a_tie_is_a_stock_out_risk():
-    fired, flags = _fired({"material_stock_days": 6, "material_lead_time_days": 6})       # stock == lead time
+def test_rl_mat_is_raised_by_a_quantity_shortfall_the_dealer_cannot_cover_in_time():
+    fired, flags = _fired({"material_short": True, "material_stockout_before_delivery": True})
     assert fired["RL-MAT"] == "elevated" and flags["R-MAT"]["level"] == "elevated"
-    fired, _ = _fired({"material_stock_days": 7, "material_lead_time_days": 6})
-    assert "RL-MAT" not in fired
-    fired, flags = _fired({"material_stock_days": 2})                                     # lead time unknown
+    fired, _ = _fired({"material_short": True, "material_stockout_before_delivery": False})
+    assert "RL-MAT" not in fired and fired["RL-MAT2"] == "normal"
+    fired, flags = _fired({"material_short": True})                                       # lead time unknown
     assert fired["RL-MAT2"] == "normal" and "RL-MAT" not in fired and flags["R-MAT"]["level"] == "normal"
 
 
 def test_a_normal_and_an_elevated_rule_on_one_risk_give_elevated_not_conflict():
-    fired, flags = _fired({"material_stock_days": 2, "material_lead_time_days": 6})
+    fired, flags = _fired({"material_short": True, "material_stockout_before_delivery": True})
     assert {"RL-MAT", "RL-MAT2"} <= set(fired) and flags["R-MAT"] == {"level": "elevated", "rules": ["RL-MAT", "RL-MAT2"], "conflict": False}
     fired, flags = _fired({"monsoon_overlap": True, "external_walls_in_scope": True})
     assert flags["R-WX"]["level"] == "elevated" and not flags["R-WX"]["conflict"]
@@ -359,7 +358,7 @@ def test_new_fact_rules_fire_on_their_conditions_only():
     assert f(work_front_ready=False) == {"RL-FRONT": "elevated"} and f(work_front_ready=True) == {}
     assert f(masonry_floor_level=2, hoist_available=False) == {"RL-VT": "elevated"}
     assert f(masonry_floor_level=0, hoist_available=False) == {} and f(masonry_floor_level=2, hoist_available=True) == {}
-    assert f(sand_cement_stock_days=3, sand_cement_lead_time_days=3) == {"RL-MORT": "elevated"}
+    assert f(mortar_stockout_before_delivery=True) == {"RL-MORT": "elevated"}
     assert f(gang_payment_overdue=True) == {"RL-GPAY": "elevated"}
     assert f(frames_on_site=True, mep_sleeve_layout_marked=False, lintel_level_plan_issued=True) == {"RL-OPEN": "elevated"}
     assert f(festival_or_harvest_in_window=True) == {"RL-FEST": "normal"}

@@ -156,12 +156,12 @@ function suggestPanel() {
 export function render() {
   const risks = S.case.risks || [];
   const tab = S.ui.riskTab;
-  return `${screenHead(3, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk is placed on the matrix once both are entered (${term("occurrence model", "bernoulli")}).`,
+  return `${screenHead(2, "Risk register", `Risks that can add delay to this activity. Each needs a ${term("probability", "p")} and a delay range with their sources; a risk is placed on the matrix once both are entered (${term("occurrence model", "bernoulli")}).`,
     `<button type="button" class="btn" data-action="risk-add-custom">${icon("plus")}<span class="lbl">Custom risk</span></button>`)}
   ${screenProblems("risks")}
   <div class="grid-3-1">
     <div>
-      ${risks.length ? risks.map(riskCard).join("") : `<div class="card"><div class="card-b">${emptyState({ ic: "shield", title: "No risks in the register", text: "Add risks from the curated library (existence supported by cited records), from the rule flags on step 2, or as custom risks. Probabilities and delays are always entered by you.", actions: `<button type="button" class="btn" data-action="risk-add-custom">${icon("plus")}Add custom risk</button>` })}</div></div>`}
+      ${risks.length ? risks.map(riskCard).join("") : `<div class="card"><div class="card-b">${emptyState({ ic: "shield", title: "No risks in the register", text: "Add risks from the curated library (existence supported by cited records), from the rule flags (Masonry schedule, Task information, Rules), or as custom risks. Probabilities and delays are always entered by you.", actions: `<button type="button" class="btn" data-action="risk-add-custom">${icon("plus")}Add custom risk</button>` })}</div></div>`}
     </div>
     <aside class="card aside-card">
       <div class="tabs" role="tablist">

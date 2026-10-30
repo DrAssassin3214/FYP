@@ -36,3 +36,16 @@ export async function api(method, path, body) {
 
 export const get = (p) => api("GET", p);
 export const post = (p, b) => api("POST", p, b);
+
+/** POST raw bytes (a file) and read the JSON answer; same error shape as api(). */
+export async function postRaw(path, bytes, type = "application/octet-stream") {
+  let res;
+  try {
+    res = await fetch(path, { method: "POST", headers: { "Content-Type": type }, body: bytes });
+  } catch (e) {
+    return { ok: false, status: 0, data: { problems: [`Cannot reach the local server (${e.message}).`] } };
+  }
+  let data;
+  try { data = await res.json(); } catch { data = { problems: [`Unreadable server response (HTTP ${res.status}).`] }; }
+  return { ok: res.ok, status: res.status, data };
+}

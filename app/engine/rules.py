@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 import numbers
 import operator
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Mapping, Optional, Sequence
 
 from .models import Source
@@ -103,7 +103,7 @@ def _eval_detail(c: Cond, facts: Mapping[str, Any]) -> tuple[Optional[bool], lis
     if rhs_name is None and rhs is None:
         return None, [], ["the rule has no value to compare with"]
     if c.op in _NUMERIC_OPS:
-        need = "number"
+        need: Optional[str] = "number"
     else:                                   # eq / ne: the fact must have the same type as what it is compared with
         need = rk if rk in ("bool", "number", "str") else None
     if need is None:
@@ -178,7 +178,7 @@ def evaluate_rules(rules: Sequence[Rule], facts: Mapping[str, Any]) -> dict:
         ok_any = (not r.any_of) or any(v is True for v in any_res)
         if ok_all and ok_any:
             fired.append({"rule_id": r.rule_id, "risk_id": r.risk_id, "level": r.level, "priority": r.priority,
-                          "facts_used": {f: facts[f] for c in r.conditions() for f in c.facts() if f in facts},
+                          "facts_used": {f: facts[f] for c in r.conditions() for f in sorted(c.facts()) if f in facts},
                           "source": r.source.value, "evidence_ids": list(r.evidence_ids),
                           "confidence": r.confidence, "rationale": r.rationale})
         elif (missing or reasons) and not any(v is False for v in all_res):

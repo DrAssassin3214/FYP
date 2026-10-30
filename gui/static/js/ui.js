@@ -20,6 +20,8 @@ export const ICONS = {
   x: '<path d="M6 6l12 12M18 6 6 18"/>',
   xCircle: '<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>',
   minusCircle: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',
+  chevUp: '<path d="M6 15l6-6 6 6"/>',
+  chevLeft: '<path d="M15 6l-6 6 6 6"/>',
   chevDown: '<path d="M6 9l6 6 6-6"/>',
   chevRight: '<path d="M9 6l6 6-6 6"/>',
   download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
@@ -88,7 +90,7 @@ export const SOURCE_META = {
 export function srcMeta(s) { return SOURCE_META[s] || { cls: "s-none", g: "?", short: s ? `Unknown: ${s}` : "No source" }; }
 /** Read-only source badge. Hidden by default; pass force=true where the Source itself is the content. */
 export function sourceBadge(s, force = false) {
-  if (!force) return "";
+  if (!force || s === "Assumption") return "";   // the Assumption tag is not shown; Literature and other sources still are
   const m = srcMeta(s);
   return `<span class="src ${m.cls}" title="Source: ${h(s || "not given")}"><span class="src-g" aria-hidden="true">${m.g}</span>${h(m.short)}</span>`;
 }
@@ -222,7 +224,7 @@ export function illustrativeBanner() {
   return isIllustrative() ? `<div class="alert alert-warn illus-banner" role="note">${icon("flask")}<div class="a-body"><strong>ILLUSTRATIVE case: every number is a placeholder, not evidence and not site data.</strong></div></div>` : "";
 }
 export function screenHead(n, title, lede = "", actions = "") {
-  return `${illustrativeBanner()}<div class="screen-head"><span class="step">Step ${n}</span><div class="titles"><h1 tabindex="-1">${h(title)}</h1>${lede ? `<p class="lede">${lede}</p>` : ""}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
+  return `${illustrativeBanner()}<div class="screen-head"><div class="titles"><h1 tabindex="-1">${h(title)}</h1>${lede ? `<p class="lede">${lede}</p>` : ""}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
 }
 export function alertBox(kind, title, body = "", o = {}) {
   const ic = o.icon || { warn: "alert", danger: "alert", info: "info", neutral: "info", ok: "checkCircle" }[kind];

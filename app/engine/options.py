@@ -28,6 +28,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Optional, Sequence
 
+from app import data_sync
 from .decision import CRITERIA, Constraints, Option, compare_options
 from .emv import cost_summary, event_emv
 from .models import Activity, CostModel, Mitigation, Param, Risk, Source
@@ -39,7 +40,7 @@ _BASIS_DERIVED = "Derived Calculation from the entered risk register and cost mo
 
 def load_catalogue(path: Optional[Path] = None) -> list[dict]:
     """Candidate response actions (no numbers).  Missing file = empty catalogue, never an error."""
-    p = Path(path) if path else CATALOGUE_PATH
+    p = Path(path) if path else data_sync.resolve("mitigation_catalogue.json")
     if not p.exists():
         return []
     return json.loads(p.read_text(encoding="utf-8-sig")).get("entries", [])
@@ -245,7 +246,7 @@ def decision_command(decision: dict, currency: str = "INR") -> dict:
     rows = {o["option_id"]: o for o in decision["options"]}
     sel_id = decision.get("selected_option_id")
     crit = decision["criterion"]
-    accept = rows.get("ACCEPT")
+    accept = rows["ACCEPT"]       # decision.py always inserts ACCEPT
     if sel_id is None:
         return {"command": "NO ADMISSIBLE OPTION", "selected_option_id": None, "criterion": crit,
                 "reason": "Every evaluated option violates a constraint, including accepting the risk. Relax a constraint "

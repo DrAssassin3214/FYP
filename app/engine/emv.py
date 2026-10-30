@@ -46,6 +46,8 @@ def event_emv(risks: Sequence[Risk], cost: CostModel) -> list[dict]:
         r.validate()
         _validate_risk_money(r)
         conditional = r.delay.mean() * cd + r.direct_cost_if_occurs.value
+        if not (math.isfinite(conditional) and math.isfinite(r.p.value * conditional)):
+            raise ValueError(f"{r.risk_id}: event EMV is not finite (delay, cost per day or direct cost too large)")
         rows.append(
             {
                 "risk_id": r.risk_id,
@@ -72,12 +74,20 @@ def simulated_cost(res: SimResult, cost: CostModel, deadline_days: Optional[floa
     (Jensen's inequality) and cannot be recovered from event EMVs; use simulated cost.
     """
     validate_cost_model(cost)
+    with np.errstate(over="ignore", invalid="ignore"):
+        return _simulated_cost(res, cost, deadline_days)
+
+
+def _simulated_cost(res: SimResult, cost: CostModel, deadline_days: Optional[float]) -> np.ndarray:
     c = cost.cost_per_delay_day.value * np.maximum(res.delay, 0.0) + res.direct_cost
+    # (overflow is caught by the isfinite check below, so silence numpy's warning for these products)
     ld = cost.ld_per_day_after_deadline.value
     if ld > 0:
         if deadline_days is None:
             raise ValueError("liquidated damages set but no deadline given")
         c = c + ld * np.maximum(0.0, res.duration - deadline_days)
+    if not np.isfinite(c).all():
+        raise ValueError("the simulated cost is not finite (cost per day, liquidated damages, delay or direct cost too large)")
     return c
 
 

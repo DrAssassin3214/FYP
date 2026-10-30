@@ -1,27 +1,26 @@
 // Application controller: boot, routing, data binding, live checking, files, theme.
 // The GUI never computes a result: it posts the case JSON to the local API (app.service) and renders what comes back.
 import { $, $$, h, fmtIn, getPath, setPath, deletePath, debounce, download, slug, uniqueId, parseNum } from "./util.js";
-import { get, post } from "./api.js";
+import { get, post, postRaw } from "./api.js";
 import { S, caseKey, isDirty, isStale, riskIds } from "./state.js";
 import { icon, toast, openModal, closeModal, confirmModal, showEvidence, refreshSourcePicker, alertBox } from "./ui.js";
 import { applyInline, countByScreen, screenProblems, classify, friendly, SCREEN_TITLES } from "./problems.js";
-import * as sCase from "./screens/case.js";
-import * as sRules from "./screens/rules.js";
+import * as sSched from "./screens/schedule.js";
 import * as sRisks from "./screens/risks.js";
 import * as sMatrix from "./screens/matrix.js";
 import * as sEv from "./screens/evidence.js";
 import * as sRep from "./screens/report.js";
 import * as sAna from "./screens/analysis.js";
 import { initCursor } from "./cursor.js";
+import { startWalkthrough } from "./walkthrough.js";
 
 const SCREENS = [
-  { id: "case", n: 1, title: "Case & Activity", ic: "building", group: "Define", mod: sCase },
-  { id: "rules", n: 2, title: "Site facts & Rules", ic: "rules", group: "Identify", mod: sRules },
-  { id: "risks", n: 3, title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
-  { id: "matrix", n: 4, title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
-  { id: "analysis", n: 5, title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
-  { id: "evidence", n: 6, title: "Evidence", ic: "book", group: "Reference", mod: sEv },
-  { id: "report", n: 7, title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
+  { id: "schedule", title: "Masonry schedule", ic: "grid", group: "Define", mod: sSched },
+  { id: "risks", title: "Risk register", ic: "shield", group: "Identify", mod: sRisks },
+  { id: "matrix", title: "Risk matrix", ic: "grid", group: "Prioritise", mod: sMatrix, results: true },
+  { id: "analysis", title: "Cost, options & decision", ic: "sparkle", group: "Decide", mod: sAna },
+  { id: "evidence", title: "Evidence", ic: "book", group: "Reference", mod: sEv },
+  { id: "report", title: "Export", ic: "doc", group: "Reference", mod: sRep, results: true },
 ];
 const BY_ID = Object.fromEntries(SCREENS.map((s) => [s.id, s]));
 const screenEl = () => $("#screen");
@@ -44,6 +43,15 @@ function toggleTags() {
 }
 
 // ------------------------------------------------------------------ chrome
+function dataChip() {
+  const d = S.health?.data;
+  if (!d) return "";
+  const on = d.mode === "online pack";
+  const tip = on ? `Using the online data pack ${d.version} (downloaded ${d.installed_utc || ""}). Offline, the tool keeps using it; Settings can switch back to the data on this computer.`
+    : "Using the data stored on this computer. When you are online the tool downloads a newer data pack automatically if one is published.";
+  return `<span class="ai-badge${on ? " is-llm" : ""}" tabindex="0" data-tip="${h(tip)}" aria-label="${h(tip)}"><span>${on ? "Data: online " + h(d.version) : "Data: local"}</span></span>`;
+}
+
 function renderToolbar() {
   const ai = S.health?.ai;
   const dark = theme() === "dark";
@@ -53,8 +61,8 @@ function renderToolbar() {
     <button type="button" class="btn btn-ghost" data-action="save" title="Save the case as JSON (Ctrl+S)">${icon("save")}<span class="lbl">Save</span></button>
     <button type="button" class="btn btn-ghost" data-action="example" title="Load the ILLUSTRATIVE example (placeholder numbers)">${icon("flask")}<span class="lbl">Load example</span></button>
     <span class="sep" aria-hidden="true"></span>
-    <button type="button" class="btn btn-ghost" data-action="tags" title="Show or hide the Source and ILLUSTRATIVE tags on the forms (the data keep their Sources)" aria-pressed="${tagsHidden() ? "false" : "true"}"><span class="lbl">Tags: ${tagsHidden() ? "off" : "on"}</span></button>
     <button type="button" class="btn btn-ghost btn-icon" data-action="theme" aria-label="Switch to ${dark ? "light" : "dark"} theme" title="Switch to ${dark ? "light" : "dark"} theme">${icon(dark ? "sun" : "moon")}</button>
+    ${dataChip()}
     ${ai ? `<span class="ai-badge${ai.mode === "llm" ? " is-llm" : ""}" tabindex="0" data-tip="${h(ai.label)}" aria-label="${h(ai.label)}">${icon("sparkle", "ic-sm")}<span>${ai.mode === "llm" ? "AI: guarded LLM" : "AI: offline mode"}</span></span>` : ""}`;
 }
 
@@ -66,7 +74,7 @@ function renderRail() {
     const n = counts[s.id] || 0;
     const flag = n ? `<span class="nav-flag err" title="${n} input problem(s)">${icon("alert", "ic-sm")}${n}</span>`
       : s.results && S.result && isStale() ? `<span class="nav-flag stale" title="Inputs have problems; showing the last valid state">stale</span>` : "";
-    html += `<a class="navlink" href="#/${s.id}" data-tip="${h(`${s.n}. ${s.title}`)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}><span class="nav-num">${s.n}</span>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
+    html += `<a class="navlink" href="#/${s.id}" data-tip="${h(s.title)}"${S.ui.screen === s.id ? ' aria-current="page"' : ""}>${icon(s.ic)}<span class="nav-label">${h(s.title)}</span>${flag}</a>`;
   }
   html += `</div>
     <button type="button" class="navlink rail-settings" data-action="settings" data-tip="Settings: API key, model">${icon("gear")}<span class="nav-label">Settings</span></button>
@@ -164,6 +172,7 @@ function renderScreen({ nav = false } = {}) {
   const y = window.scrollY;
   const activeId = document.activeElement && root.contains(document.activeElement) ? document.activeElement.id : null;
   const mod = BY_ID[S.ui.screen].mod;
+  schedHydrate();
   root.innerHTML = mod.render();
   if (!root.querySelector("[data-screen-problems]")) {
     const html = screenProblems(S.ui.screen);
@@ -185,15 +194,17 @@ function renderScreen({ nav = false } = {}) {
 function renderAll(opts) { renderChrome(); renderScreen(opts); }
 
 function go(id) {
-  if (!BY_ID[id]) id = "case";
+  if (!BY_ID[id]) id = "schedule";
   if (location.hash !== `#/${id}`) { location.hash = `#/${id}`; return; }
   S.ui.screen = id;
   renderRail();
   renderScreen({ nav: true });
 }
 window.addEventListener("hashchange", () => {
-  const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "case";
-  S.ui.screen = BY_ID[id] ? id : "case";
+  const raw = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || "schedule";
+  const id = raw === "case" || raw === "rules" ? "schedule" : raw;      // the old Case and Site-facts tabs now live in the Masonry schedule
+  S.ui.screen = BY_ID[id] ? id : "schedule";
+  if (raw !== S.ui.screen) history.replaceState(null, "", `#/${S.ui.screen}`);
   renderRail();
   renderScreen({ nav: true });
 });
@@ -456,7 +467,7 @@ async function guardDiscard(what) {
   return confirmModal("Discard unsaved changes?", `The current case has unsaved changes. ${h(what)} will replace it. Save first if you want to keep it.`, "Discard and continue");
 }
 function loadCase(c, { fileName = null, msg = "" } = {}) {
-  S.case = c;
+  S.case = c; S.ui.schedRows = null; S.ui.schedule = null; S.ui.schedSel = null; S.ui.schedAssess = null; S.ui.schedCheck = null;
   S.savedKey = caseKey();
   S.result = null; S.resultKey = null;
   S.validation = { status: "idle", problems: [], warnings: [], key: null };
@@ -522,7 +533,7 @@ function openProblems() {
   const rect = btn.getBoundingClientRect();
   root.innerHTML = `<div class="popover" role="dialog" aria-label="Input problems" style="top:${rect.bottom + 8}px;left:${Math.max(16, Math.min(rect.left, window.innerWidth - 580))}px">
     <h3>${icon("alert")} ${probs.length} problem${probs.length === 1 ? "" : "s"} reported by the service</h3>
-    ${probs.map((p) => { const c = classify(p); const sc = c.screen || "case"; return `<div class="prob-item">${icon("alert")}<div>${friendly(p)}</div><button type="button" class="btn btn-sm where" data-action="goto" data-screen="${sc}">${h(SCREEN_TITLES[sc] || sc)} ${icon("chevRight", "ic-sm")}</button></div>`; }).join("")}
+    ${probs.map((p) => { const c = classify(p); const sc = c.screen || "schedule"; return `<div class="prob-item">${icon("alert")}<div>${friendly(p)}</div><button type="button" class="btn btn-sm where" data-action="goto" data-screen="${sc}">${h(SCREEN_TITLES[sc] || sc)} ${icon("chevRight", "ic-sm")}</button></div>`; }).join("")}
   </div>`;
   btn.setAttribute("aria-expanded", "true");
   root.querySelector("button")?.focus();
@@ -555,6 +566,10 @@ function openSettings() {
     const dlg = openModal({
       title: `${icon("gear")} Settings`,
       body: `
+        <div class="walk-card">
+          <div><strong>Walkthrough</strong><div class="hint">A short guided tour of the tool, from the masonry schedule to the export. It opens each screen in turn and explains what to enter and what you get back.</div></div>
+          <button type="button" class="btn btn-primary" id="set-walkthrough">${icon("info")}<span>Start walkthrough</span></button>
+        </div>
         ${settingsStatusBox(d)}
         <div class="form-grid">
           <div class="field span-2">
@@ -578,6 +593,9 @@ function openSettings() {
             <div class="hint" id="set-model-hint">Optional. Leave blank to use the default (${h(PROVIDER_INFO[provider].defaultModel)}).</div>
           </div>
         </div>
+        <div class="field span-2" id="data-box"><label>Data sources</label><div id="data-status" class="hint">Checking...</div>
+          <button type="button" class="btn" id="data-update">Check online for a newer data pack</button>
+          <button type="button" class="btn btn-ghost" id="data-reset">Use the data on this computer</button></div>
         <div id="set-test-result"></div>
         ${alertBox("warn", "What this key is used for", "One thing: proposing candidate risks for you to review, each tied to cited evidence and marked unverified. It never sets a probability, a delay or a place on the matrix. Those come from your inputs.")}`,
       footer: `
@@ -591,6 +609,20 @@ function openSettings() {
     const keyInput = dlg.querySelector("#set-key");
     const modelInput = dlg.querySelector("#set-model");
     const testResult = dlg.querySelector("#set-test-result");
+    const dataBox = dlg.querySelector("#data-status");
+    const showData = (s, msg) => {
+      dataBox.innerHTML = `${msg ? `<div>${h(msg)}</div>` : ""}<div>${s.mode === "online pack" ? `Online data pack <strong>${h(s.version)}</strong> in use (installed ${h(s.installed_utc || "")}).` : "Using the data stored on this computer."} Last check: ${h(s.last_check_utc || "never")}.</div>`;
+    };
+    get("/api/data-status").then((r) => { if (r.ok) showData(r.data); else dataBox.textContent = "Data status unavailable."; });
+    dlg.querySelector("#data-update").addEventListener("click", async () => {
+      dataBox.textContent = "Checking the internet...";
+      const r = await post("/api/data-update", {});
+      if (r.data?.status) { showData(r.data.status, r.data.message); refreshHealth(); } else dataBox.textContent = "The check could not run.";
+    });
+    dlg.querySelector("#data-reset").addEventListener("click", async () => {
+      const r = await post("/api/data-reset", {});
+      if (r.data?.status) { showData(r.data.status, "Switched to the data on this computer."); refreshHealth(); }
+    });
     providerSelect.addEventListener("change", () => {
       const info = PROVIDER_INFO[providerSelect.value];
       dlg.querySelector("#set-key-label").textContent = `${info.label} API key`;
@@ -618,6 +650,7 @@ function openSettings() {
       if (res.ok) { await refreshHealth(); toast("API key cleared. AI is now in offline mode.", "info"); closeModal(); }
       else toast(`Could not clear the key: ${h((res.data?.problems || []).join("; ") || "unknown error")}`, "err");
     });
+    dlg.querySelector("#set-walkthrough").addEventListener("click", () => { closeModal(); startWalkthrough({ go, screens: SCREENS }); });
     dlg.querySelector("#set-save").addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       const body = { model: modelInput.value.trim(), provider: providerSelect.value };
@@ -640,12 +673,13 @@ const ACTIONS = {
   tags: () => toggleTags(),
   theme: () => setTheme(theme() === "dark" ? "light" : "dark"),
   settings: () => openSettings(),
+  walkthrough: () => startWalkthrough({ go, screens: SCREENS }),
   save: () => saveCase(),
   open: async () => { if (await guardDiscard("Opening a file")) $("#file-input").click(); },
   new: async () => {
     if (!(await guardDiscard("A new blank case"))) return;
     const r = await get("/api/template");
-    if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("case"); }
+    if (r.ok) { loadCase(r.data, { msg: "New blank case." }); go("schedule"); }
   },
   example: async () => {
     if (!(await guardDiscard("The ILLUSTRATIVE example"))) return;
@@ -705,22 +739,301 @@ const ACTIONS = {
     openNewRisk(S.case.risks.length - 1, "AI-suggested risk added as unverified. Its probability and delay are empty and must come from you or an expert.");
     ensureEvidence(c.evidence_ids).then((found) => { if (found) renderScreen(); });
   },
-  "risk-tab": (b) => { S.ui.riskTab = b.dataset.val; renderScreen(); },
-  "fact-bool": (b) => {
-    S.case.facts = S.case.facts || {};
-    if (b.dataset.val === "unknown") delete S.case.facts[b.dataset.fact];
-    else S.case.facts[b.dataset.fact] = b.dataset.val === "true";
-    S.ui.autoAddPending = true;
-    changed({ rerender: true });
+  "sched-open": () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = ".xml,application/xml,text/xml";
+    inp.addEventListener("change", async () => {
+      const f = inp.files && inp.files[0];
+      if (!f) return;
+      S.ui.schedBusy = true; S.ui.schedProblems = null; renderScreen();
+      const r = await postRaw("/api/schedule/import", await f.arrayBuffer(), "application/xml");
+      S.ui.schedBusy = false;
+      if (r.ok && r.data.ok) {
+        S.ui.schedCheck = { file: f.name, ...(r.data.check || {}) };
+        const prev = (S.ui.schedRows || [])[(S.ui.schedAssess || 1) - 1];
+        S.ui.schedRows = sSched.rowsFromResult(r.data); S.ui.schedSel = null; S.ui.schedFile = f.name;
+        if (r.data.project.name && !(S.case.project || {}).name) { S.case.project = S.case.project || {}; S.case.project.name = r.data.project.name; }
+        S.ui.schedStart = (r.data.tasks.find((t) => t.start) || {}).start?.slice(0, 10) || S.ui.schedStart || new Date().toISOString().slice(0, 10);
+        S.ui.schedCal = r.data.calendar || S.ui.schedCal || sSched.defaultCalendar();
+        S.ui.schedMasOnly = false;      // the import already kept only the masonry tasks
+        const first = r.data.tasks.find((t) => !t.summary && t.masonry_like) || r.data.tasks.find((t) => !t.summary);
+        S.ui.schedAssess = first ? first.id : 1;
+        if (prev && S.ui.schedRows[S.ui.schedAssess - 1]) S.ui.schedRows[S.ui.schedAssess - 1].facts = { ...S.ui.schedRows[S.ui.schedAssess - 1].facts, ...(prev.facts || {}) };   // keep the site facts already entered
+        S.ui.schedSel = S.ui.schedAssess;
+        await schedRecompute(r.data.warnings || []);   // from here the grid is the single source: row number = task ID
+      } else { S.ui.schedProblems = r.data.problems || ["The schedule could not be read."]; renderScreen(); }
+    });
+    inp.click();
   },
-  "fact-remove": (b) => { delete S.case.facts[b.dataset.fact]; changed({ rerender: true }); },
+  "sched-pick": (b) => { S.ui.schedSel = +b.dataset.uid; renderScreen(); },
+  "sched-add": () => {
+    const rows = S.ui.schedRows, at = S.ui.schedSel || rows.length;
+    const row = sSched.blankRow(); row.outline_level = rows[at - 1] ? rows[at - 1].outline_level : 1;
+    rows.splice(at, 0, row);
+    const map = {}; for (let k = 1; k <= rows.length - 1; k++) map[k] = k > at ? k + 1 : k;
+    sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = at + 1; schedRecompute();
+  },
+  "sched-del": () => {
+    const rows = S.ui.schedRows, at = S.ui.schedSel;
+    if (!at || rows.length < 2) return;
+    rows.splice(at - 1, 1);
+    const map = {}; for (let k = 1; k <= rows.length + 1; k++) if (k !== at) map[k] = k > at ? k - 1 : k;
+    sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = Math.min(at, rows.length); schedRecompute();
+  },
+  "sched-in": () => { const r = S.ui.schedRows[S.ui.schedSel - 1], p = S.ui.schedRows[S.ui.schedSel - 2]; if (r && p && r.outline_level <= p.outline_level) { r.outline_level += 1; schedRecompute(); } },
+  "sched-out": () => { const r = S.ui.schedRows[S.ui.schedSel - 1]; if (r && r.outline_level > 1) { r.outline_level -= 1; schedRecompute(); } },
+  "sched-cal-toggle": () => { S.ui.schedCalOpen = !S.ui.schedCalOpen; renderScreen(); },
+  "sched-tab": (b) => { S.ui.schedTab = b.dataset.val; renderScreen(); },
+  "sched-fact-bool": (b) => {
+    const r = S.ui.schedRows[S.ui.schedSel - 1]; if (!r) return;
+    r.facts = r.facts || {};
+    if (b.dataset.val === "unknown") delete r.facts[b.dataset.fact]; else r.facts[b.dataset.fact] = b.dataset.val === "true";
+    if (S.ui.schedAssess === S.ui.schedSel) S.ui.autoAddPending = true;
+    schedRecompute();
+  },
+  "work-use-crew": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i], pl = ((S.ui.workPlans || {})[i] || {}).plan; if (!r || !pl) return;
+    r.work.available = r.work.available || {};
+    for (const g of pl.groups) r.work.available[g.group] = g.required_workers;
+    workChanged(i);
+  },
+  "work-mat-add": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    (r.work.materials = r.work.materials || []).push({ class: "material", name: "", unit: "", source: "User Input" });
+    renderScreen();
+  },
+  "work-mat-del": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r || !r.work) return;
+    r.work.materials.splice(+b.dataset.m, 1);
+    workChanged(i);
+  },
+  "sched-ev-add": () => { (S.ui.schedCal.events = S.ui.schedCal.events || []).push({ name: "", kind: "monsoon", from: S.ui.schedStart, to: S.ui.schedStart }); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-ev-del": (b) => { (S.ui.schedCal.events || []).splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
+  "site-ready-add": (b) => {
+    const r = S.ui.schedRows[+b.dataset.i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    ((r.work.site = r.work.site || {}).readiness = r.work.site.readiness || []).push({ kind: "work_front", ready_by: "" });
+    renderScreen();
+  },
+  "site-ready-del": (b) => {
+    const i = +b.dataset.i, r = S.ui.schedRows[i]; if (!r || !r.work || !r.work.site) return;
+    r.work.site.readiness.splice(+b.dataset.k, 1); workChanged(i);
+  },
+  "sched-cal-add": () => { S.ui.schedCal.exceptions.push({ name: "", from: S.ui.schedStart, to: S.ui.schedStart, working: false }); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-cal-del": (b) => { S.ui.schedCal.exceptions.splice(+b.dataset.i, 1); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-up": () => schedMove(-1),
+  "sched-down": () => schedMove(1),
+  "sched-assess": () => {
+    const t = S.ui.schedule?.tasks.find((x) => x.id === S.ui.schedSel);
+    if (!t || t.summary) return;
+    S.ui.schedAssess = t.id; S.ui.autoAddPending = true; schedRecompute();
+    toast(`\u201C${h(t.name)}\u201D is now the assessed task: its duration, float and site facts are the case's activity and facts.`, "ok");
+  },
+  "sched-fact-remove": (b) => {
+    const r = S.ui.schedRows[S.ui.schedSel - 1]; if (!r || !r.facts) return;
+    delete r.facts[b.dataset.fact]; schedRecompute();
+  },
+  "opts-toggle": () => { S.ui.showAllOptions = !S.ui.showAllOptions; renderScreen(); },
+  "risk-tab": (b) => { S.ui.riskTab = b.dataset.val; renderScreen(); },
   goto: (b) => {
     closeProblems();
     go(b.dataset.screen);
     setTimeout(() => { const e = screenEl().querySelector(".field-err.show, [data-screen-problems]"); e?.scrollIntoView({ block: "center", behavior: "smooth" }); }, 150);
   },
 };
+/** Send the typed rows to the critical-path service and show the result. Keeps keyboard focus on the cell the user was in. */
+function schedHydrate() {
+  if (S.ui.screen !== "schedule" || S.ui.schedRows) return;
+  const sc = S.case.schedule, a = S.case.activity || {};
+  if (sc && Array.isArray(sc.rows) && sc.rows.length) {
+    S.ui.schedRows = sc.rows.map((r) => ({ ...sSched.blankRow(), ...r, facts: { ...(r.facts || {}) } }));
+    S.ui.schedStart = sc.start || new Date().toISOString().slice(0, 10); S.ui.schedCal = sc.calendar || sSched.defaultCalendar();
+    S.ui.schedAssess = sc.assessed || null;
+  } else {
+    // a case without a schedule (older file, blank template): its activity becomes the first and only task
+    S.ui.schedRows = [{ ...sSched.blankRow(), name: a.name || "", duration_days: Number(a.planned_duration_days && a.planned_duration_days.value) || 0, facts: { ...(S.case.facts || {}) } }];
+    S.ui.schedStart = new Date().toISOString().slice(0, 10); S.ui.schedCal = sSched.defaultCalendar(); S.ui.schedAssess = 1;
+  }
+  S.ui.schedSel = S.ui.schedAssess || 1;
+  setTimeout(() => schedRecompute([], { sync: false }), 0);
+}
+/** The assessed task is the case's activity: copy its name, duration, derived deadline and site facts into the case. */
+function schedSync() {
+  const i = (S.ui.schedAssess || 0) - 1, row = (S.ui.schedRows || [])[i];
+  const t = S.ui.schedule && S.ui.schedule.tasks.find((x) => x.id === i + 1);
+  if (!row || !t || t.summary || !t.activity) return;
+  const a = S.case.activity = S.case.activity || {};
+  a.name = t.name;
+  if (!a.id) a.id = t.activity.id;
+  const pd = a.planned_duration_days;
+  if (!pd || pd.value !== t.duration_days) a.planned_duration_days = { ...t.activity.planned_duration_days };
+  const dl = a.deadline_days;
+  if (!dl || !dl.source || dl.source === "Derived Calculation") a.deadline_days = { ...t.activity.deadline_days };
+  S.case.facts = { ...(row.facts || {}) };
+  const plan = ((S.ui.workPlans || {})[i] || {}).plan;
+  if (row.work && plan) {                                    // quantity-driven labour and stock: the facts it works out replace typed ones
+    S.case.work = JSON.parse(JSON.stringify(row.work));
+    S.case.work.context = workContext(i);
+    for (const k of Object.keys(plan.derived_facts || {})) delete S.case.facts[k];
+  } else delete S.case.work;
+}
+
+/** Task dates and the calendar's seasons/festivals, which the site flags are compared against. */
+function workContext(i) {
+  const t = S.ui.schedule && S.ui.schedule.tasks.find((x) => x.id === i + 1);
+  return { start: (t && t.start) || undefined, finish: (t && t.finish) || undefined, events: ((S.ui.schedCal || {}).events || []).filter((e) => e.from && e.to) };
+}
+/** Work plan (workers required, shortfall, material cover) for one schedule row, from the server; nothing is stored there. */
+async function workFetch(i) {
+  const r = (S.ui.schedRows || [])[i]; if (!r) return;
+  S.ui.workPlans = S.ui.workPlans || {};
+  const w = r.work;
+  const full = w && w.norm_id && Number(w.quantity) > 0 && Number(r.duration_days) > 0;
+  const hasRes = w && Array.isArray(w.materials) && w.materials.length > 0;          // listed items work without a labour norm
+  const hasSite = w && w.site && Object.keys(w.site).length > 0;
+  if (!full && !hasRes && !hasSite) { S.ui.workPlans[i] = null; return; }
+  const q = await post("/api/work-plan", { duration_days: r.duration_days, work: { ...w, context: workContext(i) } });
+  S.ui.workPlans[i] = q.ok && q.data.ok ? { plan: q.data.plan } : { error: ((q.data && q.data.problems) || ["Could not work out the requirement. If this keeps happening, close the app completely and start it again so the new Python files load."])[0] };
+}
+async function workChanged(i) {
+  const act = document.activeElement;
+  const keep = act && act.dataset && act.dataset.i !== undefined && act.dataset.f ? { i: act.dataset.i, f: act.dataset.f, m: act.dataset.m } : null;
+  await workFetch(i);
+  if (S.ui.schedAssess === i + 1) { schedSync(); changed({ rerender: false }); }
+  S.ui.schedSel = i + 1;
+  renderScreen();
+  if (keep) $(`[data-i="${keep.i}"][data-f="${keep.f}"]${keep.m !== undefined ? `[data-m="${keep.m}"]` : ""}`)?.focus();
+}
+const _wnum = (v) => { const n = parseFloat(String(v).replace(",", ".")); return String(v).trim() !== "" && isFinite(n) && n >= 0 ? n : undefined; };
+function schedFixAssess() {
+  const T = (S.ui.schedule && S.ui.schedule.tasks) || [];
+  const cur = T.find((x) => x.id === S.ui.schedAssess);
+  if (cur && !cur.summary) return;
+  const first = T.find((x) => !x.summary && x.masonry_like) || T.find((x) => !x.summary);
+  S.ui.schedAssess = first ? first.id : null;
+}
+async function schedRecompute(notes = [], { sync = true } = {}) {
+  const rows = S.ui.schedRows;
+  if (!rows || !rows.length) return;
+  const act = document.activeElement;
+  const keep = act && act.dataset && act.dataset.i !== undefined ? { i: act.dataset.i, f: act.dataset.f } : null;
+  const r = await post("/api/schedule/compute", sSched.rowsPayload());
+  if (r.ok && r.data.ok) {
+    S.ui.schedule = { ...r.data, warnings: [...notes, ...(r.data.warnings || [])] }; S.ui.schedProblems = null;
+    schedFixAssess();
+    await Promise.all(rows.map((rw, k) => (rw.work ? workFetch(k) : null)));
+    const selT = S.ui.schedule.tasks.find((x) => x.id === S.ui.schedSel);
+    if (!selT || (selT.summary && !sync)) S.ui.schedSel = S.ui.schedAssess;        // opening the tab: start on the assessed task
+    if (sync) {
+      schedSync();
+      S.case.schedule = { name: (S.case.project || {}).name || "", start: S.ui.schedStart, calendar: S.ui.schedCal, assessed: S.ui.schedAssess, rows: S.ui.schedRows };   // saved with the case file
+      changed({ rerender: false });
+    }
+  }
+  else S.ui.schedProblems = r.data.problems || ["The schedule could not be calculated."];
+  renderScreen();
+  if (keep) $(`[data-i="${keep.i}"][data-f="${keep.f}"]`)?.focus();
+}
+function schedMove(d) {
+  const rows = S.ui.schedRows, at = S.ui.schedSel, to = at + d;
+  if (!at || to < 1 || to > rows.length) return;
+  [rows[at - 1], rows[to - 1]] = [rows[to - 1], rows[at - 1]];
+  const map = {}; for (let k = 1; k <= rows.length; k++) map[k] = k;
+  map[at] = to; map[to] = at;
+  sSched.remapPreds(rows, map); S.ui.schedAssess = map[S.ui.schedAssess] || null; S.ui.schedSel = to; schedRecompute();
+}
+
 const CHANGE_ACTIONS = {
+  "sched-edit": (el) => {
+    const r = S.ui.schedRows[+el.dataset.i]; if (!r) return;
+    const f = el.dataset.f;
+    r[f] = f === "duration_days" ? Math.max(0, parseFloat(String(el.value).replace(",", ".")) || 0) : el.value;
+    S.ui.schedSel = +el.dataset.i + 1;
+    schedRecompute();
+  },
+  "work-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    const w = r.work = r.work || { available: {}, materials: [] }, f = el.dataset.f;
+    w.available = w.available || {}; w.materials = w.materials || [];
+    if (f === "norm_id") {
+      w.norm_id = el.value || undefined;
+      const n = (S.meta?.work_norms || []).find((x) => x.item_id === el.value);
+      w.unit = n ? n.unit : undefined;
+    } else if (f.startsWith("avail:")) {
+      const g = f.slice(6), v = _wnum(el.value);
+      if (v === undefined) delete w.available[g]; else w.available[g] = v;
+    } else { const v = _wnum(el.value); if (v === undefined) delete w[f]; else w[f] = v; }
+    workChanged(i);
+  },
+  "work-mat-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i], m = r && r.work && r.work.materials[+el.dataset.m]; if (!m) return;
+    const f = el.dataset.f;
+    if (f === "name" || f === "unit" || f === "class") m[f] = el.value.trim();
+    else if (f === "safe_passed") { if (el.value === "yes") m[f] = true; else if (el.value === "no") m[f] = false; else delete m[f]; }
+    else { const v = _wnum(el.value); if (v === undefined) delete m[f]; else m[f] = v; }
+    m.source = "User Input";
+    workChanged(i);
+  },
+  "sched-start": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    if (el.value) r.start_no_earlier = el.value; else delete r.start_no_earlier;      // cleared = released
+    S.ui.schedSel = i + 1;
+    schedRecompute();
+  },
+  "sched-finish": async (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r || !el.value) return;
+    const t = (S.ui.schedule?.tasks || []).find((x) => x.id === i + 1);
+    const start = t && t.start ? t.start.slice(0, 10) : null;
+    if (!start) { toast("Wait for the schedule to calculate, then pick the finish date again.", "info"); return; }
+    const q = await post("/api/schedule/duration-for-finish", { start, finish: el.value, calendar: S.ui.schedCal });
+    if (q.ok && q.data.ok) { r.duration_days = q.data.duration_days; S.ui.schedSel = i + 1; }
+    else toast(((q.data && q.data.problems) || ["That finish date cannot be used."])[0], "info");
+    schedRecompute();
+  },
+  "sched-fact-num": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    const k = el.dataset.f.replace(/^fact:/, "");
+    r.facts = r.facts || {};
+    const v = String(el.value).replace(",", ".").trim();
+    if (v === "") delete r.facts[k]; else if (isFinite(+v) && +v >= 0) r.facts[k] = +v;
+    S.ui.schedSel = i + 1;
+    schedRecompute();
+  },
+  "sched-cal-day": (el) => {
+    const c = S.ui.schedCal, d = +el.dataset.d;
+    c.workdays = el.checked ? [...new Set([...c.workdays, d])].sort() : c.workdays.filter((x) => x !== d);
+    if (!c.workdays.length) { c.workdays = [d]; }
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "sched-ev-set": (el) => {
+    const e = (S.ui.schedCal.events || [])[+el.dataset.i]; if (!e) return;
+    e[el.dataset.f] = el.value;
+    if (e.to < e.from) e.to = e.from;
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "site-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i]; if (!r) return;
+    r.work = r.work || { available: {}, materials: [] };
+    const s = r.work.site = r.work.site || {}, f = el.dataset.f, v = String(el.value).trim();
+    if (v === "") delete s[f];
+    else if (el.dataset.kind === "num") { const n = _wnum(v); if (n === undefined) delete s[f]; else s[f] = n; }
+    else s[f] = v;
+    workChanged(i);
+  },
+  "site-ready-set": (el) => {
+    const i = +el.dataset.i, r = S.ui.schedRows[i], x = r && r.work && r.work.site && r.work.site.readiness[+el.dataset.k]; if (!x) return;
+    x[el.dataset.f] = el.value; workChanged(i);
+  },
+  "sched-cal-hpd": (el) => { S.ui.schedCal.hours_per_day = Math.min(24, Math.max(1, parseFloat(el.value) || 8)); S.ui.schedCalOpen = true; schedRecompute(); },
+  "sched-cal-ex": (el) => {
+    const e = S.ui.schedCal.exceptions[+el.dataset.i]; if (!e) return;
+    e[el.dataset.f] = el.dataset.f === "working" ? el.value === "1" : el.value;
+    if (e.to < e.from) e.to = e.from;
+    S.ui.schedCalOpen = true; schedRecompute();
+  },
+  "sched-mas-only": (el) => { S.ui.schedMasOnly = el.checked; renderScreen(); },
+  "sched-meta": (el) => { S.ui.schedStart = el.value; schedRecompute(); },
   "ev-cited": (el) => { S.ui.evCitedOnly = el.checked; refreshEvList(); },
 };
 
@@ -820,9 +1133,21 @@ async function boot() {
   dl.innerHTML = ev.data.records.map((r) => `<option value="${h(r.id)}">${h(r.citation.slice(0, 80))}</option>`).join("");
   document.body.appendChild(dl);
   const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1];
-  S.ui.screen = BY_ID[id] ? id : "case";
+  S.ui.screen = BY_ID[id] ? id : "schedule";
+  if (id && id !== S.ui.screen) history.replaceState(null, "", `#/${S.ui.screen}`);     // old #/case and #/rules links land on the Masonry schedule
   loadCase(tpl.data);
   window.FYP = { S, go };   // for inspection from the browser console
+  // the start-up check for a newer online data pack runs in the background; when it finishes, reload the reference data
+  const v0 = S.health?.data?.version;
+  setTimeout(async () => {
+    const r = await get("/api/data-status");
+    if (r.ok && r.data.version !== v0) {
+      const [m2, l2, r2] = await Promise.all([get("/api/meta"), get("/api/risk-library"), get("/api/rules")]);
+      if (m2.ok && l2.ok && r2.ok) { S.meta = m2.data; S.library = l2.data; S.rules = r2.data; }
+      await refreshHealth(); renderScreen();
+      toast(`Online data pack ${r.data.version} installed and in use.`, "info");
+    }
+  }, 9000);
 }
 
 boot();

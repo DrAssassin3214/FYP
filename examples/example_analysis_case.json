@@ -22,8 +22,8 @@
   "facts": {
     "required_workers": 6,
     "available_workers": 5,
-    "material_lead_time_days": 6,
-    "material_stock_days": 2,
+    "material_short": true,
+    "material_stockout_before_delivery": true,
     "tools_shortage": false,
     "monsoon_overlap": true,
     "external_walls_in_scope": true,
@@ -39,8 +39,7 @@
     "work_front_ready": true,
     "masonry_floor_level": 0,
     "hoist_available": true,
-    "sand_cement_stock_days": 8,
-    "sand_cement_lead_time_days": 5,
+    "mortar_stockout_before_delivery": false,
     "gang_payment_overdue": false,
     "frames_on_site": true,
     "mep_sleeve_layout_marked": true,
@@ -387,5 +386,196 @@
     "n": 10000,
     "seed": 12345,
     "criterion": "min_expected_total_cost"
+  },
+  "schedule": {
+    "name": "Block B brickwork package (ILLUSTRATIVE example schedule)",
+    "start": "2026-11-02",
+    "assessed": 5,
+    "calendar": {
+      "name": "Site, six-day week (ILLUSTRATIVE)",
+      "workdays": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hours_per_day": 8.0,
+      "exceptions": [
+        {
+          "name": "Diwali (illustrative dates)",
+          "from": "2026-11-09",
+          "to": "2026-11-10",
+          "working": false
+        }
+      ]
+    },
+    "rows": [
+      {
+        "name": "Block B brickwork package",
+        "outline_level": 1,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Ground floor",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Scaffolding, lift and material staging, ground floor",
+        "outline_level": 3,
+        "duration_days": 2,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Wall layout marking and DPC level check, ground floor",
+        "outline_level": 3,
+        "duration_days": 1,
+        "predecessors": "3",
+        "facts": {}
+      },
+      {
+        "name": "Brick masonry, ground-floor external walls",
+        "outline_level": 3,
+        "duration_days": 16,
+        "predecessors": "4",
+        "facts": {
+          "required_workers": 6,
+          "available_workers": 5,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
+          "tools_shortage": false,
+          "monsoon_overlap": true,
+          "external_walls_in_scope": true,
+          "work_at_height": true,
+          "scaffolding_ready": true,
+          "payment_delay_expected": false,
+          "design_incomplete": false,
+          "prior_rework_history": true,
+          "schedule_compressed": true,
+          "planned_daily_output": 10,
+          "achieved_daily_output_last_week": 8,
+          "skilled_masons_short": true,
+          "work_front_ready": true,
+          "masonry_floor_level": 0,
+          "hoist_available": true,
+          "mortar_stockout_before_delivery": false,
+          "gang_payment_overdue": false,
+          "frames_on_site": true,
+          "mep_sleeve_layout_marked": true,
+          "lintel_level_plan_issued": true,
+          "festival_or_harvest_in_window": false,
+          "gang_mostly_migrant": false,
+          "summer_overlap": false
+        }
+      },
+      {
+        "name": "Brick masonry, ground-floor internal walls",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "4, 5SS+4d",
+        "facts": {
+          "required_workers": 4,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
+          "masonry_floor_level": 0
+        }
+      },
+      {
+        "name": "Lintels and sill bands, ground floor",
+        "outline_level": 3,
+        "duration_days": 4,
+        "predecessors": "5SS+6d",
+        "facts": {}
+      },
+      {
+        "name": "Curing and inspection, ground floor",
+        "outline_level": 3,
+        "duration_days": 3,
+        "predecessors": "5, 6, 7",
+        "facts": {}
+      },
+      {
+        "name": "First floor",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Slab curing and de-propping, first floor (structure team)",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "8",
+        "facts": {}
+      },
+      {
+        "name": "Scaffolding, lift and material staging, first floor",
+        "outline_level": 3,
+        "duration_days": 2,
+        "predecessors": "10",
+        "facts": {}
+      },
+      {
+        "name": "Brick masonry, first-floor external walls",
+        "outline_level": 3,
+        "duration_days": 16,
+        "predecessors": "11",
+        "facts": {
+          "required_workers": 6,
+          "material_short": true,
+          "material_stockout_before_delivery": true,
+          "masonry_floor_level": 1
+        }
+      },
+      {
+        "name": "Brick masonry, first-floor internal walls",
+        "outline_level": 3,
+        "duration_days": 10,
+        "predecessors": "11, 12SS+4d",
+        "facts": {}
+      },
+      {
+        "name": "Lintels and sill bands, first floor",
+        "outline_level": 3,
+        "duration_days": 4,
+        "predecessors": "12SS+6d",
+        "facts": {}
+      },
+      {
+        "name": "Curing and inspection, first floor",
+        "outline_level": 3,
+        "duration_days": 3,
+        "predecessors": "12, 13, 14",
+        "facts": {}
+      },
+      {
+        "name": "Roof level",
+        "outline_level": 2,
+        "duration_days": 0,
+        "predecessors": "",
+        "facts": {}
+      },
+      {
+        "name": "Parapet walls and terrace-level partitions",
+        "outline_level": 3,
+        "duration_days": 6,
+        "predecessors": "15",
+        "facts": {}
+      },
+      {
+        "name": "Masonry work complete",
+        "outline_level": 3,
+        "duration_days": 0,
+        "predecessors": "17",
+        "facts": {}
+      }
+    ]
   }
 }

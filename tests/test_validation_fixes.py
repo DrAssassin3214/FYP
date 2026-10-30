@@ -1,5 +1,4 @@
 """Regression tests for the defects found in the 2026-10-09 validation report (F1-F6)."""
-import copy
 import json
 from pathlib import Path
 

@@ -33,6 +33,8 @@ def start_server():
     from gui.api import create_app
 
     port = choose_port(DEFAULT_PORT)
+    from app import data_sync
+    data_sync.refresh_in_background()
     server = make_server(HOST, port, create_app(), threaded=True)
     threading.Thread(target=server.serve_forever, name="fyp-server", daemon=True).start()
     return server, f"http://{HOST}:{server.server_port}/"
